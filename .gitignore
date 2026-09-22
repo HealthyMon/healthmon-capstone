@@ -1,0 +1,179 @@
+# =========================================================
+# HealthMon - Git Ignore
+# Unity + FastAPI + Python AI + IDE
+# =========================================================
+
+
+# =========================================================
+# Unity generated folders
+# =========================================================
+
+**/.utmp/
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+
+*.log
+
+
+# =========================================================
+# Unity generated / temporary files
+# =========================================================
+
+*.blend1
+*.blend1.meta
+
+**/[Mm]emoryCaptures/
+**/[Rr]ecordings/
+
+
+# =========================================================
+# Unity plugins / IDE generated
+# =========================================================
+
+**/[Aa]ssets/Plugins/Editor/JetBrains*
+*.DotSettings.user
+
+.vs/
+.idea/
+.gradle/
+
+ExportedObj/
+.consulo/
+
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+
+# Unity generated meta files for temporary files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+
+# =========================================================
+# Unity crash files
+# =========================================================
+
+sysinfo.txt
+mono_crash.*
+
+
+# =========================================================
+# Unity builds
+# =========================================================
+
+*.apk
+*.aab
+*.unitypackage
+*.unitypackage.meta
+*.app
+
+
+# =========================================================
+# Crashlytics
+# =========================================================
+
+crashlytics-build.properties
+
+
+# =========================================================
+# Unity Test Runner
+# =========================================================
+
+**/InitTestScene*.unity*
+**/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+
+# =========================================================
+# Addressables
+# =========================================================
+
+**/ServerData/
+**/[Aa]ssets/StreamingAssets/aa*
+**/[Aa]ssets/AddressableAssetsData/link.xml*
+**/[Aa]ssets/Addressables_Temp*
+**/[Aa]ssets/AddressableAssetsData/*/*.bin*
+
+
+# =========================================================
+# Unity Visual Scripting generated files
+# =========================================================
+
+**/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
+**/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+**/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers
+**/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+
+
+# =========================================================
+# Unity Scene Dependency Cache
+# =========================================================
+
+**/[Aa]ssets/[Ss]ceneDependencyCache*
+
+
+# =========================================================
+# Python / FastAPI / AI
+# =========================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.venv/
+venv/
+env/
+
+
+# =========================================================
+# Environment variables / API Keys
+# =========================================================
+
+.env
+.env.*
+!.env.example
+
+
+# =========================================================
+# Jupyter
+# =========================================================
+
+.ipynb_checkpoints/
+
+
+# =========================================================
+# OS
+# =========================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# =========================================================
+# VS Code personal settings
+# =========================================================
+
+.vscode/
