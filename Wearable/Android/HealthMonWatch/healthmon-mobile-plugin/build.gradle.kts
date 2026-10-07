@@ -1,0 +1,42 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = "com.healthmon.app.mobile"
+    compileSdk {
+        version = release(37)
+    }
+
+    defaultConfig {
+        minSdk = 26
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+}
+
+dependencies {
+    implementation(libs.play.services.wearable)
+
+    val roomVersion = "3.0.3"
+    val sqliteVersion = "2.7.1"
+
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.material)
+    implementation("androidx.room3:room3-runtime:${roomVersion}")
+    implementation("androidx.sqlite:sqlite-framework:${sqliteVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
+    ksp("androidx.room3:room3-compiler:$roomVersion")
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+}
