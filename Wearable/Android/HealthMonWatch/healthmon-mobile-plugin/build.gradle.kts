@@ -6,7 +6,7 @@ plugins {
 android {
     namespace = "com.healthmon.app.mobile"
     compileSdk {
-        version = release(37)
+        version = release(36)
     }
 
     defaultConfig {
@@ -28,7 +28,8 @@ dependencies {
     val sqliteVersion = "2.7.1"
 
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx)
+    implementation("androidx.core:core:1.17.0")
+    implementation("androidx.core:core-ktx:1.17.0")
     implementation(libs.material)
     implementation("androidx.room3:room3-runtime:${roomVersion}")
     implementation("androidx.sqlite:sqlite-framework:${sqliteVersion}")
