@@ -21,12 +21,12 @@ def read_registry(path=REGISTRY):
     return registry
 
 
-def entry(model_id, registry=None, require_files=True):
+def entry(model_id, registry=None, require_files=True, allow_rejected=False):
     registry = read_registry() if registry is None else registry
     if model_id not in registry['models']:
         raise ValueError('Unknown model ID')
     model = dict(registry['models'][model_id], id=model_id)
-    if model['status'] in ('Rejected', 'Archived'):
+    if model['status'] == 'Archived' or model['status'] == 'Rejected' and not allow_rejected:
         raise ValueError('Model is not available for inference')
     if require_files:
         for name in ('adapter_config.json', 'adapter_model.safetensors'):

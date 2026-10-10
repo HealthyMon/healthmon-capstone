@@ -19,6 +19,7 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',required=True)
     parser.add_argument('--models',nargs='+',default=['baseline-expanded','natural-v1'])
     parser.add_argument('--limit',type=int,default=0)
+    parser.add_argument('--reference',help='Reuse frozen baseline outputs with identical cases and generation')
     args=parser.parse_args();out=ROOT/args.output
     if out.exists():raise ValueError('Choose a new output path')
     casepath=ROOT/'data/natural_eval_v1/cases.json'
@@ -29,6 +30,14 @@ def main():
             'case_sha256':hashlib.sha256(casepath.read_bytes()).hexdigest(),'case_count':len(cases),'cases':[],
             'actual_qwen':True,'human_review':False,'independent_benchmark':False,'automatic_selection':False,
             'training_executed_by_this_script':False,'generation':settings}
+    reference=None
+    if args.reference:
+        reference_path=ROOT/args.reference
+        reference=json.loads(reference_path.read_text(encoding='utf-8'))
+        if reference['case_sha256']!=report['case_sha256'] or reference['generation']!=settings or not reference.get('completed'):
+            raise ValueError('Reference cases/settings do not match or reference is incomplete')
+        report['reference']={'path':args.reference,'sha256':hashlib.sha256(reference_path.read_bytes()).hexdigest(),
+                             'baseline_git_commit':reference['git_commit'],'baseline_generated_now':False}
     out.parent.mkdir(parents=True,exist_ok=True)
     def save():out.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     for index,case in enumerate(cases):
@@ -37,6 +46,11 @@ def main():
         context=response_context(session,state,case['text'],case['memories'],case['speech_level'])
         context['recent']=case['recent']
         result=compare_models(runtime,context,case['text'],args.models,dict(settings,seed=settings['seed']+index))
+        if reference:
+            source=next(row for row in reference['cases'] if row['case_id']==case['id'])
+            if source['context_sha256']!=result['context_sha256'] or source['generation']!=result['generation']:
+                raise ValueError('Reference context or seed changed')
+            result['reference_baseline']=next(row for row in source['results'] if row['model_id']=='baseline-expanded')
         report['cases'].append({'case_id':case['id'],**result});save()
         for row in result['results']:
             print(json.dumps({'case':case['id'],'model':row['model_id'],'speech':row['output']['speech'],

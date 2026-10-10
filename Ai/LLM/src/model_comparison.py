@@ -9,7 +9,7 @@ from .persona_runtime import persona_messages
 
 def compare_models(runtime, context, text, model_ids, settings, mode='qwen'):
     registry = read_registry()
-    models = [entry(key, registry, require_files=mode == 'qwen') for key in model_ids]
+    models = [entry(key, registry, require_files=mode == 'qwen', allow_rejected=True) for key in model_ids]
     context = copy.deepcopy(context)
     digest = hashlib.sha256(json.dumps(context, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
     results = []

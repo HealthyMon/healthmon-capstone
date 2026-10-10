@@ -13,13 +13,16 @@
       "note": "Existing configured local model; preservation does not imply production approval."
     },
     "natural-v1": {
-      "status": "Candidate",
+      "status": "Rejected",
       "adapter_path": "runs/expanded-20260929/checkpoint-epoch-1",
       "prompt_profile": "natural-v1",
       "training_status": "not_required",
       "dataset_version": "improvement_v3",
       "human_review": false,
-      "production_approved": false
+      "production_approved": false,
+      "decision": "Prompt-only change did not establish overall improvement; distress response assumes fault and some Korean remains awkward.",
+      "evaluation_path": "experiments/results/natural-v1.json",
+      "compatibility_passed": true
     }
   }
 }

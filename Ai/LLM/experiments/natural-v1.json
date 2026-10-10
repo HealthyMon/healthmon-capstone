@@ -1,0 +1,14 @@
+{
+  "experiment_id": "natural-v1",
+  "kind": "prompt_only",
+  "code_commit": "30e2de2",
+  "base": "Qwen/Qwen3.5-9B",
+  "adapter": "runs/expanded-20260929/checkpoint-epoch-1",
+  "dataset_version": "natural_eval_v1",
+  "training_executed": false,
+  "evaluation_completed": true,
+  "results": "results/natural-v1.json",
+  "decision": "Rejected",
+  "decision_author": "Codex review; no human ratings",
+  "selected_model_changed": false
+}
