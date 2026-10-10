@@ -1,0 +1,7 @@
+{
+  "count": 16,
+  "sha256": "45a1e2c7ddbe2f064e5ad3d47def2d48961d1e5790aeccd9b8410d4775d5c86e",
+  "source": "Agent-authored synthetic regression cases; frozen before this task training",
+  "human_review": false,
+  "external_data_count": 0
+}

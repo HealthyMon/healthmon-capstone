@@ -1,0 +1,17 @@
+{
+  "version": "natural_sft_v1",
+  "source": "16 individually authored synthetic additions; 4 retained pilot personality examples",
+  "counts": {
+    "train": 16,
+    "validation": 4
+  },
+  "human_review": false,
+  "external_data_count": 0,
+  "paid_api_used": false,
+  "training_scope": "small feasibility run, no production selection",
+  "retained_source": "data/pilot_v2/train.jsonl",
+  "sha256": {
+    "train.jsonl": "3d61d54466c0de8c9fb9769872e435bd6dec39e45d4ace55615c07e249b33ee6",
+    "validation.jsonl": "0ca03fd4dde56fd0580ea7e5c8166bea1db99ba570dd1121217b969a6cb757dc"
+  }
+}

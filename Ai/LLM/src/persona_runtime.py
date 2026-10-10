@@ -32,7 +32,7 @@ show_progress의 target_id는 활성 퀘스트 id, offer_quest의 target_id는 �
 형식: {"speech":"대사","emotion":"neutral|happy|encouraging|sad|tired|grumpy|playful","animation":"idle|wave|cheer|encourage|rest|pout|laugh","action":{"type":"none|offer_quest|show_progress","target_id":null},"memory_ids":[],"personality_update":null}"""
 
 
-def persona_messages(context, text, repair=None):
+def persona_messages(context, text, repair=None, profile='baseline'):
     guidance = context['style_profile'].get('guidance', [])
     if isinstance(guidance, str):
         guidance = [guidance]
@@ -53,7 +53,8 @@ def persona_messages(context, text, repair=None):
     if repair:
         result += [{'role': 'assistant', 'content': repair['raw']},
                    {'role': 'user', 'content': '출력 수정: ' + repair['reason'] + ' 원래 입력에 답하는 JSON 객체 하나.'}]
-    return result
+    from .natural_dialogue import apply_policy
+    return apply_policy(result, profile)
 
 
 def project_event_context(state, events, now):
@@ -141,6 +142,11 @@ class PersonaRuntime:
     def _load(self):
         config = json.loads((ROOT / 'config/serving.json').read_text(encoding='utf-8'))
         adapter = config['adapter_path']
+        from .model_registry import read_registry, entry
+        registry = read_registry()
+        selected = entry(registry['selected_id'], registry)
+        adapter = selected['adapter_path']
+        self.dialogue_profile = selected['prompt_profile']
         if not (ROOT / adapter / 'adapter_model.safetensors').is_file():
             raise RuntimeError('Configured baseline adapter is not present locally')
         model_config = json.loads((ROOT / 'config/qwen3.5-9b.json').read_text(encoding='utf-8'))
@@ -152,6 +158,14 @@ class PersonaRuntime:
         os.environ['HF_HUB_OFFLINE'] = '1'
         os.environ['TRANSFORMERS_OFFLINE'] = '1'
         self.backend.load()
+        if getattr(self, '_loaded_adapter_path', adapter) != adapter:
+            import hashlib
+            key = 'selected_' + hashlib.sha256(adapter.encode()).hexdigest()[:12]
+            if key not in self.backend.model.peft_config:
+                self.backend.model.load_adapter(str(ROOT / adapter), adapter_name=key)
+            self.backend.model.set_adapter(key)
+            self.backend.model.eval()
+        self._loaded_adapter_path = adapter
         return adapter
 
     def _one(self, context, text, settings, mode):
@@ -171,7 +185,7 @@ class PersonaRuntime:
             def generate(self, ctx, txt, repair=None):
                 attempt_seed = settings['seed'] + len(trace)
                 set_seed(attempt_seed)
-                batch = runtime.backend.tokenizer.apply_chat_template(persona_messages(ctx, txt, repair), tokenize=True,
+                batch = runtime.backend.tokenizer.apply_chat_template(persona_messages(ctx, txt, repair, getattr(runtime, 'dialogue_profile', 'baseline')), tokenize=True,
                     enable_thinking=False, add_generation_prompt=True, return_dict=True, return_tensors='pt').to('cuda')
                 n = batch['input_ids'].shape[1]
                 if n > 4096:
@@ -209,7 +223,7 @@ class PersonaRuntime:
                 rows.append(pair)
             return {'mode': mode, 'adapter': adapter, 'user_text': text, 'generation': settings,
                     'repetitions': repetitions, 'contexts': contexts,
-                    'prompts': {key: persona_messages(value, text) for key, value in contexts.items()},
+                    'prompts': {key: persona_messages(value, text, profile=getattr(self, 'dialogue_profile', 'baseline')) for key, value in contexts.items()},
                     'results': rows, 'seed_policy': 'seed + repetition index; A/B share same seed; repair seed + attempt index',
                     'reproducibility': 'Same local software/hardware generally repeats; CUDA/SDPA bitwise identity is not guaranteed across environments.',
                     'storage': 'preview_only_no_database_write'}

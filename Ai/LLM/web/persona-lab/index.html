@@ -4,6 +4,8 @@
 <main><div class="scope-note">개발·관리자 전용 · 기본 dry-run · 별도 테스트 저장소 · 실제 사용자 DB에 연결하지 않습니다.</div>
 <nav class="tabs" aria-label="실험 모드"><button class="selected" data-tab="character" aria-selected="true">01 <b>Character Lab</b><span>성장 · 검수 · Export</span></button><button data-tab="preview" aria-selected="false">02 <b>말투 비교</b><span>Persona Preview</span></button><button data-tab="simulation" aria-selected="false">03 <b>시간 시뮬레이션</b><span>Simulation</span></button><button data-tab="lifestyle" aria-selected="false">04 <b>생활 기록 비교</b><span>Lifestyle</span></button></nav>
 <section id="character-panel"></section>
+<section id="models-panel" hidden></section>
+<script type="module" src="/lab/models.js"></script>
 <section id="preview-panel" hidden><div class="section-heading"><div><span class="eyebrow">SAME WORDS. DIFFERENT PERSONALITIES.</span><h2>같은 질문, 두 가지 성격</h2></div><button id="reset" class="subtle">기본값 초기화</button></div>
 <div class="comparison-controls"><div id="controls-a" class="card persona"></div><div id="controls-b" class="card persona"></div></div>
 <div class="card input-card"><label for="user-text">함께 비교할 사용자 입력</label><textarea id="user-text" rows="2" maxlength="1500">오늘 시간이 조금 생겼어. 무엇을 해보면 좋을까?</textarea>

@@ -38,7 +38,7 @@ def style_guidance(context):
     if settings['profanity']=='none':hints.append('이번 사용자는 비속어를 전혀 허용하지 않는다.')
     return '\n'.join(hints)
 
-def messages(context, text, repair=None, runtime_guidance=True):
+def messages(context, text, repair=None, runtime_guidance=True, profile='baseline'):
     system=SYSTEM+('\n'+style_guidance(context) if runtime_guidance else '')
     result=[{'role':'system','content':system},
             {'role':'user','content':json.dumps({'context':context,'user_text':text},ensure_ascii=False,separators=(',',':'))}]
@@ -48,4 +48,5 @@ def messages(context, text, repair=None, runtime_guidance=True):
             instruction=repair['reason']
         else:instruction=repair
         result.append({'role':'user','content':'직전 출력 수정 사항: '+instruction+' 원래 질문에 답하는 JSON 객체 하나를 다시 작성해.'})
-    return result
+    from .natural_dialogue import apply_policy
+    return apply_policy(result, profile)

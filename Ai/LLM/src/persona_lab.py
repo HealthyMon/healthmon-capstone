@@ -231,7 +231,7 @@ def create_app(runtime=None, store=None):
 
     @application.get('/lab/{filename}')
     def static_file(filename: str):
-        if filename not in ('app.js', 'styles.css', 'lifestyle.js', 'character.js', 'character.css'):
+        if filename not in ('app.js', 'styles.css', 'lifestyle.js', 'character.js', 'character.css', 'models.js'):
             raise HTTPException(404)
         return FileResponse(ROOT / 'web/persona-lab' / filename)
 
@@ -346,6 +346,8 @@ def create_app(runtime=None, store=None):
 
     from .character_lab_api import install
     install(application)
+    from .model_comparison_api import install as install_models
+    install_models(application)
     return application
 
 

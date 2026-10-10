@@ -6,3 +6,12 @@ runs/
 __pycache__/
 .pytest_cache/
 *.pyc
+backups/
+*.sqlite3*
+*.safetensors
+*.pt
+*.gguf
+*.zip
+*.log
+.env.*
+!.env.example

@@ -33,7 +33,8 @@ class QwenBackend:
         import torch
         with self.lock:
             self.load()
-            batch=self.tokenizer.apply_chat_template(messages(context,text,repair,runtime_guidance=self.runtime_guidance),tokenize=True,
+            batch=self.tokenizer.apply_chat_template(messages(context,text,repair,runtime_guidance=self.runtime_guidance,
+                 profile=os.getenv('DIALOGUE_PROFILE','baseline')),tokenize=True,
                  enable_thinking=False,add_generation_prompt=True,return_dict=True,return_tensors='pt').to('cuda')
             n=batch['input_ids'].shape[1]
             if n>4096: raise ValueError('Context exceeds inference budget; no silent truncation')

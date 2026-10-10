@@ -4,7 +4,10 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 
 def resolve_adapter(adapter=None,base=False):
     if base:return None
-    return adapter or os.getenv('ADAPTER_PATH') or json.loads((ROOT/'config/serving.json').read_text(encoding='utf-8'))['adapter_path']
+    if adapter or os.getenv('ADAPTER_PATH'):return adapter or os.getenv('ADAPTER_PATH')
+    from src.model_registry import read_registry,entry
+    registry=read_registry()
+    return entry(registry['selected_id'],registry)['adapter_path']
 
 def main():
     from dotenv import load_dotenv
@@ -15,6 +18,12 @@ def main():
     choice.add_argument('--base',action='store_true',help='Explicitly serve the base model without LoRA')
     p.add_argument('--warmup',action='store_true');args=p.parse_args()
     adapter=resolve_adapter(args.adapter,args.base)
+    if not args.adapter and not args.base and not os.getenv('ADAPTER_PATH'):
+        from src.model_registry import read_registry,entry
+        registry=read_registry()
+        os.environ['DIALOGUE_PROFILE']=entry(registry['selected_id'],registry)['prompt_profile']
+    elif args.base:
+        os.environ['DIALOGUE_PROFILE']='baseline'
     if adapter:os.environ['ADAPTER_PATH']=adapter
     else:os.environ.pop('ADAPTER_PATH',None)
     (ROOT/'runs/server-worker.pid').write_text(str(os.getpid()))

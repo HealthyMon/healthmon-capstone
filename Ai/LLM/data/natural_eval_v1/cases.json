@@ -1,0 +1,268 @@
+{
+  "version": "natural_eval_v1",
+  "human_review": false,
+  "independent_benchmark": false,
+  "cases": [
+    {
+      "id": "bus",
+      "text": "버스를 놓쳤는데 다음 차가 20분 뒤래.",
+      "state": {},
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "movie",
+      "text": "영화 예고편만 세 시간째 보고 있어.",
+      "state": {
+        "activity": 85,
+        "initiative": 85
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "silence",
+      "text": "조언은 됐고 잠깐 들어주기만 해.",
+      "state": {
+        "affection": 85,
+        "initiative": 90
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "work",
+      "text": "메일 한 줄 쓰는 데 한 시간 걸렸어.",
+      "state": {
+        "roughness": 65,
+        "bluntness": 75
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "goodnight",
+      "text": "나 이제 잘게.",
+      "state": {},
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "continuity",
+      "text": "그 배우가 마지막에 다시 나온 게 좋았어.",
+      "state": {},
+      "recent": [
+        {
+          "user": "어제 본 영화에서 조연이 제일 좋더라.",
+          "assistant": "짧게 나와도 인상적인 배우가 있지."
+        }
+      ],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "preference",
+      "text": "내가 좋아하는 운동 기억해?",
+      "state": {},
+      "recent": [],
+      "memories": [
+        {
+          "id": "swim",
+          "content": "나는 달리기보다 수영을 좋아해.",
+          "source_id": "synthetic-swim",
+          "slot": "preference"
+        }
+      ],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "correction",
+      "text": "지금 내가 좋아하는 시간대가 언제지?",
+      "state": {},
+      "recent": [
+        {
+          "user": "전에는 저녁이 좋았는데 지금은 오후가 좋아.",
+          "assistant": "알겠어."
+        }
+      ],
+      "memories": [
+        {
+          "id": "time",
+          "content": "나는 저녁보다 오후에 산책하는 것을 좋아해.",
+          "source_id": "synthetic-time",
+          "slot": "preference",
+          "source_revision": 2
+        }
+      ],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "no_memory",
+      "text": "지난주에 내가 본 영화 기억해?",
+      "state": {},
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "formal",
+      "text": "택배 상자가 생각보다 엄청 컸어요.",
+      "state": {
+        "courtesy": 90
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "formal",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "rest",
+      "text": "운동 얘기는 그만하고 오늘은 푹 쉴래.",
+      "state": {
+        "activity": 95,
+        "initiative": 95
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "distress",
+      "text": "친구와 말다툼해서 속상해.",
+      "state": {
+        "roughness": 85,
+        "bluntness": 85,
+        "mood": -25
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "detail",
+      "text": "약속 시간을 자꾸 헷갈리는데 정리하는 방법을 자세히 알려줘.",
+      "state": {},
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "play",
+      "text": "계획은 완벽한데 실행 버튼을 못 찾겠어.",
+      "state": {
+        "activity": 80,
+        "initiative": 70,
+        "affection": 75
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "reserved",
+      "text": "오늘은 그냥 평범한 하루였어.",
+      "state": {
+        "affection": 20,
+        "initiative": 15
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    },
+    {
+      "id": "warm",
+      "text": "오늘은 그냥 평범한 하루였어.",
+      "state": {
+        "affection": 90,
+        "initiative": 75
+      },
+      "recent": [],
+      "memories": [],
+      "speech_level": "casual",
+      "expect": {
+        "unrelated_quest": false,
+        "personality_update": null,
+        "review_all_eight_criteria": true
+      }
+    }
+  ]
+}

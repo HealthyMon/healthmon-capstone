@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "selected_id": "baseline-expanded",
+  "models": {
+    "baseline-expanded": {
+      "status": "Baseline",
+      "adapter_path": "runs/expanded-20260929/checkpoint-epoch-1",
+      "prompt_profile": "baseline",
+      "training_status": "historical_completed",
+      "dataset_version": "improvement_v3",
+      "human_review": false,
+      "production_approved": false,
+      "note": "Existing configured local model; preservation does not imply production approval."
+    },
+    "natural-v1": {
+      "status": "Candidate",
+      "adapter_path": "runs/expanded-20260929/checkpoint-epoch-1",
+      "prompt_profile": "natural-v1",
+      "training_status": "not_required",
+      "dataset_version": "improvement_v3",
+      "human_review": false,
+      "production_approved": false
+    }
+  }
+}
