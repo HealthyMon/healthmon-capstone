@@ -1,0 +1,49 @@
+{
+  "version": "persona-quests.v1",
+  "selection": {
+    "history_days": 7,
+    "rejection_cooldown_hours": 72,
+    "same_quest_cooldown_hours": 20,
+    "proposal_cooldown_hours": 12,
+    "max_same_quest_per_week": 3,
+    "trusted_sources": ["sensor", "backend", "simulation"],
+    "minimum_confidence": 0.8,
+    "low_activity": 40,
+    "high_activity": 60,
+    "low_confidence": 40,
+    "high_confidence": 65,
+    "high_curiosity": 60,
+    "low_energy": 30,
+    "high_stress": 70,
+    "low_motivation": 30,
+    "level2_successes": 2,
+    "level3_successes": 4,
+    "failure_reduction_count": 2,
+    "current_turn_exercise_refusal": {
+      "negated_patterns": [
+        "운동[^.!?\\n]{0,12}싫(?:은|어하는|다는|지)[^.!?\\n]{0,8}(?:아니|않)",
+        "운동[^.!?\\n]{0,8}안\\s*(?:하|할)[^.!?\\n]{0,8}(?:아니|않)"
+      ],
+      "refusal_patterns": [
+        "운동[^.!?\\n]{0,10}싫(?:어|다|은|고)",
+        "운동[^.!?\\n]{0,8}안\\s*(?:해|할|하겠)",
+        "운동[^.!?\\n]{0,8}(?:하지|권하지|추천하지|시키지)\\s*(?:마|말)",
+        "운동\\s*(?:은|을)?\\s*말고",
+        "(?:오늘(?:은)?\\s*)?(?:그냥\\s*)?쉬고\\s*싶(?:어|다|어요)",
+        "오늘(?:은)?\\s*(?:그냥\\s*)?쉴(?:래|게|거야)"
+      ]
+    },
+    "weights": {"base": 10, "difficulty_match": 5, "easier_level": -3, "novel_activity": 4, "repeated_activity": -1, "weekly_repeat": -2, "exercise_preference": 3, "food_context": 4, "food_variety": 3, "together_affection": 2, "requested_category": 4, "preferred_activity": 2}
+  },
+  "quests": [
+    {"quest_id":"walk_100", "id":"walk_100", "title":"가볍게 100걸음", "category":"exercise", "activity":"walk", "difficulty":1, "goal":{"metric":"steps","target":100,"unit":"steps"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"walk","metric":"steps"}, "reward_id":"badge_small_start", "together":true},
+    {"quest_id":"walk_500", "id":"walk_500", "title":"함께 500걸음", "category":"exercise", "activity":"walk", "difficulty":2, "goal":{"metric":"steps","target":500,"unit":"steps"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"walk","metric":"steps"}, "reward_id":"badge_walk_routine", "together":true},
+    {"quest_id":"walk_1000", "id":"walk_1000", "title":"1000걸음 산책", "category":"exercise", "activity":"walk", "difficulty":3, "goal":{"metric":"steps","target":1000,"unit":"steps"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"walk","metric":"steps"}, "reward_id":"badge_walk_challenge", "together":true},
+    {"quest_id":"stretch_2", "id":"stretch_2", "title":"2분 스트레칭", "category":"exercise", "activity":"stretch", "difficulty":1, "goal":{"metric":"minutes","target":2,"unit":"minutes"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"stretch","metric":"minutes"}, "reward_id":"badge_small_start", "together":false},
+    {"quest_id":"stretch_5", "id":"stretch_5", "title":"5분 스트레칭", "category":"exercise", "activity":"stretch", "difficulty":2, "goal":{"metric":"minutes","target":5,"unit":"minutes"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"stretch","metric":"minutes"}, "reward_id":"badge_stretch_routine", "together":false},
+    {"quest_id":"cycle_5", "id":"cycle_5", "title":"편한 속도로 5분 자전거", "category":"exercise", "activity":"cycle", "difficulty":2, "goal":{"metric":"minutes","target":5,"unit":"minutes"}, "verification_method":{"event_type":"exercise_recorded","sources":["sensor","backend"],"activity":"cycle","metric":"minutes"}, "reward_id":"badge_new_activity", "together":false},
+    {"quest_id":"food_record_1", "id":"food_record_1", "title":"오늘 먹은 음식 1개 기록", "category":"food", "activity":"food_record", "difficulty":1, "goal":{"metric":"records","target":1,"unit":"records"}, "verification_method":{"event_type":"food_recorded","sources":["backend"],"activity":null,"metric":"records"}, "reward_id":"badge_food_record", "together":false},
+    {"quest_id":"new_food_1", "id":"new_food_1", "title":"새로운 음식 1개 기록", "category":"food", "activity":"new_food", "difficulty":1, "goal":{"metric":"new_foods","target":1,"unit":"foods"}, "verification_method":{"event_type":"food_recorded","sources":["backend"],"activity":null,"metric":"new_foods"}, "reward_id":"badge_food_discovery", "together":false},
+    {"quest_id":"food_groups_2", "id":"food_groups_2", "title":"서로 다른 음식군 2개 기록", "category":"food", "activity":"food_groups", "difficulty":2, "goal":{"metric":"distinct_food_groups","target":2,"unit":"groups"}, "verification_method":{"event_type":"food_recorded","sources":["backend"],"activity":null,"metric":"distinct_food_groups"}, "reward_id":"badge_food_variety", "together":false}
+  ]
+}

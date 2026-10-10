@@ -1,0 +1,33 @@
+{
+  "version": "character-expression.v1",
+  "scope": "Character Lab synthetic sessions only",
+  "provisional": true,
+  "sources": {
+    "initial_values": "config/rules.json initial: roughness=10, bluntness=20, courtesy=60",
+    "voice": "config/persona_voices.json sassy",
+    "adaptation": "User request: repeated own language gradually affects expression; thresholds below are provisional"
+  },
+  "minimum_analysis_confidence": 0.6,
+  "minimum_distinct_texts": 3,
+  "minimum_distinct_dates": 2,
+  "minimum_signal_ratio": 0.5,
+  "weekly_max_delta": 5,
+  "rough_delta": {"roughness": 5, "bluntness": 4, "courtesy": -3},
+  "polite_delta": {"roughness": -4, "bluntness": -3, "courtesy": 5},
+  "rough_terms": ["씨발", "시발", "씨바", "시바", "씨벌", "ㅅㅂ", "ㅆㅂ", "존나", "졸라", "젠장", "썅", "개빡", "빡치", "지랄", "좆", "엿같", "개새끼", "병신", "fuck", "shit"],
+  "rough_term_exclusions": ["시발점", "시발역", "시바견", "shitting", "shitake"],
+  "polite_terms": ["고마워", "감사", "미안", "죄송", "부탁", "존중", "수고", "괜찮아요", "괜찮습니다"],
+  "instruction_patterns": ["ignore\\s+(?:all\\s+)?(?:previous|prior)", "system\\s*prompt", "(?:roughness|bluntness|courtesy)\\s*(?:=|:|를|을|수치)", "성격(?:을|수치를|\\s*수치)\\s*(?:바꿔|올려|변경|수정)", "(?:욕설|욕하는|싸가지).*(?:캐릭터|말투)(?:가|로|야|처럼)", "(?:분석|분류|출력)\\s*(?:결과|값|형식|json)", "욕설\\s*(?:예시|단어|뜻)", "(?:라고|이라는)\\s*(?:말|욕|단어)", "\\b(?:label|classification)\\s*(?:=|:)"],
+  "profile": {
+    "sassy_roughness": 60,
+    "casual_roughness": 35,
+    "low_axis": 40,
+    "high_axis": 70,
+    "direct_bluntness": 60,
+    "polite_courtesy": 70,
+    "negative_mood_initiative_multiplier": 0.5,
+    "stop_style_patterns": ["(?:장난|농담|놀리|비꼬|빈정|말투).*(?:그만|싫|(?:하지|지)\\s*마|멈춰)", "(?:그만|싫|(?:하지|지)\\s*마|멈춰).*(?:장난|농담|놀리|비꼬|빈정|말투)", "정중하게\\s*말", "진지하게\\s*(?:말|답)", "don't\\s+(?:mock|tease)", "stop\\s+(?:mocking|teasing)"],
+    "distress_patterns": ["(?:죽고|사라지고)\\s*싶", "자살", "자해", "힘들", "못\\s*버티", "우울", "불안", "다쳤", "아프", "아파", "고통", "괴롭", "무서워", "폭행", "학대", "상처", "슬퍼", "상실", "괴로워", "울고", "울었", "돌아가셨", "죽었", "숨이\\s*차"],
+    "rest_patterns": ["쉬고\\s*싶", "쉬자", "쉬고\\s*있", "누워\\s*있고\\s*싶", "안\\s*할래", "운동.*(?:싫|안\\s*할|못\\s*하|하기\\s*싫|하지\\s*마)", "피곤", "지쳤", "권유.*(?:그만|싫|하지\\s*마)", "제안.*(?:그만|싫|하지\\s*마)"]
+  }
+}
