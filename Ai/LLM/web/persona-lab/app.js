@@ -13,7 +13,7 @@ async function api(path, body) {
  if(!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
  return data;
 }
-function tab(name){document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.tab===name);b.setAttribute('aria-selected',String(b.dataset.tab===name));});for(const key of ['character','preview','simulation','lifestyle'])if($(key+'-panel'))$(key+'-panel').hidden=name!==key;}
+function tab(name){document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.tab===name);b.setAttribute('aria-selected',String(b.dataset.tab===name));});for(const section of document.querySelectorAll('main>section'))section.hidden=section.id!==name+'-panel';}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
 function controls(side){
  const target=$(`controls-${side}`);

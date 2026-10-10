@@ -61,3 +61,22 @@ def test_comparison_rejects_unknown_or_duplicate_models(client):
         response=client.post('/api/model-comparison',json={'text':'안녕','mode':'dummy','model_ids':ids},
             headers={'Origin':'http://127.0.0.1:8001','X-Persona-Lab':'1'})
         assert response.status_code==422
+
+
+def test_adapter_and_profile_restored_when_generation_fails(monkeypatch):
+    import threading
+    from types import SimpleNamespace
+    from src.model_comparison import compare_models
+    class Adapter:
+        active_adapter='original'
+        peft_config={}
+        def load_adapter(self,path,adapter_name):self.peft_config[adapter_name]={}
+        def set_adapter(self,key):self.active_adapter=key
+        def eval(self):pass
+    model=Adapter()
+    runtime=SimpleNamespace(lock=threading.Lock(),backend=SimpleNamespace(model=model),dialogue_profile='baseline',_load=lambda:None)
+    def fail(*args):raise RuntimeError('test generation failure')
+    runtime._one=fail
+    with pytest.raises(RuntimeError,match='test generation failure'):
+        compare_models(runtime,context(),'hello',['natural-v1'],{},'qwen')
+    assert model.active_adapter=='original' and runtime.dialogue_profile=='baseline'
