@@ -5,5 +5,6 @@
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 
-# Stable prompt/data hashes in the LLM workspace.
-Ai/LLM/** text eol=lf
+# Preserve dataset and raw evaluation bytes used by SHA256 manifests.
+Ai/LLM/data/** -text
+Ai/LLM/experiments/results/** -text
