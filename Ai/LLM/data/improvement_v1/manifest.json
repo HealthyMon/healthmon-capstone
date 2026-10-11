@@ -1,0 +1,51 @@
+{
+  "counts": {
+    "train": 96,
+    "validation": 16
+  },
+  "max_tokens": 1003,
+  "truncated": 0,
+  "group_leakage": false,
+  "reviewer": "Codex agent",
+  "human_review": false,
+  "human_reviewed_count": 0,
+  "new_authored": 70,
+  "reused_reviewed": 42,
+  "semantic_reviewed": 112,
+  "method": "Each explicit authored answer reviewed against fact/state/action; automated format checks separate. No external or generated bulk data.",
+  "target_complete": false,
+  "targets": {
+    "train": 800,
+    "validation": 100,
+    "final_test": 200
+  },
+  "distribution": {
+    "train": {
+      "count": 96,
+      "formal": 6,
+      "memory": 7,
+      "styles": {
+        "courtesy": 5,
+        "playfulness": 5,
+        "bluntness": 5,
+        "roughness": 10
+      }
+    },
+    "validation": {
+      "count": 16,
+      "formal": 1,
+      "memory": 3,
+      "styles": {
+        "courtesy": 1,
+        "playfulness": 1,
+        "bluntness": 1,
+        "roughness": 2
+      }
+    }
+  },
+  "sha256": {
+    "train.jsonl": "efb14bb22b20309dccbbe4523ed77fdf710a91a8e3870584cef94ddf437610c1",
+    "validation.jsonl": "9646229ade68f7b5e390ff8c825a70bd29d2d80c5ae7ee0782cbd0c31c7c00f0"
+  },
+  "prompt_sha256": "cc4ec91326f7ecf4cd70e2a0f360d40e1ea4c6ddfa7a40142c929601613e1c25"
+}

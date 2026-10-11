@@ -1,0 +1,34 @@
+{
+  "version": "character-quests.v1",
+  "scope": "Character Lab synthetic namespace only",
+  "daily": {
+    "catalog_id": "daily_walk_6000",
+    "title": "오늘 6000보 걷기",
+    "target": "walk",
+    "target_value": 6000,
+    "unit": "step",
+    "reward_exp": 10,
+    "goal_source": "User request: daily walking quest with a 6000-step goal",
+    "evidence_window": "All verified incremental walking records on the quest date, including records before acceptance",
+    "character_proposal": false
+  },
+  "mini_reward_exp": {
+    "walk_100": 5,
+    "walk_500": 5,
+    "walk_1000": 8,
+    "stretch_2": 5,
+    "stretch_5": 5,
+    "cycle_5": 5,
+    "food_record_1": 5,
+    "new_food_1": 5,
+    "food_groups_2": 5
+  },
+  "provisional": {
+    "daily_reward_exp": "10 EXP is a development balance placeholder, not a finalized game reward",
+    "mini_reward_exp": "walk_500=5 and walk_1000=8 preserve existing rule rewards; other entries use the existing Character Lab default of 5 EXP",
+    "expiry": "When the virtual date becomes later than due_date, unaccepted created quests become expired; accepted/in_progress quests become failed. No reward is paid. The caller may apply the existing quest-failure Mood rule once for accepted quests.",
+    "daily_generation": "Create one daily quest per virtual date when the backend synchronizes that date; no wall-clock scheduler is installed",
+    "mini_evidence": "Only evidence recorded after acceptance and linked to the instance counts for exercise mini quests; food evidence uses the existing catalog novelty validator",
+    "sensor_contract": "Exercise actual values are verified increments, not repeatedly submitted cumulative pedometer snapshots"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "counts": {
+    "train": 216,
+    "validation": 43,
+    "final_test": 58
+  },
+  "max_tokens": 1003,
+  "truncated": 0,
+  "group_leakage": false,
+  "exact_duplicates": 0,
+  "scenario_groups": {
+    "train": 177,
+    "validation": 30
+  },
+  "reviewer": "Codex agent",
+  "semantic_reviewed": 260,
+  "human_review": false,
+  "human_reviewed_count": 0,
+  "external_data_count": 0,
+  "method": "Explicit individually authored scenario catalog; no stochastic generation, automatic acceptance or quota padding.",
+  "targets": {
+    "train": 800,
+    "validation": 100,
+    "final_test": 200
+  },
+  "target_complete": false,
+  "distribution": {
+    "train": {
+      "count": 216,
+      "memory": 23,
+      "styles": {
+        "courtesy": 12,
+        "playfulness": 11,
+        "bluntness": 13,
+        "roughness": 13
+      }
+    },
+    "validation": {
+      "count": 43,
+      "memory": 7,
+      "styles": {
+        "courtesy": 2,
+        "playfulness": 2,
+        "bluntness": 2,
+        "roughness": 3
+      }
+    }
+  },
+  "sha256": {
+    "train.jsonl": "35aca67045191acdd47a856c11afb6527990cda758d715899c65431284ed5cdd",
+    "validation.jsonl": "f60f5a6171b45fd0b89800d737c661be975770fcb7342fddb3234f6dfbd9241a",
+    "final-frozen.json": "08beb9566a41bd01678345f207db4a0c52b23c4d1f68b4822828b78f20e71118"
+  },
+  "prompt_sha256": "cc4ec91326f7ecf4cd70e2a0f360d40e1ea4c6ddfa7a40142c929601613e1c25",
+  "actual_training": "runs/expanded-20260929 used identical train SHA256 from v2. Original 44-example online val retained in logs; final selection recomputes loss on clean 43-example v3 split."
+}

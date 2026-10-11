@@ -1,0 +1,154 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "default": "none",
+          "enum": [
+            "none",
+            "offer_quest",
+            "show_progress"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        }
+      },
+      "title": "Action",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "message",
+            "activity"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "PersonalityUpdate": {
+      "additionalProperties": false,
+      "properties": {
+        "delta": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Delta",
+          "type": "object"
+        },
+        "evidence_refs": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "minItems": 3,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "delta",
+        "evidence_refs"
+      ],
+      "title": "PersonalityUpdate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "speech": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Speech",
+      "type": "string"
+    },
+    "emotion": {
+      "enum": [
+        "neutral",
+        "happy",
+        "encouraging",
+        "sad",
+        "tired",
+        "grumpy",
+        "playful"
+      ],
+      "title": "Emotion",
+      "type": "string"
+    },
+    "animation": {
+      "enum": [
+        "idle",
+        "wave",
+        "cheer",
+        "encourage",
+        "rest",
+        "pout",
+        "laugh"
+      ],
+      "title": "Animation",
+      "type": "string"
+    },
+    "action": {
+      "$ref": "#/$defs/Action"
+    },
+    "memory_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "title": "Memory Ids",
+      "type": "array"
+    },
+    "personality_update": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PersonalityUpdate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "speech",
+    "emotion",
+    "animation",
+    "action",
+    "memory_ids"
+  ],
+  "title": "ModelOutput",
+  "type": "object"
+}

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: pgvector/pgvector:0.8.2-pg17
+    environment:
+      POSTGRES_USER: healthmon
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a local development password}
+      POSTGRES_DB: healthmon
+    ports: ['127.0.0.1:55432:5432']
+    volumes: ['healthmon-db:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U healthmon']
+      interval: 5s
+      retries: 10
+volumes:
+  healthmon-db:

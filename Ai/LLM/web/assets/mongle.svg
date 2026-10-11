@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 300" fill="none" role="img" aria-label="민트색 스카프를 두른 펭귄 몽글이">
+ <style>.eye-happy,.eye-rest,.brows{display:none}</style>
+ <defs>
+  <linearGradient id="coat" x1="100" y1="45" x2="196" y2="244" gradientUnits="userSpaceOnUse"><stop stop-color="#536C7C"/><stop offset="1" stop-color="#2F475B"/></linearGradient>
+  <linearGradient id="belly" x1="140" y1="114" x2="140" y2="258" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF5"/><stop offset="1" stop-color="#EAF0ED"/></linearGradient>
+  <linearGradient id="scarf" x1="86" y1="163" x2="193" y2="193" gradientUnits="userSpaceOnUse"><stop stop-color="#91D5BE"/><stop offset="1" stop-color="#66B59E"/></linearGradient>
+ </defs>
+ <ellipse class="ground-shadow" cx="142" cy="273" rx="70" ry="12" fill="#457777" opacity=".14"/>
+ <g class="penguin-body">
+  <path d="M108 249C94 249 79 258 78 264C77 271 110 273 127 265L125 251Z" fill="#E8AD60"/>
+  <path d="M158 249C172 249 194 256 196 263C197 272 164 274 149 265L147 251Z" fill="#E8AD60"/>
+  <path class="flipper-left" d="M79 154C64 158 49 188 47 207C46 219 54 224 64 215L90 184Z" fill="#3B5468"/>
+  <path class="flipper-right" d="M197 151C213 155 230 179 235 196C239 209 231 215 221 207L192 182Z" fill="#3B5468"/>
+  <path d="M80 126C74 91 88 57 119 49C130 39 141 41 145 44C160 44 174 51 182 63C204 78 207 108 201 135C214 166 223 210 199 243C186 261 161 267 137 266C108 266 83 255 74 232C63 204 69 160 80 126Z" fill="url(#coat)"/>
+  <path d="M122 72C129 61 137 57 146 57" stroke="#718998" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+  <path d="M142 113C135 86 102 79 91 103C78 130 91 146 87 166C77 185 72 218 91 239C111 261 170 264 191 240C208 220 201 191 194 170C188 150 201 129 191 108C178 81 151 88 142 113Z" fill="url(#belly)"/>
+  <g class="eye-open" fill="#30465A"><ellipse cx="115" cy="123" rx="5.5" ry="7.5"/><ellipse cx="168" cy="123" rx="5.5" ry="7.5"/></g>
+  <g class="eye-shine" fill="white"><circle cx="116.5" cy="120.5" r="1.8"/><circle cx="169.5" cy="120.5" r="1.8"/></g>
+  <g class="eye-happy" stroke="#30465A" stroke-width="4.5" stroke-linecap="round"><path d="M109 125Q115 116 122 125"/><path d="M161 125Q168 116 175 125"/></g>
+  <g class="eye-rest" stroke="#30465A" stroke-width="4" stroke-linecap="round"><path d="M109 125Q115 130 122 125"/><path d="M162 125Q168 130 175 125"/></g>
+  <g class="brows" stroke="#30465A" stroke-width="3.5" stroke-linecap="round"><path d="M108 111L122 116"/><path d="M161 116L175 111"/></g>
+  <ellipse cx="101" cy="142" rx="11" ry="6" fill="#EBA8A2" opacity=".65"/><ellipse cx="183" cy="142" rx="11" ry="6" fill="#EBA8A2" opacity=".65"/>
+  <path d="M131 136Q142 129 153 136Q151 148 142 149Q133 146 131 136Z" fill="#EDB263"/>
+  <path d="M133 138Q142 141 151 138" stroke="#CC9349" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M84 160Q139 180 198 158L201 178Q146 201 83 181Z" fill="url(#scarf)"/>
+  <path d="M163 183L178 181L187 218Q179 224 166 219Z" fill="#75C1AA"/>
+  <path d="M173 215L177 215M181 214L184 212" stroke="#4E9F89" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="167" cy="179" rx="10" ry="9" fill="#A9DDCA"/>
+  <path d="M154 229Q161 222 166 229Q166 233 160 237Q155 234 154 229Z" fill="#C5DFD4" opacity=".7"/>
+ </g>
+</svg>
