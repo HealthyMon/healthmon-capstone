@@ -1,0 +1,5 @@
+MSYS_NO_PATHCONV=1 docker run -d \
+  -p 8000:8000 \
+  -v "$(pwd -W):/app" \
+  --name food-ai \
+  food-ai

@@ -5,11 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/HealthMon/Scenes/MainARScene.unity
+    guid: e4a8dca573165a746af26aa76b1ea7dc
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: ffc070b1fe1040e46b8319c485f950d2, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 10ae254516eb24c408400c09ac036492, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 11b8a97d115255741bd6c0f352520639, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 627c0d58724267e41bbb2ef309454a6c, type: 2}
+    xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 809ebae73d0e2a14384887573073f73c, type: 2}
