@@ -8,7 +8,7 @@ public class HealthMonApiManager : MonoBehaviour
     [Header("Server")]
     [SerializeField]
     private string baseUrl =
-        "http://YOUR_SERVER_ADDRESS";
+        "http://localhost:8000";
 
     public string BaseUrl => baseUrl;
 
