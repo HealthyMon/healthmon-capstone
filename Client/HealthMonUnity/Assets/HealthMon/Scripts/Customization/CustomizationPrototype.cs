@@ -1,7 +1,13 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// HealthMon collection/customization prototype.
+/// Keeps the original Unity Inspector fields and button functions intact.
+/// Adds local save/load for unlock and equipped-item state.
+/// </summary>
 public class CustomizationPrototype : MonoBehaviour
 {
     [Header("Collection")]
@@ -24,6 +30,8 @@ public class CustomizationPrototype : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private Button equipButton;
 
+    private const string SaveKey = "HealthMon_Customization_Save_v1";
+
     private bool badgeUnlocked = true;
     private bool ribbonUnlocked = false;
     private bool glassesUnlocked = false;
@@ -31,6 +39,21 @@ public class CustomizationPrototype : MonoBehaviour
 
     private string selectedItem = "기본 배지";
     private string equippedItem = "기본 배지";
+
+    [Serializable]
+    private class CustomizationSaveData
+    {
+        public bool ribbonUnlocked;
+        public bool glassesUnlocked;
+        public bool capUnlocked;
+        public string equippedItem;
+    }
+
+    private void Awake()
+    {
+        // Read persisted state before any quest/admin action can save a new state.
+        LoadCustomizationData();
+    }
 
     private void Start()
     {
@@ -40,20 +63,37 @@ public class CustomizationPrototype : MonoBehaviour
 
     public void UnlockRibbon()
     {
+        if (ribbonUnlocked) return;
         ribbonUnlocked = true;
+        SaveCustomizationData();
         RefreshUI();
     }
 
     public void UnlockGlasses()
     {
+        if (glassesUnlocked) return;
         glassesUnlocked = true;
+        SaveCustomizationData();
         RefreshUI();
     }
 
     public void UnlockCap()
     {
+        if (capUnlocked) return;
         capUnlocked = true;
+        SaveCustomizationData();
         RefreshUI();
+    }
+
+    // Kept for the AdminUnlockAllItems() call from HealthMonAdminPanel.
+    public void UnlockAllItems()
+    {
+        ribbonUnlocked = true;
+        glassesUnlocked = true;
+        capUnlocked = true;
+        SaveCustomizationData();
+        RefreshUI();
+        Debug.Log("[Customization] 모든 아이템 해금 완료!");
     }
 
     public void SelectBadge()
@@ -92,112 +132,107 @@ public class CustomizationPrototype : MonoBehaviour
         );
     }
 
-    private void SelectItem(
-        string itemName,
-        string description,
-        bool unlocked)
+    private void SelectItem(string itemName, string description, bool unlocked)
     {
         selectedItem = itemName;
 
-        selectedItemNameText.text = itemName;
+        if (selectedItemNameText != null) selectedItemNameText.text = itemName;
 
         if (unlocked)
         {
-            selectedItemDescriptionText.text = description;
-            customizeButton.interactable = true;
+            if (selectedItemDescriptionText != null) selectedItemDescriptionText.text = description;
+            if (customizeButton != null) customizeButton.interactable = true;
         }
         else
         {
-            selectedItemDescriptionText.text =
-                "아직 획득하지 않은 아이템입니다.";
-
-            customizeButton.interactable = false;
+            if (selectedItemDescriptionText != null)
+                selectedItemDescriptionText.text = "아직 획득하지 않은 아이템입니다.";
+            if (customizeButton != null) customizeButton.interactable = false;
         }
 
-        customizeItemNameText.text = itemName;
-        customizeDescriptionText.text =
-            unlocked ? description : "잠긴 아이템입니다.";
-
-        equipButton.interactable = unlocked;
+        if (customizeItemNameText != null) customizeItemNameText.text = itemName;
+        if (customizeDescriptionText != null)
+            customizeDescriptionText.text = unlocked ? description : "잠긴 아이템입니다.";
+        if (equipButton != null) equipButton.interactable = unlocked;
     }
 
     public void EquipSelectedItem()
     {
-        if (!IsSelectedItemUnlocked())
-            return;
+        if (!IsItemUnlocked(selectedItem)) return;
 
         equippedItem = selectedItem;
+        if (statusText != null) statusText.text = $"{equippedItem}을(를) 장착했습니다.";
 
-        equippedItemText.text =
-            $"현재 장착 : {equippedItem}";
-
-        statusText.text =
-            $"{equippedItem}을(를) 장착했습니다.";
-
+        SaveCustomizationData();
         RefreshUI();
     }
 
-    private bool IsSelectedItemUnlocked()
+    private bool IsItemUnlocked(string itemName)
     {
-        switch (selectedItem)
+        switch (itemName)
         {
-            case "기본 배지":
-                return badgeUnlocked;
+            case "기본 배지": return true;
+            case "리본": return ribbonUnlocked;
+            case "안경": return glassesUnlocked;
+            case "운동 모자": return capUnlocked;
+            default: return false;
+        }
+    }
 
-            case "리본":
-                return ribbonUnlocked;
+    private void SaveCustomizationData()
+    {
+        var data = new CustomizationSaveData
+        {
+            ribbonUnlocked = ribbonUnlocked,
+            glassesUnlocked = glassesUnlocked,
+            capUnlocked = capUnlocked,
+            equippedItem = equippedItem
+        };
 
-            case "안경":
-                return glassesUnlocked;
+        PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(data));
+        PlayerPrefs.Save();
+        Debug.Log("[Customization] 아이템 데이터 저장 완료");
+    }
 
-            case "운동 모자":
-                return capUnlocked;
+    private void LoadCustomizationData()
+    {
+        if (!PlayerPrefs.HasKey(SaveKey))
+        {
+            Debug.Log("[Customization] 기존 저장 데이터 없음: 초기 아이템 사용");
+            return;
         }
 
-        return false;
+        try
+        {
+            var data = JsonUtility.FromJson<CustomizationSaveData>(PlayerPrefs.GetString(SaveKey));
+            if (data == null) return;
+
+            ribbonUnlocked = data.ribbonUnlocked;
+            glassesUnlocked = data.glassesUnlocked;
+            capUnlocked = data.capUnlocked;
+            equippedItem = IsItemUnlocked(data.equippedItem) ? data.equippedItem : "기본 배지";
+
+            Debug.Log("[Customization] 아이템 데이터 불러오기 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("[Customization] 아이템 저장 데이터 읽기 실패: " + e.Message);
+        }
     }
 
     private void RefreshUI()
     {
-        badgeLockText.text =
-            badgeUnlocked ? "해금됨" : "잠김";
+        if (badgeLockText != null) badgeLockText.text = badgeUnlocked ? "해금됨" : "잠김";
+        if (ribbonLockText != null) ribbonLockText.text = ribbonUnlocked ? "해금됨" : "잠김";
+        if (glassesLockText != null) glassesLockText.text = glassesUnlocked ? "해금됨" : "잠김";
+        if (capLockText != null) capLockText.text = capUnlocked ? "해금됨" : "잠김";
 
-        ribbonLockText.text =
-            ribbonUnlocked ? "해금됨" : "잠김";
-
-        glassesLockText.text =
-            glassesUnlocked ? "해금됨" : "잠김";
-
-        capLockText.text =
-            capUnlocked ? "해금됨" : "잠김";
-
-        int unlockedCount = 0;
-
-        if (badgeUnlocked) unlockedCount++;
+        int unlockedCount = 1;
         if (ribbonUnlocked) unlockedCount++;
         if (glassesUnlocked) unlockedCount++;
         if (capUnlocked) unlockedCount++;
 
-        collectionCountText.text =
-            $"{unlockedCount} / 4 해금";
-
-        equippedItemText.text =
-            $"현재 장착 : {equippedItem}";
+        if (collectionCountText != null) collectionCountText.text = $"{unlockedCount} / 4 해금";
+        if (equippedItemText != null) equippedItemText.text = $"현재 장착 : {equippedItem}";
     }
-
-    
-    // ==========================================
-    // 관리자 전용 - 모든 꾸미기 아이템 해금
-    // ==========================================
-    public void UnlockAllItems()
-    {
-        UnlockRibbon();
-        UnlockGlasses();
-        UnlockCap();
-
-        RefreshUI();
-
-        Debug.Log("[Customization] 모든 아이템 해금 완료!");
-    }
-
 }
