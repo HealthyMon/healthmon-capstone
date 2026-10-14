@@ -184,4 +184,20 @@ public class CustomizationPrototype : MonoBehaviour
         equippedItemText.text =
             $"현재 장착 : {equippedItem}";
     }
+
+    
+    // ==========================================
+    // 관리자 전용 - 모든 꾸미기 아이템 해금
+    // ==========================================
+    public void UnlockAllItems()
+    {
+        UnlockRibbon();
+        UnlockGlasses();
+        UnlockCap();
+
+        RefreshUI();
+
+        Debug.Log("[Customization] 모든 아이템 해금 완료!");
+    }
+
 }

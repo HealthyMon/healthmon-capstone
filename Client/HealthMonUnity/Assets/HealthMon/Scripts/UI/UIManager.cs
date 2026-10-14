@@ -12,6 +12,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject customizationPanel;
     [SerializeField] private GameObject collectionPanel;
 
+    // 관리자 패널 추가
+    [Header("Admin Panel")]
+    [SerializeField] private GameObject adminPanel;
+
     private void Start()
     {
         ShowHome();
@@ -27,6 +31,9 @@ public class UIManager : MonoBehaviour
         rewardPanel.SetActive(false);
         customizationPanel.SetActive(false);
         collectionPanel.SetActive(false);
+
+        if (adminPanel != null)
+            adminPanel.SetActive(false);
     }
 
     public void ShowHome()
@@ -75,5 +82,28 @@ public class UIManager : MonoBehaviour
     {
         HideAllPanels();
         collectionPanel.SetActive(true);
+    }
+
+    // 관리자 모드 열기
+    public void ShowAdmin()
+    {
+        if (adminPanel == null)
+        {
+            Debug.LogError("[UIManager] AdminPanel 연결 안 됨!");
+            return;
+        }
+
+        HideAllPanels();
+        adminPanel.SetActive(true);
+
+        Debug.Log("[UIManager] 관리자 모드 열기");
+    }
+
+    // 관리자 모드 닫기
+    public void CloseAdmin()
+    {
+        ShowHome();
+
+        Debug.Log("[UIManager] 관리자 모드 닫기");
     }
 }

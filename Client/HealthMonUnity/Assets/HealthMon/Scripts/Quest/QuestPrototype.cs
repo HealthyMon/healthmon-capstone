@@ -272,4 +272,35 @@ public class QuestPrototype : MonoBehaviour
     {
         rewardPanel.SetActive(false);
     }
+
+    
+    // ==========================================
+    // 관리자 전용 - 퀘스트 초기화
+    // ==========================================
+    public void ResetQuestsForTesting()
+    {
+        // 퀘스트 진행도 초기화
+        walkProgress = 1200;
+        foodProgress = 0;
+        dialogueProgress = 0;
+        arProgress = 0;
+
+        // 보상 수령 여부 초기화
+        walkClaimed = false;
+        foodClaimed = false;
+        dialogueClaimed = false;
+        arClaimed = false;
+
+        // 보상 팝업 닫기
+        if (rewardPanel != null)
+        {
+            rewardPanel.SetActive(false);
+        }
+
+        // UI 즉시 갱신
+        RefreshUI();
+
+        Debug.Log("[Quest] 관리자 퀘스트 초기화 완료");
+    }
+
 }
