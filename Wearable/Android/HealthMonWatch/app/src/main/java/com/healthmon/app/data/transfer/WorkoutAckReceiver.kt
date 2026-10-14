@@ -82,27 +82,17 @@ class WorkoutAckReceiver :
                 )
                     ?: return@forEach
 
-
-            Log.d(
-                TAG,
-                "ACK 수신: $workoutId"
-            )
-
+            //Log.d(TAG, "ACK 수신: $workoutId")
 
             serviceScope.launch {
 
                 try {
-
                     WorkoutStorage.markAsSent(
                         applicationContext,
                         workoutId
                     )
 
-
-                    Log.d(
-                        TAG,
-                        "Workout SENT 처리 완료: $workoutId"
-                    )
+                    //Log.d(TAG, "Workout SENT 처리 완료: $workoutId")
 
                     val deletedCount =
                         Wearable
@@ -115,19 +105,9 @@ class WorkoutAckReceiver :
                             .await()
 
 
-                    Log.d(
-                        TAG,
-                        "ACK DataItem 삭제 완료: " +
-                                "id=$workoutId, " +
-                                "count=$deletedCount"
-                    )
+                    //Log.d(TAG, "ACK DataItem 삭제 완료: " + "id=$workoutId, " + "count=$deletedCount")
                 } catch (e: Exception) {
-
-                    Log.e(
-                        TAG,
-                        "Workout SENT 처리 실패: $workoutId",
-                        e
-                    )
+                    Log.e(TAG, "Workout SENT 처리 실패: $workoutId", e)
                 }
             }
         }

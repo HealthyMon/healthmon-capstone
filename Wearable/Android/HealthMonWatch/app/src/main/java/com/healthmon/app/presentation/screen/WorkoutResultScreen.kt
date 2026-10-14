@@ -46,94 +46,52 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun WorkoutResultScreen(
-    result: WorkoutResult,
-    onConfirm: () -> Unit
-) {
-
+fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
     val listState = rememberTransformingLazyColumnState()
-    /*
-     * 결과 화면 진입 시 한 번만
-     * Unity 전송 요청
-     */
-
-    ScreenScaffold(
-        scrollState = listState
-    ) { contentPadding ->
-
-
-        TransformingLazyColumn(
-            state =
-                listState,
-
-            modifier =
-                Modifier
+    //결과 화면 진입 시 한 번만 Unity 전송 요청
+    ScreenScaffold(scrollState = listState) {
+        contentPadding -> TransformingLazyColumn(
+            state = listState,
+            modifier = Modifier
                     .fillMaxSize()
                     .background(
                         HealthMonBackground
                     ),
-
-            contentPadding =
-                contentPadding
-        ) {
-
+            contentPadding = contentPadding) {
             // 제목
             item {
-
                 Column(
-                    modifier =
-                        Modifier.fillMaxWidth(),
-
-                    horizontalAlignment =
-                        Alignment.CenterHorizontally
-                ) {
-
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text =
-                            "운동 완료!",
-
-                        style =
-                            MaterialTheme
+                        text = "운동 완료!",
+                        style = MaterialTheme
                                 .typography
                                 .titleMedium,
-
-                        color =
-                            HealthMonMint
+                        color = HealthMonMint
                     )
 
-
                     Text(
-                        text =
-                            result
+                        text = result
                                 .exercise
                                 .displayName,
-
-                        style =
-                            MaterialTheme
+                        style = MaterialTheme
                                 .typography
                                 .labelMedium,
-
-                        color =
-                            HealthMonSubText
+                        color = HealthMonSubText
                     )
                 }
             }
 
-
             // 완료 애니메이션
             item {
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
                             vertical = 4.dp
                         ),
-
-                    contentAlignment =
-                        Alignment.Center
-                ) {
-
+                    contentAlignment = Alignment.Center) {
                     WorkoutCompleteAnimation()
                 }
             }
@@ -141,31 +99,18 @@ fun WorkoutResultScreen(
 
             // 운동 시간
             item {
-
                 ResultMetric(
-                    title =
-                        "운동 시간",
-
-                    value =
-                        formatWorkoutTime(
-                            result.durationSeconds
-                        )
+                    title = "운동 시간",
+                    value = formatWorkoutTime(
+                            result.durationSeconds)
                 )
             }
 
-            if (
-                WorkoutMetric.HEART_RATE
-                in result.supportedMetrics
-            ) {
-
+            if (WorkoutMetric.HEART_RATE in result.supportedMetrics) {
                 item {
-
                     ResultMetric(
-                        title =
-                            "평균 심박수",
-
-                        value =
-                            result.averageHeartRate
+                        title = "평균 심박수",
+                        value = result.averageHeartRate
                                 ?.let {
 
                                     String.format(
@@ -177,15 +122,10 @@ fun WorkoutResultScreen(
                     )
                 }
 
-
                 item {
-
                     ResultMetric(
-                        title =
-                            "최대 심박수",
-
-                        value =
-                            result.maxHeartRate
+                        title = "최대 심박수",
+                        value = result.maxHeartRate
                                 ?.let {
 
                                     String.format(
@@ -198,19 +138,11 @@ fun WorkoutResultScreen(
                 }
             }
 
-            if (
-                WorkoutMetric.CALORIES
-                in result.supportedMetrics
-            ) {
-
+            if (WorkoutMetric.CALORIES in result.supportedMetrics) {
                 item {
-
                     ResultMetric(
-                        title =
-                            "칼로리",
-
-                        value =
-                            result.calories
+                        title = "칼로리",
+                        value = result.calories
                                 ?.let {
 
                                     String.format(
@@ -223,51 +155,25 @@ fun WorkoutResultScreen(
                 }
             }
 
-            if (
-                WorkoutMetric.STEPS
-                in result.supportedMetrics ||
-                WorkoutMetric.DISTANCE
-                in result.supportedMetrics
-            ) {
-
+            if (WorkoutMetric.STEPS in result.supportedMetrics ||
+                WorkoutMetric.DISTANCE in result.supportedMetrics) {
                 item {
-
                     Row(
-                        modifier =
-                            Modifier.fillMaxWidth(),
-
-                        horizontalArrangement =
-                            Arrangement.SpaceEvenly
-                    ) {
-
-                        if (
-                            WorkoutMetric.STEPS
-                            in result.supportedMetrics
-                        ) {
-
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly) {
+                        if (WorkoutMetric.STEPS in result.supportedMetrics) {
                             ResultMetric(
-                                title =
-                                    "걸음",
-
-                                value =
-                                    result.steps
+                                title = "걸음",
+                                value = result.steps
                                         ?.toString()
                                         ?: "--"
                             )
                         }
 
-
-                        if (
-                            WorkoutMetric.DISTANCE
-                            in result.supportedMetrics
-                        ) {
-
+                        if (WorkoutMetric.DISTANCE in result.supportedMetrics) {
                             ResultMetric(
-                                title =
-                                    "거리",
-
-                                value =
-                                    result.distanceKm
+                                title = "거리",
+                                value = result.distanceKm
                                         ?.let {
 
                                             String.format(
@@ -283,7 +189,6 @@ fun WorkoutResultScreen(
             }
             // 확인 완료
             item {
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -291,36 +196,22 @@ fun WorkoutResultScreen(
                             top = 8.dp,
                             bottom = 40.dp
                         ),
-
-                    contentAlignment =
-                        Alignment.Center
-                ) {
-
+                    contentAlignment = Alignment.Center) {
                     Button(
-                        onClick =
-                            onConfirm,
-
-                        modifier =
-                            Modifier
+                        onClick = onConfirm,
+                        modifier = Modifier
                                 .fillMaxWidth(
                                     0.72f
                                 )
                                 .height(
                                     42.dp
                                 ),
-
-                        colors =
-                            ButtonDefaults
+                        colors = ButtonDefaults
                                 .buttonColors(
-                                    containerColor =
-                                        HealthMonSurface,
-
-                                    contentColor =
-                                        HealthMonText
+                                    containerColor = HealthMonSurface,
+                                    contentColor = HealthMonText
                                 ),
-
                         label = {
-
                             Text(
                                 "확인 완료"
                             )
@@ -334,54 +225,32 @@ fun WorkoutResultScreen(
 
 
 @Composable
-private fun ResultMetric(
-    title: String,
-    value: String
-) {
-
+private fun ResultMetric(title: String, value: String) {
     Column(
-        modifier =
-            Modifier.padding(
+        modifier = Modifier.padding(
                 vertical = 3.dp
             ),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally
-    ) {
-
+        horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text =
-                value,
-
-            style =
-                MaterialTheme
+            text = value,
+            style = MaterialTheme
                     .typography
                     .bodyLarge,
-
-            color =
-                HealthMonText
+            color = HealthMonText
         )
 
-
         Text(
-            text =
-                title,
-
-            style =
-                MaterialTheme
+            text = title,
+            style = MaterialTheme
                     .typography
                     .labelSmall,
-
-            color =
-                HealthMonSubText
+            color = HealthMonSubText
         )
     }
 }
 
-
 @Composable
 private fun WorkoutCompleteAnimation() {
-
     val frames = listOf(
         R.drawable.complete_00,
         R.drawable.complete_01,
@@ -393,34 +262,23 @@ private fun WorkoutCompleteAnimation() {
         R.drawable.complete_07
     )
 
-
     var frameIndex by remember {
         mutableIntStateOf(0)
     }
 
-
     LaunchedEffect(Unit) {
-
         for (i in frames.indices) {
-
             frameIndex = i
-
             delay(130)
         }
     }
 
 
     Image(
-        painter =
-            painterResource(
-                id =
-                    frames[frameIndex]
+        painter = painterResource(
+                id = frames[frameIndex]
             ),
-
-        contentDescription =
-            "Happy HealthMon",
-
-        modifier =
-            Modifier.size(90.dp)
+        contentDescription = "Happy HealthMon",
+        modifier = Modifier.size(90.dp)
     )
 }

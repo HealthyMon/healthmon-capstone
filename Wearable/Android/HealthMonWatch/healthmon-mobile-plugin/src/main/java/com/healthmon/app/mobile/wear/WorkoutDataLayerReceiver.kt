@@ -277,7 +277,7 @@ class WorkoutDataLayerReceiver :
                         source
                 )
 
-
+            /*
             Log.d(
                 TAG,
                 "워치 운동 기록 수신: " +
@@ -290,11 +290,8 @@ class WorkoutDataLayerReceiver :
                         "steps=$steps, " +
                         "distance=$distance"
             )
-
-
-            /*
-             * 휴대폰 Room 저장
              */
+
             serviceScope.launch {
 
                 try {
@@ -305,10 +302,7 @@ class WorkoutDataLayerReceiver :
                     )
 
 
-                    Log.d(
-                        TAG,
-                        "휴대폰 Room 저장 성공: ${result.id}"
-                    )
+                    //Log.d(TAG, "휴대폰 Room 저장 성공: ${result.id}")
 
 
                     /*
@@ -324,16 +318,8 @@ class WorkoutDataLayerReceiver :
 
                     if (ackSuccess) {
 
-                        Log.d(
-                            TAG,
-                            "워치 ACK 등록 성공: ${result.id}"
-                        )
+                        //Log.d(TAG, "워치 ACK 등록 성공: ${result.id}")
 
-
-                        /*
-                         * ACK가 Data Layer에 정상 등록됐으므로
-                         * 원본 Workout Result DataItem은 삭제한다.
-                         */
                         val deletedCount =
                             Wearable
                                 .getDataClient(
@@ -345,19 +331,10 @@ class WorkoutDataLayerReceiver :
                                 .await()
 
 
-                        Log.d(
-                            TAG,
-                            "Workout Result DataItem 삭제 완료: " +
-                                    "id=${result.id}, " +
-                                    "count=$deletedCount"
-                        )
+                        //Log.d(TAG, "Workout Result DataItem 삭제 완료: " + "id=${result.id}, " + "count=$deletedCount")
 
                     } else {
-
-                        Log.e(
-                            TAG,
-                            "워치 ACK 등록 실패: ${result.id}"
-                        )
+                        Log.e(TAG, "워치 ACK 등록 실패: ${result.id}")
                     }
 
 
@@ -367,18 +344,10 @@ class WorkoutDataLayerReceiver :
                         )
 
 
-                    Log.d(
-                        TAG,
-                        "휴대폰 Room 전체 기록 수: ${workouts.size}"
-                    )
+                    //Log.d(TAG, "휴대폰 Room 전체 기록 수: ${workouts.size}")
 
                 } catch (e: Exception) {
-
-                    Log.e(
-                        TAG,
-                        "휴대폰 Room 저장 실패: ${result.id}",
-                        e
-                    )
+                    Log.e(TAG, "휴대폰 Room 저장 실패: ${result.id}", e)
                 }
             }
         }
@@ -386,7 +355,6 @@ class WorkoutDataLayerReceiver :
 
 
     override fun onDestroy() {
-
         serviceScope.cancel()
 
         super.onDestroy()
@@ -394,8 +362,6 @@ class WorkoutDataLayerReceiver :
 
 
     companion object {
-
-        private const val TAG =
-            "HealthMonPhoneReceiver"
+        private const val TAG = "HealthMonPhoneReceiver"
     }
 }

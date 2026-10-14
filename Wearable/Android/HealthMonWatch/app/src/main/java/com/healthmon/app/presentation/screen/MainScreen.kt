@@ -15,16 +15,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+
 import com.healthmon.app.R
 import com.healthmon.app.presentation.theme.HealthMonBackground
+
 import kotlinx.coroutines.delay
 
-
 @Composable
-fun MainScreen(
-    onWakeFinished: () -> Unit
-) {
-
+fun MainScreen(onWakeFinished: () -> Unit) {
     val sleepFrames = listOf(
         R.drawable.sleep_00,
         R.drawable.sleep_01,
@@ -49,7 +47,6 @@ fun MainScreen(
         R.drawable.wake_07
     )
 
-
     var isWaking by remember {
         mutableStateOf(false)
     }
@@ -62,29 +59,19 @@ fun MainScreen(
         mutableIntStateOf(0)
     }
 
-
-    // 잠자는 애니메이션
     LaunchedEffect(isWaking) {
-
         while (!isWaking) {
 
             delay(250)
 
-            sleepFrame =
-                (sleepFrame + 1) % sleepFrames.size
+            sleepFrame = (sleepFrame + 1) % sleepFrames.size
         }
     }
 
-
-    // 잠에서 깨는 애니메이션
     LaunchedEffect(isWaking) {
-
         if (isWaking) {
-
             for (i in wakeFrames.indices) {
-
                 wakeFrame = i
-
                 delay(250)
             }
 
@@ -92,9 +79,7 @@ fun MainScreen(
         }
     }
 
-
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .fillMaxSize()
             .background(HealthMonBackground)
             .clickable(
@@ -102,10 +87,7 @@ fun MainScreen(
             ) {
                 isWaking = true
             },
-
-        contentAlignment = Alignment.Center
-    ) {
-
+        contentAlignment = Alignment.Center) {
         val currentImage =
             if (isWaking) {
                 wakeFrames[wakeFrame]
@@ -113,16 +95,12 @@ fun MainScreen(
                 sleepFrames[sleepFrame]
             }
 
-
         Image(
             painter = painterResource(
                 id = currentImage
             ),
-
             contentDescription = "HealthMon",
-
-            modifier =
-                Modifier.fillMaxSize(0.7f)
+            modifier = Modifier.fillMaxSize(0.7f)
         )
     }
 }

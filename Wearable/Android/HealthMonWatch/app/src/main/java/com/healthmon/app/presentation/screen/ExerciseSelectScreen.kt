@@ -24,37 +24,24 @@ import com.healthmon.app.presentation.theme.HealthMonText
 
 
 @Composable
-fun ExerciseSelectScreen(
-    onExerciseSelected: (WorkoutType) -> Unit
-) {
+fun ExerciseSelectScreen(onExerciseSelected: (WorkoutType) -> Unit) {
+    val listState = rememberTransformingLazyColumnState()
 
-    val listState =
-        rememberTransformingLazyColumnState()
-
-
-    ScreenScaffold(
-        scrollState = listState
-    ) {
-
+    ScreenScaffold(scrollState = listState) {
         TransformingLazyColumn(
             state = listState,
-
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     HealthMonBackground
                 ),
-
             contentPadding = PaddingValues(
                 top = 24.dp,
                 bottom = 64.dp
             )
         ) {
-
             item {
-
                 ListHeader {
-
                     Text(
                         text = "운동 선택",
                         color = HealthMonText
@@ -62,39 +49,24 @@ fun ExerciseSelectScreen(
                 }
             }
 
-
             item {
-
-                ExerciseButton(
-                    name = "걷기"
-                ) {
-
+                ExerciseButton(name = "걷기") {
                     onExerciseSelected(
                         WorkoutType.WALKING
                     )
                 }
             }
 
-
             item {
-
-                ExerciseButton(
-                    name = "달리기"
-                ) {
-
+                ExerciseButton(name = "달리기") {
                     onExerciseSelected(
                         WorkoutType.RUNNING
                     )
                 }
             }
 
-
             item {
-
-                ExerciseButton(
-                    name = "사이클"
-                ) {
-
+                ExerciseButton(name = "사이클") {
                     onExerciseSelected(
                         WorkoutType.CYCLING
                     )
@@ -103,24 +75,15 @@ fun ExerciseSelectScreen(
 
 
             item {
-
-                ExerciseButton(
-                    name = "스쿼트"
-                ) {
-
+                ExerciseButton(name = "스쿼트") {
                     onExerciseSelected(
                         WorkoutType.SQUAT
                     )
                 }
             }
 
-
             item {
-
-                ExerciseButton(
-                    name = "체조"
-                ) {
-
+                ExerciseButton(name = "체조") {
                     onExerciseSelected(
                         WorkoutType.GYMNASTICS
                     )
@@ -130,39 +93,19 @@ fun ExerciseSelectScreen(
     }
 }
 
-
 @Composable
-private fun ExerciseButton(
-    name: String,
-    onClick: () -> Unit
-) {
-
-    Box(
-        modifier =
-            Modifier.fillMaxWidth(),
-
-        contentAlignment =
-            Alignment.Center
-    ) {
-
+private fun ExerciseButton(name: String, onClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center) {
         Button(
             onClick = onClick,
-
             modifier = Modifier
                 .fillMaxWidth(0.82f)
                 .height(48.dp),
-
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor =
-                        HealthMonSurface,
-
-                    contentColor =
-                        HealthMonText
-                ),
-
+            colors = ButtonDefaults.buttonColors(
+                    containerColor = HealthMonSurface,
+                    contentColor = HealthMonText),
             label = {
-
                 Text(
                     text = name
                 )

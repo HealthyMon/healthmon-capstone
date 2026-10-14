@@ -20,13 +20,11 @@ import com.healthmon.app.exercise.ExerciseService
 fun HealthMonApp() {
     val context = LocalContext.current
 
-    val workoutUiState by
-    WorkoutRepository
+    val workoutUiState by WorkoutRepository
         .workoutUiState
         .collectAsState()
 
-    val completedWorkout by
-    WorkoutRepository
+    val completedWorkout by WorkoutRepository
         .completedWorkout
         .collectAsState()
 
@@ -64,13 +62,8 @@ fun HealthMonApp() {
     }
 
     LaunchedEffect(completedWorkout) {
-        if (
-            completedWorkout != null &&
-            screen == WatchScreen.WORKOUT
-        ) {
-
-            screen =
-                WatchScreen.WORKOUT_RESULT
+        if (completedWorkout != null && screen == WatchScreen.WORKOUT) {
+            screen = WatchScreen.WORKOUT_RESULT
         }
     }
 
@@ -85,16 +78,12 @@ fun HealthMonApp() {
         WatchScreen.EXERCISE_SELECT -> {
             ExerciseSelectScreen(
                 onExerciseSelected = { exercise ->
-                    /*
-                     * 실제 ExerciseClient 운동 측정 시작
-                     */
+                    //실제 ExerciseClient 운동 측정 시작
                     ExerciseService.start(
                         context,
                         exercise
                     )
-
                     selectedExercise = exercise
-
                     screen = WatchScreen.WORKOUT
                 }
             )
@@ -103,9 +92,7 @@ fun HealthMonApp() {
             selectedExercise?.let { exercise ->
                 WorkoutScreen(
                     exercise = exercise,
-
                     workoutData = workoutUiState,
-
                     onFinish = {
                         ExerciseService.end(
                             context
@@ -118,17 +105,10 @@ fun HealthMonApp() {
             completedWorkout?.let { result ->
                 WorkoutResultScreen(
                     result = result,
-
                     onConfirm = {
-
-                        WorkoutRepository
-                            .clearCompletedWorkout()
-
-                        selectedExercise =
-                            null
-
-                        screen =
-                            WatchScreen.MAIN
+                        WorkoutRepository.clearCompletedWorkout()
+                        selectedExercise = null
+                        screen = WatchScreen.MAIN
                     }
                 )
             }
