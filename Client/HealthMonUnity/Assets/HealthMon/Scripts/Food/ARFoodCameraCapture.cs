@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -16,6 +17,7 @@ public class ARFoodCameraCapture : MonoBehaviour
 
     public Texture2D LastCapturedTexture { get; private set; }
     public byte[] LastCapturedJpg { get; private set; }
+    public bool LastCaptureWasTestImage { get; private set; }
 
     public event Action<Texture2D, byte[]> OnCaptureCompleted;
     public event Action<string> OnCaptureFailed;
@@ -27,15 +29,34 @@ public class ARFoodCameraCapture : MonoBehaviour
 
     private IEnumerator CaptureRoutine()
     {
+
+        // 실패 후 이전 촬영 파일을 다시 보내지 않도록 전송 데이터를 초기화한다.
+        LastCapturedJpg = null;
+        LastCaptureWasTestImage = false;
+
+#if UNITY_EDITOR
+    // PC Unity Editor에서는 가상 카메라 대신 Food/food.jpg 사용
+    CaptureEditorTestImage();
+    yield break;
+#endif
+
         if (cameraManager == null)
         {
+#if UNITY_EDITOR
+            CaptureEditorTestImage();
+#else
             Fail("ARCameraManager가 연결되어 있지 않습니다.");
+#endif
             yield break;
         }
 
         if (!cameraManager.TryAcquireLatestCpuImage(out XRCpuImage cpuImage))
         {
+#if UNITY_EDITOR
+            CaptureEditorTestImage();
+#else
             Fail("현재 카메라 이미지를 가져오지 못했습니다.");
+#endif
             yield break;
         }
 
@@ -112,6 +133,36 @@ public class ARFoodCameraCapture : MonoBehaviour
 
         yield return null;
     }
+
+#if UNITY_EDITOR
+    private void CaptureEditorTestImage()
+    {
+        string path = Path.Combine(Application.dataPath, "HealthMon/Scripts/Food/food.jpg");
+        Texture2D texture = null;
+        try
+        {
+            byte[] jpg = File.ReadAllBytes(path);
+            if (jpg.Length == 0 || jpg.Length > 8 * 1024 * 1024)
+                throw new InvalidDataException("테스트 사진은 0바이트보다 크고 8MB 이하여야 합니다.");
+            texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!ImageConversion.LoadImage(texture, jpg))
+                throw new InvalidDataException("food.jpg 이미지를 읽을 수 없습니다.");
+            if (LastCapturedTexture != null) Destroy(LastCapturedTexture);
+            LastCapturedTexture = texture;
+            // 재인코딩 없이 Food 폴더의 원본 파일 바이트를 전송한다.
+            LastCapturedJpg = jpg;
+            LastCaptureWasTestImage = true;
+        }
+        catch (Exception ex)
+        {
+            if (texture != null) Destroy(texture);
+            Fail("테스트 사진 읽기 실패: " + path + " / " + ex.Message);
+            return;
+        }
+        Debug.Log("[FoodCapture] 카메라 사용 불가 → 테스트 사진 전송: " + path + " / " + LastCapturedJpg.Length + " bytes");
+        OnCaptureCompleted?.Invoke(LastCapturedTexture, LastCapturedJpg);
+    }
+#endif
 
     private void Fail(string message)
     {

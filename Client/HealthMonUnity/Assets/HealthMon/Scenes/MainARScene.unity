@@ -6304,6 +6304,7 @@ Transform:
   - {fileID: 153929820}
   - {fileID: 754883720}
   - {fileID: 1128324289}
+  - {fileID: 1748238185}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &506654691
@@ -20535,7 +20536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c143d1d944f3745bcb81f73d0e8129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthMonApiManager
-  baseUrl: http://YOUR_SERVER_ADDRESS
+  baseUrl: http://localhost:8000
 --- !u!1 &1384008951
 GameObject:
   m_ObjectHideFlags: 0
@@ -25938,6 +25939,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1748238184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1748238185}
+  - component: {fileID: 1748238186}
+  m_Layer: 0
+  m_Name: FoodApiSender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1748238185
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748238184}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 506654690}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1748238186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748238184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6614b8bf447afb4448f82ea6ec5497e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FoodApiSender
+  cameraCapture: {fileID: 0}
+  serverUrl: http://localhost:8000/food/analyze
+  nutritionServerUrl: 
+  imageFilePath: food.jpg
+  nutritionFilePath: my_nutrition.json
 --- !u!1 &1758150942
 GameObject:
   m_ObjectHideFlags: 0
