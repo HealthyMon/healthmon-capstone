@@ -42,6 +42,7 @@ dependencies {
     val roomVersion = "3.0.3"
     val sqliteVersion = "2.7.1"
 
+    implementation("androidx.wear:wear-ongoing:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
     implementation("androidx.room3:room3-runtime:$roomVersion")
     ksp("androidx.room3:room3-compiler:$roomVersion")

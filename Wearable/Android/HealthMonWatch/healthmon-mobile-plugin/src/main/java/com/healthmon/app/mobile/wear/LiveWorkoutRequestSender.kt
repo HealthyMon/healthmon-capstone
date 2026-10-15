@@ -13,7 +13,6 @@ object LiveWorkoutRequestSender {
             .connectedNodes
             .addOnSuccessListener { nodes ->
                 if (nodes.isEmpty()) {
-                    Log.d(TAG, "연결된 워치 없음")
                     return@addOnSuccessListener
                 }
 
@@ -25,9 +24,6 @@ object LiveWorkoutRequestSender {
                             LiveWorkoutContract.LIVE_REQUEST_PATH,
                             ByteArray(0)
                         )
-                        .addOnSuccessListener {
-                            //Log.d(TAG, "현재 운동 상태 요청 성공: " + "node=${node.displayName}")
-                        }
                         .addOnFailureListener { e ->
                             Log.e(TAG, "현재 운동 상태 요청 실패", e)
                         }

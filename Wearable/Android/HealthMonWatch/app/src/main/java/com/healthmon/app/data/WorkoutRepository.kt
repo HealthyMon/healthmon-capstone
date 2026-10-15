@@ -2,6 +2,7 @@ package com.healthmon.app.data
 
 import com.healthmon.app.model.WorkoutMetric
 import com.healthmon.app.model.WorkoutResult
+import com.healthmon.app.model.WorkoutType
 import com.healthmon.app.model.WorkoutUiState
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,18 @@ object WorkoutRepository {
     private val _completedWorkout = MutableStateFlow<WorkoutResult?>(null)
     val completedWorkout: StateFlow<WorkoutResult?> = _completedWorkout.asStateFlow()
 
+    private val _activeWorkoutType = MutableStateFlow<WorkoutType?>(null)
+
+    val activeWorkoutType: StateFlow<WorkoutType?> = _activeWorkoutType.asStateFlow()
+
+    fun setActiveWorkout(workoutType: WorkoutType) {
+        _activeWorkoutType.value = workoutType
+    }
+
+    fun clearActiveWorkout() {
+        _activeWorkoutType.value = null
+    }
+
     fun reset() {
         _workoutUiState.value = WorkoutUiState()
         _completedWorkout.value = null
@@ -30,14 +43,7 @@ object WorkoutRepository {
         }
     }
 
-    fun updateMetrics(
-        heartRate: Double?,
-        averageHeartRate: Double?,
-        maxHeartRate: Double?,
-        steps: Long?,
-        calories: Double?,
-        distanceMeters: Double?
-    ) {
+    fun updateMetrics(heartRate: Double?, averageHeartRate: Double?, maxHeartRate: Double?, steps: Long?, calories: Double?, distanceMeters: Double?) {
         _workoutUiState.update { current ->
             current.copy(
                 heartRate = heartRate ?: current.heartRate,
@@ -51,10 +57,6 @@ object WorkoutRepository {
         }
     }
 
-    /*
-     * Health Services의
-     * ActiveDurationCheckpoint 저장
-     */
     fun updateTimer(checkpointTimeMillis: Long?, activeDurationMillis: Long?, isActive: Boolean) {
         _workoutUiState.update { current ->
             if (checkpointTimeMillis != null && activeDurationMillis != null) {
@@ -63,14 +65,7 @@ object WorkoutRepository {
                     checkpointActiveDurationMillis = activeDurationMillis,
                     isActive = isActive
                 )
-            } else if (
-                !isActive &&
-                current.isActive
-            ) {
-                /*
-                 * ENDING/ENDED에서 checkpoint가
-                 * 없는 경우 현재 시간을 기준으로 고정
-                 */
+            } else if (!isActive && current.isActive) {
                 val finalDuration = current.getActiveDurationMillis()
 
                 current.copy(

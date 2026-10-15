@@ -40,31 +40,10 @@ class LiveWorkoutMessageReceiver : WearableListenerService() {
                     sequence = json.getLong("sequence")
                 )
 
-            val sequence = json.getLong("sequence")
-
             LiveWorkoutStateHolder.update(state)
 
-            /*
-            Log.d(
-                TAG,
-                "실시간 수신: " +
-                        "session=${state.sessionId}, " +
-                        "seq=${state.sequence}, " +
-                        "status=${state.status}, " +
-                        "duration=${state.durationSeconds}s, " +
-                        "HR=${state.heartRate}, " +
-                        "avgHR=${state.averageHeartRate}, " +
-                        "maxHR=${state.maxHeartRate}, " +
-                        "calories=${state.calories}, " +
-                        "steps=${state.steps}, " +
-                        "distance=${state.distanceKm}"
-            )
-
-             */
-
-            Log.d("HM_TEST", "RECV seq=$sequence")
         } catch (e: Exception) {
-            Log.e(TAG, "실시간 메시지 파싱 실패", e)
+            Log.e(TAG, "실시간 메시지 파싱 실패")
         }
     }
 

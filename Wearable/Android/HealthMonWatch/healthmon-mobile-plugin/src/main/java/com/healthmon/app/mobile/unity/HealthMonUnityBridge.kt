@@ -45,11 +45,12 @@ object HealthMonUnityBridge {
 
     @JvmStatic
     fun getPendingWorkoutResults(): String {
+        if (!::appContext.isInitialized) {
+            Log.e(TAG, "Bridge가 초기화되지 않음")
+            return "[]"
+        }
+
         val context = appContext
-                ?: run {
-                    Log.e(TAG, "Bridge가 초기화되지 않음")
-                    return "[]"
-                }
 
         return try {
             val workouts = runBlocking(Dispatchers.IO) {
@@ -158,7 +159,11 @@ object HealthMonUnityBridge {
 
     @JvmStatic
     fun markWorkoutConsumed(workoutId: String): Boolean {
-        val context = appContext ?: return false
+        if (!::appContext.isInitialized) {
+            return false
+        }
+
+        val context = appContext
 
         if (workoutId.isBlank()) {
             return false
@@ -183,7 +188,11 @@ object HealthMonUnityBridge {
 
     @JvmStatic
     fun getPendingWorkoutCount(): Int {
-        val context = appContext ?: return 0
+        if (!::appContext.isInitialized) {
+            return 0
+        }
+
+        val context = appContext
 
         return try {
             runBlocking(Dispatchers.IO) {

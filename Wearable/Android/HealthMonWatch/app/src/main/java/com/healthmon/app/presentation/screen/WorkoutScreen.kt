@@ -55,7 +55,6 @@ import com.healthmon.app.presentation.theme.HealthMonSubText
 import com.healthmon.app.presentation.theme.HealthMonText
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun WorkoutScreen(exercise: WorkoutType, workoutData: WorkoutUiState, onFinish: () -> Unit) {
     val context = LocalContext.current

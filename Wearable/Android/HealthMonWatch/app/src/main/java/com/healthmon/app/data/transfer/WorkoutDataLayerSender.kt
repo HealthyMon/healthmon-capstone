@@ -14,10 +14,7 @@ import kotlinx.coroutines.tasks.await
 
 object WorkoutDataLayerSender {
     private const val TAG = "HealthMonDataLayer"
-    /*
-     * 하나의 운동 결과를
-     * Data Layer에 등록한다.
-     */
+
     suspend fun sendWorkout(context: Context, workout: WorkoutResult): Boolean {
         val path = WorkoutDataContract.RESULT_PATH_PREFIX + workout.id
 
@@ -44,10 +41,7 @@ object WorkoutDataLayerSender {
                         WorkoutDataContract.KEY_DURATION_SECONDS,
                         workout.durationSeconds
                     )
-                    /*
-                     * nullable 데이터는
-                     * 값이 있을 때만 DataMap에 넣는다.
-                     */
+
                     workout
                         .averageHeartRate
                         ?.let {
@@ -115,18 +109,10 @@ object WorkoutDataLayerSender {
                 .setUrgent()
 
         return try {
-            val dataItem = Wearable
+            Wearable
                     .getDataClient(context)
                     .putDataItem(request)
                     .await()
-            /*
-            Log.d(
-                TAG,
-                "DataItem 등록 성공: " +
-                        "path=${dataItem.uri.path}"
-            )
-
-             */
             true
         } catch (e: Exception) {
             Log.e(TAG, "DataItem 등록 실패: ${workout.id}", e)
@@ -137,22 +123,11 @@ object WorkoutDataLayerSender {
     suspend fun sendPendingWorkouts(context: Context) {
         val pendingWorkouts = WorkoutStorage.getPending(context)
 
-        /*
-        Log.d(TAG, "PENDING 운동 수: ${pendingWorkouts.size}")
-        */
-
         pendingWorkouts.forEach { workout ->
-            val success =
-                sendWorkout(
-                    context = context,
-                    workout = workout
-                )
-
-            if (success) {
-                //Log.d(TAG, "Data Layer 등록 완료: ${workout.id}")
-            } else {
-                //Log.d(TAG, "전송 대기 유지: ${workout.id}")
-            }
+            sendWorkout(
+                context,
+                workout
+            )
         }
     }
 }

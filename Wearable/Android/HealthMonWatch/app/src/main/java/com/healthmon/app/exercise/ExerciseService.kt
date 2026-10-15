@@ -2,6 +2,7 @@ package com.healthmon.app.exercise
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -26,6 +27,7 @@ import androidx.health.services.client.data.ExerciseConfig
 import androidx.health.services.client.data.ExerciseLapSummary
 import androidx.health.services.client.data.ExerciseState
 import androidx.health.services.client.data.ExerciseUpdate
+import androidx.wear.ongoing.OngoingActivity
 
 import com.healthmon.app.data.local.WorkoutStorage
 import com.healthmon.app.data.transfer.WorkoutDataLayerSender
@@ -38,6 +40,7 @@ import com.healthmon.app.model.WorkoutType
 import com.healthmon.app.R
 import com.healthmon.app.data.transfer.LiveWorkoutMessageSender
 import com.healthmon.app.data.transfer.LiveWorkoutRequestDispatcher
+import com.healthmon.app.presentation.MainActivity
 
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.CoroutineScope
@@ -117,19 +120,8 @@ class ExerciseService : Service() {
                     calories = calories,
                     distanceMeters = distance
                 )
-/*
-                Log.d(
-                    TAG,
-                    "state=$state, " +
-                            "HR=$heartRate, " +
-                            "Steps=$steps, " +
-                            "Calories=$calories, " +
-                            "Distance=$distance"
-                )
-*/
-                if (state == ExerciseState.ENDED) {
-                    //Log.d(TAG, "운동 종료 완료")
 
+                if (state == ExerciseState.ENDED) {
                     stopLiveSnapshotLoop()
                     emitLiveWorkoutState(LiveWorkoutStatus.ENDED)
 
@@ -173,8 +165,6 @@ class ExerciseService : Service() {
                                     result = result
                                 )
 
-                               //Log.d(TAG, "Room 저장 성공: ${result.id}")
-
                                 WorkoutDataLayerSender
                                     .sendPendingWorkouts(this@ExerciseService)
 
@@ -194,6 +184,8 @@ class ExerciseService : Service() {
                             }
                         } finally {
                             stopLiveSnapshotLoop()
+
+                            WorkoutRepository.clearActiveWorkout()
 
                             currentSessionId = null
                             currentWorkoutType = null
@@ -231,14 +223,12 @@ class ExerciseService : Service() {
             currentSessionId = UUID.randomUUID().toString()
             liveSequence = 0L
 
-            //Log.d("HealthMonExercise", "운동 세션 생성: $currentSessionId")
-
             val healthExerciseType = workoutType.toHealthServicesType()
 
             val capabilities = exerciseClient.getCapabilities()
 
             if (healthExerciseType !in capabilities.supportedExerciseTypes) {
-                Log.e(TAG, "지원하지 않는 운동: $healthExerciseType")
+                Log.w(TAG, "지원하지 않는 운동: $healthExerciseType")
 
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
@@ -288,8 +278,6 @@ class ExerciseService : Service() {
                 supportedMetrics
             )
 
-            //Log.d(TAG, "요청할 데이터: $requestedDataTypes")
-
             val config = ExerciseConfig(
                     exerciseType = healthExerciseType,
                     dataTypes = requestedDataTypes,
@@ -297,14 +285,12 @@ class ExerciseService : Service() {
                     isGpsEnabled = false
                 )
 
-            // 운동 시작 전에 callback 등록
             exerciseClient.setUpdateCallback(exerciseUpdateCallback)
             exerciseClient.startExercise(config)
-
-            //Log.d(TAG, "운동 시작 성공: $workoutType")
-
+            WorkoutRepository.setActiveWorkout(workoutType)
             emitLiveWorkoutState(LiveWorkoutStatus.STARTED)
             startLiveSnapshotLoop()
+
         } catch (e: Exception) {
             Log.e(TAG, "운동 시작 실패", e)
 
@@ -318,50 +304,66 @@ class ExerciseService : Service() {
             )
 
             stopSelf()
+
+            WorkoutRepository.clearActiveWorkout()
         }
     }
 
     private suspend fun endTrackedExercise() {
         try {
-            //호출 즉시 서비스를 죽이지 않음.
-            //최종 ExerciseState.ENDED가 callback으로 들어올 때까지 기다린다.
+            stopLiveSnapshotLoop()
+
             emitLiveWorkoutState(LiveWorkoutStatus.ENDING)
             exerciseClient.endExercise()
 
-            //Log.d(TAG, "운동 종료 요청 완료")
         } catch (e: Exception) {
             Log.e(TAG, "운동 종료 요청 실패", e)
         }
     }
 
     private fun startAsForeground() {
-        val notification = NotificationCompat
-                .Builder(
-                    this,
-                    CHANNEL_ID
-                )
-                .setSmallIcon(
-                    R.mipmap.ic_launcher
-                )
-                .setContentTitle(
-                    "헬스몬 운동 기록"
-                )
-                .setContentText(
-                    "운동 데이터를 측정하고 있습니다."
-                )
+        val openAppIntent = Intent(this, MainActivity::class.java)
+            .apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+
+        val pendingIntent = PendingIntent
+            .getActivity(this, 0, openAppIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or
+                        PendingIntent.FLAG_IMMUTABLE
+            )
+
+        val notificationBuilder = NotificationCompat
+                .Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("헬스몬 운동 기록")
+                .setContentText("운동 데이터를 측정하고 있습니다.")
+                .setCategory(NotificationCompat.CATEGORY_WORKOUT)
+                .setContentIntent(pendingIntent)
                 .setOngoing(true)
+
+        val ongoingActivity = OngoingActivity.Builder(
+                this,
+                NOTIFICATION_ID,
+                notificationBuilder
+            )
+                .setTouchIntent(
+                    pendingIntent
+                )
                 .build()
 
+        ongoingActivity.apply(this)
+
+        val notification = notificationBuilder.build()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            // Android 14(API 34) 이상
             startForeground(
                 NOTIFICATION_ID,
                 notification,
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
             )
-
         } else {
-            // Android 13 이하
             startForeground(
                 NOTIFICATION_ID,
                 notification
@@ -424,20 +426,6 @@ class ExerciseService : Service() {
     private fun emitLiveWorkoutState(status: LiveWorkoutStatus) {
         val state = createLiveWorkoutState(status) ?: return
 
-        Log.d(
-            LIVE_TAG,
-            "session=${state.sessionId}, " +
-                    "sequence=${state.sequence}, " +
-                    "status=${state.status}, " +
-                    "duration=${state.durationSeconds}s, " +
-                    "HR=${state.heartRate}, " +
-                    "avgHR=${state.averageHeartRate}, " +
-                    "maxHR=${state.maxHeartRate}, " +
-                    "calories=${state.calories}, " +
-                    "steps=${state.steps}, " +
-                    "distance=${state.distanceKm}"
-        )
-
         serviceScope.launch {
             LiveWorkoutMessageSender.send(
                 this@ExerciseService,
@@ -450,23 +438,9 @@ class ExerciseService : Service() {
         liveSnapshotJob?.cancel()
 
         liveSnapshotJob = serviceScope.launch {
-            var lastTick = android.os.SystemClock.elapsedRealtime()
-            try {
-                while (isActive) {
-                    delay(1000)
-
-                    val now = android.os.SystemClock.elapsedRealtime()
-                    val gap = now - lastTick
-                    lastTick = now
-
-                    Log.d("HM_TEST", "TICK gap=${gap}ms")
-
-                    emitLiveWorkoutState(
-                        LiveWorkoutStatus.ACTIVE
-                    )
-                }
-            } finally {
-                Log.d("HM_TEST", "LOOP_END")
+            while (isActive) {
+                delay(1000)
+                emitLiveWorkoutState(LiveWorkoutStatus.ACTIVE)
             }
         }
     }
@@ -480,11 +454,10 @@ class ExerciseService : Service() {
         super.onCreate()
 
         createNotificationChannel()
+
         LiveWorkoutRequestDispatcher.register {
             serviceScope.launch {
                 if (currentSessionId != null && currentWorkoutType != null) {
-                    //Log.d(TAG, "현재 운동 상태 재전송 요청 처리")
-
                     emitLiveWorkoutState(LiveWorkoutStatus.ACTIVE)
                 }
             }
@@ -522,7 +495,7 @@ class ExerciseService : Service() {
             }
         }
 
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -538,7 +511,6 @@ class ExerciseService : Service() {
 
     companion object {
         private const val TAG = "HealthMonExercise"
-        private const val LIVE_TAG = "HealthMonLive"
         private const val CHANNEL_ID = "healthmon_exercise"
         private const val NOTIFICATION_ID = 1001
 

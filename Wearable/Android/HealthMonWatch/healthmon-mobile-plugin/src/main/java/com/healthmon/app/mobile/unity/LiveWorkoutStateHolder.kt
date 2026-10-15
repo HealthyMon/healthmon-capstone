@@ -7,14 +7,27 @@ object LiveWorkoutStateHolder {
     private var latestState: PhoneLiveWorkoutState? = null
 
     @Synchronized
-    fun update(state: PhoneLiveWorkoutState) {
+    fun update(state: PhoneLiveWorkoutState): Boolean {
         val current = latestState
 
-        if (current == null ||
-            current.sessionId != state.sessionId ||
-            state.sequence > current.sequence) {
+        val accepted =
+            when {
+                current == null -> { true }
+
+                current.sessionId == state.sessionId -> {
+                    state.sequence > current.sequence
+                }
+
+                else -> {
+                    state.timestamp > current.timestamp
+                }
+            }
+
+        if (accepted) {
             latestState = state
         }
+
+        return accepted
     }
 
     fun getLatest(): PhoneLiveWorkoutState? {

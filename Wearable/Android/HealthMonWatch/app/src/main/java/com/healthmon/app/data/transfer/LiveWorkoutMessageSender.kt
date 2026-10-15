@@ -1,7 +1,6 @@
 package com.healthmon.app.data.transfer
 
 import android.content.Context
-import android.util.Log
 
 import com.google.android.gms.wearable.Wearable
 import com.healthmon.app.model.LiveWorkoutState
@@ -15,8 +14,6 @@ object LiveWorkoutMessageSender {
 
     suspend fun send(context: Context, state: LiveWorkoutState) {
         try {
-            Log.d("HM_TEST", "SEND seq=${state.sequence}")
-
             val json = JSONObject().apply {
                 put(
                     "sessionId",
@@ -73,8 +70,6 @@ object LiveWorkoutMessageSender {
             val payload = json.toString().toByteArray(Charsets.UTF_8)
             val nodes = Wearable.getNodeClient(context).connectedNodes.await()
             if (nodes.isEmpty()) {
-                //Log.d(TAG, "연결된 스마트폰 없음")
-                Log.w("HM_TEST", "NO_NODE seq=${state.sequence}")
                 return
             }
 
@@ -87,21 +82,8 @@ object LiveWorkoutMessageSender {
                         payload
                     )
                     .await()
-                /*
-                Log.d(
-                    TAG,
-                    "실시간 전송 성공: " +
-                            "node=${node.displayName}, " +
-                            "session=${state.sessionId}, " +
-                            "seq=${state.sequence}, " +
-                            "status=${state.status}"
-                )
-                 */
-                Log.d("HM_TEST", "OK seq=${state.sequence}")
             }
         } catch (e: Exception) {
-            //Log.e(TAG, "실시간 전송 실패", e)
-            Log.e("HM_TEST", "FAIL seq=${state.sequence}", e)
         }
     }
 
