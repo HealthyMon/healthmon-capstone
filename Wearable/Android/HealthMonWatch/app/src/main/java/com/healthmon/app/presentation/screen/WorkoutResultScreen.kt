@@ -54,11 +54,8 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
             state = listState,
             modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        HealthMonBackground
-                    ),
+                    .background(HealthMonBackground),
             contentPadding = contentPadding) {
-            // 제목
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -83,7 +80,6 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                 }
             }
 
-            // 완료 애니메이션
             item {
                 Box(
                     modifier = Modifier
@@ -96,8 +92,6 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                 }
             }
 
-
-            // 운동 시간
             item {
                 ResultMetric(
                     title = "운동 시간",
@@ -112,7 +106,6 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                         title = "평균 심박수",
                         value = result.averageHeartRate
                                 ?.let {
-
                                     String.format(
                                         "%.0f BPM",
                                         it
@@ -175,7 +168,6 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                                 title = "거리",
                                 value = result.distanceKm
                                         ?.let {
-
                                             String.format(
                                                 "%.2f km",
                                                 it
@@ -187,7 +179,7 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                     }
                 }
             }
-            // 확인 완료
+
             item {
                 Box(
                     modifier = Modifier
@@ -212,9 +204,7 @@ fun WorkoutResultScreen(result: WorkoutResult, onConfirm: () -> Unit) {
                                     contentColor = HealthMonText
                                 ),
                         label = {
-                            Text(
-                                "확인 완료"
-                            )
+                            Text("확인 완료")
                         }
                     )
                 }

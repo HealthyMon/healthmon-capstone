@@ -32,9 +32,7 @@ fun ExerciseSelectScreen(onExerciseSelected: (WorkoutType) -> Unit) {
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    HealthMonBackground
-                ),
+                .background(HealthMonBackground),
             contentPadding = PaddingValues(
                 top = 24.dp,
                 bottom = 64.dp
@@ -42,51 +40,38 @@ fun ExerciseSelectScreen(onExerciseSelected: (WorkoutType) -> Unit) {
         ) {
             item {
                 ListHeader {
-                    Text(
-                        text = "운동 선택",
-                        color = HealthMonText
-                    )
+                    Text(text = "운동 선택", color = HealthMonText)
                 }
             }
 
             item {
                 ExerciseButton(name = "걷기") {
-                    onExerciseSelected(
-                        WorkoutType.WALKING
-                    )
+                    onExerciseSelected(WorkoutType.WALKING)
                 }
             }
 
             item {
                 ExerciseButton(name = "달리기") {
-                    onExerciseSelected(
-                        WorkoutType.RUNNING
-                    )
+                    onExerciseSelected(WorkoutType.RUNNING)
                 }
             }
 
             item {
                 ExerciseButton(name = "사이클") {
-                    onExerciseSelected(
-                        WorkoutType.CYCLING
-                    )
+                    onExerciseSelected(WorkoutType.CYCLING)
                 }
             }
 
 
             item {
                 ExerciseButton(name = "스쿼트") {
-                    onExerciseSelected(
-                        WorkoutType.SQUAT
-                    )
+                    onExerciseSelected(WorkoutType.SQUAT)
                 }
             }
 
             item {
                 ExerciseButton(name = "체조") {
-                    onExerciseSelected(
-                        WorkoutType.GYMNASTICS
-                    )
+                    onExerciseSelected(WorkoutType.GYMNASTICS)
                 }
             }
         }

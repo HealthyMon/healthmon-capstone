@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.healthmon.app.exercise.ExerciseService
 
+//화면 관리자 - Repository의 운동상태 감시, 현재 보여줄 화면 관리, 사용자 입력에 따라 ExerciseService 호출
 @Composable
 fun HealthMonApp() {
     val activeWorkoutType by WorkoutRepository
@@ -37,75 +38,41 @@ fun HealthMonApp() {
 
 
     var screen by remember {
-        mutableStateOf(
-            WatchScreen.MAIN
-        )
+        mutableStateOf(WatchScreen.MAIN)
     }
 
     var selectedExercise by remember {
         mutableStateOf<WorkoutType?>(null)
     }
 
-    /*
-     * 권한 요청 후 자동으로 시작할 운동
-     */
     var pendingExercise by remember {
         mutableStateOf<WorkoutType?>(null)
     }
 
-    /*
-     * 운동 측정에 반드시 필요한 권한만 정의한다.
-     *
-     * POST_NOTIFICATIONS는 운동 측정 자체에는 필수가 아니므로
-     * 여기에 넣지 않는다.
-     */
     val requiredExercisePermissions = remember {
         buildList {
-
-            add(
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
 
             if (Build.VERSION.SDK_INT >= 36) {
-                add(
-                    HealthPermissions.READ_HEART_RATE
-                )
+                add(HealthPermissions.READ_HEART_RATE)
             } else {
-                add(
-                    Manifest.permission.BODY_SENSORS
-                )
+                add(Manifest.permission.BODY_SENSORS)
             }
         }
     }
 
-    /*
-     * 앱 시작 시 요청할 전체 권한.
-     *
-     * 알림 권한은 OngoingActivity 표시를 위해 요청하지만
-     * 거부되어도 운동 측정 자체는 허용한다.
-     */
     val startupPermissions = remember {
         buildList {
+            addAll(requiredExercisePermissions)
 
-            addAll(
-                requiredExercisePermissions
-            )
-
-            if (
-                Build.VERSION.SDK_INT >=
-                Build.VERSION_CODES.TIRAMISU
-            ) {
-                add(
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
 
     fun hasRequiredExercisePermissions(): Boolean {
-
         return requiredExercisePermissions.all { permission ->
-
             ContextCompat.checkSelfPermission(
                 context,
                 permission
@@ -113,9 +80,7 @@ fun HealthMonApp() {
         }
     }
 
-    fun startWorkout(
-        exercise: WorkoutType
-    ) {
+    fun startWorkout(exercise: WorkoutType) {
         ExerciseService.start(
             context,
             exercise
@@ -125,28 +90,19 @@ fun HealthMonApp() {
         screen = WatchScreen.WORKOUT
     }
 
-    val permissionLauncher =
-        rememberLauncherForActivityResult(
-            contract =
-                ActivityResultContracts
+    val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts
                     .RequestMultiplePermissions()
         ) {
-
-            if (
-                hasRequiredExercisePermissions()
-            ) {
-
+            if (hasRequiredExercisePermissions()) {
                 pendingExercise?.let { exercise ->
 
                     pendingExercise = null
 
-                    startWorkout(
-                        exercise
-                    )
+                    startWorkout(exercise)
                 }
 
             } else {
-
                 pendingExercise = null
 
                 Toast.makeText(
@@ -158,10 +114,8 @@ fun HealthMonApp() {
         }
 
     LaunchedEffect(Unit) {
-
         val missingPermissions =
             startupPermissions.filter { permission ->
-
                 ContextCompat.checkSelfPermission(
                     context,
                     permission
@@ -169,7 +123,6 @@ fun HealthMonApp() {
             }
 
         if (missingPermissions.isNotEmpty()) {
-
             permissionLauncher.launch(
                 missingPermissions.toTypedArray()
             )
@@ -179,19 +132,15 @@ fun HealthMonApp() {
     LaunchedEffect(activeWorkoutType, completedWorkout) {
         when {
             completedWorkout != null -> {
-                selectedExercise =
-                    completedWorkout!!.exercise
+                selectedExercise = completedWorkout!!.exercise
 
-                screen =
-                    WatchScreen.WORKOUT_RESULT
+                screen = WatchScreen.WORKOUT_RESULT
             }
 
             activeWorkoutType != null -> {
-                selectedExercise =
-                    activeWorkoutType
+                selectedExercise = activeWorkoutType
 
-                screen =
-                    WatchScreen.WORKOUT
+                screen = WatchScreen.WORKOUT
             }
         }
     }
