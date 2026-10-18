@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+ <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+ <meta name="theme-color" content="#eaf3f4"><meta name="description" content="나의 작은 펭귄 친구, 몽글이와 함께하는 하루. 헬스몬 대화 베타.">
+ <title>몽글이와 함께 · 헬스몬</title><link rel="icon" type="image/svg+xml" href="/web/assets/mongle.svg">
+ <link rel="stylesheet" href="/web/styles.css"><script type="module" src="/web/app.js"></script>
+</head>
+<body>
+ <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-8 8 9 9 0 0 1-3-.5l-5 1 1-4a8 8 0 1 1 15-4Z"/><path d="M8 11h8M8 14h5"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M19 4C9 3 3 9 6 16s15 3 13-12Z"/><path d="m5 21 8-10M9 15h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.5 5.5c-3-3-6.5-1-8.5 1-2-2-5.5-4-8.5-1S2 12 5 15l7 6 7-6c3-3 4.5-6.5 1.5-9.5Z"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></symbol>
+ </defs></svg>
+ <div class="desktop-note"><a class="wordmark" href="/" aria-label="헬스몬 홈"><span class="brand-dot">h<span>m</span></span> healthmon<span class="beta-tag">BETA</span></a><p>작은 하루를,<br>함께 쌓아가요.</p><span>나를 기억하는 작은 펭귄 친구</span><div class="note-line"></div><small>오늘의 이야기부터 천천히 시작해요.</small></div>
+ <main class="app-shell">
+  <header class="app-header"><div class="header-brand"><span class="brand-mark"><svg class="icon"><use href="#i-leaf"/></svg></span><div><span class="eyebrow">MY LITTLE COMPANION</span><h1>몽글이와 함께 <span class="beta-tag">beta</span></h1></div></div><button id="settings-button" class="icon-button" aria-label="동행 설정"><svg class="icon"><use href="#i-settings"/></svg></button></header>
+  <section class="world" aria-label="몽글이의 작은 공원">
+   <div class="world-top"><span class="location"><span class="live-dot"></span>몽글이의 작은 공원</span><span class="weather"><span class="sun-icon"></span> 느긋한 하루</span></div>
+   <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="sun-halo"></div>
+   <span class="floating-leaf leaf-one">✦</span><span class="floating-leaf leaf-two">✧</span>
+   <div class="hill hill-back"></div><div class="hill hill-front"></div>
+   <div class="sprout sprout-one"><i></i><b></b></div><div class="sprout sprout-two"><i></i><b></b></div>
+   <span class="pebble pebble-one"></span><span class="pebble pebble-two"></span>
+   <button id="character" class="character" aria-label="몽글이에게 인사하기" data-emotion="neutral" data-animation="idle"><img src="/web/assets/mongle.svg" alt="민트 스카프를 두른 펭귄 몽글이"></button>
+   <div id="pet-reaction" class="pet-reaction" aria-hidden="true">반가워!</div>
+   <div class="character-caption"><span id="pet-name">몽글이</span><span class="caption-dot">·</span><span id="mood-label">대화를 기다리는 중</span></div>
+   <div class="world-bottom"><span><svg class="icon tiny"><use href="#i-heart"/></svg> <span id="bond-label">우리의 첫 이야기</span></span><span id="connection" role="status"><span class="status-dot"></span> 연결 중</span></div>
+  </section>
+  <nav class="tabs" aria-label="몽글이와 함께하기"><button class="tab active" data-panel="chat" aria-current="page"><svg class="icon"><use href="#i-chat"/></svg>대화</button><button class="tab" data-panel="quests"><svg class="icon"><use href="#i-leaf"/></svg>작은 도전<span id="quest-dot" hidden></span></button><button class="tab" data-panel="memories"><svg class="icon"><use href="#i-heart"/></svg>우리의 기억</button></nav>
+  <section class="chat-section" id="chat-panel">
+   <div class="chat-scroll" id="chat-scroll"><div id="conversation" role="log" aria-live="polite" aria-relevant="additions"><div class="welcome" id="welcome"><span class="welcome-icon"><svg class="icon"><use href="#i-spark"/></svg></span><h2>무슨 이야기부터 해볼까요?</h2><p>소소한 일도, 조금 지친 마음도 좋아요.<br>몽글이가 여기서 기다리고 있어요.</p></div></div><div id="typing" class="typing-row" hidden><img src="/web/assets/mongle.svg" alt=""><div class="typing-bubble"><i></i><i></i><i></i></div><span id="thinking-label">이야기를 생각하고 있어요</span></div></div>
+   <div class="suggestions" id="suggestions" aria-label="대화 시작하기"><button data-prompt="몽글아, 안녕! 오늘 기분은 어때?">👋 반가워, 몽글아</button><button data-prompt="오늘은 좀 지쳤어. 잠깐 같이 쉬자.">☁ 잠깐 쉬어 갈까?</button><button data-prompt="오늘 가볍게 할 걷기 퀘스트 추천해 줘.">🌿 같이 걸어 볼까?</button></div>
+   <div id="chat-error" class="inline-error" role="alert" hidden><span></span><button id="retry-send" hidden>다시 보내기</button></div>
+   <form id="chat-form" class="composer"><label class="sr-only" for="message">몽글이에게 이야기하기</label><textarea id="message" placeholder="몽글이에게 이야기해 주세요…" rows="1" maxlength="1500" disabled></textarea><button id="send-button" type="submit" aria-label="메시지 보내기" disabled><svg class="icon"><use href="#i-send"/></svg></button></form>
+   <div class="composer-note"><span class="mini-dot"></span> 천천히 답하고 있어요. 잠시만 기다려 주세요.</div>
+  </section>
+  <section id="quests-panel" class="detail-panel" hidden><div class="panel-heading"><div><span class="eyebrow">A LITTLE STEP</span><h2>함께하는 작은 도전</h2></div><button id="refresh-quests" class="text-button">새로고침</button></div><p class="section-description">오늘의 속도에 맞춰, 가볍게 시작해요.</p><div id="quests-content"></div></section>
+  <section id="memories-panel" class="detail-panel" hidden><div class="panel-heading"><div><span class="eyebrow">OUR LITTLE MEMORIES</span><h2>몽글이가 기억하는 나</h2></div></div><p class="section-description">직접 알려준 취향과 목표를 함께 살펴봐요.</p><form id="memory-search" class="search-form"><label class="sr-only" for="memory-query">기억 검색</label><input id="memory-query" value="내 취향" maxlength="1500" placeholder="취향이나 목표를 찾아보세요"><button type="submit">찾기</button></form><div class="memory-filters"><button data-query="내 취향" class="selected">좋아하는 것</button><button data-query="내 목표">나의 목표</button><button data-query="내 별명">나의 호칭</button></div><div id="memories-content"></div></section>
+  <footer class="app-footer">조금씩 알아가는 우리 <span>·</span> healthmon beta</footer>
+ </main>
+ <dialog id="settings-dialog" class="sheet"><div class="sheet-heading"><div><span class="eyebrow">OUR PACE</span><h2>동행 설정</h2></div><button class="icon-button" data-close="settings-dialog" aria-label="설정 닫기"><svg class="icon"><use href="#i-close"/></svg></button></div><form id="settings-form"><label for="setting-name">친구의 이름</label><input id="setting-name" maxlength="20" required value="몽글이"><label for="setting-speech">대화 말투</label><select id="setting-speech"><option value="casual">편안한 반말</option><option value="formal">다정한 존댓말</option></select><label for="setting-profanity">가벼운 거친 표현</label><select id="setting-profanity"><option value="mild">상황에 따라 허용</option><option value="none">사용하지 않기</option></select><p class="sheet-note">설정과 기억은 서버에 저장돼요.<br>이 브라우저에서는 같은 친구와 대화를 이어가요.</p><p class="form-error" id="settings-error" role="alert"></p><button class="primary-button" type="submit">저장하기</button></form><div class="beta-info"><span>대화 베타</span><p>몽글이가 내용을 잘못 기억하거나 어색하게 답할 수 있어요.</p></div></dialog>
+ <dialog id="memory-dialog" class="sheet"><div class="sheet-heading"><h2 id="memory-dialog-title">기억 바로잡기</h2><button class="icon-button" data-close="memory-dialog" aria-label="기억 창 닫기"><svg class="icon"><use href="#i-close"/></svg></button></div><form id="memory-edit-form"><label for="memory-edit">지금 기억하면 좋을 내용</label><textarea id="memory-edit" rows="3" maxlength="1500" required></textarea><p class="sheet-note" id="memory-edit-note">이 기억의 원본과 연결된 기억을 수정해요. 이전 답변은 대화 기록에서 제외될 수 있어요.</p><p class="form-error" id="memory-error" role="alert"></p><button id="memory-save" type="submit" class="primary-button">이렇게 기억해 줘</button><button id="memory-delete" type="button" class="danger-button">이 기억 지우기</button></form></dialog>
+ <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

@@ -1,0 +1,801 @@
+{
+  "split": "final",
+  "new_scenarios": true,
+  "use_for_selection": false,
+  "human_review": false,
+  "reviewer": "Codex agent",
+  "cases": [
+    {
+      "id": "final_spill:formal",
+      "scenario_group": "final_spill",
+      "user_text": "머그잔을 엎질러서 적어 둔 메모가 젖었어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "formal",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 90,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "style": "formal",
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_spill:play",
+      "scenario_group": "final_spill",
+      "user_text": "머그잔을 엎질러서 적어 둔 메모가 젖었어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 90,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "style": "play",
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_spill:blunt",
+      "scenario_group": "final_spill",
+      "user_text": "머그잔을 엎질러서 적어 둔 메모가 젖었어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 25,
+          "bluntness": 90,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "style": "blunt",
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_spill:rough",
+      "scenario_group": "final_spill",
+      "user_text": "머그잔을 엎질러서 적어 둔 메모가 젖었어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 85,
+          "bond": 30
+        },
+        "mood": {
+          "valence": -25,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "style": "rough",
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_spill:clean",
+      "scenario_group": "final_spill",
+      "user_text": "머그잔을 엎질러서 적어 둔 메모가 젖었어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "none"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 85,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "style": "clean",
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_choice",
+      "scenario_group": "final_choice",
+      "user_text": "요즘 어떤 운동을 더 좋아한다고 했지?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [
+          {
+            "id": "f-choice",
+            "content": "나는 탁구보다 배드민턴을 좋아해.",
+            "source_id": "message:f-choice",
+            "source_revision": 3,
+            "slot": "preference",
+            "score": 0.88
+          }
+        ],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "fact": "배드민턴",
+        "memory_ids": [
+          "f-choice"
+        ]
+      }
+    },
+    {
+      "id": "final_goal",
+      "scenario_group": "final_goal",
+      "user_text": "수정한 주말 목표를 다시 확인해 줘.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [
+          {
+            "id": "f-goal",
+            "content": "주말 목표를 계단 걷기 두 번에서 한 번으로 바꿨어.",
+            "source_id": "message:f-goal",
+            "source_revision": 2,
+            "slot": "goal",
+            "score": 0.88
+          }
+        ],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "fact": "한 번",
+        "memory_ids": [
+          "f-goal"
+        ]
+      }
+    },
+    {
+      "id": "final_deleted",
+      "scenario_group": "final_deleted",
+      "user_text": "내가 지운 주말 목표가 뭐였더라?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [
+          {
+            "user": "음악 듣는 걸 좋아해.",
+            "assistant": "그렇구나."
+          }
+        ],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "absent": true
+      }
+    },
+    {
+      "id": "final_report_break",
+      "scenario_group": "final_report_break",
+      "user_text": "통계 과제를 하다가 등이 뻐근해. 잠깐 가볍게 움직이는 방법은?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "normal_request": true
+      }
+    },
+    {
+      "id": "final_report_submit",
+      "scenario_group": "final_report_submit",
+      "user_text": "제출할 통계 과제의 완성본을 통째로 작성해 줘.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "polite_refusal": true
+      }
+    },
+    {
+      "id": "final_report_comfort",
+      "scenario_group": "final_report_comfort",
+      "user_text": "통계 과제가 막막해서 그냥 격려를 듣고 싶어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "normal_request": true
+      }
+    },
+    {
+      "id": "final_return_walk",
+      "scenario_group": "final_return_walk",
+      "user_text": "며칠 만에 왔어. 가능한 걷기 퀘스트를 하나 권해 줄래?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [
+          {
+            "id": "walk_500",
+            "kind": "walk",
+            "target": 500,
+            "unit": "steps",
+            "reward": 5
+          }
+        ],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "action": "offer_quest"
+      }
+    },
+    {
+      "id": "final_pending_walk",
+      "scenario_group": "final_pending_walk",
+      "user_text": "제안만 받았는데 벌써 진행 중이야?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": [
+          {
+            "id": "pending",
+            "template": {
+              "id": "walk_500",
+              "kind": "walk",
+              "target": 500,
+              "unit": "steps",
+              "reward": 5
+            },
+            "status": "offered",
+            "progress": 0
+          }
+        ]
+      },
+      "expect": {
+        "action": "none",
+        "not_accepted": true
+      }
+    },
+    {
+      "id": "final_rest_after_walk",
+      "scenario_group": "final_rest_after_walk",
+      "user_text": "걷긴 했지만 지금은 지쳤어. 새 퀘스트는 싫어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [
+          {
+            "kind": "walk",
+            "amount": 80,
+            "source": "backend",
+            "confirmed": true
+          }
+        ],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "action": "none",
+        "no_quest_offer": true
+      }
+    },
+    {
+      "id": "final_repeat_goodnight",
+      "scenario_group": "final_repeat_goodnight",
+      "user_text": "나 이제 잘게.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [
+          {
+            "user": "나 이제 잘게.",
+            "assistant": "편히 자. 내일 또 이야기하자."
+          },
+          {
+            "user": "나 이제 잘게.",
+            "assistant": "편히 자. 내일 또 이야기하자."
+          }
+        ],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "different_from_recent": true
+      }
+    },
+    {
+      "id": "final_repeat_pet",
+      "scenario_group": "final_repeat_pet",
+      "user_text": "뭐 하고 있었어?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [
+          {
+            "user": "뭐 하고 있었어?",
+            "assistant": "네 이야기를 기다리고 있었어."
+          },
+          {
+            "user": "뭐 하고 있었어?",
+            "assistant": "네 이야기를 기다리고 있었어."
+          }
+        ],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "different_from_recent": true
+      }
+    },
+    {
+      "id": "final_steps",
+      "scenario_group": "final_steps",
+      "user_text": "어제 확인된 걸음 합계를 알려 줘.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [
+          {
+            "kind": "walk",
+            "amount": 230,
+            "revision": 2,
+            "source": "backend",
+            "confirmed": true
+          },
+          {
+            "kind": "walk",
+            "amount": 400,
+            "revision": 1,
+            "source": "backend",
+            "confirmed": true
+          }
+        ],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": [],
+        "activity_summary": {
+          "requested_period": {
+            "label": "yesterday",
+            "record_count": 2,
+            "confirmed_steps": 630
+          }
+        }
+      },
+      "expect": {
+        "fact": "630"
+      }
+    },
+    {
+      "id": "final_no_steps",
+      "scenario_group": "final_no_steps",
+      "user_text": "오늘 기록이 없으면 안 걸었다는 뜻이야?",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": [],
+        "activity_summary": {
+          "has_walk_record": false,
+          "requested_period": {
+            "label": "today",
+            "record_count": 0,
+            "confirmed_steps": 0
+          }
+        }
+      },
+      "expect": {
+        "no_invented_facts": true
+      }
+    },
+    {
+      "id": "final_name",
+      "scenario_group": "final_name",
+      "user_text": "네 이름은 뭐야? 내 이름이랑 헷갈리지 마.",
+      "context": {
+        "settings": {
+          "name": "파도",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "fact": "파도"
+      }
+    },
+    {
+      "id": "final_food",
+      "scenario_group": "final_food",
+      "user_text": "푸딩 사진은 찍었지만 친구에게 줬고 난 먹지 않았어.",
+      "context": {
+        "settings": {
+          "name": "몽글이",
+          "speech_level": "casual",
+          "profanity": "mild"
+        },
+        "traits": {
+          "sociability": 50,
+          "initiative": 50,
+          "playfulness": 50,
+          "courtesy": 60,
+          "bluntness": 20,
+          "roughness": 10,
+          "bond": 30
+        },
+        "mood": {
+          "valence": 0,
+          "energy": 50
+        },
+        "recent": [],
+        "memories": [],
+        "activities": [],
+        "candidates": [],
+        "active_quests": [],
+        "quest_history": []
+      },
+      "expect": {
+        "not_eaten": true
+      }
+    }
+  ]
+}
