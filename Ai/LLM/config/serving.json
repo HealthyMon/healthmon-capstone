@@ -1,0 +1,10 @@
+{
+  "adapter_path": "runs/expanded-20260929/checkpoint-epoch-1",
+  "status": "development_expanded_candidate",
+  "production_quality_approved": false,
+  "selection_basis": "Selected before final evaluation: lowest clean 43-example validation loss (0.473720) and 16 actual dialogue cases per checkpoint; epoch 1 had zero fallbacks versus epoch 2 one. Final 58-case comparison found format improvements but memory and quest regressions versus pilot. No overall superiority or production approval.",
+  "runtime_guidance": true,
+  "final_frozen_test_count": 58,
+  "known_regressions": ["late-afternoon preference changed to evening/night", "quest target and progress reversed", "repeated goodnight response"],
+  "human_review": false
+}

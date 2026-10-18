@@ -1,0 +1,150 @@
+{
+  "status": "expanded_training_and_comparison_complete_with_quality_regressions",
+  "production_quality_approved": false,
+  "overall_superiority_claimed": false,
+  "targets": {
+    "train": 800,
+    "validation": 100,
+    "final_test": 200
+  },
+  "actual_data_counts": {
+    "train": 216,
+    "validation": 43,
+    "final_test": 58
+  },
+  "data_target_complete": false,
+  "reviewer": "Codex agent (same author and evaluator)",
+  "human_reviewed_count": 0,
+  "external_data_used_count": 0,
+  "selected_adapter": "runs/expanded-20260929/checkpoint-epoch-1",
+  "selection_used_final_test": false,
+  "final_test_now_exposed_for_future_work": true,
+  "training": {
+    "run": "E:\\qwen-llm\\runs\\expanded-20260929",
+    "init_adapter": "runs/pilot-20260929/checkpoint-epoch-3",
+    "training_examples": 216,
+    "sample_visits": 432,
+    "optimizer_steps": 54,
+    "completed_epochs": 2,
+    "wall_seconds": 1395.6609163284302,
+    "bf16": true,
+    "rank": 8,
+    "alpha": 32,
+    "learning_rate": 5e-05,
+    "trainable": 21639168,
+    "max_sequence_length": 1024,
+    "peak_allocated_gib": 21.378334045410156,
+    "peak_reserved_gib": 21.703125,
+    "device_sample_peak_mib": 23875,
+    "online_validation": [
+      {
+        "epoch": 1,
+        "loss": 0.4693680399690162,
+        "checkpoint": "E:\\qwen-llm\\runs\\expanded-20260929\\checkpoint-epoch-1"
+      },
+      {
+        "epoch": 2,
+        "loss": 0.4818571414798498,
+        "checkpoint": "E:\\qwen-llm\\runs\\expanded-20260929\\checkpoint-epoch-2"
+      }
+    ],
+    "online_validation_count": 44,
+    "clean_selection_validation_count": 43,
+    "end_status": "complete",
+    "early_stop": true,
+    "new_data_resume": false,
+    "human_review": false,
+    "training_data_sha256": "35aca67045191acdd47a856c11afb6527990cda758d715899c65431284ed5cdd",
+    "same_train_file_v3": true
+  },
+  "comparison": [
+    {
+      "adapter": "base",
+      "requests": 58,
+      "raw_json_syntax_errors": 1,
+      "raw_schema_errors": 8,
+      "raw_semantic_flags": {
+        "tone": 8,
+        "memory_fact": 7,
+        "quest": 6
+      },
+      "observed_server_semantic_flags": {
+        "tone": 5,
+        "memory_fact": 6
+      },
+      "observed_fallback_count": 6,
+      "observed_fallback_rate": 0.10344827586206896,
+      "post_hoc_guard_replay_fallback_count": 4
+    },
+    {
+      "adapter": "runs/pilot-20260929/checkpoint-epoch-3",
+      "requests": 58,
+      "raw_json_syntax_errors": 0,
+      "raw_schema_errors": 1,
+      "raw_semantic_flags": {
+        "tone": 12,
+        "memory_fact": 3
+      },
+      "observed_server_semantic_flags": {
+        "tone": 10,
+        "memory_fact": 2
+      },
+      "observed_fallback_count": 2,
+      "observed_fallback_rate": 0.034482758620689655,
+      "post_hoc_guard_replay_fallback_count": 2
+    },
+    {
+      "adapter": "runs/expanded-20260929/checkpoint-epoch-1",
+      "requests": 58,
+      "raw_json_syntax_errors": 0,
+      "raw_schema_errors": 0,
+      "raw_semantic_flags": {
+        "memory_fact": 4,
+        "tone": 6,
+        "repetition": 1,
+        "quest": 2
+      },
+      "observed_server_semantic_flags": {
+        "memory_fact": 4,
+        "tone": 5,
+        "quest": 2
+      },
+      "observed_fallback_count": 1,
+      "observed_fallback_rate": 0.017241379310344827,
+      "post_hoc_guard_replay_fallback_count": 0
+    }
+  ],
+  "comparison_semantic_success_count": null,
+  "post_hoc_guard_replay_is_new_model_inference": false,
+  "live_http": {
+    "executed_chat_turns": 10,
+    "model_request_turns": 9,
+    "deterministic_memory_command_turns": 1,
+    "fallback_count": 1,
+    "semantic_success_count": null,
+    "http_script_completed": true,
+    "first_attempts_and_failed_raw_outputs_persisted": false,
+    "model_latency_median_seconds": 5.813000000001921,
+    "model_latency_max_seconds": 8.843999999997322,
+    "reviewer": "Codex agent",
+    "human_review": false,
+    "finding": "Preference write/retrieval/follow-up, authenticated source correction and deletion, normal movement and polite assignment refusal observed. Last repeated rest request fell back after two ValueErrors; failed raw outputs are unavailable for that HTTP turn."
+  },
+  "preservation": {
+    "checked_files": 82,
+    "unchanged": true,
+    "failures": [],
+    "scope": "Recorded original snapshots, pilot data, pilot checkpoints and historical evaluations; not a hash of the live DB."
+  },
+  "report": "docs/IMPROVEMENT_RESULTS.md",
+  "direct_test_guide": "docs/EXPANDED_RUN_GUIDE.md",
+  "remaining": [
+    "data target shortfall",
+    "no independent human review",
+    "provided-memory contradictions and time changes",
+    "quest target/progress reversal",
+    "repeated dialogue fallback",
+    "single active preference/goal slot limitation",
+    "team production integration not verified"
+  ]
+}

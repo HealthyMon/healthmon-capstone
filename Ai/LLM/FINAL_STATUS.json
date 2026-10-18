@@ -1,0 +1,53 @@
+{
+  "date": "2026-09-29",
+  "overall": "working_local_pilot_not_production_quality_complete",
+  "prompt_restored_from_user_attachment": true,
+  "original_project_modified": false,
+  "original_lab_data_or_adapters_recovered": false,
+  "gpu": "RTX 3090 24GB",
+  "model": "Qwen/Qwen3.5-9B",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "training": {
+    "dtype": "BF16", "quantized": false,
+    "framework": "Transformers 5.5.1 + PEFT 0.18.1",
+    "train_examples": 34, "validation_examples": 8,
+    "epochs": 3, "optimizer_steps": 15,
+    "rank": 8, "alpha": 32,
+    "actual_max_sequence_tokens": 660,
+    "max_allocated_gib": 20.176178455352783,
+    "max_reserved_gib": 20.447265625,
+    "sampled_device_max_mib": 22501,
+    "adapter_reload_verified": true,
+    "development_adapter": "runs/pilot-20260929/checkpoint-epoch-3"
+  },
+  "verification": {
+    "automated_tests_passed": 21,
+    "actual_qwen_flow_count": 20,
+    "actual_qwen_flow_turns": 200,
+    "two_session_flows": 20,
+    "session_gap_simulated": true,
+    "change_rules_passed": 8,
+    "maintain_rules_passed": 8,
+    "correction_flows_executed": 4,
+    "flow_http_errors": 0,
+    "flow_fallback_turns": 2,
+    "real_postgres_restart_verified": true,
+    "final_real_http_smoke": "runs/http-smoke-final-v3.json",
+    "final_http_delete_answer_used_fallback": true,
+    "frozen_final_test_count": 0,
+    "human_quality_review": false
+  },
+  "running": {
+    "api": "http://127.0.0.1:8000",
+    "db": "127.0.0.1:55432",
+    "server_worker_pid_file": "runs/server-worker.pid"
+  },
+  "remaining": [
+    "800/100/200 data expansion and independent frozen final evaluation",
+    "Natural Korean, reliable raw memory grounding and refusal style",
+    "Human semantic review",
+    "Team authentication, DB schema, Unity mapping and actual reward/growth rules",
+    "Docker validation (native PostgreSQL used instead)",
+    "Full stop/resume training equivalence test"
+  ]
+}

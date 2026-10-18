@@ -1,5 +1,5 @@
 {
-  "scope": "Reviewed GitHub code and environment export; server-wide inventory omitted; license notices added",
+  "scope": "3D source, reproducible environment and Unity evolution bridge; weights/vendor/output data excluded",
   "weights_included": false,
   "rtx3090_inference_tested": false,
   "files": [
@@ -17,6 +17,11 @@
       "path": ".gitignore",
       "bytes": 360,
       "sha256": "762be93cc5f317799791d33f74ae65b402a635e316478c4fde01948ac334e877"
+    },
+    {
+      "path": ".gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "Dockerfile",
@@ -49,6 +54,11 @@
       "sha256": "449cd2869caec1d35efeae57e1a1a929a5cf7ee62fead42894abf19449c28253"
     },
     {
+      "path": "configs/evolution/second-stage-v2.json",
+      "bytes": 3774,
+      "sha256": "87baf2e411006fa0c3f08a7eb68c13a7006111443989862dc6c323e0cb2bc36d"
+    },
+    {
       "path": "configs/evolution_art_direction.json",
       "bytes": 8646,
       "sha256": "95f9e7e650212cd6991f24f4dbf5ff95758d39726789c0f17b930722ebb95ab8"
@@ -72,6 +82,16 @@
       "path": "configs/serak_numeric_profiles.json",
       "bytes": 5208,
       "sha256": "95817ccdb67f449abf04efe4528e9b6066c306b97cf3f7096914287e2043e404"
+    },
+    {
+      "path": "configs/species/mora.json",
+      "bytes": 2342,
+      "sha256": "7bd13b8bf262de97591477bb92e733798fb0a9592b84354f3430dd2d35f9da0f"
+    },
+    {
+      "path": "configs/species/nubi.json",
+      "bytes": 2285,
+      "sha256": "efddeaaac5ea3080c167521d3a47fd6c99a136d47c079fd19119a5b725b37ce0"
     },
     {
       "path": "configs/species/serak.json",
@@ -569,9 +589,139 @@
       "sha256": "7cb25fa2dd9b19cdc6739d39d82794518b0de7b09c9be0b28bafd5707625d383"
     },
     {
+      "path": "runtime/lineage/matrix.py",
+      "bytes": 12380,
+      "sha256": "f88aa969e84a7870eb21ace9308a9db7e982f1776f18d61283c5abb5fa7be416"
+    },
+    {
+      "path": "runtime/lineage/qwen_runner.py",
+      "bytes": 12383,
+      "sha256": "c0949a980329180aec65bda6a9ccb7a69fde69044e7a852572545924004a6c7f"
+    },
+    {
+      "path": "runtime/lineage/reconstruct.py",
+      "bytes": 1472,
+      "sha256": "f6537faabf5b6d73958ff4a8b89d36a3a52e86de657a8e429d333840f5ec2fab"
+    },
+    {
+      "path": "runtime/lineage/run_image_to_rigged.py",
+      "bytes": 6222,
+      "sha256": "11086a86851b98663d6c7d70d5c09a46257068c47742bd464ed95a611aa150d9"
+    },
+    {
+      "path": "runtime/lineage/trellis_runner.py",
+      "bytes": 19300,
+      "sha256": "120c20a5564ab874daf66a0bc3336d73d69e4873b72d340c033ad10bb3239dd4"
+    },
+    {
+      "path": "runtime/phased/compose.qwen.yaml",
+      "bytes": 71,
+      "sha256": "9962fd15064494ba25da9825be7c470e469969ed725b629502330e5c7605f16b"
+    },
+    {
+      "path": "runtime/phased/compose.reconstruction.yaml",
+      "bytes": 72,
+      "sha256": "62290712396dcd953b3c02e0842e181c7ca319d24c4ab5ced351ce084f8b00a5"
+    },
+    {
+      "path": "runtime/phased/configure_gpu_runtime.py",
+      "bytes": 539,
+      "sha256": "4f3c595cc51f262dea8e0ab8087c42d408f0c7b37e3b3c393db07e61e2f7baeb"
+    },
+    {
+      "path": "runtime/phased/qwen_runner.py",
+      "bytes": 12266,
+      "sha256": "d7ee63d0de5f763665c09e082b0528ee4b7fd974273e5b17675c9a45813440b1"
+    },
+    {
+      "path": "runtime/phased/run_stages.sh",
+      "bytes": 3072,
+      "sha256": "e8422e29ee377f53cb5413f125659b6e716de120e6d45d74a3c659ecd79e123e"
+    },
+    {
+      "path": "runtime/unity/HealthMonEvolution.json",
+      "bytes": 192,
+      "sha256": "63f4f1140332d1a3e33655327571e7fae8a7a68ffab9214067fe101558b7ddd1"
+    },
+    {
+      "path": "runtime/unity/README.md",
+      "bytes": 1351,
+      "sha256": "32885a6f671cc7587660ec83a86df49a10285f0f25379f60a633f9bb1423062b"
+    },
+    {
+      "path": "runtime/unity/evolution_worker.py",
+      "bytes": 12335,
+      "sha256": "a3475d7cf11f60501e4dfe2f695b9980d2e19f30aa1544c83e38178f4328217f"
+    },
+    {
+      "path": "runtime/unity/job_store.py",
+      "bytes": 10389,
+      "sha256": "ef8c0ce90d88b6abd7ed83b5fff7813c0295456f2048f3dc98b6f03483c0451a"
+    },
+    {
+      "path": "runtime/unity/mobile_export.py",
+      "bytes": 1930,
+      "sha256": "42a96312336998320494e840116ad95fb3054faacae6e0164a42e687129310a5"
+    },
+    {
+      "path": "runtime/unity/provision_starter.py",
+      "bytes": 837,
+      "sha256": "d0cb95309657b758189f1e32ce91a0b219f0bbf982c6359b201016f27745ecd0"
+    },
+    {
+      "path": "runtime/unity/review_evolution_images.py",
+      "bytes": 7552,
+      "sha256": "2b9a1e74ae10d60289aad389f490311f8e779b7c5ed16bc07877361800c36dd8"
+    },
+    {
+      "path": "runtime/unity/service.py",
+      "bytes": 11289,
+      "sha256": "d0395d6df69092213409895969e4742d1b18469dc7723761e20e46086080ad1e"
+    },
+    {
+      "path": "runtime/unity/setup_tls.ps1",
+      "bytes": 1935,
+      "sha256": "83eee5e85458216f6930a92e290dc71b0ffb8980c8321c71e553e188aa5f40b8"
+    },
+    {
+      "path": "runtime/unity/species_experiment.py",
+      "bytes": 4263,
+      "sha256": "0c400154a3231195695c007f5fccbf12979ac25ba3497f1088f0ee4093a2fdb4"
+    },
+    {
+      "path": "runtime/unity/start_service.ps1",
+      "bytes": 591,
+      "sha256": "45907a15b1dd12d130b58f3b674a2e222317e9a4adf282313dada10fd5d9e2ea"
+    },
+    {
+      "path": "runtime/unity/test_evolution_gate.py",
+      "bytes": 3572,
+      "sha256": "32ba5db049a85dfc909e4f2b8a733594ea0e417a3b355fa7053eacb5216259c2"
+    },
+    {
+      "path": "runtime/unity/test_jobs.py",
+      "bytes": 7250,
+      "sha256": "805164b503e18a2c9a3726bc876a2698e205071789b57fd39768c728c38dd182"
+    },
+    {
+      "path": "runtime/unity/test_second_stage.py",
+      "bytes": 3817,
+      "sha256": "88afe0873a555f83d837ae4ac4acd7a3dd4feb52568bb250eb679f8fc6cdb49a"
+    },
+    {
+      "path": "runtime/unity/test_species_contracts.py",
+      "bytes": 5277,
+      "sha256": "83e6a988b7d3a304bebb37315ac150f963121b7c45afb000b45b5c771b804506"
+    },
+    {
       "path": "scripts/background_matte.py",
       "bytes": 1916,
       "sha256": "07ccd3a965b07b0932b3b443e70be2c201628d9612d846dc45bd62a48615ac9a"
+    },
+    {
+      "path": "scripts/launch_unity_bridge.py",
+      "bytes": 2297,
+      "sha256": "85648c26a0c110ca6fd908a00de0209b35085bb1dd98a9f9774eb6f658a273be"
     },
     {
       "path": "scripts/prepare_3d_input.py",
@@ -669,9 +819,14 @@
       "sha256": "5e0146254d7d377ca6bd4ee290ac0a6680988ab4fe4d58cdbfbf813c697ba0fd"
     },
     {
+      "path": "src/healthmon/evolution_gate.py",
+      "bytes": 7088,
+      "sha256": "7ca43bf4fc0712a3f516e9adbdb85e68dfaef88dec4e0185bfee047588373c2e"
+    },
+    {
       "path": "src/healthmon/individual_evolution.py",
-      "bytes": 29647,
-      "sha256": "a3dc6c0baaad7d88fd9a373bd64a2c714a53744545da3b1afcb5bfdfff23c7b3"
+      "bytes": 31298,
+      "sha256": "8b077f91ca09edd08f58b624e8e1ccf69424ead47354c89d3d615ec9d2ed2e0b"
     },
     {
       "path": "src/healthmon/numeric_evolution.py",
@@ -724,9 +879,19 @@
       "sha256": "a048d5e35ad30c9a3462a841074ffda6ad27eaa44c6b0541942eb1d6f813d14d"
     },
     {
+      "path": "src/healthmon/species_contract.py",
+      "bytes": 9464,
+      "sha256": "f5f82df361ae29bd43859cae242a55d91bd95077a5544e74671fe032892bd44d"
+    },
+    {
       "path": "src/healthmon/trellis_runner.py",
       "bytes": 19005,
       "sha256": "cf4b9a88a621c83d86e084c637a4c5ef5c1a840fa1fce00c9d038f42e9673240"
+    },
+    {
+      "path": "tests/fixtures/lucan-species-baseline.json",
+      "bytes": 26341,
+      "sha256": "dc5e85be0a7c989d241d3ed8b54afbb9f13c0dcecaf10544336025ae972e7cd9"
     },
     {
       "path": "tests/test_migration.py",

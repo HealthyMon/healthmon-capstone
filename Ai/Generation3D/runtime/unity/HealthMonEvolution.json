@@ -1,0 +1,8 @@
+{
+  "base_url": "https://127.0.0.1:8010",
+  "pet_id": "lucan-local",
+  "display_height_m": 0.35,
+  "model_yaw_degrees": 180,
+  "auto_level_evolution": true,
+  "certificate_sha256": ""
+}

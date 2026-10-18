@@ -24,6 +24,16 @@ public class FoodApiSender : MonoBehaviour
 
     private void Start()
     {
+        // The desktop integration records food and dialogue on the same authenticated pet.
+        // Preserve the team's standalone sender for scenes without that integration.
+        var dialogue = FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include);
+        if (dialogue != null && dialogue.Api != null)
+        {
+            UseManualCapture();
+            Debug.Log("[FoodAPI] Shared pet API enabled; FoodScanPrototype owns the existing buttons.");
+            return;
+        }
+
         if (GetComponent<FoodScanLiveUI>() == null)
             gameObject.AddComponent<FoodScanLiveUI>().Initialize(this);
     }

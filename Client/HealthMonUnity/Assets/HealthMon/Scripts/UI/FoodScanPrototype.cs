@@ -1,3 +1,6 @@
+using System;
+using System.Globalization;
+using Healthmon.Beta;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,323 +8,201 @@ using UnityEngine.UI;
 public class FoodScanPrototype : MonoBehaviour
 {
     [Header("Views")]
-    [SerializeField] private GameObject captureView;
-    [SerializeField] private GameObject candidateView;
-    [SerializeField] private GameObject resultView;
-
+    [SerializeField] private GameObject captureView, candidateView, resultView;
     [Header("Result UI")]
-    [SerializeField] private TMP_Text foodNameText;
-    [SerializeField] private TMP_Text caloriesText;
-    [SerializeField] private TMP_Text proteinText;
-    [SerializeField] private TMP_Text carbText;
-    [SerializeField] private TMP_Text fatText;
-    [SerializeField]
-    private QuestPrototype questPrototype;
-
-    [Header("Real Camera Capture")]
-    [SerializeField]
-    private ARFoodCameraCapture cameraCapture;
-
-    [SerializeField]
-    private RawImage capturedPreview;
-
-    [SerializeField]
-    private TMP_Text scanStatusText;
-
+    [SerializeField] private TMP_Text foodNameText, caloriesText, proteinText, carbText, fatText;
+    [SerializeField] private QuestPrototype questPrototype;
+    [Header("Camera")]
+    [SerializeField] private ARFoodCameraCapture cameraCapture;
+    [SerializeField] private RawImage capturedPreview;
+    [SerializeField] private TMP_Text scanStatusText;
     [SerializeField] private Button analyzeButton;
-
-    [Header("API")]
-    [SerializeField]
-    private HealthMonApiManager apiManager;
+    private DialoguePrototype dialogue;
+    private byte[] capturedBytes;
+    private FoodAnalysis analysis;
+    private FoodCandidate selected;
+    private TMP_InputField gramsInput;
+    private readonly Button[] candidateButtons = new Button[3];
+    private bool confirming;
+    public string LastAnalysisId { get; private set; }
+    public string LastRecordedSourceId { get; private set; }
+    private HealthmonApiClient Api => dialogue == null ? null : dialogue.Api;
 
     private void Start()
     {
-        ShowCapture();
-
-        if (cameraCapture != null)
+        dialogue = FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include);
+        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted += HandleCaptureCompleted; cameraCapture.OnCaptureFailed += HandleCaptureFailed; }
+        foreach (var button in candidateView.GetComponentsInChildren<Button>(true))
+            for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
+                if (button.onClick.GetPersistentTarget(i) == this)
+                {
+                    string method = button.onClick.GetPersistentMethodName(i);
+                    int index = method == nameof(SelectChickenSalad) ? 0 : method == nameof(SelectChickenRice) ? 1 : method == nameof(SelectCaesarSalad) ? 2 : -1;
+                    if (index >= 0) candidateButtons[index] = button;
+                }
+        // The updated team scene also has admin inputs. Clone the dialogue input explicitly.
+        var template = Array.Find(FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include),
+            field => field.name == "MessageInput");
+        if (template != null)
         {
-            cameraCapture.OnCaptureCompleted += HandleCaptureCompleted;
-            cameraCapture.OnCaptureFailed += HandleCaptureFailed;
+            gramsInput = Instantiate(template, resultView.transform);
+            gramsInput.name = "ConsumedGrams";
+            foreach (var label in gramsInput.GetComponentsInChildren<TMP_Text>(true))
+            {
+                label.font = foodNameText.font;
+                label.fontSize = 24;
+                if (label != gramsInput.textComponent && label != gramsInput.placeholder)
+                    label.gameObject.SetActive(false);
+            }
+            gramsInput.onValueChanged = new TMP_InputField.OnChangeEvent();
+            gramsInput.onEndEdit = new TMP_InputField.SubmitEvent();
+            gramsInput.onSubmit = new TMP_InputField.SubmitEvent();
+            gramsInput.text = "";
+            gramsInput.contentType = TMP_InputField.ContentType.DecimalNumber;
+            gramsInput.characterLimit = 8;
+            var rect = gramsInput.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(.58f, .38f); rect.anchorMax = new Vector2(.94f, .48f);
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            if (gramsInput.placeholder is TMP_Text placeholder) placeholder.text = "먹은 양(g), 모르면 비워두세요";
+            gramsInput.onValueChanged.AddListener(_ => RenderSelection());
+            gramsInput.gameObject.SetActive(true);
         }
-
-        if (capturedPreview != null)
-        {
-            capturedPreview.gameObject.SetActive(false);
-        }
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text = "촬영 준비 완료";
-        }
-
+#if UNITY_EDITOR
         if (analyzeButton != null)
         {
-            analyzeButton.interactable = false;
+            var desktop = Instantiate(analyzeButton, analyzeButton.transform.parent);
+            desktop.name = "ChooseDesktopFoodPhoto";
+            desktop.onClick = new Button.ButtonClickedEvent();
+            desktop.onClick.AddListener(ChooseDesktopPhoto);
+            var desktopRect = desktop.GetComponent<RectTransform>();
+            desktopRect.anchorMin = new Vector2(.74f, .12f);
+            desktopRect.anchorMax = new Vector2(.96f, .22f);
+            desktopRect.offsetMin = desktopRect.offsetMax = Vector2.zero;
+            var label = desktop.GetComponentInChildren<TMP_Text>(true);
+            if (label != null) label.text = "PC 사진 선택";
+            desktop.interactable = true;
         }
+#endif
+        ShowCapture();
     }
-
-    private void OnDestroy()
+    private void Update()
     {
-        if (cameraCapture != null)
-        {
-            cameraCapture.OnCaptureCompleted
-                -= HandleCaptureCompleted;
-
-            cameraCapture.OnCaptureFailed
-                -= HandleCaptureFailed;
-        }
+        if (analyzeButton != null) analyzeButton.interactable = capturedBytes != null && Api != null && dialogue.IsConnected && !Api.IsBusy && !Api.HasPendingChat;
     }
-
     public void CaptureRealPhoto()
     {
-        if (cameraCapture == null)
-        {
-            Debug.LogError("[FoodScan] ARFoodCameraCapture가 연결되지 않았습니다.");
-
-            if (scanStatusText != null)
-            {
-                scanStatusText.text = "카메라 연결 오류";
-            }
-
-            return;
-        }
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text = "촬영 중...";
-        }
-
-        cameraCapture.Capture();
+        if (cameraCapture == null) { Status("카메라가 연결되지 않았습니다."); return; }
+        Status("촬영 중…"); cameraCapture.Capture();
     }
-
-    private void HandleCaptureCompleted(Texture2D texture, byte[] jpgBytes)
+    private void HandleCaptureCompleted(Texture2D texture, byte[] bytes)
     {
-        Debug.Log(
-            $"[FoodScan] 촬영 이미지 수신 완료: {jpgBytes.Length} bytes"
-        );
-
-        if (capturedPreview != null)
-        {
-            capturedPreview.texture = texture;
-            capturedPreview.gameObject.SetActive(true);
-        }
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text = "촬영 완료";
-        }
-
-         // 나중에 여기에서
-        // AI 서버 업로드 실행
-
-        if (analyzeButton != null)
-        {
-            analyzeButton.interactable = true;
-        }
+        capturedBytes = bytes; analysis = null; selected = null;
+        if (capturedPreview != null) { capturedPreview.texture = texture; capturedPreview.gameObject.SetActive(true); }
+        Status(cameraCapture != null && cameraCapture.LastCaptureWasTestImage
+            ? "PC 시연 사진입니다. 음식 분석을 눌러주세요."
+            : "사진 준비 완료. 음식 분석을 눌러주세요.");
     }
-
-    private void HandleCaptureFailed(string errorMessage)
+    private void HandleCaptureFailed(string error) { Status("촬영 실패: " + error); }
+    public void UseImage(byte[] bytes)
     {
-        Debug.LogError(
-            "[FoodScan] 촬영 실패: " + errorMessage
-        );
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text = "촬영 실패";
-        }
+        var texture = new Texture2D(2, 2);
+        if (!texture.LoadImage(bytes)) { Destroy(texture); Status("이미지를 읽지 못했습니다."); return; }
+        HandleCaptureCompleted(texture, bytes);
     }
-
-    public void ShowCapture()
+#if UNITY_EDITOR
+    public void ChooseDesktopPhoto()
     {
-        captureView.SetActive(true);
-        candidateView.SetActive(false);
-        resultView.SetActive(false);
-
-        if (capturedPreview != null)
-        {
-            capturedPreview.gameObject.SetActive(false);
-        }
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text = "촬영 준비 완료";
-        }
-        if (analyzeButton != null)
-        {
-            analyzeButton.interactable = false;
-        }
-
+        string path = UnityEditor.EditorUtility.OpenFilePanelWithFilters("음식 사진 선택", "", new[] { "사진", "jpg,jpeg,png" });
+        if (!string.IsNullOrEmpty(path)) UseImage(System.IO.File.ReadAllBytes(path));
     }
-
-    public void ShowCandidates()
-    {
-        captureView.SetActive(false);
-        candidateView.SetActive(true);
-        resultView.SetActive(false);
-    }
-
-    public void SelectChickenSalad()
-    {
-        ShowResult(
-            "닭가슴살 샐러드",
-            "420 kcal",
-            "35 g",
-            "28 g",
-            "12 g"
-        );
-    }
-
-    public void SelectChickenRice()
-    {
-        ShowResult(
-            "닭가슴살 덮밥",
-            "560 kcal",
-            "32 g",
-            "65 g",
-            "15 g"
-        );
-    }
-
-    public void SelectCaesarSalad()
-    {
-        ShowResult(
-            "시저 샐러드",
-            "380 kcal",
-            "18 g",
-            "22 g",
-            "24 g"
-        );
-    }
-
-    private void ShowResult(
-        string foodName,
-        string calories,
-        string protein,
-        string carb,
-        string fat)
-    {
-        captureView.SetActive(false);
-        candidateView.SetActive(false);
-        resultView.SetActive(true);
-
-        foodNameText.text = foodName;
-        caloriesText.text = "칼로리 : " + calories;
-        proteinText.text = "단백질 : " + protein;
-        carbText.text = "탄수화물 : " + carb;
-        fatText.text = "지방 : " + fat;
-    }
-
-    public void ConfirmFood()
-    {
-        Debug.Log("[Food] 음식 기록 완료: " + foodNameText.text);
-
-        if (questPrototype != null)
-        {
-            questPrototype.AddFoodRecord();
-        }
-
-        ShowCapture();
-    }
-
+#endif
     public void AnalyzeFood()
     {
-        if (cameraCapture == null)
+        if (capturedBytes == null) { Status("먼저 사진을 촬영하거나 선택해 주세요."); return; }
+        if (Api == null || !dialogue.IsConnected) { Status("서버에 먼저 연결해 주세요."); return; }
+        Status("음식을 분석하고 있어요…");
+        Api.AnalyzeFood(capturedBytes, result =>
         {
-            Debug.LogError(
-                "[FoodScan] CameraCapture 없음"
-            );
-
-            return;
-        }
-
-        if (
-            cameraCapture.LastCapturedJpg == null ||
-            cameraCapture.LastCapturedJpg.Length == 0
-        )
-        {
-            Debug.LogError(
-                "[FoodScan] 촬영된 이미지 없음"
-            );
-
-            if (scanStatusText != null)
+            analysis = result; LastAnalysisId = result.analysis_id; selected = null;
+            if (result.candidates == null || result.candidates.Length == 0) { Status("음식을 찾지 못했어요. 다른 사진으로 시도해 주세요."); return; }
+            for (int i = 0; i < candidateButtons.Length; i++)
             {
-                scanStatusText.text =
-                    "먼저 사진을 촬영해주세요.";
+                var button = candidateButtons[i]; if (button == null) continue;
+                button.gameObject.SetActive(i < result.candidates.Length);
+                if (i < result.candidates.Length)
+                {
+                    var label = button.GetComponentInChildren<TMP_Text>(true);
+                    if (label != null) label.text = result.candidates[i].food + "  " + (result.candidates[i].confidence * 100).ToString("F0") + "%";
+                }
             }
-
-            return;
-        }
-
-        if (apiManager == null)
-        {
-            Debug.LogWarning(
-                "[FoodScan] API Manager가 아직 연결되지 않았습니다."
-            );
-
-            if (scanStatusText != null)
-            {
-                scanStatusText.text =
-                    "AI 서버 연결 전 테스트 모드";
-            }
-
             ShowCandidates();
-
-            return;
-        }
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text =
-                "AI가 음식을 분석 중...";
-        }
-
-        if (analyzeButton != null)
-        {
-            analyzeButton.interactable = false;
-        }
-
-        StartCoroutine(
-            apiManager.PostImage(
-                "/food/analyze",
-                cameraCapture.LastCapturedJpg,
-                HandleAnalysisSuccess,
-                HandleAnalysisError
-            )
-        );
+            Debug.Log($"[HealthMon Vision] AnalysisDisplayed id={result.analysis_id} candidates={result.candidates.Length}");
+        }, Failure);
     }
-    private void HandleAnalysisSuccess(string json)
+    // Keep the existing scene bindings; choose actual server candidates.
+    public void SelectChickenSalad() { SelectCandidate(0); }
+    public void SelectChickenRice() { SelectCandidate(1); }
+    public void SelectCaesarSalad() { SelectCandidate(2); }
+    public void SelectCandidate(int index)
     {
-        Debug.Log(
-            "[FoodScan AI SUCCESS] " + json
-        );
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text =
-                "분석 완료";
-        }
-
-        // 현재는 서버 JSON 형식이 아직 없으므로
-        // 기존 Mock 후보 화면을 표시한다.
-        ShowCandidates();
+        if (analysis == null || index < 0 || index >= analysis.candidates.Length) return;
+        selected = analysis.candidates[index];
+        captureView.SetActive(false); candidateView.SetActive(false); resultView.SetActive(true);
+        if (gramsInput != null) gramsInput.SetTextWithoutNotify(selected.has_estimated_grams ? selected.estimated_grams.ToString("F1", CultureInfo.InvariantCulture) : "");
+        RenderSelection();
     }
-    private void HandleAnalysisError(string error)
+    private bool Quantity(out float? grams)
     {
-        Debug.LogError(
-            "[FoodScan AI ERROR] " + error
-        );
-
-        if (scanStatusText != null)
-        {
-            scanStatusText.text =
-                "분석 실패";
-        }
-
-        if (analyzeButton != null)
-        {
-            analyzeButton.interactable = true;
-        }
+        grams = null;
+        if (gramsInput == null || string.IsNullOrWhiteSpace(gramsInput.text)) return true;
+        float value;
+        if (!float.TryParse(gramsInput.text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) || float.IsNaN(value) || float.IsInfinity(value) || value <= 0 || value > 10000) return false;
+        grams = value; return true;
     }
-
+    private static string Nutrient(string label, NutrientValue value, float scale, string unit)
+    { return label + " : " + (value != null && value.available ? (value.value * scale).ToString("F1") + unit : "정보 없음"); }
+    private void RenderSelection()
+    {
+        if (selected == null) return;
+        float? grams; bool valid = Quantity(out grams);
+        float scale = valid && grams.HasValue ? grams.Value / 100 : 1;
+        foodNameText.text = selected.food + (grams.HasValue ? "\n" + grams.Value.ToString("F1") + "g 기준" : "\n100g당 참고값 (섭취량 미입력)") + (selected.has_estimated_grams ? "\n사진 추정량은 실제 먹은 양으로 수정해 주세요." : "");
+        caloriesText.text = Nutrient("열량", selected.per_100g.energy_kcal, scale, " kcal");
+        proteinText.text = Nutrient("단백질", selected.per_100g.protein_g, scale, " g");
+        carbText.text = Nutrient("탄수화물", selected.per_100g.carbohydrate_g, scale, " g");
+        fatText.text = Nutrient("지방", selected.per_100g.fat_g, scale, " g");
+    }
+    public void ConfirmFood()
+    {
+        if (confirming || selected == null || Api == null || Api.IsBusy) return;
+        float? grams;
+        if (!Quantity(out grams)) { foodNameText.text = "먹은 양을 0보다 크고 10,000g 이하로 입력해 주세요."; return; }
+        confirming = true;
+        Api.ConfirmFood(analysis.analysis_id, selected.candidate_id, grams, result =>
+        {
+            confirming = false; LastRecordedSourceId = result.source_id;
+            if (!result.duplicate && questPrototype != null) questPrototype.AddFoodRecord();
+            ShowCapture(); Status("음식 기록 완료. 대화 화면에서 몽글이의 반응을 확인해 주세요.");
+            Debug.Log($"[HealthMon Food] FoodRecorded source_id={result.source_id} duplicate={result.duplicate} state_version={result.state_version}");
+        }, error => { confirming = false; Failure(error); });
+    }
+    public void ShowCapture()
+    {
+        captureView.SetActive(true); candidateView.SetActive(false); resultView.SetActive(false);
+        capturedBytes = null; analysis = null; selected = null;
+        if (capturedPreview != null) capturedPreview.gameObject.SetActive(false);
+        Status("음식 사진을 촬영하거나 선택해 주세요.");
+    }
+    public void ShowCandidates() { captureView.SetActive(false); candidateView.SetActive(true); resultView.SetActive(false); }
+    private void Status(string text) { if (scanStatusText != null) scanStatusText.text = text; }
+    private void Failure(ApiFailure error)
+    {
+        string message = "분석·저장에 실패했어요 (" + error.StatusCode + "). 다시 시도해 주세요.";
+        Status(message); if (selected != null) foodNameText.text = message;
+        Debug.LogWarning($"[HealthMon Food] RequestFailed status={error.StatusCode}");
+    }
+    private void OnDestroy()
+    {
+        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureFailed -= HandleCaptureFailed; }
+    }
 }

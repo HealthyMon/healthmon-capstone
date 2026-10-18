@@ -1,0 +1,28 @@
+#character-panel .cl-toolbar{display:flex;flex-wrap:wrap;align-items:end;gap:14px;margin-bottom:20px}
+#character-panel .cl-toolbar label{min-width:145px;flex:1}
+#character-panel .cl-toolbar .check{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+#character-panel .check input{width:auto}
+.cl-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:24px;align-items:start}
+.cl-nav{position:sticky;top:20px;display:grid;gap:7px}
+.cl-nav button{text-align:left;border:1px solid transparent;background:transparent;padding:13px 10px}
+.cl-nav button.selected{background:#1d3a32;border-color:#467760;color:var(--mint)}
+.cl-nav small{display:block;color:var(--muted);margin-top:4px}
+.cl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cl-grid label{min-width:0;display:grid;gap:6px}
+.cl-grid input,.cl-grid select{width:100%}
+.cl-actions{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 6px}
+.cl-status{font-size:13px;line-height:1.7;color:var(--mint);overflow-wrap:anywhere}
+.cl-metrics{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.cl-metrics span{background:#20322c;color:var(--mint);border:1px solid #355548;border-radius:8px;padding:8px 12px;font-size:13px}
+#character-panel pre{max-height:380px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.cl-diff{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.cl-diff article{min-width:0}
+.cl-review{border-top:1px solid var(--border);margin-top:18px;padding-top:16px}
+.cl-review textarea{width:100%;font-family:inherit}
+.cl-chip{display:inline-block;font-size:12px;color:#756035;background:#fcf2d8;padding:4px 9px;border-radius:20px}
+.cl-muted{font-size:13px;color:var(--muted);line-height:1.7}
+.cl-result{margin-top:22px}
+#cl-result:empty{display:none}
+#cl-ledger th,#cl-ledger td{font-size:12px;vertical-align:top}
+@media(max-width:800px){.cl-layout{grid-template-columns:1fr}.cl-nav{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.cl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cl-diff{grid-template-columns:1fr}}
+@media(max-width:450px){.cl-grid{grid-template-columns:1fr}.cl-nav button{font-size:13px}.tabs{overflow:auto}}

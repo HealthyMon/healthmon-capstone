@@ -90,8 +90,14 @@ def reference_principles():
         'Branches may have different body plans. Do not copy an existing franchise character.'])
 
 
-def compile_individual(profile):
-    if profile.get('species')!='lucan': raise ValueError('V2 currently validates Lucan only; V1 retains all species')
+def compile_individual(profile, species_contract=None):
+    species = profile.get('species')
+    if species_contract is None and species != 'lucan':
+        raise ValueError('A species contract is required outside the legacy Lucan lineage')
+    if species_contract is not None:
+        from .species_contract import validate_contract
+        species_contract = validate_contract(species_contract, species)
+    version = VERSION if species_contract is None else 'individual-v2.12-species-contracts'
     current=scores(profile['stats'])
     previous=number(profile['previous_level'],'previous_level',0,100)
     level=number(profile['level'],'level',0,100)
@@ -134,7 +140,7 @@ def compile_individual(profile):
     d={k:round(max(0,min(1,v)),6) for k,v in d.items()}
     tendencies={k:d[k] for k in ('kinetic_flow','support_distribution','spatial_spread','visual_density',
                   'social_openness','self_direction','developmental_momentum','contrast_rhythm','coiled_to_expansive')}
-    raw=hashlib.sha256(f'lucan-individual-v1:{seed}'.encode()).digest()
+    raw=hashlib.sha256(f'{species}-individual-v1:{seed}'.encode()).digest()
     variation={k:round(int.from_bytes(raw[j*4:j*4+4],'big')/(2**32-1),6)
                for j,k in enumerate(('contour_rhythm','symmetry_play','motif_migration','negative_space','movement_invention','surface_rhythm'))}
     process_weights={
@@ -151,8 +157,10 @@ def compile_individual(profile):
         1:'First transition: leave the infant form behind and establish a fresh stylized fantasy creature silhouette. Invent an acquired thunder-related visual structure that can be transformed at later stages. Preserve recognizable lineage, not realistic mammalian anatomy.',
         2:'Second transition: substantially redesign the whole-body mass organization, organizing axis, proportions and structural silhouette. The descendant may be compact or immense, graceful or monumental, mythical rather than zoologically realistic. If a final bipedal transition develops, provide preparatory balance in pelvis, hindquarters and tail here. These are possibilities, not mandatory destinations.',
         3:'Third transition: resolve the individual lineage into a distinctive mature mythical creature. A quadruped MAY become a biped at this final stage when its previous balance structures develop accordingly. Quadrupedal, elongated or other coherent fantastical organizations remain possible. Colossal scale and presence are allowed; never force humanoid warriors or repeat a larger realistic wolf.'}[target]
+    if species_contract is not None:
+        stage_contract = species_contract['stage_directions'][str(target)]
     principles=reference_principles()
-    intent=dict(version=VERSION,species='lucan',source_stage=source,target_stage=target,level=LEVELS[target],seed=seed,
+    intent=dict(version=version,species=species,source_stage=source,target_stage=target,level=LEVELS[target],seed=seed,
                 current={k:current[k] for k in BODY_FIELDS},history={k:v for k,v in h.items() if k!='records'},
                 history_records=[dict(r,stats={k:v for k,v in r['stats'].items() if k!='Mood'}) for r in h['records']],
                 dimensions=d,tendencies=tendencies,condition=condition,individual_variation=variation,process_weights=process_weights,
@@ -163,12 +171,19 @@ def compile_individual(profile):
             'Natural anatomy is not mandatory; fantasy anatomy must read as a deliberate connected design. Final-stage bipedal evolution is optional when prepared by previous-stage balance. '
             'Do not reduce the outcome to a realistic animal, automatic armored humanoid, muscular warrior or weight-only edit. '
             'Use a calm expression; mood is a separate runtime channel.\n'+json.dumps(intent,ensure_ascii=False,sort_keys=True))
+    if species_contract is not None:
+        intent['species_contract'] = species_contract
+        prompt = ('Design one newly evolved individual of the explicitly registered species. '
+                  'Use the actual previous image and its declared lineage anchors. '
+                  'Preserve the family identity while reorganizing coherent whole-body shapes for this stage. '
+                  'Mood controls expression only. Full combined design state:\n'
+                  + json.dumps(intent, ensure_ascii=False, sort_keys=True))
     recipe={**intent,'prompt':prompt}
     body_key=digest(recipe)
     mood=current['Mood'];expression=dict(mood=mood,smile=(mood-50)/50,ear_tilt=(mood-50)/250,
         implementation='expression_parameters_only',body_regeneration_required=False,
         note_ko='표정용 값만 갱신합니다. 현재 GLB에는 표정 블렌드셰이프가 없어 자동 표정 변형은 아직 적용하지 않습니다.')
-    return dict(version=VERSION,body_key=body_key,expression_key=digest([body_key,expression]),recipe=recipe,
+    return dict(version=version,body_key=body_key,expression_key=digest([body_key,expression]),recipe=recipe,
                 expression=expression,history=h,dimensions=d,tendencies=tendencies,condition=condition,
                 individual_variation=variation,prompt=prompt,
                 transition=dict(source_stage=source,target_stage=target,level=LEVELS[target]),stats=current,seed=seed,
@@ -202,6 +217,9 @@ AXIS_SOURCES={
 def design_planning_request(compiled):
     """Ask the installed Qwen3-VL head to invent anatomy, not choose a body preset."""
     r=compiled['recipe']
+    if r.get('species_contract') is not None:
+        from .species_contract import planning_request
+        return planning_request(compiled, AXIS_SOURCES)
     # Physical condition remains recorded, but does not dominate the art director.
     state={k:v for k,v in r.items() if k not in ('prompt','history_records','condition','dimensions','current','history','tendencies')}
     state['whole_form_axes']={k:v for k,v in r['dimensions'].items() if k!='adiposity'}
@@ -309,6 +327,7 @@ def infer_design_brief(pipe,request,path,implementation,visual_references=None):
             'Write 30 to 50 English words describing ONLY visible coat colors, fur material, eye color and distinctive markings. '
             'Do not describe claws, appendages, anatomy, props, translucent objects or infer unusual accents from rendering artifacts. If uncertain omit the feature. '
             'Do not propose a new evolution. Describe only features actually visible. No mood or invented history.')
+        perception_system = request.get('perception_system', perception_system)
         perception_key=digest(dict(system=perception_system,implementation=implementation,visual_references=refs))
         perception_path=ROOT/'outputs/v2/lineage_cache'/f'{perception_key}.json'
         if perception_path.exists():
@@ -327,7 +346,7 @@ def infer_design_brief(pipe,request,path,implementation,visual_references=None):
             perception_path.parent.mkdir(parents=True,exist_ok=True);perception_path.write_text(json.dumps(perception,ensure_ascii=False,indent=2)+'\n')
             del visual_inputs,perceived
         path.with_suffix('.lineage.json').write_text(json.dumps(perception,ensure_ascii=False,indent=2)+'\n')
-    user=request['user']+'\n\nACTUAL INHERITED VISUAL SIGNATURE (not an anatomical template):\n'+(perception['signature'] if perception else 'Charcoal, ivory and gold; amber eyes; an organic thunder motif.')
+    user=request['user']+'\n\nACTUAL INHERITED VISUAL SIGNATURE (not an anatomical template):\n'+(perception['signature'] if perception else request.get('fallback_signature', 'Charcoal, ivory and gold; amber eyes; an organic thunder motif.'))
     messages=[dict(role='system',content=request['system']),dict(role='user',content=user)]
     formatted=pipe.processor.apply_chat_template(messages,tokenize=False,add_generation_prompt=True,enable_thinking=False)
     inputs=pipe.processor(text=[formatted],return_tensors='pt').to('cuda')

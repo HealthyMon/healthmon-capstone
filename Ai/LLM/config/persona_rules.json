@@ -1,0 +1,15 @@
+{
+  "version": "persona-growth.v1",
+  "initial": {"curiosity": 50.0, "affection": 50.0, "activity": 50.0, "confidence": 50.0},
+  "short_term_initial": {"mood": "neutral", "energy": 60.0, "recent_motivation": 50.0, "recent_stress": 0.0},
+  "limits": {"minimum": 0.0, "maximum": 100.0, "ordinary_event_axis": 0.5, "daily_positive": 1.0, "daily_negative": 0.5, "weekly_positive": 3.0, "weekly_negative": 1.0, "weekly_streak_total": 1.5, "window_days": 7},
+  "verification": {"sources": ["backend", "sensor", "simulation"], "minimum_confidence": 0.8},
+  "stages": {"names": ["very_low", "low", "medium", "high", "very_high"], "lower_bounds": [0, 25, 40, 60, 75], "hysteresis": 3, "boundary_step": 1},
+  "exercise": {"recorded": {"activity": 0.4, "confidence": 0.2}, "new_type": {"curiosity": 0.5}, "streaks": {"3": {"activity": 0.5}, "7": {"activity": 1.0, "confidence": 0.8}, "14": {"activity": 1.5, "confidence": 1.2}}},
+  "interaction": {"meaningful": {"affection": 0.2}, "asks_state": {"affection": 0.15}, "new_topic": {"curiosity": 0.15}, "greeting": {"affection": 0.05}, "daily_affection_cap": 0.4, "near_duplicate_ratio": 0.88, "duplicate_window_days": 7, "streaks": {"7": {"affection": 0.8}, "14": {"affection": 1.2}}},
+  "food": {"new_food": {"curiosity": 0.2}, "new_group": {"curiosity": 0.3}, "streaks": {"7": {"confidence": 0.4}}, "diversity_groups": 4, "diversity_days": 4, "diversity": {"curiosity": 0.5}, "fast_food_repeat_count": 3, "balanced_pattern_days": 3},
+  "quest": {"progress": {"exercise": {"activity": 0.15}, "food": {"curiosity": 0.15}, "interaction": {"affection": 0.1}}, "completed": {"confidence": 0.6}, "exercise_completed": {"affection": 0.15}, "new_type": {"curiosity": 0.3}, "together": {"affection": 0.2}, "failure_count": 3, "failure_window_days": 7, "repeated_failure": {"confidence": -0.5}},
+  "inactivity": {"grace_days": 7, "daily": {"activity": -0.2}},
+  "short_term": {"half_life_hours": 24.0, "mood_duration_hours": 18.0, "exercise": {"energy": -8.0, "recent_motivation": 8.0, "recent_stress": -3.0, "mood": "happy"}, "interaction": {"recent_motivation": 2.0, "recent_stress": -2.0, "mood": "happy"}, "negative": {"recent_stress": 12.0, "mood": "low"}, "quest_completed": {"energy": 3.0, "recent_motivation": 12.0, "mood": "proud"}, "quest_failed": {"recent_motivation": -8.0, "recent_stress": 5.0, "mood": "low"}, "balanced_food": {"energy": 3.0, "recent_stress": -2.0, "mood": "content"}, "fast_food_pattern": {"energy": -4.0, "mood": "tired"}},
+  "normalization": {"unknown_values": ["unknown", "none", "null", "미상", "알수없음", "모름"], "greetings": ["안녕", "안녕하세요", "안녕하세용", "하이", "hello", "hi", "반가워", "좋은아침"], "negative_markers": ["싫어", "짜증", "바보", "멍청", "미워"]}
+}

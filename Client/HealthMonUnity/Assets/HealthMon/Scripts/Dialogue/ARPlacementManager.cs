@@ -15,6 +15,7 @@ public class ARPlacementManager : MonoBehaviour
     [SerializeField] private GameObject healthMonPrefab;
 
     private GameObject spawnedHealthMon;
+    public GameObject SpawnedHealthMon => spawnedHealthMon;
 
     private static readonly List<ARRaycastHit> hits =
         new List<ARRaycastHit>();
@@ -57,7 +58,12 @@ public class ARPlacementManager : MonoBehaviour
 
         Debug.Log("[AR] AR 평면 Raycast 성공!");
 
-        Pose hitPose = hits[0].pose;
+        PlaceAt(hits[0].pose);
+    }
+
+    // Shared by real AR raycasts and editor integration verification.
+    public void PlaceAt(Pose hitPose)
+    {
 
         if (spawnedHealthMon == null)
         {
@@ -67,6 +73,7 @@ public class ARPlacementManager : MonoBehaviour
                 hitPose.rotation
             );
 
+            Healthmon.Evolution.ArEvolutionModel.Attach(spawnedHealthMon);
             Debug.Log("[AR] TestHealthMon 생성 완료!");
         }
         else
