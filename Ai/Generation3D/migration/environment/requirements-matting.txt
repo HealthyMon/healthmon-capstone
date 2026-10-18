@@ -1,0 +1,4 @@
+# Observed primary dependencies; Torch/native extensions handled separately.
+pillow==12.3.0
+numpy==1.24.4
+onnxruntime==1.23.2

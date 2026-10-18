@@ -1,0 +1,127 @@
+{
+  "species": "lucan",
+  "status": "USER_CONFIRMED_VISUAL_STAGE_DIRECTION",
+  "confirmed_at_utc": "2026-10-10",
+  "user_clarification_ko": "왼쪽 위·아래는 1단 진화의 마른형·뚱뚱한형. 오른쪽 위·아래는 2단 진화의 마른형·뚱뚱한형.",
+  "level_thresholds": [
+    25,
+    50,
+    75
+  ],
+  "stage_and_form_are_independent": true,
+  "references": {
+    "stage1_athletic": {
+      "design_stage": 1,
+      "form": "athletic",
+      "level_milestone": 25,
+      "image_path": "/workspace/healthmon-evolution/outputs/branch_evolution/images/stage2_sprinter_head_identity.png",
+      "sha256": "88070525b57caa5a9fe1def41686d3deb814b2f3df4eb3b4512ed4b07af286e5",
+      "original_inference_case_id": "stage2_sprinter_head_identity",
+      "original_requested_stage": 2,
+      "assignment_purpose": "User-confirmed visual design reference, not a rewritten generation record or runtime state",
+      "technical_qc": "PASS",
+      "accept_for_3d": false
+    },
+    "stage1_heavy": {
+      "design_stage": 1,
+      "form": "heavy",
+      "level_milestone": 25,
+      "image_path": "/workspace/healthmon-evolution/outputs/branch_evolution/images/stage2_hearth_heavy_head_identity.png",
+      "sha256": "0779e67d5a77f6eb0df13a28bef972b63d226d50f2d68063b9e151b5ac7e3cb6",
+      "original_inference_case_id": "stage2_hearth_heavy_head_identity",
+      "original_requested_stage": 2,
+      "assignment_purpose": "User-confirmed visual design reference, not a rewritten generation record or runtime state",
+      "technical_qc": "PASS",
+      "accept_for_3d": false
+    },
+    "stage2_athletic": {
+      "design_stage": 2,
+      "form": "athletic",
+      "level_milestone": 50,
+      "image_path": "/workspace/healthmon-evolution/outputs/heroic_evolution/images/stage3_regal_sprinter.png",
+      "sha256": "93c3c5b739d9653013ae23d23e75509bcffcc0227477fbba3e1adcac0216209d",
+      "original_inference_case_id": "stage3_regal_sprinter",
+      "original_requested_stage": 3,
+      "assignment_purpose": "User-confirmed visual design reference, not a rewritten generation record or runtime state",
+      "technical_qc": "PASS",
+      "accept_for_3d": false
+    },
+    "stage2_heavy": {
+      "design_stage": 2,
+      "form": "heavy",
+      "level_milestone": 50,
+      "image_path": "/workspace/healthmon-evolution/outputs/heroic_evolution/images/stage3_crowned_bastion.png",
+      "sha256": "393306252a2829a3e86496285c143ba06a0631ced9ce78593e9e77fd169c33bd",
+      "original_inference_case_id": "stage3_crowned_bastion",
+      "original_requested_stage": 3,
+      "assignment_purpose": "User-confirmed visual design reference, not a rewritten generation record or runtime state",
+      "technical_qc": "FAIL",
+      "accept_for_3d": false
+    }
+  },
+  "stage3": {
+    "level_milestone": 75,
+    "design_status": "NOT_ESTABLISHED_BY_THIS_FEEDBACK",
+    "direction": "Further evolve each branch from the accepted Stage2 visual direction, retaining distinct body forms and Lucan identity."
+  },
+  "excluded_from_stage_direction": [
+    "outputs/branch_evolution/images/stage3_sprinter.png",
+    "outputs/branch_evolution/images/stage3_hearth_heavy.png"
+  ],
+  "usage_note": "Visual reference assignments and shared design policy consumed by the main evolution_prompt builder. Archived inference states and exact queue prompts remain unchanged; no new image inference has been run for this policy.",
+  "full_diversity_batch_resume": false,
+  "trellis_resume": false,
+  "rigging_resume": false,
+  "comparison": {
+    "path": "/workspace/healthmon-evolution/reports/lucan_stage1_stage2_direction.png",
+    "sha256": "0099bf4359d88cf7bfa260679543b749a7e62ef1104593a0f50fd2571e0670d7",
+    "layout": "Rows: athletic/heavy. Columns: Stage1/Stage2."
+  },
+  "schema_version": 1,
+  "shared_design_policy": {
+    "principle": "At each evolutionary milestone, every branch becomes more compelling, powerful and visually distinctive. Exercise, nutrition and personality create different appealing evolution paths at the SAME stage. Evolve integrated anatomy, proportions, expression and silhouette together. Express numinous sacred-beast presence through poised bearing, elegant monumental shapes, meaningful species-specific markings and restrained pearlescent or luminous anatomical details; keep that presence equally developed across all Forms at the same stage.",
+    "stages": {
+      "0": "Starter with simple small shapes, youthful face and a few clear species identity motifs.",
+      "1": "First evolution: recognizable juvenile development, a clear branch body plan and a restrained set of emerging signature motifs. Introduce a subtle hint of its sacred lineage while leaving room for a substantial second evolution.",
+      "2": "Second evolution: an established sacred guardian with heroic fantasy anatomy, a poised expressive face and a strong elegant silhouette. Develop the species-specific motifs into flowing or monumental natural structures and subtle innate markings; retain readable torso and limb proportions for every body Form.",
+      "3": "Third evolution: a definitive further maturation of the established second-stage branch, with stronger integrated anatomy, distinctive silhouette and commanding character. Its design is not established by the current Lucan feedback; develop a new concept rather than relabel the approved second-stage image."
+    },
+    "species_features": {
+      "lucan": "Develop its gold forehead crest, ivory mane, paws and gold-accented tail into elegant sovereign anatomy, refined gold markings and restrained amber highlights. Preserve the charcoal canine lineage, poised mature face and branch-specific body proportions.",
+      "mongle": "Develop its cream-and-apricot wool into auspicious cloud scrolls, sweeping natural fleece streamers and pearl-like highlights integrated into the mane and tail. Preserve the curled forehead lineage and warm facial character; expose the branch-specific torso beneath the cloud mantle.",
+      "tori": "Develop its leaf ears and vegetation into elegant branching sacred-grove fronds, meaningful leaf-vein patterns, small blossoms and restrained emerald heartwood highlights. Preserve the ivory face and plant lineage, with clear branch-specific torso and limb anatomy."
+    },
+    "form_features": {
+      "FIT": "Express agile power, developed exercise-specific anatomy and a purposeful silhouette; retain the target stage maturity and creature appeal.",
+      "BALANCED": "Express harmonious proportions, composed confidence and versatile strength with fully developed target-stage motifs.",
+      "INACTIVE": "Express calm self-possession and species-appropriate quiet carriage. Retain the target stage maturity and strong identity; inactivity alone does not establish obesity.",
+      "HEAVY": "Express dignified mass, broad soft contours and powerful presence while keeping the required body-fat morphology visible. Retain adult target-stage development and an appealing character.",
+      "RECOVERY": "Express renewed confidence and gradually improving capability while retaining body-history traits. Maintain stage maturity and species appeal."
+    },
+    "application_scope": [
+      "mongle",
+      "tori",
+      "lucan"
+    ],
+    "applied_code_path": "src/healthmon/prompts.py:evolution_prompt -> evolution_art_direction",
+    "experimental_worker_note": "The existing queue worker executes exact saved prompts. Archived queue prompts are preserved and are not silently updated by this policy.",
+    "visual_validation_scope": "User-confirmed Lucan visual staging plus a manually reviewed Mongle/Tori Stage1→Stage2 FIT/HEAVY trial. Other Forms, Stage3, independent personality and continuous numeric control remain unproved."
+  },
+  "inferences_for_lucan_stage_reassignment": 0,
+  "latest_other_species_trial": {
+    "run_directory": "/workspace/healthmon-evolution/outputs/other_species_evolution",
+    "actual_inferences": 10,
+    "comparison_images": 8,
+    "status": "DESIGN_DEMONSTRATION_PARTIAL",
+    "user_preference_acceptance": "NOT_ASSUMED",
+    "report": "reports/other_species_evolution_results_ko.md"
+  },
+  "latest_sacred_direction_feedback": {
+    "status": "PROMPT_DESIGN_POLICY_UPDATED_ONLY",
+    "feedback_ko": "기존 몽글·토리가 밋밋하고 신수적인 인상이 부족함. 운동 여부에 따른 수치 설명 요청.",
+    "new_image_inferences": 0,
+    "visual_success": "NOT_VERIFIED",
+    "numeric_audit": "reports/evolution_numeric_comparison.json",
+    "notes": "Existing exact prompts, output metadata and prior reviews remain preserved. This feedback does not prove numeric-to-image control."
+  }
+}

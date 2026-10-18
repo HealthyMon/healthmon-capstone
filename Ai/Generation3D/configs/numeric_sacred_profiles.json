@@ -1,0 +1,305 @@
+{
+  "description": "Numeric inputs only; Form, branch, anatomy and prompt are computed automatically. All outputs target Stage2 level50. Separate recovery lineage uses its actual heavy preceding face.",
+  "profiles": [
+    {
+      "case_id": "mongle_wind_runner",
+      "label_ko": "하체 운동 · 바람 신수",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 55,
+          "LowerBody": 95,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_mountain_guardian",
+      "label_ko": "상체 운동 · 산악 신수",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 95,
+          "LowerBody": 55,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_balanced",
+      "label_ko": "균형 생활 · 조화 신수",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 50,
+          "LowerBody": 50,
+          "Activity": 50,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_low_meal_quality",
+      "label_ko": "같은 운동 · 식생활만 낮음",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 50,
+          "LowerBody": 50,
+          "Activity": 50,
+          "Nutrition": 25,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_stillwatch",
+      "label_ko": "저활동 · 섭취 균형",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 20,
+          "LowerBody": 20,
+          "Activity": 10,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_hearth_guardian",
+      "label_ko": "저활동 + 과잉 섭취 28일",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 20,
+          "LowerBody": 20,
+          "Activity": 10,
+          "Nutrition": 85,
+          "EnergyBalance": 0.8
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_returning_guardian",
+      "label_ko": "과거 Heavy · 회복 생활",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "HEAVY",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 65,
+          "LowerBody": 65,
+          "Activity": 65,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_heavy.png",
+      "face_box": [
+        225,
+        295,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "mongle_solemn_runner",
+      "label_ko": "같은 하체 운동 · 과묵한 성격",
+      "species": "mongle",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 55,
+          "LowerBody": 95,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 15,
+        "Initiative": 25,
+        "Mood": 20
+      },
+      "previous_image": "outputs/other_species_evolution/images/mongle_stage1_athletic.png",
+      "face_box": [
+        210,
+        300,
+        535,
+        500
+      ]
+    },
+    {
+      "case_id": "tori_wind_runner",
+      "label_ko": "토리 · 하체 운동 신수",
+      "species": "tori",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 55,
+          "LowerBody": 95,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/tori_stage1_athletic.png",
+      "face_box": [
+        585,
+        395,
+        825,
+        550
+      ]
+    },
+    {
+      "case_id": "tori_hearth_guardian",
+      "label_ko": "토리 · 저활동 + 과잉 섭취",
+      "species": "tori",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "FIT",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 20,
+          "LowerBody": 20,
+          "Activity": 10,
+          "Nutrition": 85,
+          "EnergyBalance": 0.8
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/other_species_evolution/images/tori_stage1_athletic.png",
+      "face_box": [
+        585,
+        395,
+        825,
+        550
+      ]
+    }
+  ]
+}

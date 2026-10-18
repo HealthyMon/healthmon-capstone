@@ -1,0 +1,7 @@
+{
+  "url": "https://www.python.org/ftp/python/3.10.21/Python-3.10.21.tgz",
+  "filename": "Python-3.10.21.tgz",
+  "bytes": 25951184,
+  "sha256": "f276987f06270ae6c1fb4da620bd105edf78c31368c2f7e85e6c1d51c560b04b",
+  "role": "Rebuild original matting Python 3.10.21 on target x86_64; no build or installation on Spark."
+}

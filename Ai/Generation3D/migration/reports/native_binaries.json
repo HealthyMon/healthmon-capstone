@@ -1,0 +1,54 @@
+[
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/cumesh/_C.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 15764648,
+    "sha256": "d172b10eab2569f494df9056c3e68ad5c2498a907ba956145fa1447e559193cb",
+    "elf_machine": 183,
+    "cuda_architectures": [
+      "sm_121"
+    ]
+  },
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/cumesh/_cubvh.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 21145216,
+    "sha256": "73303eb2d3d9bf8db705f73dd598d481c7390218b49d1b4e1fc8fe4f6d5a97b6",
+    "elf_machine": 183,
+    "cuda_architectures": [
+      "sm_121"
+    ]
+  },
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/cumesh/_cumesh_xatlas.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 13238256,
+    "sha256": "ba300a51124e8307c27defb997a7559c346a95433486d3f5b3677e8e06b3b9ba",
+    "elf_machine": 183,
+    "cuda_architectures": []
+  },
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/o_voxel/_C.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 63203648,
+    "sha256": "0eafbdb9a7d5691482c0541ae8a2056afd0b1d7a91c5d103866cbbbec5e51b12",
+    "elf_machine": 183,
+    "cuda_architectures": [
+      "sm_121"
+    ]
+  },
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/flex_gemm/kernels/cuda.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 12070224,
+    "sha256": "445de04a0c31b27aaaa1a1403adce3d2c00527a5ea4aa006ea51177ae9d977d6",
+    "elf_machine": 183,
+    "cuda_architectures": [
+      "sm_121"
+    ]
+  },
+  {
+    "path": "/workspace/healthmon-evolution/.venvs/trellis/lib/python3.12/site-packages/flash_attn_2_cuda.cpython-312-aarch64-linux-gnu.so",
+    "bytes": 423473920,
+    "sha256": "bf2bd8d0d0ce7b4dd02606c892b7fbd257522ff612b8a0f7f016372364692583",
+    "elf_machine": 183,
+    "cuda_architectures": [
+      "sm_120"
+    ]
+  }
+]

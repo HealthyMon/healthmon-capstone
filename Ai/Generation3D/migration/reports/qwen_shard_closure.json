@@ -1,0 +1,20 @@
+[
+  {
+    "index": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/text_encoder/model.safetensors.index.json",
+    "shards": [
+      "model-00001-of-00004.safetensors",
+      "model-00002-of-00004.safetensors",
+      "model-00003-of-00004.safetensors",
+      "model-00004-of-00004.safetensors"
+    ],
+    "all_present": true
+  },
+  {
+    "index": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/transformer/diffusion_pytorch_model.safetensors.index.json",
+    "shards": [
+      "diffusion_pytorch_model-00001-of-00002.safetensors",
+      "diffusion_pytorch_model-00002-of-00002.safetensors"
+    ],
+    "all_present": true
+  }
+]

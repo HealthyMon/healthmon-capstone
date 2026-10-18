@@ -1,0 +1,4 @@
+# Lightweight coordinator dependencies; model environments have separate pins.
+Pillow==12.0.0
+numpy==2.1.0
+scipy==1.16.3

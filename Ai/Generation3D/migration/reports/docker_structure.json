@@ -1,0 +1,60 @@
+{
+  "target_containers": [
+    {
+      "Id": "43bfd7f61b762e690e87c9a9db48e94d15486b6ac4d9311bf786e25b790572af",
+      "Name": "/seungwoo-hy3d21",
+      "Image": "sha256:eea3fe49e8a583008e4ea66fbeb36b2a7a111db8e1e322d2f310fd697baad95b",
+      "Created": "2026-09-14T05:14:49.393953761Z",
+      "Mounts": [],
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "StartedAt": "2026-09-14T05:47:48.603419927Z"
+      },
+      "config": {
+        "Image": "nvcr.io/nvidia/pytorch:25.11-py3",
+        "User": "",
+        "WorkingDir": "/workspace",
+        "Entrypoint": [
+          "/opt/nvidia/nvidia_entrypoint.sh"
+        ],
+        "Cmd": [
+          "bash"
+        ]
+      },
+      "hostconfig": {
+        "IpcMode": "private",
+        "ShmSize": 34359738368,
+        "Runtime": "runc",
+        "DeviceRequests": [
+          {
+            "Driver": "",
+            "Count": -1,
+            "DeviceIDs": null,
+            "Capabilities": [
+              [
+                "gpu"
+              ]
+            ],
+            "Options": {}
+          }
+        ],
+        "Binds": null
+      }
+    }
+  ],
+  "image": {
+    "Id": "sha256:eea3fe49e8a583008e4ea66fbeb36b2a7a111db8e1e322d2f310fd697baad95b",
+    "RepoTags": [
+      "nvcr.io/nvidia/pytorch:25.11-py3"
+    ],
+    "RepoDigests": [
+      "nvcr.io/nvidia/pytorch@sha256:417cbf33f87b5378849df37983552cd1f8bc8b62fe1ceabe004de816a55dff21"
+    ],
+    "Architecture": "arm64",
+    "Os": "linux",
+    "Size": 19498134934,
+    "Created": "2025-11-08T06:33:30.014716335Z"
+  },
+  "note": "No volume mounts. Model and project files live in the container writable layer. Env and credentials excluded."
+}

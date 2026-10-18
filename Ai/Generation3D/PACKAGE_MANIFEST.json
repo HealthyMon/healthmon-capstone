@@ -1,0 +1,737 @@
+{
+  "scope": "Reviewed GitHub code and environment export; server-wide inventory omitted; license notices added",
+  "weights_included": false,
+  "rtx3090_inference_tested": false,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 140,
+      "sha256": "5911ecaa6405be5a471519610ccb988bde0ed86f8a62d3a2677e2ef4605125d2"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 449,
+      "sha256": "0c58b0fe2d3ec37a1d1fff3c97c9f24b2ce782ca2c5c1306c451281fab5cf03f"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 360,
+      "sha256": "762be93cc5f317799791d33f74ae65b402a635e316478c4fde01948ac334e877"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 1562,
+      "sha256": "5dfb46f138d54dc0941a879949ee82995ca6d5f52c49a7012dd70e671675bc83"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 515,
+      "sha256": "8fc2374433445e7dded0fa3746d95344f94e5e3f405122c7527f7ffd777f94a1"
+    },
+    {
+      "path": "README.md",
+      "bytes": 11100,
+      "sha256": "bc4f14a19af1e499d15ee123ea6d179a089420138dd8445a1b86490edac09560"
+    },
+    {
+      "path": "compose.yaml",
+      "bytes": 616,
+      "sha256": "c86da600dbff6cde05d1ec700faf798d9feb739f21daaa7f5d0ca5eb48969026"
+    },
+    {
+      "path": "configs/branch_evolution.json",
+      "bytes": 3627,
+      "sha256": "60bc0a58b1b95fe816c073f55d371dd7905ee8bc74e37c010fb6be29c6ed6ac9"
+    },
+    {
+      "path": "configs/evolution.json",
+      "bytes": 2645,
+      "sha256": "449cd2869caec1d35efeae57e1a1a929a5cf7ee62fead42894abf19449c28253"
+    },
+    {
+      "path": "configs/evolution_art_direction.json",
+      "bytes": 8646,
+      "sha256": "95f9e7e650212cd6991f24f4dbf5ff95758d39726789c0f17b930722ebb95ab8"
+    },
+    {
+      "path": "configs/numeric_sacred_profiles.json",
+      "bytes": 7126,
+      "sha256": "1a35dc4049abce34bc7261b395d52a5d9961ceaa23300fb916da4b250bb6d587"
+    },
+    {
+      "path": "configs/reference_regions.json",
+      "bytes": 832,
+      "sha256": "94e8564c222594a11b485392e0d11bca0dc8ae4d944743687bda1a5f107b80b9"
+    },
+    {
+      "path": "configs/runtime.json",
+      "bytes": 1221,
+      "sha256": "d7716903fec29a5fcb7f10ad34dfee3a63a1b7e9c3c0344360b0f324c5f09813"
+    },
+    {
+      "path": "configs/serak_numeric_profiles.json",
+      "bytes": 5208,
+      "sha256": "95817ccdb67f449abf04efe4528e9b6066c306b97cf3f7096914287e2043e404"
+    },
+    {
+      "path": "configs/species/serak.json",
+      "bytes": 7220,
+      "sha256": "01ff59ae22eebe5dad93a257f816eabd3b1cee9096f1e3bb317d3e42ae627c83"
+    },
+    {
+      "path": "configs/structural_evolution.json",
+      "bytes": 15241,
+      "sha256": "c73e6ddf1838ce26217a0de429b4268757eee2899ba8a304f5afe9b527dae128"
+    },
+    {
+      "path": "configs/web_stage_designs.json",
+      "bytes": 15488,
+      "sha256": "d80a66b1cf8641cd0c60797e4eb11c7cec7201a90604751e50263599b1b6be6f"
+    },
+    {
+      "path": "docs/LICENSES.md",
+      "bytes": 4449,
+      "sha256": "8c2acad79b0e1b7f81a413eb62c304dc1eab4ca58213bb5f2bc3574daf53834e"
+    },
+    {
+      "path": "docs/QWEN.md",
+      "bytes": 9587,
+      "sha256": "67040d3f4b44f8e9c17ab878e0b6c4deb71db02b602fc916902c62874f825008"
+    },
+    {
+      "path": "docs/QWEN_MODEL_CARD.md",
+      "bytes": 5707,
+      "sha256": "d4aee8d372df2a890b6283e7d1885e3f68b57190c7d3f4b9466a61beffc16016"
+    },
+    {
+      "path": "docs/QWEN_MODEL_LICENSE.txt",
+      "bytes": 7831,
+      "sha256": "8dc973f024ff95966bea25866efa443fd16776dcb1001e681e3d467ea572b28d"
+    },
+    {
+      "path": "docs/RIGANYTHING_LICENSE.txt",
+      "bytes": 2281,
+      "sha256": "65c682b967c196be3b17e2a005c27b0556aa02db6ec0a90a5b44fcc0e5b49cbd"
+    },
+    {
+      "path": "docs/RIGGING.md",
+      "bytes": 13005,
+      "sha256": "16d53a14751e7f7858f199f1ad78ecd3cf0cf0619b73c842cead27df31d34397"
+    },
+    {
+      "path": "docs/TRELLIS.md",
+      "bytes": 8287,
+      "sha256": "8a1f9c2d91729c64a88168f3c51d6caed1f3f042a6c3ba79e0593ead11394105"
+    },
+    {
+      "path": "docs/TRELLIS2_LICENSE.txt",
+      "bytes": 1140,
+      "sha256": "d9a1b1e30d633d5732ea18e3cba9538d293ebc53e1a9e4e96ab739e0c5c4f1cb"
+    },
+    {
+      "path": "migration/AUDIT_REPORT_KO.md",
+      "bytes": 13640,
+      "sha256": "9821d14e585806fb934999808967005e5a38a5aa16ae00dcf61c656229cf207e"
+    },
+    {
+      "path": "migration/BACKUP_INVENTORY_KO.md",
+      "bytes": 1972,
+      "sha256": "7c9dc43b851e5542836e5411376cf7875dd9a01a82b6ce013a22a94525622109"
+    },
+    {
+      "path": "migration/CHANGES_FOR_PORTABILITY.md",
+      "bytes": 1894,
+      "sha256": "f16d5c0f543a3ec5492ca0f745ea8e8c62baccb700dcb99b14d52ba4f14ecdc8"
+    },
+    {
+      "path": "migration/COMMANDS_KO.md",
+      "bytes": 3553,
+      "sha256": "a8ac1b50deebb48cb2f4b0438dd8987851800c657487c65f78f75aba9e24b82f"
+    },
+    {
+      "path": "migration/FILE_ROLES.tsv",
+      "bytes": 3039393,
+      "sha256": "35d8cd7ea3e09dbaed885c962644023a3bf9cbf05fd6267b143fdfa729846178"
+    },
+    {
+      "path": "migration/MODEL_FILES.tsv",
+      "bytes": 28887,
+      "sha256": "b20a20e69ccb8e51acafeb2d05cf891fb5759708fb3793b86b8d46d46bbf5249"
+    },
+    {
+      "path": "migration/PROJECT_TREE.txt",
+      "bytes": 37343,
+      "sha256": "484ac6b1de00a2255174c10ef6b707a227629f2cf725791be217beb29776c37c"
+    },
+    {
+      "path": "migration/READY_REPORT_KO.md",
+      "bytes": 4548,
+      "sha256": "78c117b0fcd44d796477618d20aef0328c93ebfb3358404473e630ba4aa59b1c"
+    },
+    {
+      "path": "migration/RTX3090_GUIDE_KO.md",
+      "bytes": 2656,
+      "sha256": "a09f1b856dc887518bf9adba7f37e2ff43b115cc0089d60c807aae13f249c54b"
+    },
+    {
+      "path": "migration/environment/Dockerfile.rtx3090-candidate",
+      "bytes": 971,
+      "sha256": "ad02ee47bc2827846af60b32d5dd11fa54ea3d8fbf003df6fd718412eca88cf2"
+    },
+    {
+      "path": "migration/environment/Dockerfile.spark-reference",
+      "bytes": 280,
+      "sha256": "d6f52e58832351b1c0f5d6742fd7311ef5a523ce36bf6a4f9f88d52964a65bb5"
+    },
+    {
+      "path": "migration/environment/base.freeze-observed.txt",
+      "bytes": 5082,
+      "sha256": "6278b77a5bbd08b841d20af3f9743871b3cf18f5e7b3087a667330f53982ce1a"
+    },
+    {
+      "path": "migration/environment/base.packages.json",
+      "bytes": 48528,
+      "sha256": "ced8384df53138d433451e5cb7c0d6108790444cbda6d83c4df59606436c0cc4"
+    },
+    {
+      "path": "migration/environment/build_target.sh",
+      "bytes": 2731,
+      "sha256": "01e8913606324e25cf6b01cb569d9c6f72fa1754adf134b446239710fc83a78c"
+    },
+    {
+      "path": "migration/environment/constraints-matting.txt",
+      "bytes": 331,
+      "sha256": "d4aec1ca10e8fcc07746bb6b727a76cb960bb3c8ac76b8e5096dc276a948fc03"
+    },
+    {
+      "path": "migration/environment/constraints-qwen.txt",
+      "bytes": 986,
+      "sha256": "f4eaa7c6bd6f934d5cf61adb3bd69de9c7ae6c38f7deb08db9fbefbf7e388928"
+    },
+    {
+      "path": "migration/environment/constraints-riganything.txt",
+      "bytes": 770,
+      "sha256": "b06c1469adb9729ba86c5d833dabfeabe5de0a44acafa8fcc973c2aa72a29a0d"
+    },
+    {
+      "path": "migration/environment/constraints-trellis.txt",
+      "bytes": 926,
+      "sha256": "a00873b3ce6ca6584081c15a8551767a2068f1033c88ddfc1eea66a416806083"
+    },
+    {
+      "path": "migration/environment/docker-entrypoint.sh",
+      "bytes": 254,
+      "sha256": "2eb157128786bb344e1d1a7582dd6fc69b824660f86ef14ee93392f104ca96f7"
+    },
+    {
+      "path": "migration/environment/matting.freeze-observed.txt",
+      "bytes": 267,
+      "sha256": "b4f3b3b7a367335cb08ca59847c9801129495e873674c8e7d414a0d5a3db8645"
+    },
+    {
+      "path": "migration/environment/matting.packages.json",
+      "bytes": 2584,
+      "sha256": "95f16f08491c1a70ce60f7f8fa724bde3f1eb2132dc1f0fe091f200cad54ec81"
+    },
+    {
+      "path": "migration/environment/qwen.freeze-observed.txt",
+      "bytes": 5195,
+      "sha256": "22f95797f15929bc7c107ac8ec193a737e3b4d75d5a3b92aa4c7aac7783eba5d"
+    },
+    {
+      "path": "migration/environment/qwen.packages.json",
+      "bytes": 50006,
+      "sha256": "2451dd3595ae2249a991c41c2122cdab638c322e9fdbfae65e3481ccfd30722b"
+    },
+    {
+      "path": "migration/environment/requirements-matting-py312-candidate.txt",
+      "bytes": 212,
+      "sha256": "a5a8c492fd3e007e9d5e122231b53665ad3ee51ed19b7d91599338096f4ef2c6"
+    },
+    {
+      "path": "migration/environment/requirements-matting.txt",
+      "bytes": 126,
+      "sha256": "6a617a7f77c5583efc05e33e21fb86ecf910af1ee09bb72d526e9cde1ce7aeb8"
+    },
+    {
+      "path": "migration/environment/requirements-qwen.txt",
+      "bytes": 286,
+      "sha256": "00be1e47c5277747f625cecdeaef88d6bee0708ef487fb761a639ad0468cb429"
+    },
+    {
+      "path": "migration/environment/requirements-riganything.txt",
+      "bytes": 274,
+      "sha256": "78947c887854283a195254851a3bde2706bc8c75604b12dddb5867243709a821"
+    },
+    {
+      "path": "migration/environment/requirements-trellis.txt",
+      "bytes": 513,
+      "sha256": "6d59132c6015512641b9d74159a86fdf349c86b7924486a3ca349b97d2bceca0"
+    },
+    {
+      "path": "migration/environment/riganything.freeze-observed.txt",
+      "bytes": 5132,
+      "sha256": "d5cc369e7dfd2100cb59b70dcf3ecfed72be498b8f6210669e6658b9485fe8f3"
+    },
+    {
+      "path": "migration/environment/riganything.packages.json",
+      "bytes": 49261,
+      "sha256": "635264c6c92214dfef9ffcb1501f05269c3daca138f2f7205f89be80fbb111cb"
+    },
+    {
+      "path": "migration/environment/torch-constraints.txt",
+      "bytes": 60,
+      "sha256": "9910877b814382b1e48862935f8fc80c8ee6cd095737395b770789c446437d5b"
+    },
+    {
+      "path": "migration/environment/trellis.freeze-observed.txt",
+      "bytes": 5344,
+      "sha256": "3a8698a0d6181f24eacbf50d4dee17d87d67845ceba5974aa465cca02a2ec803"
+    },
+    {
+      "path": "migration/environment/trellis.packages.json",
+      "bytes": 53151,
+      "sha256": "6291441f4026823c31580e51de934a553024c0959ac4c460a31d87c491857247"
+    },
+    {
+      "path": "migration/model_manifest.json",
+      "bytes": 51945,
+      "sha256": "ad93bf1f41dd79c757a257f0d8a7b45e2686cff5e9358c7c46ab497a3d58dbf3"
+    },
+    {
+      "path": "migration/reports/CURRENT_DOCKER_AUDIT_KO.txt",
+      "bytes": 36436,
+      "sha256": "c452637da6accbaeaed518b67e8b7c5628fdd99b90d282ae0be3665468d36b2c"
+    },
+    {
+      "path": "migration/reports/CURRENT_DOCKER_FILE_AUDIT.json",
+      "bytes": 105995,
+      "sha256": "6795c94fe89fe4182e0128730e7247983d20c5e10734dfc572bfa8f82bc1fa90"
+    },
+    {
+      "path": "migration/reports/CURRENT_DOCKER_SOURCE_AUDIT.json",
+      "bytes": 21984,
+      "sha256": "c66e364df3139e60e5c9911aae66558c938605fed8d1184600f7d200010de812"
+    },
+    {
+      "path": "migration/reports/backup_manifest.json",
+      "bytes": 18643,
+      "sha256": "f9f31549c9a44dc29280a4d6ca3fb6346e7ed95044bb180c0d78e387db8b1505"
+    },
+    {
+      "path": "migration/reports/copied_assets_and_evidence.json",
+      "bytes": 39350,
+      "sha256": "efd9e83182b37ed2abd4dc005a223ceb924f954aafc147fcd62f6ab659a0c638"
+    },
+    {
+      "path": "migration/reports/copied_assets_verified.json",
+      "bytes": 26330,
+      "sha256": "8629b9f309931fad4009f1d9c902a7f47983be3c1265caa2d904051d413088b3"
+    },
+    {
+      "path": "migration/reports/copied_sources_verified.json",
+      "bytes": 206,
+      "sha256": "24d0d0a45b653baf154a4f2f8721928441f8197109c848d64416fd36fdc2728b"
+    },
+    {
+      "path": "migration/reports/copied_weights_verified.json",
+      "bytes": 128,
+      "sha256": "60d49a1ab13c1e87442556c688fb238afa7364c93876fc61f7e40851a8aac8a6"
+    },
+    {
+      "path": "migration/reports/copy_from_spark.json",
+      "bytes": 669860,
+      "sha256": "da1e5d6d0c77ec764eedb595578eb1ed69e16fea7e27e2c3669b0e55bb66c1e2"
+    },
+    {
+      "path": "migration/reports/current_code_preservation.json",
+      "bytes": 17398,
+      "sha256": "15e06cbf8e7c245dd51cf50b3e512e6a4513166aee8b9091465f2c37c36da8f6"
+    },
+    {
+      "path": "migration/reports/dependency_closure.json",
+      "bytes": 27129,
+      "sha256": "434093099851a10f8e8b6359b656760b7e31a6072c284b61541ad7b7ae65a2db"
+    },
+    {
+      "path": "migration/reports/dependency_constraints_check.json",
+      "bytes": 152,
+      "sha256": "7365fb4090b9007aa02cdfa0979964b537eeaf40ba797c67b7c953a01414918a"
+    },
+    {
+      "path": "migration/reports/docker_structure.json",
+      "bytes": 1668,
+      "sha256": "c09e4416b1b57ce4feec5234eeaa72186b90a467c144281405886b0d7d9dce91"
+    },
+    {
+      "path": "migration/reports/github_selection_check.json",
+      "bytes": 865,
+      "sha256": "8fdadbd677e56d39aa03a640fe469101b957edea229893defc2ba359c0f76c2d"
+    },
+    {
+      "path": "migration/reports/historical_cleanup_excerpt.json",
+      "bytes": 1108,
+      "sha256": "9d0bc310775344b3c0994cde9be9108ce04783eec59bcd740ad55d63a82cd171"
+    },
+    {
+      "path": "migration/reports/inference_evidence_verified.json",
+      "bytes": 9766,
+      "sha256": "99be61b1a30610c9d053a196591e7be523932b749e47aea7eca28c0b6024b16b"
+    },
+    {
+      "path": "migration/reports/missing_reference_files.json",
+      "bytes": 1277,
+      "sha256": "2697419c50365ab746b13a04c44d29816453a0d3c7677ef1df7c880bf27aafff"
+    },
+    {
+      "path": "migration/reports/missing_runtime_validation.json",
+      "bytes": 108,
+      "sha256": "59dddd6145c7589cae9cc554f96c96f166ffffeee592c45f3ea1fe9e3cb28190"
+    },
+    {
+      "path": "migration/reports/model_inventory.json",
+      "bytes": 74035,
+      "sha256": "13cf170853790b9943793b7239e81c5da5935ac63426ea16f903f9d3da63f3ba"
+    },
+    {
+      "path": "migration/reports/native_binaries.json",
+      "bytes": 1942,
+      "sha256": "e301b01f76fa3d7b3e4cc56891dcdf3d573cc62975c8e01adb61d9916a34530c"
+    },
+    {
+      "path": "migration/reports/native_source_acquisition.json",
+      "bytes": 2318,
+      "sha256": "1117f50a9f6548fd2ddc54aee2c310ebf92496fd1a9222fb3f30371cd18cb3a5"
+    },
+    {
+      "path": "migration/reports/native_upstream_revisions.json",
+      "bytes": 573,
+      "sha256": "4f1f4be20b1e91f317b803554f3fe5cc58a08dced0a0125061fa09d97cb01eaa"
+    },
+    {
+      "path": "migration/reports/official_model_metadata.json",
+      "bytes": 19694,
+      "sha256": "32900c112930cfe4d5ba4a43087adc8d7dd37aad2dab2f5ee99e87f54941df82"
+    },
+    {
+      "path": "migration/reports/previous_assets_backup_manifest.json",
+      "bytes": 18643,
+      "sha256": "f9f31549c9a44dc29280a4d6ca3fb6346e7ed95044bb180c0d78e387db8b1505"
+    },
+    {
+      "path": "migration/reports/pypi_dependency_availability.json",
+      "bytes": 135896,
+      "sha256": "aa6dc8f6f419408185cb7cbff66c953320ce79167b0c2841d226faf82e37169e"
+    },
+    {
+      "path": "migration/reports/python310_source.json",
+      "bytes": 319,
+      "sha256": "a1995e58a1a2a08e8be87ffa9a28384b5755979fde36f4edc00943deaed1fd7e"
+    },
+    {
+      "path": "migration/reports/qwen_shard_closure.json",
+      "bytes": 794,
+      "sha256": "8a9d268c6bd7821413903c995a7fb0df1545ba2fe0a745fb4fe6d66e08c36c1e"
+    },
+    {
+      "path": "migration/reports/ready_static_validation.json",
+      "bytes": 165,
+      "sha256": "10fcb8cfe88a8302cddbc6db259c1d18a6cad823b2980a9800ef3e3be420d227"
+    },
+    {
+      "path": "migration/reports/recovered_reference_posters.json",
+      "bytes": 1521,
+      "sha256": "6d7fe6e9552e7373f4eb41e0d5edcd5a429dc37da1b27a806712d5c3a9176b03"
+    },
+    {
+      "path": "migration/reports/rembg_release_metadata.json",
+      "bytes": 1854,
+      "sha256": "5048234a58b76bc7fdf2e42ae8c851da8e2059dbb33267ffe8913d681497d450"
+    },
+    {
+      "path": "migration/reports/source_code_manifest.json",
+      "bytes": 11665,
+      "sha256": "f6f9f899f4e66b6617a58026eeaece4655c863398ec70ab10346097dea3143e4"
+    },
+    {
+      "path": "migration/reports/source_variants.json",
+      "bytes": 3189,
+      "sha256": "a821851e42499995a788c13c247ee629e2a2ef5f51725aac22dd777e094c24c8"
+    },
+    {
+      "path": "migration/reports/static_validation.json",
+      "bytes": 255,
+      "sha256": "5433f6e87b1b88aceb4cfb5ab7ccee2668017b6f611c1f5dcf29853502a796e9"
+    },
+    {
+      "path": "migration/reports/target_image.json",
+      "bytes": 304,
+      "sha256": "a7c5c360edf18b2f623dce3dc1f0219b0cb77a613396fb400f06026dd3e81088"
+    },
+    {
+      "path": "migration/reports/tool_validation.json",
+      "bytes": 420,
+      "sha256": "e68a0f3e5a25f6f00ceb92de76e2ed616795d402c941345a18a8b88c5103dba2"
+    },
+    {
+      "path": "migration/reports/unirig_reference_only.json",
+      "bytes": 4988,
+      "sha256": "c626d5ec754239bfb566dfb594d8a61cf44efc87aec926fab899c291ce9de5f2"
+    },
+    {
+      "path": "migration/source_manifest.json",
+      "bytes": 4438614,
+      "sha256": "1b9fbcaa2593d07d2294dc6adb4b315e372f3abd74defb5b3c16d054eda8c394"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/run_pipeline.py",
+      "bytes": 28291,
+      "sha256": "f0a70ee981087ae2a29c647355ec224f9952e512a0aa55d2739daafb6f2d97ea"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/background_matte.py",
+      "bytes": 1865,
+      "sha256": "f698b6653fabde4b22323e5978b3b318aa07462cb19ce7e46d27e625b334392a"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/prepare_3d_input.py",
+      "bytes": 1659,
+      "sha256": "fb96dd3d3926bbe463ffeaacb8be992d7a533130d2ec5cebb56e0acf12554427"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/prepare_numeric_evolution.py",
+      "bytes": 4083,
+      "sha256": "8ee7ff5173465d594063932cdab1b3094d231f4a53b9052112b18c0a244b3fbd"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/qwen_branch_worker.py",
+      "bytes": 11675,
+      "sha256": "3e44e6546866dfa5f7fc619b10f1e08b627626e8616cec5f530827f90b806605"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/run_image_to_rigged.py",
+      "bytes": 5750,
+      "sha256": "7f392d178565ec72705de9185e7baed974726106920e23c0b8c2ef9c070ad647"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/run_numeric_evolution.py",
+      "bytes": 3513,
+      "sha256": "199a967a6d944e0e16497ec8c44b8fb3a5577c272deda8766d6aca947bfbef25"
+    },
+    {
+      "path": "migration/source_variants/healthmon-evolution/scripts/run_selected_3d.py",
+      "bytes": 19683,
+      "sha256": "4551ec915ea244aaff71ea0d112be41bac8ba8e5cc7add889bbbdb3017cad655"
+    },
+    {
+      "path": "migration/tools/configure_runtime.py",
+      "bytes": 2376,
+      "sha256": "8eed9c6df4a534cf1213464ad4c7f987e9e213a11be6df8683ed9e0b3230d883"
+    },
+    {
+      "path": "migration/tools/fetch_sources.py",
+      "bytes": 2436,
+      "sha256": "e8cc7e767b6f8a0121a69f2afc3cb24af97f57436ddb409680b0151f95793423"
+    },
+    {
+      "path": "migration/tools/models.py",
+      "bytes": 7813,
+      "sha256": "efb0571cf0fc99aa266fe421b6c64abdc41731a4af6f43f68dbdff4ac1bde6ed"
+    },
+    {
+      "path": "migration/tools/verify_package.py",
+      "bytes": 1393,
+      "sha256": "9f7c5aeaec13a5aca2ea94027ad4747fc330caffda8daf97646fb2621f498aed"
+    },
+    {
+      "path": "migration/tools/verify_ready.py",
+      "bytes": 3588,
+      "sha256": "bf28d51a22bf713fa56412c1801d9f3f38c7ec2e008a1fa5521302adda378eb9"
+    },
+    {
+      "path": "migration/tools/verify_sources.py",
+      "bytes": 2508,
+      "sha256": "9c9768f03e08e2413f5cd693ab544ecf5d77a159f2c896b06436533c6140124c"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 413,
+      "sha256": "3be3179d3a9a05ac00d28b981bb0e8602d3a9e367f6217418951d38fb8c52654"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 121,
+      "sha256": "b460720c50ad6b37ad26d9fd91bd64ccf571142a7799e8053990848a5706eab7"
+    },
+    {
+      "path": "run_pipeline.py",
+      "bytes": 28092,
+      "sha256": "7cb25fa2dd9b19cdc6739d39d82794518b0de7b09c9be0b28bafd5707625d383"
+    },
+    {
+      "path": "scripts/background_matte.py",
+      "bytes": 1916,
+      "sha256": "07ccd3a965b07b0932b3b443e70be2c201628d9612d846dc45bd62a48615ac9a"
+    },
+    {
+      "path": "scripts/prepare_3d_input.py",
+      "bytes": 1707,
+      "sha256": "159674cdccf590584a4647ecdd12ec5808dff6e4863ab3865be613cf5204938f"
+    },
+    {
+      "path": "scripts/prepare_branch_evolution.py",
+      "bytes": 6039,
+      "sha256": "20db9a0d804973ff27d927df6f1414b81be412e0c7a24369c9cf995ab7bb5a56"
+    },
+    {
+      "path": "scripts/prepare_numeric_evolution.py",
+      "bytes": 20583,
+      "sha256": "e55f3fa80b569d440ce8b53bba71caf02be9e1df59cf6cb809cc53cadd760a73"
+    },
+    {
+      "path": "scripts/qwen_branch_worker.py",
+      "bytes": 16480,
+      "sha256": "e9fab8de8274ffb618aed815a474f5549d9763e567b284c591131fbed14f170a"
+    },
+    {
+      "path": "scripts/run_image_to_rigged.py",
+      "bytes": 5816,
+      "sha256": "ce8abf4e3812a31e071314e9c5b2b880e4b828aba7d75b55dc2f06916280c288"
+    },
+    {
+      "path": "scripts/run_numeric_evolution.py",
+      "bytes": 3960,
+      "sha256": "46a9e0d5368b8c72f0ba624a381141373230c64f23cc1977673fbf00292b8dc2"
+    },
+    {
+      "path": "scripts/run_selected_3d.py",
+      "bytes": 20412,
+      "sha256": "5257ae91ebf0e936e69a1572753ad57a3a46b6409ac47fd85de8153b6e4d8217"
+    },
+    {
+      "path": "scripts/run_stages.sh",
+      "bytes": 2262,
+      "sha256": "b90436d9e6a62001a87bf3559666fd370b637c224c436512c748e91ac4eba39e"
+    },
+    {
+      "path": "scripts/setup_qwen.sh",
+      "bytes": 1808,
+      "sha256": "b9b12fc13b6eaf4c48a250b8ca6fb796b709f939ba89c19f746cb422f34922cc"
+    },
+    {
+      "path": "scripts/setup_qwen_download.py",
+      "bytes": 1461,
+      "sha256": "28314fb5bebc8b08bb2cbfedc3f6767007f2ebc8bd532623a04b1b9d3a54ddf6"
+    },
+    {
+      "path": "scripts/setup_rigging.py",
+      "bytes": 7504,
+      "sha256": "3b4eba462527941db59fb30c8c39e106210b3fe3955b585a12d8a60f57324567"
+    },
+    {
+      "path": "scripts/setup_rigging.sh",
+      "bytes": 164,
+      "sha256": "b89e71fc0ad0cb1599f1108e32dff85e897c7f8f5eed7e6899d58ebd6dd52943"
+    },
+    {
+      "path": "scripts/setup_trellis.py",
+      "bytes": 10615,
+      "sha256": "f115a44c809d984b8c949b951b9ab52995bac6517f9a0d6f2e798fbaed8632eb"
+    },
+    {
+      "path": "src/healthmon/__init__.py",
+      "bytes": 83,
+      "sha256": "1c503f7739e63b969996c18b8f3f84111ac2a064e65fcf41436b8f1b6f24a718"
+    },
+    {
+      "path": "src/healthmon/appearance_refinement.py",
+      "bytes": 3390,
+      "sha256": "a06212249bc2c19bcb275224cbba21befa60baea26f679d6a5bbade32c261f07"
+    },
+    {
+      "path": "src/healthmon/biped_evolution.py",
+      "bytes": 6440,
+      "sha256": "793a5a2b4b82b36da39e90facab0966205733ae9dacc3b0213038f3c8a043e1c"
+    },
+    {
+      "path": "src/healthmon/blender_tool.py",
+      "bytes": 26441,
+      "sha256": "f3080c83f646816b62296269b3e0c3ed46d24e78875c56538ace4d835c8f11da"
+    },
+    {
+      "path": "src/healthmon/branch_evolution.py",
+      "bytes": 6810,
+      "sha256": "ce6622ea4169dd26428c6cc0a2c30aa42e76ba1d74f382d4bd7861907512462e"
+    },
+    {
+      "path": "src/healthmon/design_contract.py",
+      "bytes": 4740,
+      "sha256": "5e0146254d7d377ca6bd4ee290ac0a6680988ab4fe4d58cdbfbf813c697ba0fd"
+    },
+    {
+      "path": "src/healthmon/individual_evolution.py",
+      "bytes": 29647,
+      "sha256": "a3dc6c0baaad7d88fd9a373bd64a2c714a53744545da3b1afcb5bfdfff23c7b3"
+    },
+    {
+      "path": "src/healthmon/numeric_evolution.py",
+      "bytes": 12942,
+      "sha256": "7172c3ceec3cd4805bd956635eb335e4f36be547913a35797f1301a1e0a219cc"
+    },
+    {
+      "path": "src/healthmon/numeric_router.py",
+      "bytes": 358,
+      "sha256": "b7a653eae1712cbdd9df035d2a5860998020034b00025dcc43a3a8b8deb0e8d3"
+    },
+    {
+      "path": "src/healthmon/numeric_source_guard.py",
+      "bytes": 1903,
+      "sha256": "90230488c8d2ba968b7298e1ab4dd677bf1e379ae2d17f0f4558205153ae9dff"
+    },
+    {
+      "path": "src/healthmon/personality_refinement.py",
+      "bytes": 2304,
+      "sha256": "595b377e5cefc4932ea7e0de9db298cb0228908b8ed647c938ac4f47899c8a9d"
+    },
+    {
+      "path": "src/healthmon/prompts.py",
+      "bytes": 9087,
+      "sha256": "f140f6ac0853a6add72025b3c190860b8c3f6d98199e26b52cce8df75a976753"
+    },
+    {
+      "path": "src/healthmon/quality.py",
+      "bytes": 6550,
+      "sha256": "2fc30c1693a031cf215e20ffe7d552e5c44a2ac9c20e8bae3f6ee6c1787442b1"
+    },
+    {
+      "path": "src/healthmon/qwen_runner.py",
+      "bytes": 9606,
+      "sha256": "54394d58e1e791db8fb1e1e43e4bcedf43390329173483e7051f7601f3cae5f4"
+    },
+    {
+      "path": "src/healthmon/references.py",
+      "bytes": 4886,
+      "sha256": "9bb02d9fd9c3b830ae46178647284c689c3464b28981bfa9b1d90230f39f67eb"
+    },
+    {
+      "path": "src/healthmon/riganything_blender_entry.py",
+      "bytes": 7734,
+      "sha256": "a9d167168a2c40c7bd37583901a39b8e1a7dddeb81d60db1451ffaefbe2eb60f"
+    },
+    {
+      "path": "src/healthmon/rigging_runner.py",
+      "bytes": 8527,
+      "sha256": "a048d5e35ad30c9a3462a841074ffda6ad27eaa44c6b0541942eb1d6f813d14d"
+    },
+    {
+      "path": "src/healthmon/trellis_runner.py",
+      "bytes": 19005,
+      "sha256": "cf4b9a88a621c83d86e084c637a4c5ef5c1a840fa1fce00c9d038f42e9673240"
+    },
+    {
+      "path": "tests/test_migration.py",
+      "bytes": 3593,
+      "sha256": "f597634773dac59d374c5a53ece024f0cff77207e0488332a199c9798e428172"
+    }
+  ]
+}

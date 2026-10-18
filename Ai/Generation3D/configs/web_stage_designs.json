@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "status": "EXPERIMENTAL_NOT_VISUALLY_APPROVED",
+  "rule": "Stage designs are independent of body fat. Numeric edits retain the selected stage design. Seed selects a deterministic structural variant; changing seed does not prove quality.",
+  "species": {
+    "mongle": {
+      "1": [
+        [
+          "reef_scout",
+          "A low, forward-oriented aquatic bird whose broad wedge skull flows into a compact horizontal torpedo-shaped ribcage; the hips sit behind the chest. Two wide smooth swept hydrofoil wings angle backwards from broad low shoulders. Strong small hind legs end in large triangular webbed feet. One thick short rudder tail ends in a clean three-lobed leaf fan. Smaller almond eyes, a short broad hooked beak and compact paired leaf crests. This is a poised purposeful fantasy diving bird, not a tall round chick."
+        ],
+        [
+          "tide_stride",
+          "A compact-headed upright aquatic bird with a short angular chest, exposed firm middle, high powerful hips and medium-length stout supporting legs with large broad webfeet. Two curved fin wings have a pronounced rounded wrist and broad blunt leaf tips beside the hips. A broad horizontal leaf rudder balances the hips. Keep the neck compact and shoulders organic, never a humanoid waist or arms."
+        ],
+        [
+          "grove_flutter",
+          "A short-necked, wide diamond-bodied seabird with two articulated fan wings made of broad rounded leaf-like primaries, compact low hips, short legs and sturdy spreading webfeet. An angular small face and stout orange beak project from the upper chest. A compact fanned tail balances the wide shoulders; the chest has large clean ivory planes. Wing anatomy is avian, without fingers."
+        ]
+      ],
+      "2": [
+        [
+          "jade_breakwater",
+          "A regal compact-necked penguin guardian with a high broad keel chest, low compact hips and massive planted webfeet. The head is a small angular wedge integrated into strong sloping shoulders. Two enormous curved crescent flippers form a clean protective span around the torso with exposed ivory abdomen; they are smooth organic fins, not armor or feather fans. The flat tail becomes one broad downward-curved rudder, visibly attached behind the hips. Deep jade and ivory, assured emerald gaze."
+        ],
+        [
+          "canopy_wing",
+          "A magnificent wide delta-shaped forest seabird: small arrow-like head, compact diamond ribcage between broad wing joints, low hips and short strong legs. Two articulated avian wings each end in three huge leaf-shaped flight primaries, folded halfway. A deep three-bladed leaf tail fans from the pelvis. Broad wing anatomy, chest and tail form a new connected body structure."
+        ],
+        [
+          "cascade_warden",
+          "A tall yet solid emperor seabird with a narrow flat skull, pronounced downward orange beak, deeply curved upright chest, short thick neck and a wide stable pelvis. The two forewings bend into long broad paddle fans with divided rounded tips. Thick rear legs and large webfeet support a low trailing wedge tail. A clear bell-like body silhouette with powerful broad fin-wings, dignified and compact."
+        ]
+      ],
+      "3": [
+        [
+          "verdant_sea_phoenix",
+          "A magnificent sacred sea-phoenix evolved from the green penguin lineage. A small noble falcon-like head and powerful short orange beak connect to a sweeping deep keel chest, compact neck and broad flight shoulders, with a lower rear pelvis. Two enormous articulate wings form a graceful double-arched silhouette, long sculpted leaf primaries with restrained mint translucency at their tips. One deep rooted tail divides into three long broad organic leaf-rudders flowing behind the hips. Stout powerful legs end in huge elegant orange webfeet. Emerald, ivory and mint. The whole body is a monumental aquatic-bird deity, calm and appealing; no human torso, crowns, armor, props or halo. Tail, wing joints, skull and torso all redesign the previous body."
+        ],
+        [
+          "tidal_archon",
+          "A sacred great diving-bird sovereign: low elongated keel torso supported by immense webfeet, a long strong root to the wide mantle-shaped pair of fin wings, a noble broad wedge face merging into an arched strong neck. A single massive fan rudder extends behind a deeply set pelvis. Sculpted green/ivory anatomical planes form flowing tidal curves with restrained mint luminescence. Grounded, serene and imposing, an elegant invented aquatic creature with no costume."
+        ],
+        [
+          "spring_emperor",
+          "A majestic sacred woodland penguin with an imposing compact upright chest, broad angled shoulders, low monumental hips and two great layered fan wings. A refined small face rises from a short strong neck. Two long sweeping leaf crests join smoothly to the skull; a long broad three-fold tail forms an organic arch behind the body. Huge defined orange webfeet and rich jade/ivory planes give a powerful silhouette. Its presence comes from confident anatomy, not ornament."
+        ]
+      ]
+    },
+    "tori": {
+      "1": [
+        [
+          "moon_springer",
+          "A clearly new biped moon-hare creature: a small angular rabbit face, two long flattened backward-swept ears with broad petal tips, a short compact inverted-triangle chest and a distinct rounded pelvis. Two thick forearms end in broad oval animal paw mitts held off the floor; much larger articulated spring-like hind feet support bent sturdy hocks. A single dense flattened seed-shaped tail roots at the low hips. Cream fur, pink ear interiors, olive eyes and restrained mint forearm/ankle accents. Keep a handsome confident face and clean curved forms, not a human boxer, lanky kangaroo or plush baby."
+        ],
+        [
+          "petal_runner",
+          "A compact slender upright hare with a narrow long skull, low swept leaf-petal ears, a small deep chest and powerful high haunches. Short free front paws sit beside the chest, two large long broad hindfeet support a poised bent-hock stance. A round flattened flower-bud tail attaches low behind the pelvis. Cream and mint, warm confident expression, springy whole-body geometry and coherent rabbit anatomy."
+        ],
+        [
+          "grove_paw",
+          "A broad pear-chested rabbit sentinel with a small refined rounded face, thick split-plane cheek forms and two short broad outward-curving ears. Two substantial short forearms end in broad rounded paws suspended beside the belly, while compact strong hips and two huge hindfeet ground the silhouette. One thick short oval tail curves behind. Cream, pink and mint biological accents, poised and appealing."
+        ]
+      ],
+      "2": [
+        [
+          "crescent_warden",
+          "A beautiful mature moon-hare guardian with a small wedge-shaped head, two great naturally curved crescent rabbit ears sweeping backward, a compact deep chest above a broad low pelvis, and thick long forearms ending in large rounded animal paws beside the exposed waist. The hind legs form low spring-loaded arches and end in long broad petal-shaped feet. One large flattened teardrop tail balances behind the pelvis. Cream coat, pink ear interiors and mint innate markings. Compact, grounded, refined; no weapons, clothes or humanoid muscles."
+        ],
+        [
+          "wind_petal",
+          "A mature upright hare with a long diamond torso, high rounded hips, very broad elongated hindfeet and a small angular face beneath two broad swept leaf-shaped ears. Two free forepaws are small but clearly defined; the single tail becomes a dense short fan of petal-like fur lobes. Purposeful elegant spring architecture, keeping the midsection exposed."
+        ],
+        [
+          "root_keeper",
+          "An imposing upright rabbit guardian with a low broad pelvis, a compact high-set ribcage, a narrow short face, two thick ear roots ending in broad curved petal blades, and massive oval forepaws on curved animal forearms. Two large broad hindfeet and a short root-like oval tail form a stable base. Cream and mint shapes, calmly powerful, never a wolf mane."
+        ]
+      ],
+      "3": [
+        [
+          "lunar_grove_deity",
+          "A magnificent sacred moon-hare deity, with a poised small diamond rabbit face, two huge graceful arched ears forming open crescent curves with softly luminous mint vein lines. A high curved chest and a broad grounded pelvis create a majestic curved upright body. Two long strong animal forearms finish in enormous rounded petal-like paws with clear short digits, suspended beside the exposed abdomen. Two powerful low hocks terminate in massive elegant hindfeet. One broad rooted fan tail curls behind the hips like a living opening flower, not a trailing scarf. The ear, wrist, hip and tail anatomy is newly integrated and spectacular. Cream, pale warm pink and mint with subtle pearlescence; serene, wise and approachable. Rabbit lineage, no antler crown, weapons, clothes, wolf mane, or humanoid bodybuilder anatomy."
+        ],
+        [
+          "dawn_hare",
+          "A sacred dawn hare with a broad low ribcage, high powerful haunches, immense elongated hindfeet and a small refined face. Two gracefully spiralling broad rabbit ears rise from thick connected roots and sweep behind like living petals. Large curved forearms with rounded animal paws and a single thick petal-fan tail counterbalance the deep haunches. Luminous cream and mint planes, gentle noble eyes, elegant and imposing."
+        ],
+        [
+          "moonroot_sovereign",
+          "A monumental serene rabbit deity with a tall compact columnar torso over a wide rounded pelvis, two broad crescent ears arching outward, a small angular face, huge paddle-like furry forepaws held away from the abdomen, and two massive low hindfeet. One rounded multi-lobed fan tail rises behind the hips. Coherent smooth cream forms and restrained mint anatomical light, noble presence without costume."
+        ]
+      ]
+    },
+    "lucan": {
+      "1": [
+        [
+          "gale_hound",
+          "An original wind-hound evolution with a compact low triangular skull, narrowed mature blue eyes, a forward-reaching short strong neck, a very deep barrel chest set well in front of narrow raised hind hips, and a sharply angled new back line. Forelegs are short substantial pillars with huge broad split-plane canine paws, hind limbs are long folded spring-like supports with clearly articulated hocks. One thick single tail becomes a wide flattened crescent rudder instead of a fluffy brush. Sculpted navy and ivory body planes with mint innate markings; short tidy fur, no mane growth or armor to substitute for anatomy. A beautiful fantastical broad-fronted canine with an unmistakable new grounded outline."
+        ],
+        [
+          "storm_loper",
+          "A long compact-faced navy canine with raised rounded rear haunches, a narrow low front chest, a strongly arched spine, long curved hocks and compact front legs ending in broad flat paws. The single tail thickens into a long elegant curled plume with a wide flat tip. The neck is short and strong, ears low swept triangles, face refined and confident. Beautiful coherent stylized animal proportions, not a realistic adult wolf."
+        ],
+        [
+          "tide_jaw",
+          "A low broad-headed mythical canine with a short deep torso, broad widely separated front paws on short curved forelegs, high compact rear haunches and powerful folded hind legs. One broad flattened tail grows directly from the hips. Sculpted navy/ivory face and body planes, blue eyes, subtle mint accents. A purposeful appealing large-shape design, never armor or spikes."
+        ]
+      ],
+      "2": [
+        [
+          "sovereign_guardian",
+          "A magnificent mature canine guardian with a small broad angular muzzle, compact strong neck merging into a high arching chest and broad shoulders, low compact pelvis and huge strongly articulated paws. The forelimbs form long weight-bearing pillars while hind legs form low powerful folded hocks, creating a steeply sloping distinctive back line. The single tail becomes a long deep crescent with a broad shaped tip. Natural ivory chest planes and sculpted dark navy surfaces, restrained mint innate markings. Mature noble expression, clean powerful silhouette. Body construction, skull, limbs and tail all change together; no armor or decorative mane inflation."
+        ],
+        [
+          "gale_courser",
+          "A noble long-bodied canine with a high compact head on a short neck, narrow deep sternum, high strong hindquarters, arched back and very long curved supporting hocks. Four broad split-plane paws are clearly grounded. A single thick blade-like tail sweeps horizontally behind. Short sculpted navy coat and ivory planes with mint accents. An elegant mythical coursing beast, not an ordinary wolf."
+        ],
+        [
+          "cliff_warden",
+          "A short compact-headed canine guardian with a broad low chest, barrel-like exposed torso, wide low hips and four immense flat articulated paws carried by thick bowed supporting limbs. One broad leaf-like tail root extends into a single wide curved tip. Gentle noble blue-eyed face, navy/ivory surfaces and quiet mint accents. Body structure creates a monumental low silhouette without muscle or fat standing in for stage."
+        ]
+      ],
+      "3": [
+        [
+          "celestial_storm_wolf",
+          "A magnificent sacred celestial storm-wolf. A refined small long wedge skull with noble blue eyes, a strong arched neck continuous with a tall deep chest, lower rear pelvis and four immense elegant canine paws. Two spectacular broad organic shoulder sails arise from the shoulder anatomy and sweep backward, shaped like graceful flowing wind vanes with subtle mint translucent edges; they are biological structures, not armor or a costume. The single thick tail extends into a long sweeping three-lobed crescent rudder. Long powerful forelimbs and folded rear hocks give an unmistakable sacred-beast silhouette. Sculpted midnight navy and ivory planes, restrained mint luminescence, a wise calm face. Coherent majestic creature anatomy, never spiky clutter, a bigger normal wolf or a bodybuilder. Keep waist and abdomen open for both lean and fat versions."
+        ],
+        [
+          "star_river_canine",
+          "A serene sacred canine sovereign with an elongated sweeping arched torso, high deep chest, powerful low haunches and four broad elegant paws on gracefully curved strong limbs. A small narrow noble head on a strong flowing neck, low swept ears, two broad wave-shaped natural shoulder fins and one long rooted fan-tipped tail create a spectacular flowing silhouette. Midnight navy, ivory and subtle mint light, dignified and appealing, no props."
+        ],
+        [
+          "northern_sanctuary",
+          "A monumental guardian canine with a very broad low arching chest, deep compact pelvis, short massive supporting forelimbs, folded substantial hind limbs and four immense sculpted paws. A compact noble angular face rises from a short strong neck. Two broad curved organic shoulder sails frame the upper body; one thick sweeping crescent tail grounds the rear silhouette. Navy and ivory, blue eyes, restrained mint natural highlights, calm sacred presence independent of body fat."
+        ]
+      ]
+    }
+  }
+}

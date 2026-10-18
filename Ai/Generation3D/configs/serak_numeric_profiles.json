@@ -1,0 +1,191 @@
+{
+  "description": "New original biped species. Six same-stage level50 profiles use one identical actual Stage1 muzzle crop, seed42 and comparable settings. No existing species images and no target-form references.",
+  "profiles": [
+    {
+      "case_id": "serak_stage2_current_leaper",
+      "label_ko": "하체 운동 · 도약형",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 55,
+          "LowerBody": 95,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    },
+    {
+      "case_id": "serak_stage2_tide_breaker",
+      "label_ko": "상체 운동 · 파도 장벽형",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 95,
+          "LowerBody": 55,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    },
+    {
+      "case_id": "serak_stage2_springwarden",
+      "label_ko": "균형 생활 · 샘 수호형",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 50,
+          "LowerBody": 50,
+          "Activity": 50,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    },
+    {
+      "case_id": "serak_stage2_still_pool",
+      "label_ko": "저활동 · 고요한 심연형",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 20,
+          "LowerBody": 20,
+          "Activity": 10,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    },
+    {
+      "case_id": "serak_stage2_deep_tide",
+      "label_ko": "저활동 + 과잉 섭취 · 거대 수호형",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 20,
+          "LowerBody": 20,
+          "Activity": 10,
+          "Nutrition": 85,
+          "EnergyBalance": 0.8
+        }
+      ],
+      "personality": {
+        "Affinity": 85,
+        "Initiative": 80,
+        "Mood": 85
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    },
+    {
+      "case_id": "serak_stage2_solemn_leaper",
+      "label_ko": "같은 하체 운동 · 과묵한 성격",
+      "species": "serak",
+      "previous_level": 49,
+      "level": 50,
+      "previous_form": "BALANCED",
+      "records": [
+        {
+          "days": 28,
+          "UpperBody": 55,
+          "LowerBody": 95,
+          "Activity": 90,
+          "Nutrition": 85,
+          "EnergyBalance": 0
+        }
+      ],
+      "personality": {
+        "Affinity": 15,
+        "Initiative": 25,
+        "Mood": 20
+      },
+      "previous_image": "outputs/serak_biped_evolution/images/serak_stage1_founder.png",
+      "face_box": [
+        292,
+        217,
+        468,
+        281
+      ],
+      "identity_crop_note": "Actual preceding muzzle and lower cheek only; eyes, forehead fins, entire torso and limbs excluded"
+    }
+  ]
+}

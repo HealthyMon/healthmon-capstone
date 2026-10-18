@@ -1,0 +1,11 @@
+{
+  "poster": "original_posters/06_three_species_revised_draft.png",
+  "poster_size": [992, 1586],
+  "x_ranges": [[192, 282], [351, 461], [514, 645], [699, 884]],
+  "y_ranges": {
+    "mongle": {"A_fit_then_heavy": [230, 347], "B_heavy_then_recovery": [395, 511]},
+    "tori": {"A_fit_then_heavy": [604, 724], "B_heavy_then_recovery": [775, 907]},
+    "lucan": {"A_fit_then_heavy": [967, 1108], "B_heavy_then_recovery": [1162, 1290]}
+  },
+  "notes": "Manually inspected primary poster pixel regions. Crops are design hints, NOT clean ground truth. Some tails are obscured and their exact reverse-side appearance is unknown. Stage 3 Lucan candidate and species sheet cut off the right side; this wider primary-poster region preserves its visible face and feet. Review any other species/stage before accepting its semantic quality."
+}

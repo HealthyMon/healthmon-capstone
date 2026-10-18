@@ -1,0 +1,3 @@
+# Observed source image only. Container writable-layer changes and weights are NOT in this image.
+FROM --platform=linux/arm64 nvcr.io/nvidia/pytorch@sha256:417cbf33f87b5378849df37983552cd1f8bc8b62fe1ceabe004de816a55dff21
+# This file is provenance, not an RTX 3090 restore recipe.

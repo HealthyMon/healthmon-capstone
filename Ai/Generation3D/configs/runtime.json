@@ -1,0 +1,29 @@
+{
+  "qwen_python": "${HEALTHMON_ENVS}/qwen/bin/python",
+  "qwen_model": "Qwen/Qwen-Image-2.1",
+  "qwen_width": 768,
+  "qwen_height": 768,
+  "qwen_steps": 40,
+  "qwen_identity_views": [
+    "three_quarter"
+  ],
+  "trellis_python": "${HEALTHMON_ENVS}/trellis/bin/python",
+  "trellis_model": "microsoft/TRELLIS.2-4B",
+  "trellis_repo": "${HEALTHMON_RUNTIME}/vendor/TRELLIS.2",
+  "trellis_low_vram": true,
+  "trellis_skip_rembg": true,
+  "blender": "${HEALTHMON_BLENDER}",
+  "rigging_backend": "riganything",
+  "rigging_python": "${HEALTHMON_ENVS}/riganything/bin/python",
+  "rigging_repo": "${HEALTHMON_RUNTIME}/vendor/RigAnything",
+  "rigging_checkpoint": "${HEALTHMON_RUNTIME}/models/RigAnything/riganything_ckpt.pt",
+  "trellis_cache": "${HEALTHMON_RUNTIME}/models/trellis",
+  "trellis_texture_size": 2048,
+  "trellis_decimation_target": 1000000,
+  "trellis_remesh": true,
+  "blender_binary": "${HEALTHMON_BLENDER}",
+  "matting_python": "${HEALTHMON_ENVS}/matting/bin/python",
+  "matting_checkpoint": "${HEALTHMON_MATTING_CHECKPOINT}",
+  "qwen_cache": "${HEALTHMON_RUNTIME}/models/huggingface",
+  "qwen_pipeline_file": "${HEALTHMON_RUNTIME}/vendor/diffusers/src/diffusers/pipelines/qwenimage21/pipeline_qwenimage21.py"
+}

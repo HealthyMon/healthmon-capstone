@@ -1,0 +1,44 @@
+{
+  "source": "/workspace/generation/records/cleanup.json",
+  "status": "COMPLETED",
+  "completed_utc": "2026-10-11T06:00:20Z",
+  "relevant_targets": [
+    {
+      "path": "/workspace/checkpoints",
+      "kind": "directory",
+      "files": 7,
+      "bytes": 395105151
+    },
+    {
+      "path": "/workspace/healthmon_evolution_reference_pack.zip",
+      "kind": "file",
+      "files": 1,
+      "bytes": 17256845
+    },
+    {
+      "path": "/workspace/3d_pipeline_lab/runtime/checkpoints",
+      "kind": "directory",
+      "files": 5,
+      "bytes": 7273628768
+    },
+    {
+      "path": "/workspace/3d_pipeline_lab/runtime/checkpoint-inspection",
+      "kind": "directory",
+      "files": 33,
+      "bytes": 196692
+    },
+    {
+      "path": "/workspace/3d_pipeline_lab/runtime/unirig",
+      "kind": "directory",
+      "files": 1912,
+      "bytes": 24045576
+    },
+    {
+      "path": "/workspace/3d_pipeline_lab/runtime/unirig_arm",
+      "kind": "directory",
+      "files": 21030,
+      "bytes": 4264606673
+    }
+  ],
+  "warning": "Historical evidence only. No deletion performed during this migration."
+}
