@@ -85,6 +85,11 @@ mono_crash.*
 *.unitypackage
 *.unitypackage.meta
 *.app
+# Unity IL2CPP generated files
+**/Il2CppOutput/
+**/il2cppOutput/
+**/Bee/
+**/BurstDebugInformation/
 
 
 # =========================================================
