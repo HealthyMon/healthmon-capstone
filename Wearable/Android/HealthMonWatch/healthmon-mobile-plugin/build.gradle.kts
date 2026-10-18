@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.healthmon.app.mobile"
+    namespace = "com.healthmon.capstone.mobile"
     compileSdk {
         version = release(36)
     }

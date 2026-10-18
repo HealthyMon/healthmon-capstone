@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.healthmon.app"
+        applicationId = "com.healthmon.capstone"
         minSdk = 26
         targetSdk = 37
         versionCode = 1
