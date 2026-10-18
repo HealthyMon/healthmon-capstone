@@ -1,0 +1,17 @@
+{
+  "schema_version": "healthmon.species.v1",
+  "species": "nubi",
+  "label_ko": "누비",
+  "identity": "A coral-gilled axolotl creature with smooth sky-blue skin, lilac underside, a broad smiling head, external pink-coral gill fans, four short legs and a broad finned tail.",
+  "lineage_anchors": [
+    "pink-coral branching external gills",
+    "smooth sky-blue skin and lilac underside",
+    "broad connected paddle tail with a continuous translucent fin"
+  ],
+  "starter_prompt": "ONE original baby fantasy-game companion, smooth high-quality stylized 3D character render, broad clear connected volumes, appealing readable silhouette, calm three-quarter standing pose on four complete supporting feet. Whole body and whole tail inside generous margins, plain WHITE square background, soft studio light. Single character, no text, grids, panels, clothing, weapons, props or detached fragments. A tiny coral-gilled axolotl infant with a wide smooth smiling head, sky-blue moist skin and a lilac underside. Three rounded pink-coral external gill stalks grow on each side of its head as soft branching fans. Four short complete legs with tiny rounded toes. A broad connected tapering paddle tail has a continuous soft translucent blue fin. Dark violet round eyes, compact infant body, simple readable soft forms.",
+  "stage_directions": {
+    "1": "FIRST EVOLUTION: a juvenile coral-gilled axolotl, a longer supple sky-blue trunk and more developed four supporting legs, enlarged smoothly connected pink-coral gill fans on both sides of its head, a broad lilac underside and a more substantial finned paddle tail. Clearly older than the infant while preserving the axolotl family.",
+    "2": "SECOND EVOLUTION: a mature coral-gilled axolotl with a distinctive flowing whole-body silhouette, a stronger connected finned tail and reorganized external coral gill fans. Keep smooth sky-blue and lilac surfaces and four clear supporting legs.",
+    "3": "THIRD EVOLUTION: a large mythical coral-gilled axolotl guardian with a powerful continuous wave-like body, structurally integrated coral gill fans and a fully connected finned tail. Preserve the blue-lilac-pink family and invent a deliberate mature aquatic fantasy organization; a humanoid form is not required."
+  }
+}

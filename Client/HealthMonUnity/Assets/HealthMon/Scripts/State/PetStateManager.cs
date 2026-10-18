@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PetStateManager : MonoBehaviour
 {
+    public int Level => level;
+    public event System.Action<int> LevelChanged;
+
     [Header("Basic State")]
     [SerializeField] private string petName = "헬스몬";
 
@@ -91,6 +94,7 @@ public class PetStateManager : MonoBehaviour
         {
             currentExp -= expToNextLevel;
             level++;
+            LevelChanged?.Invoke(level);
 
             Debug.Log(
                 $"[PetState] Level Up! 현재 레벨: {level}"
@@ -137,6 +141,15 @@ public class PetStateManager : MonoBehaviour
 
         curiosity = Mathf.Clamp(curiosity, 0, 100);
 
+        RefreshAllUI();
+        SavePetData();
+    }
+
+    public void ApplyEvolutionStage(int stage)
+    {
+        int completedStage = Mathf.Clamp(stage, 0, 3);
+        growthStage = new[] { "초기형", "1차 진화", "2차 진화", "3차 진화" }[completedStage];
+        level = Mathf.Max(level, new[] { 1, 15, 30, 50 }[completedStage]);
         RefreshAllUI();
         SavePetData();
     }
@@ -308,6 +321,8 @@ public class PetStateManager : MonoBehaviour
         activity = Mathf.Clamp(newActivity, 0, 100);
         kindness = Mathf.Clamp(newKindness, 0, 100);
         curiosity = Mathf.Clamp(newCuriosity, 0, 100);
+
+        LevelChanged?.Invoke(level);
 
         // 화면 갱신
         RefreshAllUI();

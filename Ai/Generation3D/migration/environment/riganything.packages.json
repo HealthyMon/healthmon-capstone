@@ -1,0 +1,1432 @@
+{
+  "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+  "executable": "/workspace/healthmon-evolution/.venvs/riganything/bin/python",
+  "architecture": "aarch64",
+  "packages": {
+    "easydict": {
+      "name": "easydict",
+      "version": "1.13",
+      "location": "/workspace/healthmon-evolution/.venvs/riganything/lib/python3.12/site-packages/easydict-1.13.dist-info"
+    },
+    "huggingface-hub": {
+      "name": "huggingface_hub",
+      "version": "0.36.2",
+      "location": "/workspace/healthmon-evolution/.venvs/riganything/lib/python3.12/site-packages/huggingface_hub-0.36.2.dist-info"
+    },
+    "pip": {
+      "name": "pip",
+      "version": "24.0",
+      "location": "/workspace/healthmon-evolution/.venvs/riganything/lib/python3.12/site-packages/pip-24.0.dist-info"
+    },
+    "transformers": {
+      "name": "transformers",
+      "version": "4.57.6",
+      "location": "/workspace/healthmon-evolution/.venvs/riganything/lib/python3.12/site-packages/transformers-4.57.6.dist-info"
+    },
+    "trimesh": {
+      "name": "trimesh",
+      "version": "4.12.2",
+      "location": "/workspace/healthmon-evolution/.venvs/riganything/lib/python3.12/site-packages/trimesh-4.12.2.dist-info"
+    },
+    "nvidia-cusolver": {
+      "name": "nvidia-cusolver",
+      "version": "12.0.4.66",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cusolver-12.0.4.66.dist-info"
+    },
+    "nvidia-cusparse": {
+      "name": "nvidia-cusparse",
+      "version": "12.6.3.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cusparse-12.6.3.3.dist-info"
+    },
+    "click": {
+      "name": "click",
+      "version": "8.5.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/click-8.5.0.dist-info"
+    },
+    "cuda-pathfinder": {
+      "name": "cuda-pathfinder",
+      "version": "1.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/cuda_pathfinder-1.6.0.dist-info"
+    },
+    "nvidia-cuda-runtime": {
+      "name": "nvidia-cuda-runtime",
+      "version": "13.0.96",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cuda_runtime-13.0.96.dist-info"
+    },
+    "triton": {
+      "name": "triton",
+      "version": "3.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/triton-3.6.0.dist-info"
+    },
+    "nvidia-nvjitlink": {
+      "name": "nvidia-nvjitlink",
+      "version": "13.0.88",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvjitlink-13.0.88.dist-info"
+    },
+    "nvidia-cudnn-cu13": {
+      "name": "nvidia-cudnn-cu13",
+      "version": "9.15.1.9",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cudnn_cu13-9.15.1.9.dist-info"
+    },
+    "nvidia-nccl-cu13": {
+      "name": "nvidia-nccl-cu13",
+      "version": "2.28.9",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nccl_cu13-2.28.9.dist-info"
+    },
+    "torchvision": {
+      "name": "torchvision",
+      "version": "0.25.0+cu130",
+      "location": "/usr/local/lib/python3.12/dist-packages/torchvision-0.25.0+cu130.dist-info"
+    },
+    "torch": {
+      "name": "torch",
+      "version": "2.10.0+cu130",
+      "location": "/usr/local/lib/python3.12/dist-packages/torch-2.10.0+cu130.dist-info"
+    },
+    "cuda-bindings": {
+      "name": "cuda-bindings",
+      "version": "13.0.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/cuda_bindings-13.0.3.dist-info"
+    },
+    "nvidia-cusparselt-cu13": {
+      "name": "nvidia-cusparselt-cu13",
+      "version": "0.8.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cusparselt_cu13-0.8.0.dist-info"
+    },
+    "nvidia-nvtx": {
+      "name": "nvidia-nvtx",
+      "version": "13.0.85",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvtx-13.0.85.dist-info"
+    },
+    "nvidia-cufile": {
+      "name": "nvidia-cufile",
+      "version": "1.15.1.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cufile-1.15.1.6.dist-info"
+    },
+    "nvidia-curand": {
+      "name": "nvidia-curand",
+      "version": "10.4.0.35",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_curand-10.4.0.35.dist-info"
+    },
+    "nvidia-nvshmem-cu13": {
+      "name": "nvidia-nvshmem-cu13",
+      "version": "3.4.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvshmem_cu13-3.4.5.dist-info"
+    },
+    "nvidia-cuda-cupti": {
+      "name": "nvidia-cuda-cupti",
+      "version": "13.0.85",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cuda_cupti-13.0.85.dist-info"
+    },
+    "nvidia-cufft": {
+      "name": "nvidia-cufft",
+      "version": "12.0.0.61",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cufft-12.0.0.61.dist-info"
+    },
+    "nvidia-cuda-nvrtc": {
+      "name": "nvidia-cuda-nvrtc",
+      "version": "13.0.88",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cuda_nvrtc-13.0.88.dist-info"
+    },
+    "hf-xet": {
+      "name": "hf-xet",
+      "version": "1.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/hf_xet-1.6.0.dist-info"
+    },
+    "nvidia-cublas": {
+      "name": "nvidia-cublas",
+      "version": "13.1.0.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cublas-13.1.0.3.dist-info"
+    },
+    "zipp": {
+      "name": "zipp",
+      "version": "3.23.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/zipp-3.23.0.dist-info"
+    },
+    "ml-dtypes": {
+      "name": "ml_dtypes",
+      "version": "0.5.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/ml_dtypes-0.5.3.dist-info"
+    },
+    "onnxscript": {
+      "name": "onnxscript",
+      "version": "0.5.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/onnxscript-0.5.6.dist-info"
+    },
+    "transformer-engine": {
+      "name": "transformer_engine",
+      "version": "2.9.0+70f53666",
+      "location": "/usr/local/lib/python3.12/dist-packages/transformer_engine-2.9.0+70f53666.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///workspace/TransformerEngine"
+      }
+    },
+    "importlib-metadata": {
+      "name": "importlib_metadata",
+      "version": "8.7.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/importlib_metadata-8.7.0.dist-info"
+    },
+    "onnx-ir": {
+      "name": "onnx-ir",
+      "version": "0.1.12",
+      "location": "/usr/local/lib/python3.12/dist-packages/onnx_ir-0.1.12.dist-info"
+    },
+    "flash-attn": {
+      "name": "flash_attn",
+      "version": "2.7.4.post1+25.11",
+      "location": "/usr/local/lib/python3.12/dist-packages/flash_attn-2.7.4.post1+25.11.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=64b7258a2d259dce32bc1eea9060f47c18483a4735eda7916ee707f11da10077",
+          "hashes": {
+            "sha256": "64b7258a2d259dce32bc1eea9060f47c18483a4735eda7916ee707f11da10077"
+          }
+        },
+        "url": "file:///opt/transfer/flash_attn-2.7.4.post1%2B25.11-38114660-cp312-cp312-linux_aarch64.whl"
+      }
+    },
+    "einops": {
+      "name": "einops",
+      "version": "0.8.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/einops-0.8.1.dist-info"
+    },
+    "dllist": {
+      "name": "dllist",
+      "version": "2.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/dllist-2.0.0.dist-info"
+    },
+    "torch-tensorrt": {
+      "name": "torch_tensorrt",
+      "version": "2.10.0a0",
+      "location": "/usr/local/lib/python3.12/dist-packages/torch_tensorrt-2.10.0a0.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=82ac67112105bbd9c81a9ced57ced15c17a9b795dcc48c4774ab9375c2bde068",
+          "hashes": {
+            "sha256": "82ac67112105bbd9c81a9ced57ced15c17a9b795dcc48c4774ab9375c2bde068"
+          }
+        },
+        "url": "file:///opt/pytorch/torch_tensorrt/dist/torch_tensorrt-2.10.0a0-cp312-cp312-linux_aarch64.whl"
+      }
+    },
+    "apex": {
+      "name": "apex",
+      "version": "0.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/apex-0.1.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=f76c61507100ba63144fabf0bbcebbadb5f550397e7afd72ea20ec0f50169695",
+          "hashes": {
+            "sha256": "f76c61507100ba63144fabf0bbcebbadb5f550397e7afd72ea20ec0f50169695"
+          }
+        },
+        "url": "file:///opt/pytorch/apex/dist/apex-0.1-cp312-cp312-linux_aarch64.whl"
+      }
+    },
+    "typing-inspection": {
+      "name": "typing-inspection",
+      "version": "0.4.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/typing_inspection-0.4.2.dist-info"
+    },
+    "safetensors": {
+      "name": "safetensors",
+      "version": "0.6.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/safetensors-0.6.2.dist-info"
+    },
+    "polygraphy": {
+      "name": "polygraphy",
+      "version": "0.49.26",
+      "location": "/usr/local/lib/python3.12/dist-packages/polygraphy-0.49.26.dist-info"
+    },
+    "pulp": {
+      "name": "PuLP",
+      "version": "3.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pulp-3.3.0.dist-info"
+    },
+    "nvidia-resiliency-ext": {
+      "name": "nvidia-resiliency-ext",
+      "version": "0.4.1+cuda13",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_resiliency_ext-0.4.1+cuda13.dist-info"
+    },
+    "annotated-types": {
+      "name": "annotated-types",
+      "version": "0.7.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/annotated_types-0.7.0.dist-info"
+    },
+    "pydantic": {
+      "name": "pydantic",
+      "version": "2.12.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/pydantic-2.12.4.dist-info"
+    },
+    "nvidia-modelopt": {
+      "name": "nvidia-modelopt",
+      "version": "0.37.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_modelopt-0.37.0.dist-info"
+    },
+    "pydantic-core": {
+      "name": "pydantic_core",
+      "version": "2.41.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/pydantic_core-2.41.5.dist-info"
+    },
+    "torchprofile": {
+      "name": "torchprofile",
+      "version": "0.0.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/torchprofile-0.0.4.dist-info"
+    },
+    "nvidia-ml-py": {
+      "name": "nvidia-ml-py",
+      "version": "13.580.82",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_ml_py-13.580.82.dist-info"
+    },
+    "tensorrt": {
+      "name": "tensorrt",
+      "version": "10.14.1.48",
+      "location": "/usr/local/lib/python3.12/dist-packages/tensorrt-10.14.1.48.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=046b5c803c183e54cc9dd3504a6cfeaa06fd2763dd4a67abb6b28ce48e0392dd",
+          "hashes": {
+            "sha256": "046b5c803c183e54cc9dd3504a6cfeaa06fd2763dd4a67abb6b28ce48e0392dd"
+          }
+        },
+        "url": "file:///workspace/TensorRT-10.14.1.48/python/tensorrt-10.14.1.48-cp312-none-linux_aarch64.whl"
+      }
+    },
+    "tabulate": {
+      "name": "tabulate",
+      "version": "0.9.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/tabulate-0.9.0.dist-info"
+    },
+    "pandas": {
+      "name": "pandas",
+      "version": "2.3.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/pandas-2.3.3.dist-info"
+    },
+    "lightning-utilities": {
+      "name": "lightning-utilities",
+      "version": "0.15.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/lightning_utilities-0.15.2.dist-info"
+    },
+    "multidict": {
+      "name": "multidict",
+      "version": "6.7.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/multidict-6.7.0.dist-info"
+    },
+    "rich": {
+      "name": "rich",
+      "version": "14.2.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/rich-14.2.0.dist-info"
+    },
+    "docstring-parser": {
+      "name": "docstring_parser",
+      "version": "0.17.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/docstring_parser-0.17.0.dist-info"
+    },
+    "pytz": {
+      "name": "pytz",
+      "version": "2025.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytz-2025.2.dist-info"
+    },
+    "tomli": {
+      "name": "tomli",
+      "version": "2.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/tomli-2.3.0.dist-info"
+    },
+    "tyro": {
+      "name": "tyro",
+      "version": "0.9.35",
+      "location": "/usr/local/lib/python3.12/dist-packages/tyro-0.9.35.dist-info"
+    },
+    "aiohttp": {
+      "name": "aiohttp",
+      "version": "3.13.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/aiohttp-3.13.2.dist-info"
+    },
+    "looseversion": {
+      "name": "looseversion",
+      "version": "1.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/looseversion-1.3.0.dist-info"
+    },
+    "torchao": {
+      "name": "torchao",
+      "version": "0.14.0+git",
+      "location": "/usr/local/lib/python3.12/dist-packages/torchao-0.14.0+git.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/ao"
+      }
+    },
+    "xxhash": {
+      "name": "xxhash",
+      "version": "3.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/xxhash-3.6.0.dist-info"
+    },
+    "lightning-thunder": {
+      "name": "lightning-thunder",
+      "version": "0.2.6.dev0",
+      "location": "/usr/local/lib/python3.12/dist-packages/lightning_thunder-0.2.6.dev0.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/lightning-thunder"
+      }
+    },
+    "aiohappyeyeballs": {
+      "name": "aiohappyeyeballs",
+      "version": "2.6.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/aiohappyeyeballs-2.6.1.dist-info"
+    },
+    "dill": {
+      "name": "dill",
+      "version": "0.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/dill-0.4.0.dist-info"
+    },
+    "yarl": {
+      "name": "yarl",
+      "version": "1.22.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/yarl-1.22.0.dist-info"
+    },
+    "typer-slim": {
+      "name": "typer-slim",
+      "version": "0.20.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/typer_slim-0.20.0.dist-info"
+    },
+    "onnx": {
+      "name": "onnx",
+      "version": "1.18.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/onnx-1.18.0.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/pytorch/third_party/onnx"
+      }
+    },
+    "tokenizers": {
+      "name": "tokenizers",
+      "version": "0.22.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/tokenizers-0.22.1.dist-info"
+    },
+    "shtab": {
+      "name": "shtab",
+      "version": "1.7.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/shtab-1.7.2.dist-info"
+    },
+    "torchtitan": {
+      "name": "torchtitan",
+      "version": "0.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/torchtitan-0.1.0.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/torchtitan"
+      }
+    },
+    "multiprocess": {
+      "name": "multiprocess",
+      "version": "0.70.18",
+      "location": "/usr/local/lib/python3.12/dist-packages/multiprocess-0.70.18.dist-info"
+    },
+    "typeguard": {
+      "name": "typeguard",
+      "version": "4.4.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/typeguard-4.4.4.dist-info"
+    },
+    "frozenlist": {
+      "name": "frozenlist",
+      "version": "1.8.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/frozenlist-1.8.0.dist-info"
+    },
+    "nvfuser": {
+      "name": "nvfuser",
+      "version": "0.2.34+gitfce1aec",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvfuser-0.2.34+gitfce1aec.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/fuser/python"
+      }
+    },
+    "torchdata": {
+      "name": "torchdata",
+      "version": "0.11.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/torchdata-0.11.0.dist-info"
+    },
+    "nvidia-cudnn-frontend": {
+      "name": "nvidia-cudnn-frontend",
+      "version": "1.15.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_cudnn_frontend-1.15.0.dist-info",
+      "direct_url": {
+        "dir_info": {},
+        "url": "file:///opt/pytorch/lightning-thunder/tmp/cudnn_frontend"
+      }
+    },
+    "opt-einsum": {
+      "name": "opt_einsum",
+      "version": "3.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/opt_einsum-3.4.0.dist-info"
+    },
+    "aiosignal": {
+      "name": "aiosignal",
+      "version": "1.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/aiosignal-1.4.0.dist-info"
+    },
+    "propcache": {
+      "name": "propcache",
+      "version": "0.4.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/propcache-0.4.1.dist-info"
+    },
+    "shellingham": {
+      "name": "shellingham",
+      "version": "1.5.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/shellingham-1.5.4.dist-info"
+    },
+    "pybind11-global": {
+      "name": "pybind11-global",
+      "version": "3.0.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pybind11_global-3.0.1.dist-info"
+    },
+    "datasets": {
+      "name": "datasets",
+      "version": "4.4.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/datasets-4.4.1.dist-info"
+    },
+    "pyarrow": {
+      "name": "pyarrow",
+      "version": "22.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pyarrow-22.0.0.dist-info"
+    },
+    "contourpy": {
+      "name": "contourpy",
+      "version": "1.3.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/contourpy-1.3.3.dist-info"
+    },
+    "fonttools": {
+      "name": "fonttools",
+      "version": "4.60.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/fonttools-4.60.1.dist-info"
+    },
+    "cycler": {
+      "name": "cycler",
+      "version": "0.12.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/cycler-0.12.1.dist-info"
+    },
+    "kiwisolver": {
+      "name": "kiwisolver",
+      "version": "1.4.9",
+      "location": "/usr/local/lib/python3.12/dist-packages/kiwisolver-1.4.9.dist-info"
+    },
+    "matplotlib": {
+      "name": "matplotlib",
+      "version": "3.10.7",
+      "location": "/usr/local/lib/python3.12/dist-packages/matplotlib-3.10.7.dist-info"
+    },
+    "pycocotools": {
+      "name": "pycocotools",
+      "version": "2.0+nv0.8.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pycocotools-2.0+nv0.8.1.dist-info",
+      "direct_url": {
+        "subdirectory": "PythonAPI",
+        "url": "https://github.com/nvidia/cocoapi.git",
+        "vcs_info": {
+          "commit_id": "08350a157b41f0755a536441b5abec89ab934c5b",
+          "requested_revision": "v0.8.1",
+          "vcs": "git"
+        }
+      }
+    },
+    "pyparsing": {
+      "name": "pyparsing",
+      "version": "3.2.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/pyparsing-3.2.5.dist-info"
+    },
+    "makefun": {
+      "name": "makefun",
+      "version": "1.16.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/makefun-1.16.0.dist-info"
+    },
+    "nvidia-nvcomp-cu13": {
+      "name": "nvidia-nvcomp-cu13",
+      "version": "5.0.0.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvcomp_cu13-5.0.0.6.dist-info"
+    },
+    "wrapt": {
+      "name": "wrapt",
+      "version": "2.0.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/wrapt-2.0.1.dist-info"
+    },
+    "nvidia-nvjpeg": {
+      "name": "nvidia-nvjpeg",
+      "version": "13.0.1.86",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvjpeg-13.0.1.86.dist-info"
+    },
+    "nvtx": {
+      "name": "nvtx",
+      "version": "0.2.13",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvtx-0.2.13.dist-info"
+    },
+    "nvidia-nvtiff-cu13": {
+      "name": "nvidia-nvtiff-cu13",
+      "version": "0.6.0.78",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvtiff_cu13-0.6.0.78.dist-info"
+    },
+    "nvidia-nvimgcodec-cu13": {
+      "name": "nvidia-nvimgcodec-cu13",
+      "version": "0.6.1.37",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvimgcodec_cu13-0.6.1.37.dist-info"
+    },
+    "nvidia-dali-cuda130": {
+      "name": "nvidia-dali-cuda130",
+      "version": "1.52.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_dali_cuda130-1.52.0.dist-info"
+    },
+    "nvidia-nvjpeg2k-cu13": {
+      "name": "nvidia-nvjpeg2k-cu13",
+      "version": "0.9.0.43",
+      "location": "/usr/local/lib/python3.12/dist-packages/nvidia_nvjpeg2k_cu13-0.9.0.43.dist-info"
+    },
+    "dm-tree": {
+      "name": "dm-tree",
+      "version": "0.1.9",
+      "location": "/usr/local/lib/python3.12/dist-packages/dm_tree-0.1.9.dist-info"
+    },
+    "gast": {
+      "name": "gast",
+      "version": "0.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/gast-0.6.0.dist-info"
+    },
+    "pytorch-triton": {
+      "name": "pytorch-triton",
+      "version": "3.5.0+gitde3506d2",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytorch_triton-3.5.0+gitde3506d2.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=6f0a6f49794554a3ead9a66b2d37affbc34f7906e31f14c0248afc7bd8ea7ba5",
+          "hashes": {
+            "sha256": "6f0a6f49794554a3ead9a66b2d37affbc34f7906e31f14c0248afc7bd8ea7ba5"
+          }
+        },
+        "url": "file:///tmp/dist/pytorch_triton-3.5.0%2Bgitde3506d2-cp312-cp312-linux_aarch64.whl"
+      }
+    },
+    "triton-kernels": {
+      "name": "triton_kernels",
+      "version": "1.0.0+nv25.11",
+      "location": "/usr/local/lib/python3.12/dist-packages/triton_kernels-1.0.0+nv25.11.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=373a3a8cb00eb70ae55b2e797f5792e23552556814465f71c8c7297b4ed062e3",
+          "hashes": {
+            "sha256": "373a3a8cb00eb70ae55b2e797f5792e23552556814465f71c8c7297b4ed062e3"
+          }
+        },
+        "url": "file:///tmp/dist/triton_kernels-1.0.0%2Bnv25.11-py3-none-any.whl"
+      }
+    },
+    "optree": {
+      "name": "optree",
+      "version": "0.17.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/optree-0.17.0.dist-info"
+    },
+    "uv": {
+      "name": "uv",
+      "version": "0.9.8",
+      "location": "/usr/local/lib/python3.12/dist-packages/uv-0.9.8.dist-info"
+    },
+    "pyproject-hooks": {
+      "name": "pyproject_hooks",
+      "version": "1.2.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pyproject_hooks-1.2.0.dist-info"
+    },
+    "build": {
+      "name": "build",
+      "version": "1.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/build-1.3.0.dist-info"
+    },
+    "ninja": {
+      "name": "ninja",
+      "version": "1.13.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/ninja-1.13.0.dist-info"
+    },
+    "lintrunner": {
+      "name": "lintrunner",
+      "version": "0.12.7",
+      "location": "/usr/local/lib/python3.12/dist-packages/lintrunner-0.12.7.dist-info"
+    },
+    "networkx": {
+      "name": "networkx",
+      "version": "3.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/networkx-3.5.dist-info"
+    },
+    "filelock": {
+      "name": "filelock",
+      "version": "3.20.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/filelock-3.20.0.dist-info"
+    },
+    "sympy": {
+      "name": "sympy",
+      "version": "1.14.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/sympy-1.14.0.dist-info"
+    },
+    "mpmath": {
+      "name": "mpmath",
+      "version": "1.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/mpmath-1.3.0.dist-info"
+    },
+    "fsspec": {
+      "name": "fsspec",
+      "version": "2025.10.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/fsspec-2025.10.0.dist-info"
+    },
+    "markdown-it-py": {
+      "name": "markdown-it-py",
+      "version": "4.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/markdown_it_py-4.0.0.dist-info"
+    },
+    "mdit-py-plugins": {
+      "name": "mdit-py-plugins",
+      "version": "0.5.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/mdit_py_plugins-0.5.0.dist-info"
+    },
+    "jupyterlab-tensorboard-pro": {
+      "name": "jupyterlab_tensorboard_pro",
+      "version": "4.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyterlab_tensorboard_pro-4.0.0.dist-info",
+      "direct_url": {
+        "archive_info": {
+          "hash": "sha256=bec4fb4c6084ac04d458edecd1210fccc7206184d7fba4d2b099edeaa1387d77",
+          "hashes": {
+            "sha256": "bec4fb4c6084ac04d458edecd1210fccc7206184d7fba4d2b099edeaa1387d77"
+          }
+        },
+        "url": "file:///builder/jupyterlab_tensorboard_pro-4.0.0-py2.py3-none-any.whl"
+      }
+    },
+    "mypy-extensions": {
+      "name": "mypy_extensions",
+      "version": "1.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/mypy_extensions-1.1.0.dist-info"
+    },
+    "mdurl": {
+      "name": "mdurl",
+      "version": "0.1.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/mdurl-0.1.2.dist-info"
+    },
+    "jupytext": {
+      "name": "jupytext",
+      "version": "1.18.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupytext-1.18.1.dist-info"
+    },
+    "pathspec": {
+      "name": "pathspec",
+      "version": "0.12.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pathspec-0.12.1.dist-info"
+    },
+    "isort": {
+      "name": "isort",
+      "version": "7.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/isort-7.0.0.dist-info"
+    },
+    "pytokens": {
+      "name": "pytokens",
+      "version": "0.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytokens-0.3.0.dist-info"
+    },
+    "black": {
+      "name": "black",
+      "version": "25.9.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/black-25.9.0.dist-info"
+    },
+    "lark": {
+      "name": "lark",
+      "version": "1.3.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/lark-1.3.1.dist-info"
+    },
+    "rpds-py": {
+      "name": "rpds-py",
+      "version": "0.28.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/rpds_py-0.28.0.dist-info"
+    },
+    "matplotlib-inline": {
+      "name": "matplotlib-inline",
+      "version": "0.2.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/matplotlib_inline-0.2.1.dist-info"
+    },
+    "parso": {
+      "name": "parso",
+      "version": "0.8.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/parso-0.8.5.dist-info"
+    },
+    "jupyter-core": {
+      "name": "jupyter_core",
+      "version": "5.9.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_core-5.9.1.dist-info"
+    },
+    "prompt-toolkit": {
+      "name": "prompt_toolkit",
+      "version": "3.0.52",
+      "location": "/usr/local/lib/python3.12/dist-packages/prompt_toolkit-3.0.52.dist-info"
+    },
+    "pexpect": {
+      "name": "pexpect",
+      "version": "4.9.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pexpect-4.9.0.dist-info"
+    },
+    "grpcio": {
+      "name": "grpcio",
+      "version": "1.76.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/grpcio-1.76.0.dist-info"
+    },
+    "nbformat": {
+      "name": "nbformat",
+      "version": "5.10.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/nbformat-5.10.4.dist-info"
+    },
+    "werkzeug": {
+      "name": "Werkzeug",
+      "version": "3.1.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/werkzeug-3.1.3.dist-info"
+    },
+    "httpx": {
+      "name": "httpx",
+      "version": "0.28.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/httpx-0.28.1.dist-info"
+    },
+    "jsonpointer": {
+      "name": "jsonpointer",
+      "version": "3.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jsonpointer-3.0.0.dist-info"
+    },
+    "absl-py": {
+      "name": "absl-py",
+      "version": "2.3.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/absl_py-2.3.1.dist-info"
+    },
+    "jupyterlab-server": {
+      "name": "jupyterlab_server",
+      "version": "2.28.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyterlab_server-2.28.0.dist-info"
+    },
+    "notebook-shim": {
+      "name": "notebook_shim",
+      "version": "0.2.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/notebook_shim-0.2.4.dist-info"
+    },
+    "fastjsonschema": {
+      "name": "fastjsonschema",
+      "version": "2.21.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/fastjsonschema-2.21.2.dist-info"
+    },
+    "jupyter-lsp": {
+      "name": "jupyter-lsp",
+      "version": "2.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_lsp-2.3.0.dist-info"
+    },
+    "soupsieve": {
+      "name": "soupsieve",
+      "version": "2.8",
+      "location": "/usr/local/lib/python3.12/dist-packages/soupsieve-2.8.dist-info"
+    },
+    "notebook": {
+      "name": "notebook",
+      "version": "7.4.7",
+      "location": "/usr/local/lib/python3.12/dist-packages/notebook-7.4.7.dist-info"
+    },
+    "jupyter-events": {
+      "name": "jupyter-events",
+      "version": "0.12.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_events-0.12.0.dist-info"
+    },
+    "jsonschema-specifications": {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/jsonschema_specifications-2025.9.1.dist-info"
+    },
+    "argon2-cffi-bindings": {
+      "name": "argon2-cffi-bindings",
+      "version": "25.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/argon2_cffi_bindings-25.1.0.dist-info"
+    },
+    "httpcore": {
+      "name": "httpcore",
+      "version": "1.0.9",
+      "location": "/usr/local/lib/python3.12/dist-packages/httpcore-1.0.9.dist-info"
+    },
+    "pure-eval": {
+      "name": "pure_eval",
+      "version": "0.2.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/pure_eval-0.2.3.dist-info"
+    },
+    "pillow": {
+      "name": "pillow",
+      "version": "12.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pillow-12.0.0.dist-info"
+    },
+    "ipython-pygments-lexers": {
+      "name": "ipython_pygments_lexers",
+      "version": "1.1.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/ipython_pygments_lexers-1.1.1.dist-info"
+    },
+    "bleach": {
+      "name": "bleach",
+      "version": "6.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/bleach-6.3.0.dist-info"
+    },
+    "markdown": {
+      "name": "Markdown",
+      "version": "3.10",
+      "location": "/usr/local/lib/python3.12/dist-packages/markdown-3.10.dist-info"
+    },
+    "pyzmq": {
+      "name": "pyzmq",
+      "version": "27.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pyzmq-27.1.0.dist-info"
+    },
+    "python-hostlist": {
+      "name": "python_hostlist",
+      "version": "2.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/python_hostlist-2.3.0.dist-info"
+    },
+    "jedi": {
+      "name": "jedi",
+      "version": "0.19.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/jedi-0.19.2.dist-info"
+    },
+    "psutil": {
+      "name": "psutil",
+      "version": "7.1.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/psutil-7.1.3.dist-info"
+    },
+    "arrow": {
+      "name": "arrow",
+      "version": "1.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/arrow-1.4.0.dist-info"
+    },
+    "jsonschema": {
+      "name": "jsonschema",
+      "version": "4.25.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/jsonschema-4.25.1.dist-info"
+    },
+    "rfc3339-validator": {
+      "name": "rfc3339-validator",
+      "version": "0.1.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/rfc3339_validator-0.1.4.dist-info"
+    },
+    "beautifulsoup4": {
+      "name": "beautifulsoup4",
+      "version": "4.14.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/beautifulsoup4-4.14.2.dist-info"
+    },
+    "rfc3987-syntax": {
+      "name": "rfc3987-syntax",
+      "version": "1.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/rfc3987_syntax-1.1.0.dist-info"
+    },
+    "referencing": {
+      "name": "referencing",
+      "version": "0.37.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/referencing-0.37.0.dist-info"
+    },
+    "babel": {
+      "name": "babel",
+      "version": "2.17.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/babel-2.17.0.dist-info"
+    },
+    "asttokens": {
+      "name": "asttokens",
+      "version": "3.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/asttokens-3.0.0.dist-info"
+    },
+    "webencodings": {
+      "name": "webencodings",
+      "version": "0.5.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/webencodings-0.5.1.dist-info"
+    },
+    "fqdn": {
+      "name": "fqdn",
+      "version": "1.5.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/fqdn-1.5.1.dist-info"
+    },
+    "websocket-client": {
+      "name": "websocket-client",
+      "version": "1.9.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/websocket_client-1.9.0.dist-info"
+    },
+    "rfc3986-validator": {
+      "name": "rfc3986-validator",
+      "version": "0.1.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/rfc3986_validator-0.1.1.dist-info"
+    },
+    "h11": {
+      "name": "h11",
+      "version": "0.16.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/h11-0.16.0.dist-info"
+    },
+    "async-lru": {
+      "name": "async-lru",
+      "version": "2.0.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/async_lru-2.0.5.dist-info"
+    },
+    "ptyprocess": {
+      "name": "ptyprocess",
+      "version": "0.7.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/ptyprocess-0.7.0.dist-info"
+    },
+    "python-json-logger": {
+      "name": "python-json-logger",
+      "version": "4.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/python_json_logger-4.0.0.dist-info"
+    },
+    "jupyter-client": {
+      "name": "jupyter_client",
+      "version": "8.6.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_client-8.6.3.dist-info"
+    },
+    "terminado": {
+      "name": "terminado",
+      "version": "0.18.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/terminado-0.18.1.dist-info"
+    },
+    "json5": {
+      "name": "json5",
+      "version": "0.12.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/json5-0.12.1.dist-info"
+    },
+    "tensorboard": {
+      "name": "tensorboard",
+      "version": "2.20.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/tensorboard-2.20.0.dist-info"
+    },
+    "send2trash": {
+      "name": "Send2Trash",
+      "version": "1.8.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/Send2Trash-1.8.3.dist-info"
+    },
+    "jupyterlab-code-formatter": {
+      "name": "jupyterlab_code_formatter",
+      "version": "3.0.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyterlab_code_formatter-3.0.2.dist-info"
+    },
+    "sniffio": {
+      "name": "sniffio",
+      "version": "1.3.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/sniffio-1.3.1.dist-info"
+    },
+    "webcolors": {
+      "name": "webcolors",
+      "version": "25.10.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/webcolors-25.10.0.dist-info"
+    },
+    "prometheus-client": {
+      "name": "prometheus_client",
+      "version": "0.23.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/prometheus_client-0.23.1.dist-info"
+    },
+    "argon2-cffi": {
+      "name": "argon2-cffi",
+      "version": "25.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/argon2_cffi-25.1.0.dist-info"
+    },
+    "jupyterlab-pygments": {
+      "name": "jupyterlab_pygments",
+      "version": "0.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyterlab_pygments-0.3.0.dist-info"
+    },
+    "pygments": {
+      "name": "Pygments",
+      "version": "2.19.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/pygments-2.19.2.dist-info"
+    },
+    "tensorboard-data-server": {
+      "name": "tensorboard-data-server",
+      "version": "0.7.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/tensorboard_data_server-0.7.2.dist-info"
+    },
+    "wcwidth": {
+      "name": "wcwidth",
+      "version": "0.2.14",
+      "location": "/usr/local/lib/python3.12/dist-packages/wcwidth-0.2.14.dist-info"
+    },
+    "nbconvert": {
+      "name": "nbconvert",
+      "version": "7.16.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/nbconvert-7.16.6.dist-info"
+    },
+    "nbclient": {
+      "name": "nbclient",
+      "version": "0.10.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/nbclient-0.10.2.dist-info"
+    },
+    "comm": {
+      "name": "comm",
+      "version": "0.2.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/comm-0.2.3.dist-info"
+    },
+    "mistune": {
+      "name": "mistune",
+      "version": "3.1.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/mistune-3.1.4.dist-info"
+    },
+    "isoduration": {
+      "name": "isoduration",
+      "version": "20.11.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/isoduration-20.11.0.dist-info"
+    },
+    "jupyter-server-terminals": {
+      "name": "jupyter_server_terminals",
+      "version": "0.5.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_server_terminals-0.5.3.dist-info"
+    },
+    "jupyterlab": {
+      "name": "jupyterlab",
+      "version": "4.4.10",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyterlab-4.4.10.dist-info"
+    },
+    "tinycss2": {
+      "name": "tinycss2",
+      "version": "1.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/tinycss2-1.4.0.dist-info"
+    },
+    "ipython": {
+      "name": "ipython",
+      "version": "9.7.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/ipython-9.7.0.dist-info"
+    },
+    "stack-data": {
+      "name": "stack-data",
+      "version": "0.6.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/stack_data-0.6.3.dist-info"
+    },
+    "tzdata": {
+      "name": "tzdata",
+      "version": "2025.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/tzdata-2025.2.dist-info"
+    },
+    "traitlets": {
+      "name": "traitlets",
+      "version": "5.14.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/traitlets-5.14.3.dist-info"
+    },
+    "jupyter-server": {
+      "name": "jupyter_server",
+      "version": "2.17.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/jupyter_server-2.17.0.dist-info"
+    },
+    "python-dateutil": {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0",
+      "location": "/usr/local/lib/python3.12/dist-packages/python_dateutil-2.9.0.post0.dist-info"
+    },
+    "anyio": {
+      "name": "anyio",
+      "version": "4.11.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/anyio-4.11.0.dist-info"
+    },
+    "defusedxml": {
+      "name": "defusedxml",
+      "version": "0.7.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/defusedxml-0.7.1.dist-info"
+    },
+    "nest-asyncio": {
+      "name": "nest-asyncio",
+      "version": "1.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/nest_asyncio-1.6.0.dist-info"
+    },
+    "pandocfilters": {
+      "name": "pandocfilters",
+      "version": "1.5.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pandocfilters-1.5.1.dist-info"
+    },
+    "executing": {
+      "name": "executing",
+      "version": "2.2.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/executing-2.2.1.dist-info"
+    },
+    "uri-template": {
+      "name": "uri-template",
+      "version": "1.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/uri_template-1.3.0.dist-info"
+    },
+    "markupsafe": {
+      "name": "MarkupSafe",
+      "version": "3.0.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/markupsafe-3.0.3.dist-info"
+    },
+    "jinja2": {
+      "name": "Jinja2",
+      "version": "3.1.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/jinja2-3.1.6.dist-info"
+    },
+    "tornado": {
+      "name": "tornado",
+      "version": "6.5.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/tornado-6.5.2.dist-info"
+    },
+    "ipykernel": {
+      "name": "ipykernel",
+      "version": "7.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/ipykernel-7.1.0.dist-info"
+    },
+    "debugpy": {
+      "name": "debugpy",
+      "version": "1.8.17",
+      "location": "/usr/local/lib/python3.12/dist-packages/debugpy-1.8.17.dist-info"
+    },
+    "msgpack": {
+      "name": "msgpack",
+      "version": "1.1.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/msgpack-1.1.2.dist-info"
+    },
+    "urllib3": {
+      "name": "urllib3",
+      "version": "2.5.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/urllib3-2.5.0.dist-info"
+    },
+    "protobuf": {
+      "name": "protobuf",
+      "version": "6.33.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/protobuf-6.33.0.dist-info"
+    },
+    "pybind11": {
+      "name": "pybind11",
+      "version": "3.0.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pybind11-3.0.1.dist-info"
+    },
+    "charset-normalizer": {
+      "name": "charset-normalizer",
+      "version": "3.4.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/charset_normalizer-3.4.4.dist-info"
+    },
+    "pycparser": {
+      "name": "pycparser",
+      "version": "2.23",
+      "location": "/usr/local/lib/python3.12/dist-packages/pycparser-2.23.dist-info"
+    },
+    "scikit-learn": {
+      "name": "scikit-learn",
+      "version": "1.7.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/scikit_learn-1.7.2.dist-info"
+    },
+    "soxr": {
+      "name": "soxr",
+      "version": "1.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/soxr-1.0.0.dist-info"
+    },
+    "lazy-loader": {
+      "name": "lazy_loader",
+      "version": "0.4",
+      "location": "/usr/local/lib/python3.12/dist-packages/lazy_loader-0.4.dist-info"
+    },
+    "audioread": {
+      "name": "audioread",
+      "version": "3.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/audioread-3.1.0.dist-info"
+    },
+    "librosa": {
+      "name": "librosa",
+      "version": "0.11.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/librosa-0.11.0.dist-info"
+    },
+    "idna": {
+      "name": "idna",
+      "version": "3.11",
+      "location": "/usr/local/lib/python3.12/dist-packages/idna-3.11.dist-info"
+    },
+    "llvmlite": {
+      "name": "llvmlite",
+      "version": "0.45.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/llvmlite-0.45.1.dist-info"
+    },
+    "packaging": {
+      "name": "packaging",
+      "version": "25.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/packaging-25.0.dist-info"
+    },
+    "wheel": {
+      "name": "wheel",
+      "version": "0.45.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/wheel-0.45.1.dist-info"
+    },
+    "certifi": {
+      "name": "certifi",
+      "version": "2025.10.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/certifi-2025.10.5.dist-info"
+    },
+    "execnet": {
+      "name": "execnet",
+      "version": "2.1.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/execnet-2.1.1.dist-info"
+    },
+    "pytest-rerunfailures": {
+      "name": "pytest-rerunfailures",
+      "version": "16.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytest_rerunfailures-16.1.dist-info"
+    },
+    "pytest-shard": {
+      "name": "pytest-shard",
+      "version": "0.1.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytest_shard-0.1.2.dist-info"
+    },
+    "expecttest": {
+      "name": "expecttest",
+      "version": "0.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/expecttest-0.3.0.dist-info"
+    },
+    "decorator": {
+      "name": "decorator",
+      "version": "5.2.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/decorator-5.2.1.dist-info"
+    },
+    "platformdirs": {
+      "name": "platformdirs",
+      "version": "4.5.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/platformdirs-4.5.0.dist-info"
+    },
+    "mock": {
+      "name": "mock",
+      "version": "5.2.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/mock-5.2.0.dist-info"
+    },
+    "six": {
+      "name": "six",
+      "version": "1.16.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/six-1.16.0.dist-info"
+    },
+    "requests": {
+      "name": "requests",
+      "version": "2.32.5",
+      "location": "/usr/local/lib/python3.12/dist-packages/requests-2.32.5.dist-info"
+    },
+    "pytest": {
+      "name": "pytest",
+      "version": "8.1.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytest-8.1.1.dist-info"
+    },
+    "cython": {
+      "name": "Cython",
+      "version": "3.2.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/cython-3.2.0.dist-info"
+    },
+    "hypothesis": {
+      "name": "hypothesis",
+      "version": "6.130.8",
+      "location": "/usr/local/lib/python3.12/dist-packages/hypothesis-6.130.8.dist-info"
+    },
+    "pooch": {
+      "name": "pooch",
+      "version": "1.8.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/pooch-1.8.2.dist-info"
+    },
+    "attrs": {
+      "name": "attrs",
+      "version": "25.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/attrs-25.4.0.dist-info"
+    },
+    "joblib": {
+      "name": "joblib",
+      "version": "1.5.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/joblib-1.5.2.dist-info"
+    },
+    "numba": {
+      "name": "numba",
+      "version": "0.62.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/numba-0.62.1.dist-info"
+    },
+    "cffi": {
+      "name": "cffi",
+      "version": "2.0.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/cffi-2.0.0.dist-info"
+    },
+    "xdoctest": {
+      "name": "xdoctest",
+      "version": "1.0.2",
+      "location": "/usr/local/lib/python3.12/dist-packages/xdoctest-1.0.2.dist-info"
+    },
+    "iniconfig": {
+      "name": "iniconfig",
+      "version": "2.3.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/iniconfig-2.3.0.dist-info"
+    },
+    "pytest-xdist": {
+      "name": "pytest-xdist",
+      "version": "3.8.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytest_xdist-3.8.0.dist-info"
+    },
+    "threadpoolctl": {
+      "name": "threadpoolctl",
+      "version": "3.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/threadpoolctl-3.6.0.dist-info"
+    },
+    "pyyaml": {
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/pyyaml-6.0.3.dist-info"
+    },
+    "tqdm": {
+      "name": "tqdm",
+      "version": "4.67.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/tqdm-4.67.1.dist-info"
+    },
+    "astunparse": {
+      "name": "astunparse",
+      "version": "1.6.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/astunparse-1.6.3.dist-info"
+    },
+    "regex": {
+      "name": "regex",
+      "version": "2025.11.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/regex-2025.11.3.dist-info"
+    },
+    "soundfile": {
+      "name": "soundfile",
+      "version": "0.13.1",
+      "location": "/usr/local/lib/python3.12/dist-packages/soundfile-0.13.1.dist-info"
+    },
+    "pluggy": {
+      "name": "pluggy",
+      "version": "1.6.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pluggy-1.6.0.dist-info"
+    },
+    "sortedcontainers": {
+      "name": "sortedcontainers",
+      "version": "2.4.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/sortedcontainers-2.4.0.dist-info"
+    },
+    "scipy": {
+      "name": "scipy",
+      "version": "1.16.3",
+      "location": "/usr/local/lib/python3.12/dist-packages/scipy-1.16.3.dist-info"
+    },
+    "pytest-flakefinder": {
+      "name": "pytest-flakefinder",
+      "version": "1.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/pytest_flakefinder-1.1.0.dist-info"
+    },
+    "numpy": {
+      "name": "numpy",
+      "version": "2.1.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/numpy-2.1.0.dist-info"
+    },
+    "typing-extensions": {
+      "name": "typing_extensions",
+      "version": "4.15.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/typing_extensions-4.15.0.dist-info"
+    },
+    "setuptools": {
+      "name": "setuptools",
+      "version": "80.9.0",
+      "location": "/usr/local/lib/python3.12/dist-packages/setuptools-80.9.0.dist-info"
+    },
+    "cmake": {
+      "name": "cmake",
+      "version": "3.31.6",
+      "location": "/usr/local/lib/python3.12/dist-packages/cmake-3.31.6.dist-info"
+    },
+    "pygobject": {
+      "name": "PyGObject",
+      "version": "3.48.2",
+      "location": "/usr/lib/python3/dist-packages/PyGObject-3.48.2.egg-info"
+    },
+    "dbus-python": {
+      "name": "dbus-python",
+      "version": "1.3.2",
+      "location": "/usr/lib/python3/dist-packages/dbus_python-1.3.2.egg-info"
+    }
+  }
+}

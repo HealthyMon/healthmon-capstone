@@ -1,0 +1,4 @@
+services:
+  generation3d:
+    mem_limit: 12g
+    memswap_limit: 14g

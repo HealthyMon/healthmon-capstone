@@ -47,11 +47,13 @@ def validate(raw,context,text):
     return out
 
 def respond(backend,context,text):
-    started=time.monotonic(); metrics={'attempts':0,'raw_valid':False,'repaired':False,'fallback':False,'errors':[]}
+    started=time.monotonic(); metrics={'attempts':0,'raw_valid':False,'repaired':False,'fallback':False,'errors':[],
+                                      'failure_codes':[],'generation_attempt_seconds':[]}
     repair=None
     for attempt in range(2):
         metrics['attempts']+=1
         raw=''
+        attempt_started=time.monotonic()
         try:
             raw=backend.generate(context,text,repair)
             out=validate(raw,context,text)
@@ -68,7 +70,11 @@ def respond(backend,context,text):
             reason=str(e)[:180] if isinstance(e,ValueError) else type(e).__name__
             repair={'raw':raw,'reason':reason}
             metrics['errors'].append(type(e).__name__)
+            metrics['failure_codes'].append('repeated_response' if reason=='Unnecessary repeated response'
+                else 'output_validation' if isinstance(e,ValueError) else type(e).__name__)
             if isinstance(e,(RuntimeError,TimeoutError)): break
+        finally:
+            metrics['generation_attempt_seconds'].append(time.monotonic()-attempt_started)
     metrics['fallback']=True; metrics['latency_seconds']=time.monotonic()-started
     speech='잠깐 말이 꼬였어. 조금 뒤에 다시 이야기해 줄래?'
     if context['settings']['speech_level']=='formal':speech='잠깐 말이 꼬였어요. 조금 뒤에 다시 이야기해 주실래요?'

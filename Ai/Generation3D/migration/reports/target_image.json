@@ -1,0 +1,8 @@
+{
+  "tag": "nvidia/cuda:13.0.0-devel-ubuntu24.04",
+  "amd64_digest": "sha256:435220c0fef35cbf712e11999f8670a83835ef3cdd18564e5e8122f83078c88c",
+  "manifest_resolved": true,
+  "image_pulled_or_built_on_spark": false,
+  "blender_ubuntu_package": "4.0.2+dfsg-1ubuntu8",
+  "target_inference_tested": false
+}

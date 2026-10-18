@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": [
+    "valid safetensors accepted without tensor load",
+    "truncated download rejected",
+    "Git LFS pointer rejected",
+    "broken symlink rejected",
+    "valid local cache link accepted",
+    "invalid tensor offsets rejected despite matching file hash",
+    "missing indexed shard rejected",
+    "destination traversal rejected"
+  ],
+  "gpu_used": false,
+  "network_used": false
+}

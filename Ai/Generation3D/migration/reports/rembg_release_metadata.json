@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/danielgatis/rembg/releases/tags/v0.0.0",
+  "assets": [
+    {
+      "url": "https://api.github.com/repos/danielgatis/rembg/releases/assets/206901101",
+      "id": 206901101,
+      "node_id": "RA_kwDOEROlBc4MVQ9t",
+      "name": "bria-rmbg-2.0.onnx",
+      "label": null,
+      "uploader": {
+        "login": "danielgatis",
+        "id": 7380,
+        "node_id": "MDQ6VXNlcjczODA=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/7380?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/danielgatis",
+        "html_url": "https://github.com/danielgatis",
+        "followers_url": "https://api.github.com/users/danielgatis/followers",
+        "following_url": "https://api.github.com/users/danielgatis/following{/other_user}",
+        "gists_url": "https://api.github.com/users/danielgatis/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/danielgatis/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/danielgatis/subscriptions",
+        "organizations_url": "https://api.github.com/users/danielgatis/orgs",
+        "repos_url": "https://api.github.com/users/danielgatis/repos",
+        "events_url": "https://api.github.com/users/danielgatis/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/danielgatis/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "content_type": "application/octet-stream",
+      "state": "uploaded",
+      "size": 1024331469,
+      "digest": null,
+      "download_count": 710225,
+      "created_at": "2024-11-16T03:50:15Z",
+      "updated_at": "2024-11-16T03:52:55Z",
+      "browser_download_url": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/bria-rmbg-2.0.onnx"
+    }
+  ]
+}

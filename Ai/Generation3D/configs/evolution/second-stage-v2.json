@@ -1,0 +1,19 @@
+{
+  "schema_version": "healthmon.evolution_art.v1",
+  "policy_id": "second-stage-mandatory-body-plan-v2",
+  "target_stage": 2,
+  "shared_direction": "RADICAL SECOND EVOLUTION: mandatory major body-plan metamorphosis. Retain only family color relationships and two recognizable inherited symbols, NOT the original animal silhouette, short legs or low crawling posture. Reorganize the torso, limb function, proportions and locomotion into the explicit new species body plan. At least THREE major silhouette regions must change, including torso and supporting limbs. Added ornaments, a taller shell, larger fins, texture, pose, color or simple scaling alone are NOT sufficient. The ancestral description describes the parent, not a constraint on target limb function. Use a powerful original fantasy-game creature silhouette, broad smooth sculpted volumes, clear connected anatomy, expressive eyes and a stable three-quarter A-pose with limbs separated from the torso and both feet planted. Full figure and tail inside white margins. No clothes, equipment, weapons, extra heads, extra limbs or floating fragments. Interpret modestly improved scores as balanced developed physique, not extreme bodybuilding. Do not preserve the parent's quadruped silhouette for the Mora or Nubi designs below.",
+  "species_directions": {
+    "mora": "An original upright BIPEDAL forest-shell guardian evolved from the moss-turtle. Exactly TWO substantial supporting legs and TWO long FREE ARMS ending in broad clawed hands, held away from the torso; its ancestral forelegs are now arms, so there are no additional front supporting feet. A clearly vertical powerful torso with broad shoulders, defined waist/hips and an integrated peach segmented organic chest/abdomen plastron replaces the low horizontal turtle trunk. Its shell is reorganized into a raised shield-like carapace FUSED TO THE UPPER BACK, sweeping green leaf-shaped shoulder plates and an integrated backward leaf crown. Do not draw a domed turtle with a canopy arch over its head. Give it a mature expressive turtle-beaked fantasy face, dark teal eyes, a long thick leaf-tipped tail for balance, jade-green skin and broad forest-green shell plates with sparse moss accents. Recognizable green/peach shell-family DNA in an entirely new heroic standing body plan; no clothing, wearable armor, weapons or detached shell panels. Whole body, both hands, both feet and the full tail visible.",
+    "nubi": "An original upright BIPEDAL coral-wave guardian evolved from the axolotl. Exactly TWO separated supporting legs with broad webbed feet and TWO long FREE ARMS ending in webbed claw-like hands; ancestral forelegs become arms, never four supporting legs plus two extra arms. A raised vertical torso, broad flowing shoulders, a clear waist/hip transition and an active stable stance replace the low horizontal salamander body. Pink-coral external gills become two broad swept-back coral crown/mantle fans attached to the head and shoulders. A tall flowing dorsal crest is fused to the back and runs into a long powerful finned tail emerging from the hips, not a separate cape. Preserve smooth sky-blue skin, lilac chest/abdomen, dark violet eyes, pink coral gills and a translucent blue tail edge. A mature original aquatic guardian silhouette, not merely a taller or bigger axolotl. Large readable sculpted forms, full arms/hands/legs/feet and complete tail, no clothes, weapons, armor, extra limbs or floating pieces."
+  },
+  "semantic_gate": {
+    "min_change_regions": 3,
+    "require_body_plan_change": true,
+    "min_inherited_anchors": 2,
+    "species_requirements": {
+      "mora": {"expected_supporting_legs": 2, "expected_free_arms": 2},
+      "nubi": {"expected_supporting_legs": 2, "expected_free_arms": 2}
+    }
+  }
+}

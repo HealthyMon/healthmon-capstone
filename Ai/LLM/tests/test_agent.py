@@ -35,3 +35,5 @@ def test_two_generation_limit_shared_by_repetition_and_schema():
     ctx=copy.deepcopy(CONTEXT);ctx['recent']=[{'user':'안녕','assistant':'반가워.'}]
     b=Backend();out,metrics=respond(b,ctx,'안녕')
     assert b.calls==2 and metrics['fallback'] and out.action.type=='none'
+    assert metrics['failure_codes']==['repeated_response','output_validation']
+    assert len(metrics['generation_attempt_seconds'])==2

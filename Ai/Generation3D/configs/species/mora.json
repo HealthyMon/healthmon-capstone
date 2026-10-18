@@ -1,0 +1,17 @@
+{
+  "schema_version": "healthmon.species.v1",
+  "species": "mora",
+  "label_ko": "모라",
+  "identity": "A forest moss-turtle creature with a protective oval shell, smooth jade-green skin, peach underside, rounded beak and short broad feet.",
+  "lineage_anchors": [
+    "forest-green moss shell with broad rounded hexagonal plates",
+    "jade skin and peach underside",
+    "tiny integrated leaf-shaped brow markings"
+  ],
+  "starter_prompt": "ONE original baby fantasy-game companion, smooth high-quality stylized 3D character render, broad clear connected volumes, appealing readable silhouette, calm three-quarter standing pose on four complete supporting feet. Whole body and whole tail inside generous margins, plain WHITE square background, soft studio light. Single character, no text, grids, panels, clothing, weapons, props or detached fragments. A tiny forest moss-turtle infant. Its low broad oval forest-green shell has a few soft rounded hexagonal moss plates. Smooth jade-green head and four short stout legs, peach lower face and underside, dark teal round eyes, a rounded turtle beak and short tapering tail. Two tiny leaf-shaped markings grow naturally into the forehead surface. Soft compact infant proportions. The shell is part of its connected body.",
+  "stage_directions": {
+    "1": "FIRST EVOLUTION: a juvenile forest moss-turtle, visibly older and more developed than its low infant ancestor. A lifted broad oval shell reorganized into a few large moss ridges, a longer rounded head, four more substantial separated supporting feet and a complete short tail. Keep its turtle identity, jade skin, peach underside and integrated leaf motifs. A youthful coherent quadruped.",
+    "2": "SECOND EVOLUTION: a mature forest moss-turtle with a broader raised protective shell, a distinctive rhythmic arrangement of large moss plates and a stable four-footed stance. Develop the connected shell and body as a new whole silhouette while retaining jade and peach family colors.",
+    "3": "THIRD EVOLUTION: a monumental mature forest-turtle guardian, an entirely connected original creature. Resolve the inherited shell and leaf motifs into broad structural organic masses and a powerful stable four-footed silhouette. Preserve its turtle family; standing upright is optional only if balance supports it."
+  }
+}

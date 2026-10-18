@@ -1,0 +1,135 @@
+{
+  "version": "structural-evolution-v1",
+  "status": "REJECTED_ART_DIRECTION_USER_FEEDBACK",
+  "priority": "Stage changes reconstruct anatomy; morphology modifies an established stage design. No accessory-only or ordinary maturation evolution.",
+  "species": {
+    "mongle": {
+      "lineage": "Mongle is a supernatural aquatic PENGUIN lineage, green dorsal feathers, cream face and ventral plumage, green eyes, orange beak and orange webbed feet. Two inherited leaf-shaped head tufts are living anatomy. Exactly two wing-flippers and two grounded webbed feet; one tail. Never a wolf, rabbit or humanoid. No scarf, garments, jewelry, armor or hand-held objects.",
+      "stages": {
+        "0": {
+          "design_id": "mongle_s0_original",
+          "body_plan": "Round head merged into a pear-shaped infant trunk, tiny dangling flippers, very short legs, tiny tail."
+        },
+        "1": {
+          "design_id": "mongle_s1_torrent_keel",
+          "body_plan": "TORRENT KEEL: a new upright amphibious bird body with a small wedge head on a distinct short tubular neck, a forward-projecting deep keel-shaped ribcage, an indented waist and narrow elevated pelvis. Two long angular wing-flippers bend at visible elbows and taper into broad leaf-shaped paddles below the hips, with clear gaps between flippers and trunk. Lengthen the articulated shin segments so the two broad three-toed webbed feet stand well below the pelvis. The former tiny tail becomes a single broad flat spade paddle projecting behind the hips. Orange beak becomes a long flat chisel rather than a tiny button. Smooth sculpted feather surfaces, no shaggy shoulder mantle.",
+          "structural_changes": [
+            "round fused head/trunk to wedge skull with separate neck",
+            "pear torso to keel chest and indented waist",
+            "tiny flippers to elbowed leaf paddles",
+            "exposed long shins and webbed toes",
+            "tiny tail to flat spade paddle"
+          ]
+        },
+        "2": {
+          "design_id": "mongle_s2_tidal_arch",
+          "body_plan": "TIDAL ARCH: rebuild as a broad, low-centered sacred diving bird with a transverse barrel ribcage, a broad horizontal shoulder yoke and wide low pelvis, visibly shorter sturdy lower legs than Stage1. A LONG S-CURVED NECK rises from the back of the ribcage into a small narrow adult skull and a long down-curved orange hook beak. Two enormous crescent-shaped articulated flipper wings curve outward and downward, leaving open arch-shaped gaps beside the torso, ending in exactly three joined leaf-shaped lobes per flipper. A wide single tail has a three-lobed horizontal swimming fan, not a loose feather cloak. Large splayed webbed feet. The body outline is wide arches and low trunk plus a high swanlike curved neck; the green/cream penguin lineage remains obvious. The neck, torso and limb architecture must differ from the preceding narrow upright keel bird even without feathers or color.",
+          "structural_changes": [
+            "short straight neck to long S neck and hook beak",
+            "vertical keel chest to broad transverse barrel",
+            "narrow high pelvis to broad low pelvis",
+            "straight paddles to three-lobed crescent wings",
+            "spade tail to three-lobed fan"
+          ]
+        },
+        "3": {
+          "design_id": "mongle_s3_pelagic_spire",
+          "body_plan": "PELAGIC SPIRE: rebuild the penguin lineage as a towering vertical marine deity with a compact broad hammer-shaped avian cranium and low long orange wedge beak nestled directly between high swept shoulder roots; the Stage2 S neck is absorbed into a thick short neck. Its ribcage becomes a high deep V-shaped prow above a long slender connecting waist, with a high narrow pelvis and very long articulated backward-bending avian shins ending in enormous webbed platform feet. Each of its TWO wing-flippers is a long structural C-shaped arch with three fingerlike leaf paddles on its distal edge, enclosing a large empty crescent around the open torso. A single very long tapering muscular tail arcs behind the hips and terminates in a broad horizontal two-lobed fluke, rather than a short fan. This is radically different body assembly from Stage2's broad low barrel: high V chest, narrow high hips, long shins, short neck, long fluked tail. Keep orange beak, webbed feet, green/cream avian lineage; no mammalian paws or wolf mane.",
+          "structural_changes": [
+            "S neck to short neck within raised shoulder roots",
+            "barrel trunk to V prow and long narrow waist",
+            "low pelvis to elevated narrow pelvis and long angled shins",
+            "crescent flippers to open C arches",
+            "short fan tail to long muscular fluked tail"
+          ]
+        }
+      }
+    },
+    "tori": {
+      "lineage": "Tori is a supernatural RABBIT lineage with cream coat, pink inner ears and pink rabbit nose, olive-brown eyes and restrained mint natural markings. Two rabbit ears, two free forepaws, two grounded hind feet and one tail. An upright nonhumanoid biped rabbit, no canine muzzle, mane or wolf paws. Ears and tail may evolve in shape. No garments, scarf, armor, crowns, jewelry or weapons.",
+      "stages": {
+        "0": {
+          "design_id": "tori_s0_original",
+          "body_plan": "Large round baby rabbit head, oval body, tiny forepaws, hidden short legs and a small round tail."
+        },
+        "1": {
+          "design_id": "tori_s1_crescent_hock",
+          "body_plan": "CRESCENT HOCK: a poised upright fantasy hare with a compact triangular skull and projecting blunt rabbit muzzle, a visible narrow neck, short deep chest, pinched waist and very broad high-set angular haunches. Two elongated articulated hind legs have exaggerated Z-shaped hocks and very long flattened rabbit feet. Two slender independent forearms are held clear of the body, ending in rabbit forepaws. The ears are two long fleshy flattened leaf blades, each with a deeply notched asymmetrical tip, swept back from a new low forehead. The former round tail becomes a single thick smooth flattened crescent paddle behind the hips, clearly rooted in the rump. The large angular haunches, long hocks and crescent tail define the new silhouette, not fluffy fur or clothing.",
+          "structural_changes": [
+            "round head to triangular rabbit skull with neck",
+            "oval torso to short chest and broad angular haunches",
+            "tiny legs to long Z hocks and flat feet",
+            "rounded ears to notched leaf blades",
+            "round tail to crescent paddle"
+          ]
+        },
+        "2": {
+          "design_id": "tori_s2_moon_vault",
+          "body_plan": "MOON VAULT: redesign the upright rabbit into a tall narrow-pelvis sentinel with a high broad diamond-shaped ribcage and sharply separated narrow hips. The head is smaller and elongated with a squared short rabbit muzzle, seated on a thick short neck. Two long ears sweep OUTWARD SIDEWAYS in opposing crescent arcs, making a wide low ear silhouette instead of Stage1's upright backward ears. Two very long arched forearms reach toward shin level but stay lifted clear of the ground, ending in broad flattened digging forepaws; their elbow gaps frame the narrow waist. Hind legs are long and nearly vertical with high hocks and long four-toed rabbit feet, rather than Stage1's wide bent haunches. A single thick flattened ribbon tail rises from the rump in one high smooth loop and tapers behind the back. Exactly two feet touch the ground. Character is calm, adult, original sacred rabbit anatomy; no canine parts, no armor or mane.",
+          "structural_changes": [
+            "low chest and broad hips to high diamond chest and narrow pelvis",
+            "backward ears to wide sideways crescent ears",
+            "short forearms to long arched digging limbs",
+            "bent wide hocks to long vertical lower legs",
+            "low crescent tail to high looped ribbon tail"
+          ]
+        },
+        "3": {
+          "design_id": "tori_s3_lunar_burrow",
+          "body_plan": "LUNAR BURROW: rebuild as a grounded monumental rabbit with a WIDE HORIZONTAL PELVIC GIRDLE and sweeping angular haunches beneath a compact low ribcage; short bent shin segments lead to two immense forward-pointing multi-toed rabbit feet. The whole torso forms a low broad trapezoid with an exposed waist, rather than the Stage2 tall narrow sentinel. Two massive structural digging forearms form outward bowed hooks from raised elbow joints, with broad smooth spade-shaped forepaws held clear of the floor. These are long wide bones with ordinary smooth muscle covering, not inflated bodybuilder muscles. The skull is a long low flattened rabbit wedge, joined almost directly to the shoulders, with a small pink nose and calm olive eyes. The two ears become thick long S-curved ribbon organs extending outward then upward, with pink inset channels. One tail becomes a broad low flattened three-lobed crescent fan behind the haunches, replacing the high loop. Cream coat and mint biological markings; very short fur. Different skull, trunk, pelvis, limb lengths and tail architecture from Stage2, visible in solid black.",
+          "structural_changes": [
+            "high diamond chest to low trapezoid trunk",
+            "narrow hips to wide pelvic girdle",
+            "long shins to short bent shins and enormous feet",
+            "long thin forearms to bowed spade forelimbs",
+            "high tail loop to low three-lobed fan",
+            "side crescents to S ribbon ears"
+          ]
+        }
+      }
+    },
+    "lucan": {
+      "lineage": "Lucan is a supernatural WOLF lineage with navy-charcoal dorsal coat, silver-cream muzzle and ventral markings, calm BLUE eyes, black nose and subtle mint inherited natural markings. One head, two pointed wolf ears, four articulated canine paws, one connected tail. The mature angular skull and articulated grounded feet of the user's Lucan design v2 guide the visual strength, but its fur, mane or gold ornaments are not evolution. No armor, jewelry, crown, weapons, scarf or garments; no aggressive facial expression by default.",
+      "stages": {
+        "0": {
+          "design_id": "lucan_s0_original",
+          "body_plan": "Ordinary compact young wolf anatomy, fairly round triangular head, conventional spine and limbs, one bushy tail."
+        },
+        "1": {
+          "design_id": "lucan_s1_river_prow",
+          "body_plan": "RIVER PROW: redesign into a LOW LONG fantastical canine, a horizontally elongated ribcage and a narrow curved lumbar bridge leading to a distinctly raised angular pelvis. Its broad flattened wedge-shaped skull and long flat muzzle sit low in front of the chest on a long horizontal neck. Two pointed wolf ears sweep outward and backward. The forelegs have long angled forearm bones and short articulated wrists; the hind legs have deep reverse-bent hocks and elongated metatarsals. Four broad splayed individual-toed canine paws remain planted. A single tail becomes a long flexible flattened ribbon with a broad spade tip, rather than a fluffy brush. Its body length is over twice shoulder height, a low prow silhouette, not a normal adult wolf. Short sleek navy coat, silver face and belly, blue eyes, minimal fur trim. Neither grow the starter nor just enlarge muscles: change skull, neck, spine proportions, limb joints and tail construction.",
+          "structural_changes": [
+            "compact conventional wolf torso to long low ribcage",
+            "upright neck to extended horizontal neck and flat skull",
+            "level lumbar spine to raised angular pelvis",
+            "conventional legs to low angled forearms and deep hocks",
+            "bushy tail to long spade-ended ribbon"
+          ]
+        },
+        "2": {
+          "design_id": "lucan_s2_arch_bastion",
+          "body_plan": "ARCH BASTION: a completely reconstructed quadrupedal wolf guardian with an extremely HIGH DEEP SHOULDER GIRDLE and a SHORT COMPACT ribcage descending into a low narrow pelvis. A short thick forward neck carries a broad angular adult wolf skull with long squared muzzle, a deep lower jaw and small calm blue almond eyes. Two thick straight COLUMNAR FORELIMB BONES stand beneath the raised chest and end in enormous articulated blocky canine paws with individual blunt claws. Hind limbs are lower outward-arched weight-bearing brackets with visible joints, making a strongly sloped spine from high shoulder to low hips. The one tail is a thick muscular C-shaped crescent, curving up behind the pelvis with a broad flattened tip; not a brush or fur plume. Short controlled coat with compact silver cheek planes, no large covering mane. The front-high compact body, heavy articulated skull, pillar forelegs, low bracket hindquarters and crescent tail must visibly replace Stage1's low elongated horizontal prow design. Keep balanced moderate underlying musculature; this skeletal architecture remains the same when fat later changes.",
+          "structural_changes": [
+            "low long ribcage to short high shoulder chest",
+            "horizontal neck to short high-set neck and deep jaw",
+            "angled slim forelegs to columnar bones and block paws",
+            "raised pelvis to low bracket hindquarters",
+            "ribbon tail to thick C crescent"
+          ]
+        },
+        "3": {
+          "design_id": "lucan_s3_sky_arch",
+          "body_plan": "SKY ARCH: rebuild the wolf guardian as an elongated high-arched celestial gliding beast, with a visibly LONG upright S-shaped neck lifting a narrow long angular wolf skull above the shoulders. Two pointed wolf ears remain. The elongated thorax and high raised pelvis form two distinct elevated skeletal arches connected by a narrow dipped lumbar bridge, instead of Stage2's short front-high sloping body. Four very long curved digitigrade limbs form tall open arches under the belly and end in large fan-spread articulated canine paws. A pair of smooth organic GLIDING MEMBRANES grow continuously from the outside of each forelimb to the ribcage and flank; these are folded crescent patagia with clean thin edges, not feather wings, armor or fur. Keep all four paws firmly on the floor in a calm standing view; the membrane's profile remains visible while folded. One single long thin sinuous tail ends in a broad diamond-shaped steering fin, rather than Stage2's thick crescent hook. Sleek navy and silver coat, blue eyes and subtle mint membrane veins. This is a new neck/spine/limb/membrane/tail architecture recognizable as evolved wolf lineage, not simply a larger muscular wolf or a longer mane.",
+          "structural_changes": [
+            "short thick neck to long vertical S neck",
+            "short sloping trunk to elongated twin-arched spine",
+            "pillar/bracket legs to four long arched digitigrade limbs",
+            "new integrated forelimb-to-flank patagia",
+            "thick C tail to long thin fin-ended tail"
+          ]
+        }
+      }
+    }
+  },
+  "rejection_note_ko": "목·다리·꼬리의 억지 변형과 기괴한 실루엣을 사용자 피드백으로 거부. 후속 생성 및 웹 배포 금지."
+}

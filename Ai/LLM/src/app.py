@@ -1,22 +1,24 @@
 """Local API: authenticated pet scope, short transactions, authoritative events."""
-import hashlib, json, os, re, secrets, uuid
+import hashlib, json, os, re, secrets, time, uuid
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from fastapi import FastAPI, Depends, Header, HTTPException,Query,Request
 from fastapi.responses import JSONResponse
 import psycopg
 from psycopg.types.json import Jsonb
+from pydantic import BaseModel, Field
 from .contracts import ChatInput, ActivityInput, SettingsInput, MemoryInput, SourceEdit, Decision, SCHEMA_VERSION,ModelOutput,Action
 from .db import connect, owned, sources, bump, snapshot
 from .rules import replay, RULES, tags
-from .embedding import embedder
+from .model_runtime import OnDemandEmbedder, OnDemandQwen, runtime as model_runtime, ModelBusy
 from .agent import respond
-from .model import QwenBackend
 from .evidence import memory_slot
 from .beta import browser_identity, install_beta
+from .food import install_food
 
 app=FastAPI(title='Healthmon local AI',version=SCHEMA_VERSION)
-backend=QwenBackend()
+backend=OnDemandQwen()
+embedder=OnDemandEmbedder()
 
 def now(): return datetime.now(timezone.utc)
 
@@ -55,6 +57,10 @@ def identity(request:Request,authorization:str=Header(default='')):
 @app.exception_handler(psycopg.Error)
 async def database_error(request,exc):
     return JSONResponse(status_code=503,content={'detail':'Database unavailable; retry with same request ID'})
+
+@app.exception_handler(ModelBusy)
+async def model_busy(request,exc):
+    return JSONResponse(status_code=503,content={'detail':str(exc)})
 
 def current(c,p): return replay(sources(c,p['id']),tz=p['settings']['timezone'])
 
@@ -111,7 +117,32 @@ def invalidate(c,pet,source_id,revision):
 @app.get('/health')
 def health():
     with connect() as c: version=c.execute("SELECT extversion FROM pg_extension WHERE extname='vector'").fetchone()
-    return {'status':'ok','backend':backend.name,'loaded':backend.model is not None,'adapter':os.getenv('ADAPTER_PATH'),'pgvector':version['extversion']}
+    return {'status':'ok','ready':True,'backend':backend.name,'loaded':backend.model is not None,
+            'model_lifecycle':'conversation_session','adapter':os.getenv('ADAPTER_PATH'),'pgvector':version['extversion']}
+
+class ConversationKey(BaseModel):
+    session_id:str=Field(pattern=r'^[a-f0-9]{32}$')
+
+class ConversationIntent(ConversationKey):
+    active:bool
+
+@app.post('/pets/{pet}/chat-session')
+def conversation_session(pet:str,body:ConversationIntent,user=Depends(identity)):
+    with connect() as c:owned(c,user,pet)
+    key=(user,pet,body.session_id)
+    try:
+        return backend.open_session(key) if body.active else backend.close_session(key)
+    except TimeoutError as error:
+        raise HTTPException(504,'Conversation model startup timed out') from error
+    except ModelBusy:
+        raise
+    except RuntimeError as error:
+        raise HTTPException(503,'Conversation model could not load') from error
+
+@app.post('/pets/{pet}/chat-session/heartbeat')
+def conversation_heartbeat(pet:str,body:ConversationKey,user=Depends(identity)):
+    with connect() as c:owned(c,user,pet)
+    return backend.heartbeat((user,pet,body.session_id))
 
 @app.post('/pets')
 def create_pet(settings:SettingsInput,user=Depends(identity)):
@@ -221,9 +252,17 @@ def add_memory(pet:str,body:MemoryInput,user=Depends(identity)):
         version=bump(c,pet)
     return {'memory_id':ident,'state_version':version}
 
+def wants_memory_lookup(text,recent=()):
+    return bool(memory_slot(text,recent) or re.search(r'기억|지난|예전|경험',text))
+
+def durable_memory_slot(text):
+    if re.search(r'나는 .*(좋아|싫어)|보다 .*좋아',text):return 'preference'
+    if re.search(r'내 목표는|목표로 정했',text):return 'goal'
+    return None
+
 def retrieve(c,pet,vec,start=None,end=None,query=None,recent=(),for_chat=False):
     slot=memory_slot(query or '',recent)
-    if for_chat and not slot and not re.search(r'기억|지난|예전|경험',query or ''):return []
+    if for_chat and not wants_memory_lookup(query or '',recent):return []
     return c.execute('''SELECT m.id,m.content,m.source_id,m.source_revision,m.slot,1-(m.embedding <=> %s::vector) AS score
       FROM memories m JOIN sources s ON s.pet_id=m.pet_id AND s.id=m.source_id
       WHERE m.pet_id=%s AND m.valid AND s.valid AND s.revision=m.source_revision AND m.embedding IS NOT NULL
@@ -273,7 +312,9 @@ def activity_suggestion(pet:str,event_id:str,revision:int,user=Depends(identity)
         context={'settings':p['settings'],'traits':state['traits'],'mood':state['mood'],'recent':[],
                  'memories':[],'activities':[source['payload']],'candidates':choices,'active_quests':[],
                  'trigger':{'kind':'activity','id':source_id,'revision':revision}}
-    output,metrics=respond(backend,context,'확인된 활동 기록을 보고 적절하면 가능한 퀘스트를 제안해.')
+    text='확인된 활동 기록을 보고 적절하면 가능한 퀘스트를 제안해.'
+    if isinstance(backend,OnDemandQwen):output,metrics=backend.respond(context,text,owner=user,pet=pet)
+    else:output,metrics=respond(backend,context,text)
     with connect() as c:
         p=owned(c,user,pet,True)
         # Concurrent duplicate requests return the first committed result.
@@ -306,6 +347,18 @@ def decide(pet:str,offer_id:str,body:Decision,user=Depends(identity)):
 
 @app.post('/pets/{pet}/chat')
 def chat(pet:str,body:ChatInput,user=Depends(identity)):
+    try:
+        with model_runtime.reserve('llm'):
+            return chat_request(pet,body,user)
+    except ModelBusy as error:
+        raise HTTPException(503,str(error)) from error
+    except TimeoutError as error:
+        raise HTTPException(504,'Model request timed out; retry with the same request ID') from error
+    except RuntimeError as error:
+        raise HTTPException(503,'Model worker failed; retry with the same request ID') from error
+
+def chat_request(pet,body,user):
+    started=time.monotonic()
     fingerprint=hashlib.sha256(body.text.encode()).hexdigest()
     with connect() as c:
         p=owned(c,user,pet,True)
@@ -320,7 +373,6 @@ def chat(pet:str,body:ChatInput,user=Depends(identity)):
         version=p['version']
     try:
         # No DB connection or row lock remains open during embedding/LLM generation.
-        vec=vectorize(body.text)
         with connect() as c:
             p=owned(c,user,pet)
             if p['version']!=version: raise HTTPException(409,'State changed')
@@ -343,15 +395,33 @@ def chat(pet:str,body:ChatInput,user=Depends(identity)):
             quest_history=c.execute('SELECT id,template,status,progress FROM quest_offers WHERE pet_id=%s ORDER BY created_at DESC LIMIT 3',(pet,)).fetchall()
             reward=c.execute('SELECT COALESCE(SUM(amount),0) AS balance FROM reward_ledger WHERE pet_id=%s',(pet,)).fetchone()['balance']
             context={'settings':p['settings'],'traits':state['traits'],'mood':state['mood'],'recent':recent,
-                     'memories':retrieve(c,pet,vec,query=body.text,recent=recent,for_chat=True),'activities':acts,'activity_summary':activity_summary,'candidates':candidates(c,p,body.text),'active_quests':active,
+                     'memories':[],'activities':acts,'activity_summary':activity_summary,'candidates':candidates(c,p,body.text),'active_quests':active,
                      'quest_history':quest_history,'reward_balance':reward}
             forget_request=forget_target(c,pet,body.text)
+            slot=durable_memory_slot(body.text) if forget_request is None else None
+            lookup=forget_request is None and wants_memory_lookup(body.text,recent) and bool(c.execute('''
+                SELECT 1 FROM memories m JOIN sources s ON s.pet_id=m.pet_id AND s.id=m.source_id
+                WHERE m.pet_id=%s AND m.valid AND s.valid AND s.revision=m.source_revision
+                  AND m.embedding IS NOT NULL LIMIT 1''',(pet,)).fetchone())
+        # Ordinary chat and food facts already have their context. Load BGE only for
+        # a durable memory write or a lookup that actually has valid stored vectors.
+        embedding_started=time.monotonic()
+        vec=vectorize(body.text) if slot or lookup else None
+        embedding_seconds=time.monotonic()-embedding_started
+        if lookup:
+            with connect() as c:
+                p=owned(c,user,pet)
+                if p['version']!=version:raise HTTPException(409,'State changed during embedding')
+                context['memories']=retrieve(c,pet,vec,query=body.text,recent=recent,for_chat=True)
         if forget_request is not None:
             speech='말한 취향이나 목표의 원본과 기억을 삭제했어.' if forget_request['target'] else '어떤 취향이나 목표를 지울지 구체적으로 알려 줄래?'
             if p['settings']['speech_level']=='formal':speech='말씀하신 취향이나 목표의 원본과 기억을 삭제했어요.' if forget_request['target'] else '어떤 취향이나 목표를 지울지 구체적으로 알려 주실래요?'
             out=ModelOutput(speech=speech,emotion='neutral',animation='idle',action=Action(),memory_ids=[])
             metrics={'attempts':0,'raw_valid':None,'repaired':False,'fallback':False,'errors':[],'latency_seconds':0,'handler':'authenticated_memory_command'}
+        elif isinstance(backend,OnDemandQwen):out,metrics=backend.respond(context,body.text,owner=user,pet=pet)
         else:out,metrics=respond(backend,context,body.text)
+        metrics.setdefault('timings',{}).update(embedding_seconds=embedding_seconds,
+                                              embedding_loaded=vec is not None)
         with connect() as c:
             p=owned(c,user,pet,True)
             if p['version']!=version: raise HTTPException(409,'State changed during generation; retry')
@@ -368,9 +438,6 @@ def chat(pet:str,body:ChatInput,user=Depends(identity)):
                 source_id='message:'+body.request_id
                 c.execute("INSERT INTO sources(pet_id,id,kind,revision,occurred_at,session_id,payload) VALUES(%s,%s,'message',1,%s,%s,%s)",(pet,source_id,now(),session,Jsonb({'text':body.text})))
                 # Explicit durable preferences/goals only. Never promote assistant text.
-                slot=None
-                if forget_request is None and re.search(r'나는 .*(좋아|싫어)|보다 .*좋아',body.text): slot='preference'
-                elif forget_request is None and re.search(r'내 목표는|목표로 정했',body.text): slot='goal'
                 if slot:
                     c.execute('UPDATE memories SET valid=false WHERE pet_id=%s AND slot=%s',(pet,slot))
                     mem_id=hashlib.sha256((source_id+':1').encode()).hexdigest()[:24]
@@ -381,6 +448,7 @@ def chat(pet:str,body:ChatInput,user=Depends(identity)):
                 result.update(source_id=source_id,source_revision=1,state_version=new_version,state_after=state_after)
                 c.execute('INSERT INTO exchanges(pet_id,request_id,source_id,speech,memory_ids,state_used,state_after) VALUES(%s,%s,%s,%s,%s,%s,%s)',
                           (pet,body.request_id,source_id,out.speech,Jsonb(out.memory_ids),Jsonb(state),Jsonb(state_after)))
+            metrics['timings']['server_seconds']=time.monotonic()-started
             c.execute("UPDATE requests SET status='done',result=%s WHERE pet_id=%s AND id=%s",(Jsonb(result),pet,body.request_id))
         return result
     except Exception:
@@ -388,4 +456,5 @@ def chat(pet:str,body:ChatInput,user=Depends(identity)):
             c.execute("UPDATE requests SET status='failed' WHERE pet_id=%s AND id=%s AND status='running'",(pet,body.request_id))
         raise
 
+install_food(app, identity, refreshed, reconcile_quests, current)
 install_beta(app,identity)

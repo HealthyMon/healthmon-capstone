@@ -1,0 +1,13 @@
+models/
+assets/
+web/
+outputs/
+logs/
+cache/
+.venvs/
+.env
+.env.*
+!.env.example
+configs/runtime.local.json
+migration/evidence/
+**/__pycache__/

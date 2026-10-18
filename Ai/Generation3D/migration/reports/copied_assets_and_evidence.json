@@ -1,0 +1,848 @@
+[
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage1_founder.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage1_founder.effective_prompt.txt",
+    "bytes": 3339,
+    "sha256": "b7c61b46f3aaca4727bed1194cbf1118e20ec9d0fa4aaf348d8dbe488b577821"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage1_founder.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage1_founder.png",
+    "bytes": 1132409,
+    "sha256": "ea49169a95665524592a960c23f23e0c90fd8bde6d808607b8f5f6c667517aa7"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage1_founder.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage1_founder.png.json",
+    "bytes": 16612,
+    "sha256": "cc5fe34038aeafd3cc4cbc83d006e1fa0707684bef78e271f023853593f72af0"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage1_founder.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage1_founder.qc.json",
+    "bytes": 685,
+    "sha256": "efdd4f6bd049f956fafd877adb9aac0d1c18d6f157c718847564c06e956926a9"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_current_leaper.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_current_leaper.effective_prompt.txt",
+    "bytes": 3930,
+    "sha256": "ecaaddae4ff7803a504d7e1f38578d410472bf81618cb10e6d634ca62a942065"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_current_leaper.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_current_leaper.png",
+    "bytes": 1195432,
+    "sha256": "e67d54958ff089d4bc9f9f0f05674a67a3b54d725ea9dfe5dd520d3088a30d98"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_current_leaper.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_current_leaper.png.json",
+    "bytes": 19070,
+    "sha256": "d20728920a6b19d67210cc58bc66c6ed0a25d47533f9cc34566eb4f27af4b5cd"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_current_leaper.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_current_leaper.qc.json",
+    "bytes": 693,
+    "sha256": "b7b6c911f6ff3114d0a35b8aab26f54c471b86df9fcf6637f7556fad8ea87927"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_deep_tide.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_deep_tide.effective_prompt.txt",
+    "bytes": 4018,
+    "sha256": "8feacc4b9bd6b09ef21c727f089937bb4231282670baf285d4e054d5c502794b"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_deep_tide.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_deep_tide.png",
+    "bytes": 1355729,
+    "sha256": "837b792ef9c6c25824902ce9615724166880370b42bd003bbbf1957c69839b31"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_deep_tide.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_deep_tide.png.json",
+    "bytes": 19320,
+    "sha256": "727419050ccd9a7895178a3cd51fe4b78f0079456170fd99c52434c9e61d6584"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_deep_tide.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_deep_tide.qc.json",
+    "bytes": 689,
+    "sha256": "d9a4f44ac55b023c9bf61432b84c512d1d24ea9d0053b81e0435621794564f96"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_solemn_leaper.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_solemn_leaper.effective_prompt.txt",
+    "bytes": 3975,
+    "sha256": "684d2983b38c7752369e70e068088b2a1db995dfc56ab2bd3a9d614efb1e0281"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_solemn_leaper.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_solemn_leaper.png",
+    "bytes": 1207337,
+    "sha256": "37272d44f904845001bac912cf1f6980757cf23d56abe56853ba4c3e976520f9"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_solemn_leaper.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_solemn_leaper.png.json",
+    "bytes": 19192,
+    "sha256": "f59499bbf46f484f21f3caffa75f55eae8485aca942c423ef656fb2115264ed1"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_solemn_leaper.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_solemn_leaper.qc.json",
+    "bytes": 692,
+    "sha256": "334d74cb95abac8d832df2772fe1523d78122cfd4e60a8886216117c84d312a0"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_springwarden.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_springwarden.effective_prompt.txt",
+    "bytes": 3855,
+    "sha256": "a3967c8444ea30b2b1be0290a914caefab8a3890905789f8d9fed917b2815e57"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_springwarden.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_springwarden.png",
+    "bytes": 1221338,
+    "sha256": "24ad13a1027001ef2066230308ba4072ace3ee97232ea5576930e52924de5b88"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_springwarden.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_springwarden.png.json",
+    "bytes": 18842,
+    "sha256": "1fb4045f37039fb7c2df13619565f5a444e12f40ea0e01b5323ece41ffeb6b28"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_springwarden.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_springwarden.qc.json",
+    "bytes": 691,
+    "sha256": "bec0c1320a33b47ee014eacd9770c48b9549c9d92b002b13677b5fb132a9047f"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_still_pool.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_still_pool.effective_prompt.txt",
+    "bytes": 3932,
+    "sha256": "4d49d76b0a617d5f26ffd33054d966a7cbd60fe4e8fd17780361caf388d19256"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_still_pool.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_still_pool.png",
+    "bytes": 1213384,
+    "sha256": "1c7497ca6f21494da5e501e534e8e8ff125904a324b3e089993328d15449030a"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_still_pool.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_still_pool.png.json",
+    "bytes": 19060,
+    "sha256": "d01885a159982dd9a10478eb2f3f1c7be55f4b7c64a1d2b1ff2f5991cecf050d"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_still_pool.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_still_pool.qc.json",
+    "bytes": 688,
+    "sha256": "25a17d0ada3143f828ecc25655535863979ecb60e157fa5edf72760e1738e01a"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_tide_breaker.effective_prompt.txt",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_tide_breaker.effective_prompt.txt",
+    "bytes": 3930,
+    "sha256": "2af54bd785e78887458592abe70c7cc1b3edd743240267a8601b28df41b17dfd"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_tide_breaker.png",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_tide_breaker.png",
+    "bytes": 1344086,
+    "sha256": "47b0fc599afcb1ce7690d091e018f6ab04265bcf1a54051ff0be4debc47ddff6"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_tide_breaker.png.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_tide_breaker.png.json",
+    "bytes": 19060,
+    "sha256": "b1a6d349b068978bb341a4a145bc4fcb52e1891e13e3c592e531da9b22027dd0"
+  },
+  {
+    "path": "backup/assets/gpu_samples/serak/serak_stage2_tide_breaker.qc.json",
+    "source": "/workspace/generation/assets/gpu_samples/serak/serak_stage2_tide_breaker.qc.json",
+    "bytes": 691,
+    "sha256": "b660d80eca0352e067fbe27cb12e46a0a06b288c75b481526482d68a37bbe943"
+  },
+  {
+    "path": "backup/assets/healthmon_references/README_KO.md",
+    "source": "/workspace/generation/assets/healthmon_references/README_KO.md",
+    "bytes": 3294,
+    "sha256": "23cc05969a8cec34544bfa219ec8e4313139ab1c9f89487b2126a407547d87bc"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_0.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_0.png",
+    "bytes": 15319,
+    "sha256": "a7e4593c91c76729b03a13dcbc1a65885152a8497389268853d695cee5305f9f"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_1.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_1.png",
+    "bytes": 23949,
+    "sha256": "641b8cceea7e6aa4a4cc6f774c513752586e690e2714905d0b8097f298b1c835"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_2.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_2.png",
+    "bytes": 36391,
+    "sha256": "734d68d25d6d472181f58d69cb8b41b17f1d3f077bdde0993753e9bf93e0a6ad"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_3.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/A_fit_then_heavy/stage_3.png",
+    "bytes": 48833,
+    "sha256": "aba7ed609f4b877c5c844247e2e60d6b398cb54b16e7f5aa5be4555fe4ebf7e5"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_0.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_0.png",
+    "bytes": 17104,
+    "sha256": "859b7177ae9386e93e65fe504fd58880e22956ba4003a64094972f37f7b9b7fb"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_1.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_1.png",
+    "bytes": 26992,
+    "sha256": "c76684ceb09d66ece9bb1d6e1d3efc541ba94fbbf03354e48a3d7a8044ab1b90"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_2.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_2.png",
+    "bytes": 36905,
+    "sha256": "045622adbd1274c11f8906c5cc98e456a9e20d00e602ee1c1e01e3e7b08ce243"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_3.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/lucan/B_heavy_then_recovery/stage_3.png",
+    "bytes": 50135,
+    "sha256": "e86df435162af559602fdff7d8a92e1572012d053af71de7360daf3e8e327923"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_0.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_0.png",
+    "bytes": 15939,
+    "sha256": "43077a89826e0518f79493cac696632633a5d87fbb0035ec0dfa96bc0ab15567"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_1.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_1.png",
+    "bytes": 21921,
+    "sha256": "3389b192cf44159828fe971dfa03c5eada97e3071d0048c1950684c10d1fbab4"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_2.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_2.png",
+    "bytes": 32632,
+    "sha256": "de7b0565a759e40fff80763d8c488a72b7c8d5b94aebb375a7dc6aeedd6c77ab"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_3.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/A_fit_then_heavy/stage_3.png",
+    "bytes": 40849,
+    "sha256": "ee7448f0b9ddb1612d9c18836ef42711d4198b11f7f16a6ff68158aaebde8fbb"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_0.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_0.png",
+    "bytes": 14937,
+    "sha256": "b7e165450f6ffa19c85437f36e079f37ef0ea309bcbd792901f667e845ebf0f1"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_1.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_1.png",
+    "bytes": 22677,
+    "sha256": "8beea0f8c5ed0e6c7883555e708b42ba6f2feab5665f151e13309a9e5841f4b0"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_2.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_2.png",
+    "bytes": 30650,
+    "sha256": "b80616e8a8ee7d5e10eb5e7b38af65bd0ffae5913a5d014e01141a1062244bac"
+  },
+  {
+    "path": "backup/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_3.png",
+    "source": "/workspace/generation/assets/healthmon_references/candidate_crops_NOT_CLEAN/tori/B_heavy_then_recovery/stage_3.png",
+    "bytes": 44654,
+    "sha256": "326a99336786b7afd16465b9a57f4a245267663b2d7fd9dee9adeb23c8087d77"
+  },
+  {
+    "path": "backup/assets/healthmon_references/manifest.json",
+    "source": "/workspace/generation/assets/healthmon_references/manifest.json",
+    "bytes": 677,
+    "sha256": "d4032cbfd79b37a25e795acce7890edf043e74c7e121381afceb09572b4db931"
+  },
+  {
+    "path": "backup/assets/healthmon_references/misc_inspiration/rock_heavy_example_user_crop.png",
+    "source": "/workspace/generation/assets/healthmon_references/misc_inspiration/rock_heavy_example_user_crop.png",
+    "bytes": 58201,
+    "sha256": "2b31584feeb9d6e3138489e2cddde3b6a8df5b222600b9df51802ce2930602fe"
+  },
+  {
+    "path": "backup/assets/healthmon_references/original_posters/03_fire_fit_to_heavy_recovery.png",
+    "source": "/workspace/generation/assets/healthmon_references/original_posters/03_fire_fit_to_heavy_recovery.png",
+    "bytes": 2541880,
+    "sha256": "faab17f44d2e655add36f6033d41c8f9af568418e56e92784ac120db0d829116"
+  },
+  {
+    "path": "backup/assets/healthmon_references/species_sheets/lucan/A_fit_then_heavy.png",
+    "source": "/workspace/generation/assets/healthmon_references/species_sheets/lucan/A_fit_then_heavy.png",
+    "bytes": 208572,
+    "sha256": "4b1c4bdb65b72d6f081a003baf46bba64ce922688e0399f8a8b6ab590412d89e"
+  },
+  {
+    "path": "backup/assets/healthmon_references/species_sheets/lucan/B_heavy_then_recovery.png",
+    "source": "/workspace/generation/assets/healthmon_references/species_sheets/lucan/B_heavy_then_recovery.png",
+    "bytes": 187252,
+    "sha256": "7760cd416719a6148a8900f338f16920eca7559ac84d3e5e7916aaa1732be642"
+  },
+  {
+    "path": "backup/assets/healthmon_references/species_sheets/tori/A_fit_then_heavy.png",
+    "source": "/workspace/generation/assets/healthmon_references/species_sheets/tori/A_fit_then_heavy.png",
+    "bytes": 198268,
+    "sha256": "539ef9a295a7198cd1a5f05dbbe3525a243d82d40b050f72804b187a04fb4f11"
+  },
+  {
+    "path": "backup/assets/healthmon_references/species_sheets/tori/B_heavy_then_recovery.png",
+    "source": "/workspace/generation/assets/healthmon_references/species_sheets/tori/B_heavy_then_recovery.png",
+    "bytes": 188101,
+    "sha256": "c3c66ef64158777db2c3ed32b02abdc24d9c72a37fb1a9690e39e63e21253eb9"
+  },
+  {
+    "path": "backup/assets/initial_species/README.txt",
+    "source": "/workspace/generation/assets/initial_species/README.txt",
+    "bytes": 961,
+    "sha256": "0fbaafe44910063fafb926ecaff6c48008472ff4e430634ecdd79d1e080f9ba7"
+  },
+  {
+    "path": "backup/assets/initial_species/rukan.png",
+    "source": "/workspace/generation/assets/initial_species/rukan.png",
+    "bytes": 1415396,
+    "sha256": "3788f4535f819c8519432e193ee4bd2c2629f1bb1560c88865778e9c4de8fe9d"
+  },
+  {
+    "path": "backup/assets/initial_species/tori.png",
+    "source": "/workspace/generation/assets/initial_species/tori.png",
+    "bytes": 1061296,
+    "sha256": "efb37083d7177545faa1ed2e1db305b0c18323bd062f3106f97381913dae2e1d"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/HEALTHMON_Lucan_design_v2_comparison.png",
+    "source": "/workspace/generation/assets/lucan_design_v2/HEALTHMON_Lucan_design_v2_comparison.png",
+    "bytes": 1457560,
+    "sha256": "5443a0d4f712ec2093f7fe1cc86f9216de3aed87872ee8f259260d0d2e9c5a91"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/README_KO.md",
+    "source": "/workspace/generation/assets/lucan_design_v2/README_KO.md",
+    "bytes": 1470,
+    "sha256": "8b9ca27135e5f6d6aa0cd83b4572e266a2ba905cefaa2712e7f576c0c835ae32"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/image_records.csv",
+    "source": "/workspace/generation/assets/lucan_design_v2/image_records.csv",
+    "bytes": 596,
+    "sha256": "d13455cc7e2b5c267b86a9e94f823ea1b076e56bb0a822c5a3bd577c068b1808"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/image_records.jsonl",
+    "source": "/workspace/generation/assets/lucan_design_v2/image_records.jsonl",
+    "bytes": 8532,
+    "sha256": "5d06e8a1d152f3d7cc975eae7060c12d2bedaaa62402e077e7a49fadddf60ae2"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/lucan_s2_a025_cool_v2.png",
+    "source": "/workspace/generation/assets/lucan_design_v2/lucan_s2_a025_cool_v2.png",
+    "bytes": 1974863,
+    "sha256": "8a9dc2da807d8313b592ee7dacdd22d28da75f8b3d2bcf88265a3f5378467f00"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/lucan_s2_a100_cool_v2.png",
+    "source": "/workspace/generation/assets/lucan_design_v2/lucan_s2_a100_cool_v2.png",
+    "bytes": 1976746,
+    "sha256": "382ff4af40cd6fcd3b39071cef56a5dc27ba2a7d25fdb35eda0dee9665825191"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/references/lucan_s2_a025_v1.png",
+    "source": "/workspace/generation/assets/lucan_design_v2/references/lucan_s2_a025_v1.png",
+    "bytes": 1895115,
+    "sha256": "09dd26065e419ebdd8de878a8deaa6857f702dd90779ffcef3a9617c7f54a758"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/references/lucan_s2_a100_v1.png",
+    "source": "/workspace/generation/assets/lucan_design_v2/references/lucan_s2_a100_v1.png",
+    "bytes": 1860018,
+    "sha256": "f8808a10fef9f9381fdd0209d53ac4439c6cf47d2eb78dd85c65fb600d5d7e80"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/requests/lucan_s2_a025_cool_v2.json",
+    "source": "/workspace/generation/assets/lucan_design_v2/requests/lucan_s2_a025_cool_v2.json",
+    "bytes": 4191,
+    "sha256": "b0697c524956db42eff334f7f75a1f7d23676980b1f486d31c11f07fd08a1b49"
+  },
+  {
+    "path": "backup/assets/lucan_design_v2/requests/lucan_s2_a100_cool_v2.json",
+    "source": "/workspace/generation/assets/lucan_design_v2/requests/lucan_s2_a100_cool_v2.json",
+    "bytes": 4547,
+    "sha256": "5dca6354a8f501c86b7477a867cb4d41679f5431d7c9c3a90392daa1aa7cb14a"
+  },
+  {
+    "path": "backup/examples/lucan_s2_healthy.glb",
+    "source": "/workspace/generation/models/lucan_s2_healthy.glb",
+    "bytes": 56714436,
+    "sha256": "4bfd03ea874b712e896f4ddfa276a7fb02e3a96f7a68ddf3e78ca1cf0e1cc0f2"
+  },
+  {
+    "path": "backup/examples/qwen_verified.png",
+    "source": "/workspace/generation/outputs/v2/pilot/images/fb8a2079fc8b041d060f.png",
+    "bytes": 652308,
+    "sha256": "39a8e5b8dcf00e7dc50248e1e7f92234c333f9f875a1c528251093023400dcab"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s0_starter.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s0_starter.png",
+    "bytes": 336891,
+    "sha256": "2f86fe920f032fb24592205bdd9dbb4554875e6a2ca1c214f6835116cb096816"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s1_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s1_healthy.png",
+    "bytes": 283677,
+    "sha256": "df68a793871a1b360f1f758c3b58ef561448b716775f2d542d6583201a29c406"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s1_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s1_heavy.png",
+    "bytes": 352159,
+    "sha256": "c4086ba793c964375de6328ba985f88f1728597c65d5d5d3cad639f6dfd384ee"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s2_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s2_healthy.png",
+    "bytes": 421416,
+    "sha256": "66ce5650401dfa91985a8675a0dfe2ca4e9a76e44b407c932d4a459aa6cef00d"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s2_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s2_heavy.png",
+    "bytes": 483263,
+    "sha256": "879abac4047df7518475a012816d1a84b44c2c7942b6d60c5981458b723c8cbd"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s3_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s3_healthy.png",
+    "bytes": 478132,
+    "sha256": "800b1e712c3c1ea91d0d81a594eec335a308db4e995975dbfb0464ef2eec0557"
+  },
+  {
+    "path": "backup/web/fixed/assets/lucan/s3_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/lucan/s3_heavy.png",
+    "bytes": 478942,
+    "sha256": "e285b4b70a52c513f16fef1ef9d56f7d835d72cd68208414c5a23ee31e0685a1"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s0_starter.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s0_starter.png",
+    "bytes": 241621,
+    "sha256": "75c82df934a85361df758e52260f1d66e040ec8536ca3774d8266ddb89da7e5d"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s1_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s1_healthy.png",
+    "bytes": 269517,
+    "sha256": "b0571c96530ba252bb2b5ebae739578c0fb72a73e91e03f952a189489d184765"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s1_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s1_heavy.png",
+    "bytes": 305121,
+    "sha256": "8d25cdae9b80e00468f68730f03ccf68acb2e089d79a175087e070cb3730cd2d"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s2_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s2_healthy.png",
+    "bytes": 312955,
+    "sha256": "98e00129411de7f4a060c9943751e42556c3f77837cae17fd4edf30dc3301a1f"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s2_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s2_heavy.png",
+    "bytes": 386265,
+    "sha256": "3a1e554f6249641c62b3600f27d882ac57afa73b6eeae0668876478227fdd748"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s3_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s3_healthy.png",
+    "bytes": 332541,
+    "sha256": "6e8b61acc49d068faa4e9be04ed1ea2c29a27737a38f42c9c87d999081406a73"
+  },
+  {
+    "path": "backup/web/fixed/assets/mongle_cloud/s3_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/mongle_cloud/s3_heavy.png",
+    "bytes": 377755,
+    "sha256": "72b508a2db4dbe54635aba7d1d692a72cf1ee82ec694220726929d456ad38122"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s0_starter.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s0_starter.png",
+    "bytes": 298364,
+    "sha256": "ca973ffe0ede7ccffbb2fd881c0809753c57c3c6312a70c00f7e69472c02815f"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s1_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s1_healthy.png",
+    "bytes": 279605,
+    "sha256": "332636ec736c7bb94abbd5d3b24257a24e593d6b941cdea94fa98a9c5ac78d4a"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s1_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s1_heavy.png",
+    "bytes": 305522,
+    "sha256": "55d28d16e6e8ec8bbab12ac2a25582117efdb08097169a033f8d9096e5a80f80"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s2_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s2_healthy.png",
+    "bytes": 310801,
+    "sha256": "787fac63bf8550ac7b7c3ba099bc24195f74174ab60f47fef7d447bdb02b9c54"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s2_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s2_heavy.png",
+    "bytes": 354929,
+    "sha256": "7d4fd26b427b09b620f8c969d833d1b97948249b40a56d9631f436fc87e3e179"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s3_healthy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s3_healthy.png",
+    "bytes": 372995,
+    "sha256": "744ea537c9f36b23915fcfa2ab3f27bb745c9a76190d7e7c51ff00b59cdf3793"
+  },
+  {
+    "path": "backup/web/fixed/assets/tori/s3_heavy.png",
+    "source": "/workspace/generation/web/fixed/assets/tori/s3_heavy.png",
+    "bytes": 394096,
+    "sha256": "e1baa26c523fb780b61f3ba38fe4065b381bdf60ef7e203dcc33e03792a1f24d"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/background_matte.json",
+    "source": "/workspace/generation/records/3d/s0_starter/background_matte.json",
+    "bytes": 998,
+    "sha256": "22c5ed561d8f1531f58c462946954d9186f1bed2f67eff5cb63f329232ec7d87"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/case_result.json",
+    "source": "/workspace/generation/records/3d/s0_starter/case_result.json",
+    "bytes": 16930,
+    "sha256": "b7ca64004337cdd46085c42e1df5cc0354113a9f8c7adf128849ca0439091a0b"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s0_starter/render_metadata.json",
+    "bytes": 882,
+    "sha256": "e03cd9e2d74a6b3b1d23680208962495ec328f45470efd3cac523dd180a05371"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s0_starter/rigging_inference_settings.json",
+    "bytes": 995,
+    "sha256": "991326a7a82a7303606c8987dc369a86ab14657c09e3b3576c980a8c36790507"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s0_starter/trellis_inference.json",
+    "bytes": 3207,
+    "sha256": "2a3096fa8a1a3900043edf18ad43fab59cf373bbecfa6eca8c5849c2f923a9c5"
+  },
+  {
+    "path": "code/migration/evidence/3d/s0_starter/validation.json",
+    "source": "/workspace/generation/records/3d/s0_starter/validation.json",
+    "bytes": 16540,
+    "sha256": "cca9440dfe4a79c3a8f69c0f7258576631ce8dbe38e3fd7570e8b072ecbaaf82"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/background_matte.json",
+    "bytes": 997,
+    "sha256": "bbfdb9390a4e178334d15f2273c1e1e4238c5e371a8091ad4f08a37d75baeae6"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/case_result.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/case_result.json",
+    "bytes": 16761,
+    "sha256": "4a222517768a64c0cfe4b32fcf60a102e11ef73284bc14071440f3ec35d757ce"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/render_metadata.json",
+    "bytes": 880,
+    "sha256": "20b0e4c2f89693c79ef11642d2d0d88497150cf55440b90c77e13078a7df5a99"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/rigging_inference_settings.json",
+    "bytes": 986,
+    "sha256": "71fbbcb662af461313e7edc77c56a431d90e21ebfebcdc514e9d6b860b886dc5"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/trellis_inference.json",
+    "bytes": 3193,
+    "sha256": "4dceafb0d52efec1892420c60ac5a96c1471ce466ede365acb79a1b4970aad7b"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_healthy/validation.json",
+    "source": "/workspace/generation/records/3d/s1_healthy/validation.json",
+    "bytes": 16922,
+    "sha256": "fd585e0686d64a3bc6b94465091bd460b060cdecb3024d7c60982f1227c77ba6"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/background_matte.json",
+    "bytes": 993,
+    "sha256": "96a8137dda656cb767dd47ee8613fd194633fee215bbab450b256813e0a1ad82"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/case_result.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/case_result.json",
+    "bytes": 16643,
+    "sha256": "7b94333c28f5959dec8b27fa6d39cc6be0ced77adc89e6b177ca66f72a45f759"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/render_metadata.json",
+    "bytes": 878,
+    "sha256": "e5d7f154351525aee31485eecf19b54bf7f0e57546c695f0bbac7a24d463f433"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/rigging_inference_settings.json",
+    "bytes": 980,
+    "sha256": "298e87e359528b988f0dbb3640eba932971c2a5bc5170fbd5bdc7dbd30646be0"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/trellis_inference.json",
+    "bytes": 3182,
+    "sha256": "831e9b5a210ca4a81727dbff8bca9a2aaf4530b84cffda5f8b3e4d2faa0fe3bb"
+  },
+  {
+    "path": "code/migration/evidence/3d/s1_heavy/validation.json",
+    "source": "/workspace/generation/records/3d/s1_heavy/validation.json",
+    "bytes": 18748,
+    "sha256": "2ef1c4c9fa772da7b5d44f8760f3f2a0f0d6e72fa300c30120b1f91444322ea4"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/background_matte.json",
+    "bytes": 997,
+    "sha256": "5b6cfc32adcec8714c85e6ed87ccc830ad0a9af74c2342a5526528203661d5e5"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/case_result.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/case_result.json",
+    "bytes": 16763,
+    "sha256": "880be424ad65f6924f073bd632f433303fe094ec49a55a8d330be94115b5fb04"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/render_metadata.json",
+    "bytes": 879,
+    "sha256": "54d45008fb43c843b129016c06d0ed67fa1710fd00dab5aab4887007fa68835e"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/rigging_inference_settings.json",
+    "bytes": 986,
+    "sha256": "5c44e0c2b20bde82f1a91a1ca2c43787351f97bfce253dba7d3446dd9ba75f2a"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/trellis_inference.json",
+    "bytes": 3193,
+    "sha256": "bee558b2cbf270d5f887a8a6a15a661176ec6b3abb56a627070d27288ac2dacf"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_healthy/validation.json",
+    "source": "/workspace/generation/records/3d/s2_healthy/validation.json",
+    "bytes": 16158,
+    "sha256": "c9e6ef91f8f0f5f2795b468fc25fcea824d0ffc98fd341ae2e605730a0257d48"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/background_matte.json",
+    "bytes": 992,
+    "sha256": "5a99409cfaa6b0da76cd91894284661102e9237b4b0b26038cd5a31f60aea28f"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/case_result.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/case_result.json",
+    "bytes": 16644,
+    "sha256": "91fc70bd82fd3898117c073a2c4919926d1cbcf1ace535302d64f730a9ba6c4c"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/render_metadata.json",
+    "bytes": 879,
+    "sha256": "8a540b1d7acdb9063014fa0be324aea2371a9147bdfc856f975e2842107e7393"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/rigging_inference_settings.json",
+    "bytes": 980,
+    "sha256": "85540193debf95dde7ccecce12efb086d7d97095810af691c1333daa90844dcf"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/trellis_inference.json",
+    "bytes": 3182,
+    "sha256": "5480dc9e68fdb53246c40102e9712ad4167d1ac363a2122ed034ac8ea915a758"
+  },
+  {
+    "path": "code/migration/evidence/3d/s2_heavy/validation.json",
+    "source": "/workspace/generation/records/3d/s2_heavy/validation.json",
+    "bytes": 16149,
+    "sha256": "4cd47a26e775aa41a73b4a244958a434edc85d34a72290bc020b70364a22b0a0"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/background_matte.json",
+    "bytes": 997,
+    "sha256": "9981b90675456ad985ddf8c20a1f7857e2189243c2dc723f91e60c93a2b7eeb6"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/case_result.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/case_result.json",
+    "bytes": 16763,
+    "sha256": "f2dae1b618fd4bddc33c710b4663e74de6268de6c586e4233554d2714f3d8da2"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/render_metadata.json",
+    "bytes": 880,
+    "sha256": "06a395aabcc28e3d76717477005b7cfabda267df37fbd64eed0d2290766ec18f"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/rigging_inference_settings.json",
+    "bytes": 986,
+    "sha256": "97ca5af8e3bad50cb15230f1a4315d7333f124e485377e055e410d7cbdd6189b"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/trellis_inference.json",
+    "bytes": 3194,
+    "sha256": "4e0ef540dc42876b03a8b397d913a6fdac97d5ad7fab45c6036527f5198af91f"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_healthy/validation.json",
+    "source": "/workspace/generation/records/3d/s3_healthy/validation.json",
+    "bytes": 18018,
+    "sha256": "375322220956969bb6bb80bafdddde31ea0b9baeb8de884cada190ef4fd59c59"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/background_matte.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/background_matte.json",
+    "bytes": 992,
+    "sha256": "e1f761a3264da2862c852f2c4afd4ff38a6c6d47f27684e21d2cb03c05798625"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/case_result.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/case_result.json",
+    "bytes": 16645,
+    "sha256": "423e677e7653cbcd575f06bad5f03ebf2d3a93749de0b173949fecc2f54e96eb"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/render_metadata.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/render_metadata.json",
+    "bytes": 879,
+    "sha256": "742ec5ec5767e8b5c4765b4b56c7373ca422b052ab967f0fdb120d74c460ebd2"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/rigging_inference_settings.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/rigging_inference_settings.json",
+    "bytes": 980,
+    "sha256": "a6a9b9608ed9a6ad4a261ad111c4aacd672b28286941e5e940f00616ecd13400"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/trellis_inference.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/trellis_inference.json",
+    "bytes": 3182,
+    "sha256": "93dd94279ac8c143c321ffb18ed4bb64eab489854de9376bf251f96fc64aa639"
+  },
+  {
+    "path": "code/migration/evidence/3d/s3_heavy/validation.json",
+    "source": "/workspace/generation/records/3d/s3_heavy/validation.json",
+    "bytes": 16196,
+    "sha256": "2291c1f5f255a63ceb068424485d7f6134c4a7076e588d5985d1a9084c74c8ad"
+  },
+  {
+    "path": "code/migration/evidence/qwen_example.json",
+    "source": "/workspace/generation/outputs/v2/pilot/images/fb8a2079fc8b041d060f.png.json",
+    "bytes": 19273,
+    "sha256": "61adf5a5b3acf56dafaddea4aabfa77965b71f6994088a8c5aa79f0cebd576ad"
+  },
+  {
+    "path": "code/migration/source_variants/healthmon-evolution/run_pipeline.py",
+    "source": "/workspace/healthmon-evolution/run_pipeline.py",
+    "bytes": 28291,
+    "sha256": "f0a70ee981087ae2a29c647355ec224f9952e512a0aa55d2739daafb6f2d97ea"
+  },
+  {
+    "path": "code/migration/source_variants/healthmon-evolution/scripts/qwen_branch_worker.py",
+    "source": "/workspace/healthmon-evolution/scripts/qwen_branch_worker.py",
+    "bytes": 11675,
+    "sha256": "3e44e6546866dfa5f7fc619b10f1e08b627626e8616cec5f530827f90b806605"
+  },
+  {
+    "path": "code/migration/source_variants/healthmon-evolution/scripts/run_image_to_rigged.py",
+    "source": "/workspace/healthmon-evolution/scripts/run_image_to_rigged.py",
+    "bytes": 5750,
+    "sha256": "7f392d178565ec72705de9185e7baed974726106920e23c0b8c2ef9c070ad647"
+  },
+  {
+    "path": "code/migration/source_variants/healthmon-evolution/scripts/run_selected_3d.py",
+    "source": "/workspace/healthmon-evolution/scripts/run_selected_3d.py",
+    "bytes": 19683,
+    "sha256": "4551ec915ea244aaff71ea0d112be41bac8ba8e5cc7add889bbbdb3017cad655"
+  },
+  {
+    "path": "code/src/healthmon/appearance_refinement.py",
+    "source": "/workspace/generation/src/healthmon/appearance_refinement.py",
+    "bytes": 3390,
+    "sha256": "a06212249bc2c19bcb275224cbba21befa60baea26f679d6a5bbade32c261f07"
+  },
+  {
+    "path": "code/src/healthmon/biped_evolution.py",
+    "source": "/workspace/generation/src/healthmon/biped_evolution.py",
+    "bytes": 6440,
+    "sha256": "793a5a2b4b82b36da39e90facab0966205733ae9dacc3b0213038f3c8a043e1c"
+  },
+  {
+    "path": "code/src/healthmon/branch_evolution.py",
+    "source": "/workspace/generation/src/healthmon/branch_evolution.py",
+    "bytes": 6810,
+    "sha256": "ce6622ea4169dd26428c6cc0a2c30aa42e76ba1d74f382d4bd7861907512462e"
+  },
+  {
+    "path": "code/src/healthmon/design_contract.py",
+    "source": "/workspace/generation/src/healthmon/design_contract.py",
+    "bytes": 4740,
+    "sha256": "5e0146254d7d377ca6bd4ee290ac0a6680988ab4fe4d58cdbfbf813c697ba0fd"
+  },
+  {
+    "path": "code/src/healthmon/numeric_evolution.py",
+    "source": "/workspace/generation/src/healthmon/numeric_evolution.py",
+    "bytes": 12942,
+    "sha256": "7172c3ceec3cd4805bd956635eb335e4f36be547913a35797f1301a1e0a219cc"
+  },
+  {
+    "path": "code/src/healthmon/personality_refinement.py",
+    "source": "/workspace/generation/src/healthmon/personality_refinement.py",
+    "bytes": 2304,
+    "sha256": "595b377e5cefc4932ea7e0de9db298cb0228908b8ed647c938ac4f47899c8a9d"
+  }
+]

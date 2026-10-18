@@ -1,0 +1,31 @@
+{
+  "level_thresholds": [25, 50, 75],
+  "threshold_note": "Working interpretation: Stage0 at levels0-24, Stage1 at25-49, Stage2 at50-74, Stage3 from75; configurable, not an extra stage at100.",
+  "identity_traits": ["charcoal canine fur", "amber eyes", "pale muzzle and chest", "pointed ears", "gold forehead crest", "gold tail accent"],
+  "profiles": {
+    "sprinter": {
+      "label_ko": "질주형",
+      "health": {"UpperBody": 65, "LowerBody": 95, "Activity": 95, "Nutrition": 85, "EnergyBalance": 0, "ProlongedInactivity": false, "SustainedSurplus": false},
+      "personality": {"Affinity": 50, "Initiative": 90, "Mood": 85},
+      "history": "Long-term running and lower-body exercise with adequate regular meals.",
+      "anatomy": "A sleek adolescent canine sprinter: very long powerful hind legs, athletic slender forelegs, a long narrow deep ribcage, sharply tucked waist, long swept-back ears and a flowing tapered tail with a split gold-tipped tuft. Gold crest develops into two elegant swept brow prongs; accents are slim anklets rather than torso armor. The dark furry body and visible lean abdominal contour dominate the design.",
+      "expression": "Alert narrow amber eyes, a raised confident chin, ears angled forward and a poised energetic stance."
+    },
+    "hearth_heavy": {
+      "label_ko": "포근한 중량형",
+      "health": {"UpperBody": 25, "LowerBody": 25, "Activity": 10, "Nutrition": 30, "EnergyBalance": 0.8, "ProlongedInactivity": true, "SustainedSurplus": true},
+      "personality": {"Affinity": 95, "Initiative": 35, "Mood": 85},
+      "history": "Prolonged low activity combined with sustained excess energy intake; gentle sociable temperament is a separate trait.",
+      "anatomy": "A squat, wonderfully round adolescent canine hearth beast: an enormous pear-shaped furry torso, a very large soft cream-and-charcoal belly hanging low between widely spaced short sturdy legs, broad padded hips and thick soft thighs. The head is modest relative to the massive body, with a developed canine muzzle and a calm mature brow. A small gold crescent forehead crest, a short soft cream shoulder collar and a low thick gold-tipped tail retain the Lucan lineage. Expose the round abdomen completely; gold decoration is restricted to the brow and small ankle accents. This is a lovable heavy evolutionary body plan with real soft fat, not a baby, bulky armor or a muscular athlete.",
+      "expression": "Warm relaxed amber eyes, lifted friendly cheek corners and an easy approachable stance; content and sociable."
+    },
+    "bulwark": {
+      "label_ko": "수호형",
+      "health": {"UpperBody": 95, "LowerBody": 60, "Activity": 80, "Nutrition": 85, "EnergyBalance": 0, "ProlongedInactivity": false, "SustainedSurplus": false},
+      "personality": {"Affinity": 80, "Initiative": 75, "Mood": 70},
+      "history": "Long-term upper-body strength exercise with moderate walking and balanced meals.",
+      "anatomy": "A sturdy adolescent canine protector with a triangular front-heavy silhouette: broad high shoulders, a deep strong chest, thick powerful forelegs and large front paws, a clearly narrower normal-weight waist and lighter hindquarters. A short layered cream chest ruff frames the uncovered torso. The forehead crest splits into two stout gold ridges and a compact gold-tipped fan tail balances the shoulders. Show actual anatomical shoulder and foreleg development rather than covering the body in armor; it has healthy body fat and is not obese.",
+      "expression": "Steady focused amber eyes, level brows and a calm protective stance with the chest upright."
+    }
+  }
+}
