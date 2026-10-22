@@ -34,6 +34,13 @@ namespace Healthmon.Evolution
         public void Changed(ModelManifest manifest)
         {
             desired = manifest;
+            if (manifest == null)
+            {
+                if (displayed != null) Destroy(displayed);
+                displayed = null; displayedImport?.Dispose(); displayedImport = null; DisplayedRevision = null;
+                if (placeholderRenderers != null) foreach (var renderer in placeholderRenderers) renderer.enabled = true;
+                return;
+            }
             if (!loading && manifest.revision != DisplayedRevision) _ = ApplyDesired();
         }
 
@@ -56,7 +63,7 @@ namespace Healthmon.Evolution
                         !await importer.InstantiateMainSceneAsync(candidate.transform))
                         throw new InvalidOperationException("GLB import/instantiation failed.");
                     if (this == null) { Destroy(candidate); importer.Dispose(); return; }
-                    if (desired.revision != manifest.revision) { Destroy(candidate); importer.Dispose(); continue; }
+                    if (desired == null || desired.revision != manifest.revision) { Destroy(candidate); importer.Dispose(); continue; }
                     FitOnPlane(candidate, EvolutionClient.Instance.Settings.display_height_m);
                     var skinned = candidate.GetComponentsInChildren<SkinnedMeshRenderer>(true);
                     if (skinned.Length == 0) throw new InvalidOperationException("Imported model has no skin.");

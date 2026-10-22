@@ -1,0 +1,33 @@
+FROM python:3.12-slim AS runtime
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY Server/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+COPY Server/__init__.py Server/__init__.py
+COPY Server/healthmon Server/healthmon
+COPY Server/migrations Server/migrations
+COPY Ai/LLM/migrations Ai/LLM/migrations
+COPY Server/scripts Server/scripts
+COPY Server/assets Server/assets
+RUN useradd --uid 10001 --create-home healthmon
+USER 10001
+EXPOSE 8000
+CMD ["uvicorn","Server.healthmon.app:create_app","--factory","--host","0.0.0.0","--port","8000","--no-access-log"]
+
+FROM runtime AS checks
+USER root
+RUN pip install --no-cache-dir pytest==9.0.2
+COPY Server/tests Server/tests
+COPY Ai/Generation3D/configs Ai/Generation3D/configs
+COPY Ai/Generation3D/src/healthmon/__init__.py Ai/Generation3D/src/healthmon/__init__.py
+COPY Ai/Generation3D/src/healthmon/individual_evolution.py Ai/Generation3D/src/healthmon/individual_evolution.py
+COPY Ai/Generation3D/src/healthmon/qwen_runner.py Ai/Generation3D/src/healthmon/qwen_runner.py
+COPY Ai/Generation3D/src/healthmon/species_contract.py Ai/Generation3D/src/healthmon/species_contract.py
+COPY Ai/Generation3D/runtime/common_gateway Ai/Generation3D/runtime/common_gateway
+COPY Ai/Generation3D/runtime/unity/evolution_worker.py Ai/Generation3D/runtime/unity/evolution_worker.py
+COPY Ai/Generation3D/runtime/unity/job_store.py Ai/Generation3D/runtime/unity/job_store.py
+COPY compose.yaml compose.yaml
+COPY Server/Dockerfile.common Server/Dockerfile.common
+COPY Server/requirements.txt Server/requirements.txt
+USER 10001
+CMD ["python","-m","pytest","Server/tests","-q","-p","no:cacheprovider"]

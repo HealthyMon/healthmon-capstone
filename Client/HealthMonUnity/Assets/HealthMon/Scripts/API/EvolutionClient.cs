@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Healthmon.Common;
 
 namespace Healthmon.Evolution
 {
@@ -15,16 +16,21 @@ namespace Healthmon.Evolution
         public ModelManifest Current { get; private set; }
         public string LastError { get; private set; }
         public string Phase { get; private set; }
-        public string ActiveRequestId => pending == null ? null : pending.request_id;
+        public string ActiveRequestId => CommonServerConnection.UsesServerAuthority ? commonPending?.request_id : pending?.request_id;
         public EvolutionSettings Settings { get; private set; } = new EvolutionSettings();
         public event Action<ModelManifest> ModelChanged;
         public event Action<string> StatusChanged;
         private readonly CancellationTokenSource lifetime = new CancellationTokenSource();
         private PetStateManager petState;
         private GrowthStats growthStats;
-        private string scoreSource, bearerToken;
+        private string scoreSource;
+        [NonSerialized] private string bearerToken;
         private EvolutionRequest pending;
         private bool submitting;
+        [Serializable] private sealed class CommonPending { public string request_id, job_id; }
+        private CommonPending commonPending;
+        private string commonScope, commonPendingKey;
+        private bool commonTerminal, commonRetryRequested;
         private string PendingKey => "HealthMon.Evolution.Pending." + Settings.pet_id;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -38,6 +44,7 @@ namespace Healthmon.Evolution
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            if (CommonServerConnection.UsesServerAuthority) return;
             var settingsAsset = Resources.Load<TextAsset>("HealthMonEvolution");
             if (settingsAsset != null) Settings = JsonUtility.FromJson<EvolutionSettings>(settingsAsset.text);
             Settings.base_url = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_URL") ?? Settings.base_url;
@@ -49,6 +56,7 @@ namespace Healthmon.Evolution
 
         private async void Start()
         {
+            if (CommonServerConnection.UsesServerAuthority) { await RunCommonServer(); return; }
             while (!lifetime.IsCancellationRequested)
             {
                 BindGrowth();
@@ -82,6 +90,8 @@ namespace Healthmon.Evolution
         // Call this from the growth-stat producer. Dialogue personality is a separate channel.
         public void SetGrowthStats(GrowthStats stats, string source)
         {
+            if (CommonServerConnection.UsesServerAuthority)
+                throw new InvalidOperationException("Common server snapshots determine evolution; client scores are not accepted.");
             if (stats == null || !stats.IsValid() || string.IsNullOrWhiteSpace(source))
                 throw new ArgumentException("Supply all eight valid growth stats and their source.");
             growthStats = JsonUtility.FromJson<GrowthStats>(JsonUtility.ToJson(stats));
@@ -100,6 +110,7 @@ namespace Healthmon.Evolution
         // Also supports an explicit backend/game evolution signal without a level-up UI event.
         public void RequestEvolution(int level, GrowthStats stats, string source)
         {
+            if (CommonServerConnection.UsesServerAuthority) { RequestCommonEvolution(); return; }
             if (pending != null || submitting) throw new InvalidOperationException("Resolve the pending evolution first.");
             if (level < 15 || level > 100) throw new ArgumentOutOfRangeException(nameof(level));
             SetGrowthStats(stats, source);
@@ -108,6 +119,132 @@ namespace Healthmon.Evolution
             PlayerPrefs.SetString(PendingKey, JsonUtility.ToJson(pending));
             PlayerPrefs.Save();
             Phase = "queued";
+        }
+
+        public void RequestCommonEvolution()
+        {
+            var common = CommonServerConnection.Instance;
+            if (common == null || !common.IsConnected || common.LatestState == null)
+            { LastError = "Connect to the common server first."; return; }
+            PrepareCommonScope(common);
+            if (common.LatestState.evolution_target_stage <= common.LatestState.published_model_stage)
+            { LastError = "No pending server-authorized evolution stage."; return; }
+            if (commonPending == null)
+                commonPending = new CommonPending { request_id = Guid.NewGuid().ToString("N") };
+            // Explicit retry preserves request_id/job_id. A network failure cannot create a paid job twice.
+            commonRetryRequested = true; commonTerminal = false;
+            PlayerPrefs.SetString(commonPendingKey, JsonUtility.ToJson(commonPending)); PlayerPrefs.Save();
+            Phase = "queued";
+        }
+
+        private void PrepareCommonScope(CommonServerConnection common)
+        {
+            string scope = common.ServerInstanceId + "\n" + common.OwnerId + "\n" + common.Api.PetId;
+            if (scope == commonScope) return;
+            commonScope = scope;
+            commonPendingKey = "HealthMon.CommonEvolution." + Hash(Encoding.UTF8.GetBytes(scope));
+            commonPending = PlayerPrefs.HasKey(commonPendingKey)
+                ? JsonUtility.FromJson<CommonPending>(PlayerPrefs.GetString(commonPendingKey)) : null;
+            commonTerminal = false; commonRetryRequested = commonPending != null;
+            Current = null; ModelChanged?.Invoke(null);
+            Settings.base_url = common.BaseUrl; Settings.pet_id = common.Api.PetId;
+        }
+
+        private async Task RunCommonServer()
+        {
+            while (!lifetime.IsCancellationRequested)
+            {
+                var common = CommonServerConnection.Instance;
+                try
+                {
+                    if (common != null && common.IsConnected)
+                    {
+                        PrepareCommonScope(common);
+                        string capturedScope = commonScope;
+                        string root = "/pets/" + Uri.EscapeDataString(common.Api.PetId) + "/evolutions";
+                        CommonEvolutionJob job = null;
+                        if (commonPending != null && !commonTerminal)
+                        {
+                            bool firstSubmission = string.IsNullOrEmpty(commonPending.job_id);
+                            string json;
+                            if (commonRetryRequested || string.IsNullOrEmpty(commonPending.job_id))
+                            {
+                                commonRetryRequested = false;
+                                json = await Json("POST", root, JsonUtility.ToJson(new CommonEvolutionRequest { request_id = commonPending.request_id }));
+                            }
+                            else json = await Json("GET", root + "/" + Uri.EscapeDataString(commonPending.job_id));
+                            if (capturedScope != CurrentCommonScope()) continue;
+                            job = JsonUtility.FromJson<CommonEvolutionJob>(json);
+                            if (job == null || string.IsNullOrWhiteSpace(job.request_id) ||
+                                (!firstSubmission && job.request_id != commonPending.request_id) || string.IsNullOrEmpty(job.job_id))
+                                throw new IOException("Invalid common evolution job contract.");
+                            // Another device may already own this stage's one durable job.
+                            // Adopt that authenticated same-pet job's original request identity once.
+                            if (firstSubmission) commonPending.request_id = job.request_id;
+                            commonPending.job_id = job.job_id;
+                            PlayerPrefs.SetString(commonPendingKey, JsonUtility.ToJson(commonPending)); PlayerPrefs.Save();
+                            Phase = job.status; StatusChanged?.Invoke(Phase);
+                            if (job.status == "failed" || job.status == "unsupported")
+                            { commonTerminal = true; LastError = "Evolution unavailable or failed; previous model retained."; }
+                        }
+                        else if (common.LatestState != null && common.LatestState.model_reference != null &&
+                            (Current == null || Current.model_url != common.LatestState.model_reference))
+                        {
+                            string model = common.LatestState.model_reference;
+                            string id = model.Substring(model.LastIndexOf('/') + 1);
+                            job = JsonUtility.FromJson<CommonEvolutionJob>(await Json("GET", root + "/" + Uri.EscapeDataString(id)));
+                            if (capturedScope != CurrentCommonScope()) continue;
+                        }
+                        if (job != null && job.status == "succeeded")
+                        {
+                            string model = job.model_reference ?? job.model_url;
+                            if (job.stage < 0 || job.stage > 3 || string.IsNullOrEmpty(model) ||
+                                !System.Text.RegularExpressions.Regex.IsMatch(job.model_sha256 ?? "", "^[a-f0-9]{64}$"))
+                                throw new IOException("Successful job has no verified model asset.");
+                            ResolveUrl(model); // Refuse cross-origin references before publication.
+                            // A completed older job may be retained in the database without being
+                            // the currently published model. The authoritative state decides this.
+                            if (common.LatestState == null || common.LatestState.state_version < job.state_version)
+                            {
+                                common.RefreshState();
+                                await Task.Delay(500, lifetime.Token);
+                                continue;
+                            }
+                            if (common.LatestState.published_model_stage != job.stage || common.LatestState.model_reference != model)
+                            {
+                                if (commonPending != null && commonPending.job_id == job.job_id)
+                                {
+                                    commonPending = null; PlayerPrefs.DeleteKey(commonPendingKey); PlayerPrefs.Save();
+                                }
+                                Phase = "superseded";
+                                await Task.Delay(3000, lifetime.Token);
+                                continue;
+                            }
+                            var manifest = new ModelManifest { pet_id = common.Api.PetId, revision = job.job_id,
+                                stage = job.stage, model_url = model, model_sha256 = job.model_sha256 };
+                            if (Current == null || Current.revision != manifest.revision)
+                            { Current = manifest; ModelChanged?.Invoke(manifest); }
+                            commonPending = null; commonTerminal = false;
+                            PlayerPrefs.DeleteKey(commonPendingKey); PlayerPrefs.Save();
+                            Phase = "complete"; LastError = null; common.RefreshState();
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { break; }
+                catch (Exception)
+                {
+                    LastError = "Common evolution request failed. Retry retains the same request ID.";
+                    // Do not automatically repeat failed generation submissions.
+                    if (commonPending != null && string.IsNullOrEmpty(commonPending.job_id)) commonTerminal = true;
+                }
+                try { await Task.Delay(3000, lifetime.Token); }
+                catch (OperationCanceledException) { break; }
+            }
+        }
+        private static string CurrentCommonScope()
+        {
+            var c = CommonServerConnection.Instance;
+            return c == null || !c.IsConnected ? null : c.ServerInstanceId + "\n" + c.OwnerId + "\n" + c.Api.PetId;
         }
 
         private async Task SubmitPending()
@@ -149,6 +286,8 @@ namespace Healthmon.Evolution
 
         public string ResolveUrl(string path)
         {
+            if (CommonServerConnection.UsesServerAuthority)
+                return CommonServerContract.ResolveApiUrl(Settings.base_url, path);
             var origin = new Uri(Settings.base_url.TrimEnd('/') + "/");
             var address = new Uri(origin, path);
             if (address.Scheme != origin.Scheme || address.Host != origin.Host || address.Port != origin.Port)
@@ -197,9 +336,11 @@ namespace Healthmon.Evolution
         {
             lifetime.Token.ThrowIfCancellationRequested();
             request.timeout = timeout;
-            if (!string.IsNullOrEmpty(Settings.certificate_sha256))
+            if (CommonServerConnection.UsesServerAuthority)
+                CommonServerConnection.Instance.Authorize(request);
+            else if (!string.IsNullOrEmpty(Settings.certificate_sha256))
                 request.certificateHandler = new PinnedCertificate(Settings.certificate_sha256);
-            if (!string.IsNullOrEmpty(bearerToken)) request.SetRequestHeader("Authorization", "Bearer " + bearerToken);
+            if (!CommonServerConnection.UsesServerAuthority && !string.IsNullOrEmpty(bearerToken)) request.SetRequestHeader("Authorization", "Bearer " + bearerToken);
             var operation = request.SendWebRequest();
             using (lifetime.Token.Register(request.Abort))
                 while (!operation.isDone) { lifetime.Token.ThrowIfCancellationRequested(); await Task.Yield(); }

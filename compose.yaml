@@ -1,0 +1,60 @@
+name: ${COMPOSE_PROJECT_NAME:-healthmon-test}
+x-common: &common
+  image: healthmon-common-${COMPOSE_PROJECT_NAME:-healthmon-test}:${HEALTHMON_IMAGE_TAG:-local}
+  build:
+    context: .
+    dockerfile: Server/Dockerfile.common
+    target: runtime
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql://healthmon:${POSTGRES_PASSWORD:?Run Server/scripts/manage.py init first}@db:5432/${POSTGRES_DB:-healthmon}
+  networks: [backend]
+services:
+  db:
+    image: pgvector/pgvector:0.8.2-pg17
+    environment:
+      POSTGRES_USER: healthmon
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run initialization first}
+      POSTGRES_DB: ${POSTGRES_DB:-healthmon}
+    volumes: [database:/var/lib/postgresql/data]
+    networks: [backend]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U healthmon -d "$$POSTGRES_DB"']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  migrate:
+    <<: *common
+    command: [python, -m, Server.healthmon.db]
+    depends_on:
+      db: {condition: service_healthy}
+    restart: "no"
+  api:
+    <<: *common
+    ports: ["${API_BIND:-127.0.0.1}:${API_PORT:-8020}:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready',timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+    restart: unless-stopped
+  checks:
+    <<: *common
+    profiles: [test]
+    image: healthmon-common-checks-${COMPOSE_PROJECT_NAME:-healthmon-test}:${HEALTHMON_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: Server/Dockerfile.common
+      target: checks
+    environment:
+      TEST_ADMIN_DSN: postgresql://healthmon:${POSTGRES_PASSWORD}@db:5432/postgres
+    depends_on:
+      db: {condition: service_healthy}
+    restart: "no"
+volumes:
+  database:
+networks:
+  backend:

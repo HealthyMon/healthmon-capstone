@@ -16,7 +16,7 @@ public class DialoguePrototype : MonoBehaviour
 
     [Header("LLM Server")]
     [SerializeField] private string serverUrl = "http://127.0.0.1:8000";
-    private string bearerToken;
+    [NonSerialized] private string bearerToken;
     private string existingPetId;
     private HealthmonApiClient api;
     private Button sendButton;
@@ -43,26 +43,50 @@ public class DialoguePrototype : MonoBehaviour
         bearerToken = Environment.GetEnvironmentVariable("HEALTHMON_USER_TOKEN") ?? "";
         existingPetId = Environment.GetEnvironmentVariable("HEALTHMON_PET_ID");
         serverUrl = Environment.GetEnvironmentVariable("HEALTHMON_SERVER_URL") ?? serverUrl;
-        api.ChatReceived += Receive;
-        api.FoodConfirmed += ReactToFood;
-        api.Failed += Failure;
-        api.ConversationChanged += ConversationChanged;
-        api.ConversationFailed += ConversationFailed;
+        BindApiEvents();
         foreach (var button in FindObjectsByType<Button>(FindObjectsInactive.Include))
             for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
                 if (button.onClick.GetPersistentTarget(i) == this && button.onClick.GetPersistentMethodName(i) == nameof(SendMessage))
                     sendButton = button;
         characterResponseText.text = "실제 LLM 서버에 Connect한 뒤 대화해 주세요.";
         if (sendButton != null) sendLabel = sendButton.GetComponentInChildren<TMP_Text>(true);
+        ConfigureRuntimeLayout();
+    }
+
+    private void OnEnable()
+    {
+        if (api == null) api = Healthmon.Common.CommonServerConnection.Instance?.Api ?? FindAnyObjectByType<HealthmonApiClient>();
+        if (api != null) BindApiEvents();
+        if (sendButton != null) ConfigureRuntimeLayout();
+    }
+    private void ConfigureRuntimeLayout()
+    {
+        var layout = GetComponent<DialogueRuntimeLayout>() ?? gameObject.AddComponent<DialogueRuntimeLayout>();
+        layout.Configure(messageInput, userMessageText, characterResponseText, sendButton);
+    }
+    private void BindApiEvents()
+    {
+        api.ChatReceived -= Receive; api.ChatReceived += Receive;
+        api.FoodConfirmed -= ReactToFood; api.FoodConfirmed += ReactToFood;
+        api.Failed -= Failure; api.Failed += Failure;
+        api.ConversationChanged -= ConversationChanged; api.ConversationChanged += ConversationChanged;
+        api.ConversationFailed -= ConversationFailed; api.ConversationFailed += ConversationFailed;
     }
 
     private void Start()
     {
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority) return;
         if (!string.IsNullOrWhiteSpace(bearerToken)) Connect();
     }
 
     private void Update()
     {
+        var common = Healthmon.Common.CommonServerConnection.Instance;
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority && common != null)
+        {
+            connected = common.IsConnected;
+            serverUrl = common.BaseUrl ?? serverUrl;
+        }
         if (sessionStartPending && connected && !api.IsBusy) PrepareConversation();
         if (sendButton != null) sendButton.interactable = connected && !api.IsBusy && !api.ConversationLoading;
         if (sendLabel != null) sendLabel.text = api.HasPendingChat && !api.IsBusy ? "다시 시도"
@@ -119,6 +143,11 @@ public class DialoguePrototype : MonoBehaviour
 
     public void Connect()
     {
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority)
+        {
+            Healthmon.Common.CommonServerConnection.Instance?.Connect(serverUrl, bearerToken, existingPetId);
+            return;
+        }
         if (!Application.isPlaying || connected || api.IsBusy) return;
         if (string.IsNullOrWhiteSpace(bearerToken)) { characterResponseText.text = "사용자 토큰을 입력해 주세요."; return; }
         try
@@ -194,7 +223,11 @@ public class DialoguePrototype : MonoBehaviour
         LastFallback = result.metrics != null && result.metrics.fallback;
         LastSpeech = result.response.speech;
         characterResponseText.text = result.response.speech;
-        if (personalityText != null) personalityText.text = LastFallback ? "상태 : 답변 생성 실패" : "상태 : 대화 중";
+        bool synthetic = result.provenance == "synthetic" || (result.metrics != null && result.metrics.synthetic) ||
+            (result.metrics != null && result.metrics.backend == "mock") ||
+            (result.metrics != null && result.metrics.handler != null &&
+            (result.metrics.handler.IndexOf("mock", StringComparison.OrdinalIgnoreCase) >= 0 || result.metrics.handler.IndexOf("synthetic", StringComparison.OrdinalIgnoreCase) >= 0));
+        if (personalityText != null) personalityText.text = synthetic ? "MOCK / SYNTHETIC — 개발용 합성 응답" : LastFallback ? "상태 : 답변 생성 실패" : "상태 : 대화 중";
         if (!LastFallback && questPrototype != null) questPrototype.AddDialogue();
         Debug.Log($"[HealthMon LLM] ChatDisplayed request_id={LastRequestId} fallback={LastFallback} attempts={result.metrics?.attempts} latency_seconds={result.metrics?.latency_seconds:F2}");
     }

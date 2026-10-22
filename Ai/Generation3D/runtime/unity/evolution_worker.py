@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT.parents[1]))
 sys.path.insert(0, str(ROOT / 'src'))
 from job_store import LEVELS, atomic_json, read, sha
 
@@ -46,14 +47,33 @@ def plan_from_parent(folder, job, parent, source):
     contract = source.get('species_contract')
     if sha(parent) != source['image_sha256'] or source['stage'] != job['source_stage']:
         raise ValueError('Parent provenance mismatch')
-    profile = dict(species=source.get('species', 'lucan'), previous_level=LEVELS[stage] - 1, level=LEVELS[stage], seed=job.get('seed', 42),
-                   stats=job['stats'], history=[], history_origin='missing')
-    compiled = compile_individual(profile, species_contract=contract)
+    v22 = job.get('game_contract') == 'healthmon.v2.2'
+    if v22:
+        profile = dict(species=source.get('species','lucan'), level=job['authoritative_state']['level'],
+                       source_stage=job['source_stage'], target_stage=stage, seed=job.get('seed',42),
+                       stats=job['stats'], history=[], history_origin='missing',
+                       authoritative_game_profile=job['authoritative_profile'])
+    else:
+        profile = dict(species=source.get('species', 'lucan'), previous_level=LEVELS[stage] - 1, level=LEVELS[stage], seed=job.get('seed', 42),
+                       stats=job['stats'], history=[], history_origin='missing')
+    compiled = compile_individual(profile, species_contract=contract,
+                                  game_contract='healthmon.v2.2' if v22 else 'legacy')
     request = design_planning_request(compiled)
     data = json.loads(request['user'])
     resolved_policy = art_direction(compiled) if contract else None
     data['explicit_stage_art_direction'] = (resolved_policy['shared_direction'] + ' ' + resolved_policy['species_direction']) if resolved_policy else (contract['stage_directions'][str(stage)] if contract else STAGES[stage])
     data['explicit_score_condition_direction'] = species_body(compiled) if contract else body_instruction(compiled)
+    if v22:
+        from Ai.Generation3D.runtime.common_gateway.appearance import body_condition
+        direction=body_condition(job['authoritative_profile'])
+        data['explicit_score_condition_direction']=direction
+        data['authoritative_body_condition']=direction
+        data['condition_role']='The shared v2.2 appearance is a required visible whole-body condition, not an optional secondary nuance.'
+        if 'physical_condition' in data:
+            data['physical_condition']['role']=data['condition_role']
+        if 'visual_principles' in data:
+            data['visual_principles']=[value for value in data['visual_principles'] if 'not a swollen belly' not in value]
+        request['system']+=' The AUTHORITATIVE V2.2 APPEARANCE controls the visible body condition. Describe the requested abdomen, waist, flanks and supporting masses explicitly; do not contradict it with a default moderate, lean or muscular body. Preserve the supplied species and stage anatomy.'
     groups = [['kinetic_flow', 'support_distribution', 'spatial_spread'],
               ['visual_density', 'surface_integration', 'overall_presence'],
               ['social_openness', 'self_direction', 'developmental_momentum', 'contrast_rhythm']]
@@ -109,6 +129,9 @@ def plan_from_parent(folder, job, parent, source):
             'Smooth stylized rendered 3D fantasy-game character, connected anatomy, broad legible forms. '
             'Plain WHITE square background. Calm three-quarter standing pose, full body and whole tail inside generous margins. '
             'Exactly ONE creature, no text, comparison panels, extra heads, floating fragments, clothes or weapons.\n')
+    if v22:
+        from Ai.Generation3D.runtime.common_gateway.appearance import apply_to_prompt
+        prompt=apply_to_prompt(prompt,job['authoritative_profile'])
     (folder / 'prompt.txt').write_text(prompt, encoding='utf-8')
 
 

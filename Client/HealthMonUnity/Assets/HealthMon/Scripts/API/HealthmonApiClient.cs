@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using Healthmon.Common;
 
 namespace Healthmon.Beta
 {
@@ -10,14 +11,27 @@ namespace Healthmon.Beta
     {
         [SerializeField] private string baseUrl = "http://127.0.0.1:8000";
         [SerializeField, Min(1)] private int timeoutSeconds = 240;
-        private string bearerToken; // Runtime only: never store a real token in scenes or source.
+        [SerializeField, Min(1)] private int foodTimeoutSeconds = 300;
+        [NonSerialized] private string bearerToken; // Exclude Editor hot-reload serialization too.
         private UnityWebRequest activeRequest;
         private Coroutine activeCoroutine;
         private Action<ApiFailure> activeFailure;
-        private ChatRequest pendingChat;
+        [SerializeReference] private ChatRequest pendingChat;
         private string pendingPetId;
+        [SerializeReference] private PendingChatSnapshot pendingScope; // Frozen identity only; no token or duplicate request text.
+        private int emptyPlaceholderNormalizations;
         private string conversationId;
         private Coroutine heartbeatCoroutine;
+        private UnityWebRequest stateRequest;
+        private Coroutine stateCoroutine;
+        private readonly StateVersionGate stateGate = new StateVersionGate();
+        private string serverInstanceId = "unverified", ownerId = "unverified";
+        public bool IsStateBusy { get { return stateCoroutine != null; } }
+        public string BaseUrl { get { return baseUrl; } }
+        public bool IsConfigured { get { return !string.IsNullOrEmpty(bearerToken); } }
+        public string VerifiedServerInstanceId { get { return serverInstanceId; } }
+        public string VerifiedOwnerId { get { return ownerId; } }
+        public event Action<PetState> StateReceived;
         public bool ConversationReady { get; private set; }
         public bool ConversationLoading { get; private set; }
         public event Action<bool> ConversationChanged;
@@ -27,7 +41,8 @@ namespace Healthmon.Beta
         public long StateVersion { get; private set; }
         public bool HasStateVersion { get; private set; }
         public bool IsBusy { get; private set; }
-        public bool HasPendingChat { get { return pendingChat != null; } }
+        public bool HasPendingChat { get { NormalizeEmptyPendingPlaceholder(); return pendingChat != null; } }
+        public bool IsReauthenticating { get; private set; }
         public string PendingRequestId { get { return pendingChat == null ? null : pendingChat.request_id; } }
         public event Action<ChatResult> ChatReceived;
         public event Action<FoodConfirmationResult> FoodConfirmed;
@@ -39,6 +54,25 @@ namespace Healthmon.Beta
         {
             Application.runInBackground = true;
         }
+        private void OnEnable()
+        {
+            NormalizeEmptyPendingPlaceholder();
+            if (activeCoroutine == null && activeRequest == null) { IsBusy = false; IsReauthenticating = false; }
+        }
+        private void NormalizeEmptyPendingPlaceholder()
+        {
+            if (!CommonServerContract.IsEmptyPendingPlaceholder(pendingChat, pendingPetId, pendingScope)) return;
+            pendingChat = null; pendingScope = null; emptyPlaceholderNormalizations++;
+        }
+        public PendingChatDiagnostics GetPendingDiagnostics()
+        {
+            return new PendingChatDiagnostics { has_pending_object = pendingChat != null,
+                has_request_id = !string.IsNullOrEmpty(pendingChat?.request_id), has_text = !string.IsNullOrEmpty(pendingChat?.text),
+                has_pending_pet = !string.IsNullOrEmpty(pendingPetId), has_frozen_scope = pendingScope != null &&
+                    (!string.IsNullOrEmpty(pendingScope.base_url) || !string.IsNullOrEmpty(pendingScope.server_instance_id) ||
+                     !string.IsNullOrEmpty(pendingScope.owner_id) || !string.IsNullOrEmpty(pendingScope.pet_id)),
+                credential_available = IsConfigured, empty_placeholder_normalizations = emptyPlaceholderNormalizations };
+        }
 
         public void Configure(string url, string token)
         {
@@ -49,17 +83,51 @@ namespace Healthmon.Beta
                 !string.IsNullOrEmpty(address.Query) || !string.IsNullOrEmpty(address.Fragment) ||
                 !string.IsNullOrEmpty(address.UserInfo))
                 throw new ArgumentException("Use an HTTP(S) base URL without credentials, query or fragment.");
+            string safeToken = CommonServerContract.NormalizeBearerToken(token);
             CloseConversation();
+            CancelStateRequest();
             baseUrl = url.TrimEnd('/');
-            bearerToken = NormalizeToken(token);
+            bearerToken = safeToken;
             PetId = null;
             HasStateVersion = false;
+            serverInstanceId = ownerId = "unverified";
+            stateGate.Reset(baseUrl, ownerId, "");
+        }
+
+        public void GetServerInfo(Action<ServerInfo> success, Action<ApiFailure> failure = null)
+        { Begin("GET", "/server-info", null, success, failure); }
+        public void GetIdentity(Action<ServerIdentity> success, Action<ApiFailure> failure = null)
+        { Begin("GET", "/identity", null, success, failure); }
+        public void BindIdentity(string server, string owner)
+        {
+            if (string.IsNullOrWhiteSpace(server) || string.IsNullOrWhiteSpace(owner))
+                throw new ArgumentException("Verified server and identity are required.");
+            serverInstanceId = server; ownerId = owner;
+            ResetStateScope();
+        }
+        private void ResetStateScope()
+        {
+            CancelStateRequest();
+            stateGate.Reset(serverInstanceId, ownerId, PetId ?? "");
+            HasStateVersion = false;
+            StateVersion = 0;
+        }
+        private void ObserveVersion(long version)
+        {
+            if (version < 0) return;
+            StateVersion = HasStateVersion ? Math.Max(StateVersion, version) : version;
+            HasStateVersion = true;
+            stateGate.Accept(stateGate.Generation, StateVersion);
         }
 
         public void SetBearerToken(string token)
         {
-            if (IsBusy) throw new InvalidOperationException("Wait for the current request before refreshing authentication.");
-            bearerToken = NormalizeToken(token);
+            if (IsBusy || HasPendingChat) throw new InvalidOperationException("Resolve pending work before changing authentication.");
+            CloseConversation();
+            bearerToken = CommonServerContract.NormalizeBearerToken(token);
+            // Authentication refresh can represent another account; never retain its snapshot.
+            ownerId = "unverified"; PetId = null;
+            ResetStateScope();
         }
 
         public void SelectPet(string petId)
@@ -68,7 +136,7 @@ namespace Healthmon.Beta
             if (string.IsNullOrWhiteSpace(petId)) throw new ArgumentException("petId is required.");
             CloseConversation();
             PetId = petId;
-            HasStateVersion = false;
+            ResetStateScope();
         }
 
         public void ListPets(Action<PetList> success, Action<ApiFailure> failure = null)
@@ -159,8 +227,8 @@ namespace Healthmon.Beta
             Begin<CreatedPet>("POST", "/pets", JsonUtility.ToJson(settings), result =>
             {
                 PetId = result.pet_id;
-                StateVersion = result.state_version;
-                HasStateVersion = true;
+                ResetStateScope();
+                ObserveVersion(result.state_version);
                 success?.Invoke(result);
             }, failure);
         }
@@ -168,12 +236,43 @@ namespace Healthmon.Beta
         public void GetState(Action<PetState> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
-            Begin<PetState>("GET", PetPath("/state"), null, result =>
+            if (!IsConfigured) { Fail(401, "Configure authentication first.", failure); return; }
+            if (IsStateBusy) { Fail(0, "A state refresh is already running.", failure); return; }
+            stateCoroutine = StartCoroutine(RequestState(stateGate.Generation, PetId, success, failure));
+        }
+
+        private IEnumerator RequestState(int generation, string pet, Action<PetState> success, Action<ApiFailure> failure)
+        {
+            yield return null;
+            using (var request = new UnityWebRequest(baseUrl + "/pets/" + Escape(pet) + "/state", "GET"))
             {
-                StateVersion = result.state_version;
-                HasStateVersion = true;
-                success?.Invoke(result);
-            }, failure);
+                stateRequest = request;
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Authorization", "Bearer " + bearerToken);
+                request.SetRequestHeader("Accept", "application/json");
+                request.timeout = 20; request.redirectLimit = 0;
+                yield return request.SendWebRequest();
+                stateRequest = null; stateCoroutine = null;
+                if (generation != stateGate.Generation) yield break;
+                if (request.result != UnityWebRequest.Result.Success)
+                { Fail(request.responseCode, "State refresh failed; previous verified state retained.", failure); yield break; }
+                string json = request.downloadHandler.text;
+                PetState state = null;
+                try { if (CommonServerContract.HasRequiredStateFields(json)) state = JsonUtility.FromJson<PetState>(json); }
+                catch (Exception) { }
+                if (state == null || !state.IsValidCommonState(pet))
+                { Fail(request.responseCode, "Invalid healthmon.v2.2 state response.", failure); yield break; }
+                if (!stateGate.Accept(generation, state.state_version)) yield break;
+                ObserveVersion(state.state_version);
+                StateReceived?.Invoke(state);
+                success?.Invoke(state);
+            }
+        }
+        private void CancelStateRequest()
+        {
+            if (stateRequest != null) { stateRequest.Abort(); stateRequest.Dispose(); }
+            if (stateCoroutine != null) StopCoroutine(stateCoroutine);
+            stateRequest = null; stateCoroutine = null;
         }
 
         public void GetHistory(Action<MessageHistory> success, int limit = 50, Action<ApiFailure> failure = null)
@@ -181,8 +280,7 @@ namespace Healthmon.Beta
             if (!RequirePet(failure)) return;
             Begin<MessageHistory>("GET", PetPath("/messages?limit=" + Mathf.Clamp(limit, 1, 100)), null, result =>
             {
-                StateVersion = result.state_version;
-                HasStateVersion = true;
+                ObserveVersion(result.state_version);
                 success?.Invoke(result);
             }, failure);
         }
@@ -190,6 +288,21 @@ namespace Healthmon.Beta
         public void GetQuests(Action<QuestList> success, Action<ApiFailure> failure = null)
         {
             if (RequirePet(failure)) Begin("GET", PetPath("/quests"), null, success, failure);
+        }
+
+        public void MarkProposalShown(string offerId, Action<QuestOffer> success, Action<ApiFailure> failure = null)
+        {
+            if (!RequirePet(failure)) return;
+            if (HasPendingChat) { Fail(0, "Resolve pending chat before acknowledging a proposal.", failure); return; }
+            if (string.IsNullOrWhiteSpace(offerId)) { Fail(0, "An actual displayed proposal ID is required.", failure); return; }
+            string pet = PetId;
+            Begin<QuestOffer>("POST", PetPath("/proposals/" + Escape(offerId) + "/shown"), null, result =>
+            {
+                if (result.id != offerId || result.pet_id != pet || !result.is_proposal || result.excluded ||
+                    !string.IsNullOrEmpty(result.cancelled_at) || string.IsNullOrWhiteSpace(result.shown_at))
+                { Fail(0, "Invalid proposal display acknowledgement; retry after refreshing quests.", failure); return; }
+                success?.Invoke(result);
+            }, failure);
         }
 
         public void AnalyzeFood(byte[] image, Action<FoodAnalysis> success, Action<ApiFailure> failure = null)
@@ -200,25 +313,28 @@ namespace Healthmon.Beta
             { Fail(0, "Use an image up to 12 MiB.", failure); return; }
             Begin<FoodAnalysis>("POST", PetPath("/food/analyze"), null, result =>
             {
-                if (result.schema_version != "healthmon.food.v1") { Fail(0, "Unexpected food contract.", failure); return; }
+                if (!CommonServerContract.ValidFoodAnalysis(result)) { Fail(0, "Unexpected or incomplete food contract.", failure); return; }
                 success?.Invoke(result);
             }, failure, image);
         }
 
         public void ConfirmFood(string analysisId, int candidateId, float? grams,
-            Action<FoodConfirmationResult> success, Action<ApiFailure> failure = null)
+            Action<FoodConfirmationResult> success, Action<ApiFailure> failure = null,
+            string mealType = "snack", bool kcalReconfirmed = false, float? vegetableFruitGrams = null, bool syntheticFixture = false)
         {
             if (!RequirePet(failure)) return;
             if (HasPendingChat) { Fail(0, "Resolve pending chat before confirming food.", failure); return; }
-            string body = grams.HasValue
-                ? JsonUtility.ToJson(new FoodConfirmation { analysis_id = analysisId, candidate_id = candidateId, grams = grams.Value })
-                : JsonUtility.ToJson(new FoodConfirmationWithoutQuantity { analysis_id = analysisId, candidate_id = candidateId });
+            string body;
+            try { body = JsonUtility.ToJson(CommonServerContract.FoodConfirmationPayload(analysisId, candidateId, grams, vegetableFruitGrams, mealType, kcalReconfirmed, syntheticFixture)); }
+            catch (ArgumentException) { Fail(0, "Invalid explicitly confirmed food quantities.", failure); return; }
             Begin<FoodConfirmationResult>("POST", PetPath("/food/confirm"), body, result =>
             {
-                StateVersion = result.state_version;
-                HasStateVersion = true;
+                if (!result.stored || string.IsNullOrWhiteSpace(result.source_id) || result.analysis_id != analysisId || result.state == null || !result.state.IsValidCommonState(PetId) || result.state.state_version != result.state_version)
+                { Fail(0, "Invalid food confirmation state; refresh before retrying.", failure); return; }
+                ObserveVersion(result.state_version);
                 success?.Invoke(result);
-                if (!result.duplicate) FoodConfirmed?.Invoke(result);
+                if (!result.duplicate && !syntheticFixture) FoodConfirmed?.Invoke(result);
+                RefreshCommonState();
             }, failure);
         }
 
@@ -231,6 +347,7 @@ namespace Healthmon.Beta
             { Fail(0, "Enter 1 to 1500 characters.", failure); return; }
             pendingPetId = PetId;
             pendingChat = new ChatRequest { request_id = Guid.NewGuid().ToString("N"), text = text, state_version = StateVersion };
+            pendingScope = CurrentPendingScope();
             RetryPendingChat(success, failure);
         }
 
@@ -246,14 +363,15 @@ namespace Healthmon.Beta
                 { Fail(0, "Unexpected response contract; pending request retained.", failure); return; }
                 pendingChat = null;
                 pendingPetId = null;
-                StateVersion = result.state_version;
-                HasStateVersion = true;
+                pendingScope = null;
+                ObserveVersion(result.state_version);
                 ChatReceived?.Invoke(result);
                 SpeechReceived?.Invoke(result.response.speech);
                 EmotionReceived?.Invoke(result.response.emotion);
                 AnimationReceived?.Invoke(result.response.animation);
                 ExecutionReceived?.Invoke(result.execution);
                 success?.Invoke(result);
+                RefreshCommonState();
             }, failure);
         }
 
@@ -271,13 +389,16 @@ namespace Healthmon.Beta
             if (IsBusy) throw new InvalidOperationException("Cancel the current transport first.");
             pendingChat = null;
             pendingPetId = null;
+            pendingScope = null;
         }
 
         // Contains user text, but no credentials. Persist securely if app restarts must survive retries.
         public string ExportPendingChat()
         {
+            var scope = EnsurePendingScope();
             return pendingChat == null ? null : JsonUtility.ToJson(
-                new PendingChatSnapshot { pet_id = pendingPetId, request = pendingChat });
+                new PendingChatSnapshot { pet_id = pendingPetId, request = pendingChat,
+                    server_instance_id = scope?.server_instance_id, owner_id = scope?.owner_id, base_url = scope?.base_url });
         }
 
         public void RestorePendingChat(string json)
@@ -285,12 +406,114 @@ namespace Healthmon.Beta
             if (IsBusy || HasPendingChat) throw new InvalidOperationException("Pending chat already exists.");
             var snapshot = JsonUtility.FromJson<PendingChatSnapshot>(json);
             if (snapshot == null || snapshot.request == null || snapshot.pet_id != PetId ||
+                (CommonServerConnection.UsesServerAuthority && (snapshot.server_instance_id != serverInstanceId ||
+                 snapshot.owner_id != ownerId || snapshot.base_url != baseUrl || ownerId == "unverified")) ||
                 string.IsNullOrWhiteSpace(snapshot.request.request_id) || snapshot.request.request_id.Length < 8 ||
                 snapshot.request.request_id.Length > 100 || string.IsNullOrWhiteSpace(snapshot.request.text) ||
                 snapshot.request.text.Length > 1500 || snapshot.request.state_version < 0)
                 throw new ArgumentException("Invalid pending chat snapshot or pet mismatch.");
             pendingPetId = snapshot.pet_id;
             pendingChat = snapshot.request;
+            pendingScope = CurrentPendingScope();
+        }
+
+        private PendingChatSnapshot CurrentPendingScope()
+        { return new PendingChatSnapshot { base_url = baseUrl, server_instance_id = serverInstanceId, owner_id = ownerId, pet_id = pendingPetId }; }
+        private PendingChatSnapshot EnsurePendingScope()
+        {
+            if (pendingChat == null) return null;
+            // A request already in flight when this recovery code is hot-loaded
+            // may predate pendingScope. Adopt only its still-known verified scope.
+            if (pendingScope == null)
+            {
+                var legacy = CurrentPendingScope();
+                if (CommonServerContract.MatchesPendingScope(legacy, baseUrl, serverInstanceId, ownerId, PetId)) pendingScope = legacy;
+            }
+            return pendingScope;
+        }
+
+        // Re-authentication is intentionally separate from Configure: pending work
+        // never grants permission to switch its server, account or pet.
+        public void ReauthenticatePendingChat(string url, string token, string pet, Action<PetState> success, Action<ApiFailure> failure = null)
+        {
+            if (!isActiveAndEnabled || IsBusy || !HasPendingChat)
+            { Fail(0, "An idle pending chat is required for same-connection authentication.", failure); return; }
+            var scope = EnsurePendingScope();
+            string candidate;
+            try { candidate = CommonServerContract.NormalizeBearerToken(token); }
+            catch (ArgumentException) { Fail(0, "Bearer token must be one line.", failure); return; }
+            if (string.IsNullOrWhiteSpace(candidate) || !CommonServerContract.MatchesPendingScope(scope, url, serverInstanceId, ownerId, pet) || pet != PetId)
+            { Fail(403, "Only the frozen pending server, account and pet may be re-authenticated.", failure); return; }
+            CloseConversation(); CancelStateRequest();
+            IsBusy = true; IsReauthenticating = true; activeFailure = failure;
+            activeCoroutine = StartCoroutine(RecoverPendingAuthentication(scope, candidate, success, failure));
+        }
+
+        private IEnumerator RecoverPendingAuthentication(PendingChatSnapshot scope, string candidate, Action<PetState> success, Action<ApiFailure> failure)
+        {
+            var original = pendingChat;
+            int generation = stateGate.Generation;
+            string body = null;
+            ApiFailure error = null;
+            yield return null; // Retain the coroutine handle for cancellation.
+            // Do not send the candidate credential until the selected server ID matches.
+            yield return RecoveryRequest(scope.base_url, "/server-info", null, value => body = value, value => error = value);
+            var info = DecodeRecovery<ServerInfo>(body);
+            if (error == null && (info == null || info.server_instance_id != scope.server_instance_id))
+                error = new ApiFailure(403, "Server identity differs from the pending request.");
+            if (error == null)
+            {
+                body = null;
+                yield return RecoveryRequest(scope.base_url, "/identity", candidate, value => body = value, value => error = value);
+                var identity = DecodeRecovery<ServerIdentity>(body);
+                if (error == null && (identity == null || identity.owner_id != scope.owner_id))
+                    error = new ApiFailure(403, "Token owner differs from the pending request.");
+            }
+            PetState verified = null;
+            if (error == null)
+            {
+                body = null;
+                yield return RecoveryRequest(scope.base_url, "/pets/" + Escape(scope.pet_id) + "/state", candidate,
+                    value => body = value, value => error = value);
+                if (CommonServerContract.HasRequiredStateFields(body)) verified = DecodeRecovery<PetState>(body);
+                if (error == null && (verified == null || !verified.IsValidCommonState(scope.pet_id)))
+                    error = new ApiFailure(403, "Pending pet ownership/state could not be verified.");
+            }
+            if (generation != stateGate.Generation || pendingChat != original ||
+                !CommonServerContract.MatchesPendingScope(scope, baseUrl, serverInstanceId, ownerId, PetId))
+                error = new ApiFailure(409, "Pending connection changed during authentication; request retained.");
+            if (error != null)
+            { Cleanup(); Report(error, failure); yield break; }
+            // All three checks succeeded. Neither pending request nor its original
+            // request ID, text, version and frozen scope is changed or retransmitted.
+            bearerToken = candidate;
+            ResetStateScope(); ObserveVersion(verified.state_version);
+            Cleanup();
+            StateReceived?.Invoke(verified);
+            success?.Invoke(verified);
+        }
+        private static T DecodeRecovery<T>(string json) where T : class
+        { try { return string.IsNullOrWhiteSpace(json) ? null : JsonUtility.FromJson<T>(json); } catch (Exception) { return null; } }
+        private IEnumerator RecoveryRequest(string url, string path, string candidate, Action<string> success, Action<ApiFailure> failure)
+        {
+            activeRequest = UnityWebRequest.Get(CommonServerContract.ResolveApiUrl(url, path));
+            activeRequest.timeout = Mathf.Max(1, timeoutSeconds); activeRequest.redirectLimit = 0;
+            activeRequest.SetRequestHeader("Accept", "application/json");
+            if (candidate != null) activeRequest.SetRequestHeader("Authorization", "Bearer " + candidate);
+            var operation = activeRequest.SendWebRequest();
+            float started = Time.realtimeSinceStartup;
+            while (!operation.isDone)
+            {
+                if (Time.realtimeSinceStartup - started >= Mathf.Max(1, timeoutSeconds))
+                { activeRequest.Abort(); failure(new ApiFailure(0, "Authentication verification timed out; pending request retained.")); break; }
+                yield return null;
+            }
+            if (operation.isDone)
+            {
+                if (activeRequest.result == UnityWebRequest.Result.Success) success(activeRequest.downloadHandler.text);
+                else failure(new ApiFailure(activeRequest.responseCode, "Authentication verification failed; pending request retained."));
+            }
+            activeRequest.Dispose(); activeRequest = null;
         }
 
         public void DecideQuest(string offerId, bool accept, Action<QuestDecisionResult> success,
@@ -304,6 +527,7 @@ namespace Healthmon.Beta
                 {
                     HasStateVersion = false;
                     success?.Invoke(result); // Caller refreshes state and quests; duplicate response has no version.
+                    RefreshCommonState();
                 }, failure);
         }
 
@@ -317,14 +541,10 @@ namespace Healthmon.Beta
             if (notify) Report(new ApiFailure(0, "Request cancelled locally; server work may continue.", true), callback);
         }
 
-        private void OnDisable() { CloseConversation(); CancelCurrent(false); }
+        public void RefreshCommonState()
+        { if (!IsStateBusy && !string.IsNullOrEmpty(PetId)) GetState(null); }
+        private void OnDisable() { CloseConversation(); CancelCurrent(false); CancelStateRequest(); }
         private void OnApplicationQuit() { CloseConversation(); }
-        private static string NormalizeToken(string token)
-        {
-            if (token != null && (token.IndexOf('\r') >= 0 || token.IndexOf('\n') >= 0))
-                throw new ArgumentException("Bearer token must be one line.");
-            return token == null ? "" : token.Trim();
-        }
         private string PetPath(string suffix) { return "/pets/" + Escape(PetId) + suffix; }
         private static string Escape(string value) { return Uri.EscapeDataString(value); }
         private bool RequirePet(Action<ApiFailure> failure)
@@ -351,11 +571,13 @@ namespace Healthmon.Beta
         private IEnumerator Request<T>(string method, string path, string json,
             Action<T> success, Action<ApiFailure> failure, byte[] image = null) where T : class
         {
+            int generation = stateGate.Generation;
             // Yield once so cancellation has the Coroutine handle before the request starts.
             yield return null;
             activeRequest = new UnityWebRequest(baseUrl + path, method);
             activeRequest.downloadHandler = new DownloadHandlerBuffer();
-            activeRequest.timeout = Mathf.Max(1, timeoutSeconds);
+            int requestTimeout = Mathf.Max(1, typeof(T) == typeof(FoodAnalysis) ? Mathf.Max(timeoutSeconds, foodTimeoutSeconds) : timeoutSeconds);
+            activeRequest.timeout = requestTimeout;
             activeRequest.redirectLimit = 0; // Avoid forwarding authorization to redirected hosts.
             activeRequest.SetRequestHeader("Authorization", "Bearer " + bearerToken);
             activeRequest.SetRequestHeader("Accept", "application/json");
@@ -373,7 +595,7 @@ namespace Healthmon.Beta
             float started = Time.realtimeSinceStartup;
             while (!operation.isDone)
             {
-                if (Time.realtimeSinceStartup - started >= Mathf.Max(1, timeoutSeconds))
+                if (Time.realtimeSinceStartup - started >= requestTimeout)
                 {
                     activeRequest.Abort();
                     Cleanup();
@@ -387,14 +609,18 @@ namespace Healthmon.Beta
             var transportError = activeRequest.error;
             var ok = activeRequest.result == UnityWebRequest.Result.Success;
             Cleanup(); // Callbacks may safely start the next request.
+            if (generation != stateGate.Generation) yield break;
             if (!ok)
             {
                 // Server detail is retained for diagnostics, never inject it into character speech.
-                Report(new ApiFailure(status, string.IsNullOrEmpty(body) ? transportError : body), failure);
+                // Do not expose response bodies containing user data in UI or logs.
+                Report(new ApiFailure(status, status == 409 ? "State version conflict; refresh before retry." : "Request failed (HTTP " + status + ")."), failure);
                 yield break;
             }
             T parsed = null;
             string parseError = null;
+            if (typeof(T) == typeof(FoodConfirmationResult) && !CommonServerContract.HasRequiredStateFields(body))
+            { Fail(status, "Food confirmation omitted required server state fields.", failure); yield break; }
             try { parsed = JsonUtility.FromJson<T>(body); }
             catch (Exception error) { parseError = error.Message; }
             if (parsed == null) { Fail(status, "Invalid JSON response: " + parseError, failure); yield break; }
@@ -408,6 +634,7 @@ namespace Healthmon.Beta
             activeCoroutine = null;
             activeFailure = null;
             IsBusy = false;
+            IsReauthenticating = false;
         }
     }
 }

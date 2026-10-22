@@ -90,7 +90,7 @@ def reference_principles():
         'Branches may have different body plans. Do not copy an existing franchise character.'])
 
 
-def compile_individual(profile, species_contract=None):
+def compile_individual(profile, species_contract=None, *, game_contract='legacy'):
     species = profile.get('species')
     if species_contract is None and species != 'lucan':
         raise ValueError('A species contract is required outside the legacy Lucan lineage')
@@ -98,11 +98,32 @@ def compile_individual(profile, species_contract=None):
         from .species_contract import validate_contract
         species_contract = validate_contract(species_contract, species)
     version = VERSION if species_contract is None else 'individual-v2.12-species-contracts'
-    current=scores(profile['stats'])
-    previous=number(profile['previous_level'],'previous_level',0,100)
+    v22 = game_contract == 'healthmon.v2.2'
+    if game_contract not in ('legacy', 'healthmon.v2.2'):
+        raise ValueError('Unsupported game contract')
+    if v22:
+        # Mood has never entered the persistent body recipe. Do not invent one
+        # merely to satisfy the old expression-only channel's required field.
+        if set(profile['stats']) != set(BODY_FIELDS) or profile.get('history'):
+            raise ValueError('v2.2 requires exactly seven observed body/personality axes and no fabricated history')
+        current={k:number(profile['stats'][k], k, -1 if k=='EnergyBalance' else 0, 1 if k=='EnergyBalance' else 100) for k in BODY_FIELDS}
+        version = 'individual-common-v2.2-no-expression'
+    else:
+        current=scores(profile['stats'])
     level=number(profile['level'],'level',0,100)
-    source=stage_for_level(previous); target=stage_for_level(level)
-    if level<previous: raise ValueError('Level cannot go backwards')
+    if v22:
+        if type(profile['level']) is not int:
+            raise ValueError('v2.2 level must be an authoritative integer')
+        source=profile['source_stage']
+        if isinstance(source,bool) or not isinstance(source,int) or not 0 <= source <= 3:
+            raise ValueError('A verified source stage is required')
+        target=sum(level >= threshold for threshold in (10,20,30))
+        if profile.get('target_stage') != target:
+            raise ValueError('v2.2 target stage must match authoritative level 10/20/30')
+    else:
+        previous=number(profile['previous_level'],'previous_level',0,100)
+        source=stage_for_level(previous); target=stage_for_level(level)
+        if level<previous: raise ValueError('Level cannot go backwards')
     if target==source: return None
     if target!=source+1: raise ValueError('Generate each crossed stage sequentially; stage skipping is forbidden')
     seed=profile.get('seed',42)
@@ -160,11 +181,15 @@ def compile_individual(profile, species_contract=None):
     if species_contract is not None:
         stage_contract = species_contract['stage_directions'][str(target)]
     principles=reference_principles()
-    intent=dict(version=version,species=species,source_stage=source,target_stage=target,level=LEVELS[target],seed=seed,
+    effective_level=profile['level'] if v22 else LEVELS[target]
+    intent=dict(version=version,species=species,source_stage=source,target_stage=target,level=effective_level,seed=seed,
                 current={k:current[k] for k in BODY_FIELDS},history={k:v for k,v in h.items() if k!='records'},
                 history_records=[dict(r,stats={k:v for k,v in r['stats'].items() if k!='Mood'}) for r in h['records']],
                 dimensions=d,tendencies=tendencies,condition=condition,individual_variation=variation,process_weights=process_weights,
                 transformation_reference=principles,structural_brief=stage_contract)
+    if v22:
+        intent['authoritative_game_profile'] = profile['authoritative_game_profile']
+        intent['game_rule_version'] = 'healthmon.v2.2'
     prompt=('Create a newly invented evolved Lucan from the full combined design state below. '
             'The previous image supplies lineage identity, not target proportions. Preserve selected charcoal/ivory/gold '
             'and thunder motifs while freely redesigning the entire mythical body, scale, structural rhythm and locomotion. '
@@ -180,22 +205,24 @@ def compile_individual(profile, species_contract=None):
                   + json.dumps(intent, ensure_ascii=False, sort_keys=True))
     recipe={**intent,'prompt':prompt}
     body_key=digest(recipe)
-    mood=current['Mood'];expression=dict(mood=mood,smile=(mood-50)/50,ear_tilt=(mood-50)/250,
+    expression = None
+    if not v22:
+        mood=current['Mood'];expression=dict(mood=mood,smile=(mood-50)/50,ear_tilt=(mood-50)/250,
         implementation='expression_parameters_only',body_regeneration_required=False,
         note_ko='표정용 값만 갱신합니다. 현재 GLB에는 표정 블렌드셰이프가 없어 자동 표정 변형은 아직 적용하지 않습니다.')
-    return dict(version=version,body_key=body_key,expression_key=digest([body_key,expression]),recipe=recipe,
+    return dict(version=version,body_key=body_key,expression_key=None if v22 else digest([body_key,expression]),recipe=recipe,
                 expression=expression,history=h,dimensions=d,tendencies=tendencies,condition=condition,
                 individual_variation=variation,prompt=prompt,
-                transition=dict(source_stage=source,target_stage=target,level=LEVELS[target]),stats=current,seed=seed,
+                transition=dict(source_stage=source,target_stage=target,level=effective_level),stats=current,seed=seed,
                 visual_quality='REQUIRES_REVIEW',explanations_ko=[
                     f'활동·하체·주도성·에너지를 함께 해석한 운동 흐름 {d["kinetic_flow"]:.3f}',
                     f'상하체 균형·활동·친화성·주도성 → 몸 전체의 지지 분포 {d["support_distribution"]:.3f}; 팔다리 크기를 직접 지정하지 않음',
                     f'복합 수치 → 공간 확장 {d["spatial_spread"]:.3f}, 시각 밀도 {d["visual_density"]:.3f}, 형태 리듬 {d["contrast_rhythm"]:.3f}',
                     f'친화성·영양·주도성 → 관계 표현 {d["social_openness"]:.3f}; 활동·독립성·주도성 → 자기 방향성 {d["self_direction"]:.3f}',
                     f'신체 상태 채널: 지방 지수 {adiposity:.3f}; 낮은 활동성 자체로 비만을 만들지 않음',
-                    f'관측 이력 {h["days"]:g}일 ({h["origin"]}), 개체 시드 {seed}; Mood는 표정 채널만 갱신',
+                    f'관측 이력 {h["days"]:g}일 ({h["origin"]}), 개체 시드 {seed}; '+('v2.2는 Mood를 만들지 않고 표정 채널을 평가하지 않음' if v22 else 'Mood는 표정 채널만 갱신'),
                     '몸 구조와 이동 방식을 Qwen이 새로 설계합니다. 수치 지수의 연속성이 이미지의 연속성을 보장하지는 않습니다.'],
-                exp_policy='No EXP conversion exists in the inspected release; accept authoritative current Level. Do not invent EXP.')
+                exp_policy=('Authoritative v2.2 server Level preserved; the generator does not recompute EXP.' if v22 else 'No EXP conversion exists in the inspected release; accept authoritative current Level. Do not invent EXP.'))
 
 
 AXIS_SOURCES={

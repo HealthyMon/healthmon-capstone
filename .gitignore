@@ -194,3 +194,9 @@ Docs/verification/
 *.pem
 *.pfx
 *.p12
+
+# Common server local state and PostgreSQL exports
+/backups/
+/.runtime/
+*.dump
+*.sql.gz

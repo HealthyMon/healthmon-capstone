@@ -24,6 +24,11 @@ public class FoodApiSender : MonoBehaviour
 
     private void Start()
     {
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority)
+        {
+            UseManualCapture();
+            return;
+        }
         // The desktop integration records food and dialogue on the same authenticated pet.
         // Preserve the team's standalone sender for scenes without that integration.
         var dialogue = FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include);
@@ -108,6 +113,8 @@ public class FoodApiSender : MonoBehaviour
 
     private void BeginRequest(byte[] data, bool nutrition)
     {
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority)
+        { Fail("공용 서버 모드에서는 인증된 음식 기록 패널을 사용하세요."); return; }
         if (!isActiveAndEnabled) { Fail("FoodApiSender가 활성화되어 있지 않습니다."); return; }
         if (IsBusy) { Fail("이전 요청이 진행 중입니다."); return; }
         if (data == null || data.Length == 0) { Fail("전송할 파일이 비어 있습니다."); return; }

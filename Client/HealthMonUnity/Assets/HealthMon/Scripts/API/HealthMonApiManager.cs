@@ -18,6 +18,11 @@ public class HealthMonApiManager : MonoBehaviour
         Action<string> onSuccess,
         Action<string> onError)
     {
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority)
+        {
+            onError?.Invoke("Use the authenticated common pet API in common server mode.");
+            yield break;
+        }
         WWWForm form =
             new WWWForm();
 

@@ -9,6 +9,8 @@ using UnityEngine.UI;
 /// </summary>
 public class QuestPrototype : MonoBehaviour
 {
+    private static bool ServerMode => Healthmon.Common.CommonServerConnection.UsesServerAuthority;
+    private static void RefreshServer() { Healthmon.Common.CommonServerConnection.Instance?.RefreshState(); }
     [Header("Quest Progress Text")]
     [SerializeField] private TMP_Text walkProgressText;
     [SerializeField] private TMP_Text foodProgressText;
@@ -79,6 +81,15 @@ public class QuestPrototype : MonoBehaviour
 
     private void Start()
     {
+        if (ServerMode)
+        {
+            foreach (var text in new[] { walkProgressText, foodProgressText, dialogueProgressText, arProgressText, summaryText })
+                if (text != null) text.text = "공용 서버 연결 패널에서 퀘스트 조회·수락";
+            foreach (var button in new[] { walkClaimButton, foodClaimButton, dialogueClaimButton, arClaimButton })
+                if (button != null) button.interactable = false;
+            if (rewardPanel != null) rewardPanel.SetActive(false);
+            return;
+        }
         LoadOrCreateToday();
         initialized = true;
         if (rewardPanel != null) rewardPanel.SetActive(false);
@@ -98,6 +109,7 @@ public class QuestPrototype : MonoBehaviour
 
     private void CheckDateChange()
     {
+        if (ServerMode) { RefreshServer(); return; }
         if (questDate == TodayLocalDate()) return;
         ResetProgressAndClaims();
         questDate = TodayLocalDate();
@@ -109,6 +121,7 @@ public class QuestPrototype : MonoBehaviour
 
     private void ResetProgressAndClaims()
     {
+        if (ServerMode) { RefreshServer(); return; }
         walkProgress = MockStartingSteps;
         foodProgress = 0;
         dialogueProgress = 0;
@@ -121,6 +134,7 @@ public class QuestPrototype : MonoBehaviour
 
     private void LoadOrCreateToday()
     {
+        if (ServerMode) { RefreshServer(); return; }
         questDate = TodayLocalDate();
         if (!PlayerPrefs.HasKey(SaveKey))
         {
@@ -162,6 +176,7 @@ public class QuestPrototype : MonoBehaviour
 
     private void SaveQuestData()
     {
+        if (ServerMode) { RefreshServer(); return; }
         QuestSaveData data = new QuestSaveData
         {
             date = questDate,
@@ -180,6 +195,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void AddFoodRecord()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         foodProgress = 1;
         SaveQuestData();
@@ -189,6 +205,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void AddDialogue()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         dialogueProgress = 1;
         SaveQuestData();
@@ -198,6 +215,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void AddARInteraction()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         arProgress = Mathf.Min(ArGoal, arProgress + 1);
         SaveQuestData();
@@ -209,6 +227,7 @@ public class QuestPrototype : MonoBehaviour
     // 실제 누적 걸음 수 API에는 아래 SetDailyWalkSteps 를 사용할 것.
     public void AddWalkSteps(int steps)
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         if (steps <= 0) return;
         walkProgress = Mathf.Clamp(walkProgress + steps, 0, WalkGoal);
@@ -219,6 +238,7 @@ public class QuestPrototype : MonoBehaviour
     // 향후 웨어러블 연동용: '오늘의 누적 걸음 수'를 그대로 갱신 (중복 더하기 방지).
     public void SetDailyWalkSteps(int steps)
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         walkProgress = Mathf.Clamp(steps, 0, WalkGoal);
         SaveQuestData();
@@ -253,6 +273,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void ClaimWalkReward()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         if (walkProgress < WalkGoal || walkClaimed) return;
         if (petStateManager == null) { Debug.LogError("[Quest] PetStateManager 연결 필요"); return; }
@@ -265,6 +286,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void ClaimFoodReward()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         if (foodProgress < 1 || foodClaimed) return;
         if (petStateManager == null) { Debug.LogError("[Quest] PetStateManager 연결 필요"); return; }
@@ -277,6 +299,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void ClaimDialogueReward()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         if (dialogueProgress < 1 || dialogueClaimed) return;
         if (petStateManager == null) { Debug.LogError("[Quest] PetStateManager 연결 필요"); return; }
@@ -289,6 +312,7 @@ public class QuestPrototype : MonoBehaviour
 
     public void ClaimARReward()
     {
+        if (ServerMode) { RefreshServer(); return; }
         CheckDateChange();
         if (arProgress < ArGoal || arClaimed) return;
         if (petStateManager == null) { Debug.LogError("[Quest] PetStateManager 연결 필요"); return; }
@@ -315,6 +339,7 @@ public class QuestPrototype : MonoBehaviour
     // 이전에 만든 관리자 모드와 호환: 보상 수령 여부까지 초기화.
     public void ResetQuestsForTesting()
     {
+        if (ServerMode) { RefreshServer(); return; }
         questDate = TodayLocalDate();
         ResetProgressAndClaims();
         SaveQuestData();

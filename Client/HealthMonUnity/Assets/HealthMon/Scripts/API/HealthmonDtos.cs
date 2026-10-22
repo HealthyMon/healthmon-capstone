@@ -7,7 +7,7 @@ namespace Healthmon.Beta
     [Serializable] public class NutrientValue { public bool available; public float value; }
     [Serializable] public class FoodNutrients
     {
-        public NutrientValue energy_kcal, carbohydrate_g, protein_g, fat_g, sugar_g, fiber_g, sodium_mg;
+        public NutrientValue energy_kcal, carbohydrate_g, protein_g, fat_g, vegetable_fruit_g, sugar_g, fiber_g, sodium_mg;
     }
     [Serializable] public class FoodCandidate
     {
@@ -19,25 +19,31 @@ namespace Healthmon.Beta
     }
     [Serializable] public class FoodAnalysis
     {
-        public string schema_version, analysis_id, backend;
-        public bool consumption_confirmed;
+        public string schema_version, analysis_id, backend, provenance;
+        public bool consumption_confirmed, synthetic;
         public FoodCandidate[] candidates;
+        public bool IsSynthetic { get { return synthetic || provenance == "synthetic" || backend == "mock"; } }
     }
-    [Serializable] public class FoodConfirmation
+    [Serializable] public class FoodConfirmationWithoutQuantity
     {
         public string analysis_id;
         public int candidate_id;
-        public float grams;
+        public string meal_type = "snack";
+        public bool kcal_reconfirmed, synthetic;
     }
     // JsonUtility cannot express nullable numbers. Omitting grams means quantity is unknown.
-    [Serializable] public class FoodConfirmationWithoutQuantity { public string analysis_id; public int candidate_id; }
+    [Serializable] public class FoodConfirmation : FoodConfirmationWithoutQuantity { public float grams; }
+    [Serializable] public class FoodConfirmationWithVegetables : FoodConfirmation { public float vegetable_fruit_g; }
+    [Serializable] public class FoodConfirmationWithoutQuantityWithVegetables : FoodConfirmationWithoutQuantity { public float vegetable_fruit_g; }
     [Serializable] public class FoodRecord { public string food, analysis_id, quantity_source; public FoodNutrients nutrition; }
     [Serializable] public class FoodConfirmationResult
     {
         public string analysis_id, source_id;
-        public bool duplicate;
+        public bool duplicate, stored;
+        public int revision;
         public long state_version;
-        public PetSnapshot state;
+        public PetState state;
+        public string evaluation_status;
         public FoodRecord record;
     }
     // Public fields and object wrappers keep this contract compatible with JsonUtility.
@@ -64,11 +70,28 @@ namespace Healthmon.Beta
     }
     [Serializable] public class PetState
     {
+        public string pet_id, rule_version, asset_status, model_reference, evaluation_status;
+        public int level, current_exp, required_exp, total_exp, coin;
+        public float upper_body, lower_body, nutrition, energy_balance, activity, affinity, initiative;
+        public int evolution_target_stage, published_model_stage;
         public long state_version;
         public PetSettings settings;
         public Traits traits;
         public Mood mood;
         public string as_of, rules_version;
+
+        public bool IsValidCommonState(string expectedPet)
+        {
+            if (pet_id != expectedPet || rule_version != Healthmon.Common.CommonServerContract.RuleVersion ||
+                state_version < 0 || level < 1 || current_exp < 0 || required_exp <= 0 ||
+                current_exp >= required_exp || total_exp < current_exp || coin < 0 ||
+                evolution_target_stage < 0 || evolution_target_stage > 3 ||
+                published_model_stage < 0 || published_model_stage > evolution_target_stage ||
+                string.IsNullOrWhiteSpace(asset_status)) return false;
+            foreach (var value in new[] { upper_body, lower_body, nutrition, activity, affinity, initiative })
+                if (!Healthmon.Common.CommonServerContract.Bounded(value, 0, 100)) return false;
+            return Healthmon.Common.CommonServerContract.Bounded(energy_balance, -100, 100);
+        }
     }
     [Serializable] public class ChatRequest
     {
@@ -76,7 +99,13 @@ namespace Healthmon.Beta
         public string text;
         public long state_version;
     }
-    [Serializable] public class PendingChatSnapshot { public string pet_id; public ChatRequest request; }
+    [Serializable] public class PendingChatSnapshot
+    { public string pet_id, server_instance_id, owner_id, base_url; public ChatRequest request; }
+    [Serializable] public class PendingChatDiagnostics
+    {
+        public bool has_pending_object, has_request_id, has_text, has_pending_pet, has_frozen_scope, credential_available;
+        public int empty_placeholder_normalizations;
+    }
     [Serializable] public class ModelAction { public string type, target_id; }
     [Serializable] public class CharacterResponse
     {
@@ -92,11 +121,13 @@ namespace Healthmon.Beta
         public bool repaired, fallback;
         public float latency_seconds;
         public string handler;
+        public bool synthetic;
+        public string backend;
         // raw_valid may be JSON null; it is not represented as a misleading bool.
     }
     [Serializable] public class ChatResult
     {
-        public string schema_version, request_id, source_id;
+        public string schema_version, request_id, source_id, provenance;
         public CharacterResponse response;
         public long state_version;
         public PetSnapshot state_used, state_after;
@@ -121,16 +152,24 @@ namespace Healthmon.Beta
     }
     [Serializable] public class QuestTemplate
     {
-        public string id, kind, unit;
+        public string id, kind, unit, candidate;
         public float target;
         public int reward;
+        public int exp, coin;
     }
     [Serializable] public class QuestOffer
     {
-        public string id, pet_id, status, created_at, expires_at, accepted_at;
+        public string id, pet_id, status, created_at, expires_at, accepted_at, rejected_at, shown_at, cancelled_at;
+        public bool is_proposal, excluded;
         public long state_version;
         public QuestTemplate template;
         public float progress;
+        public bool IsPendingProposal
+        {
+            get { return !string.IsNullOrWhiteSpace(id) && is_proposal && !excluded && string.IsNullOrEmpty(cancelled_at) &&
+                string.IsNullOrEmpty(accepted_at) && string.IsNullOrEmpty(rejected_at) &&
+                (status == "offered" || status == "active"); }
+        }
     }
     [Serializable] public class PendingActivitySuggestion { public string source_id; public int revision; }
     [Serializable] public class QuestList

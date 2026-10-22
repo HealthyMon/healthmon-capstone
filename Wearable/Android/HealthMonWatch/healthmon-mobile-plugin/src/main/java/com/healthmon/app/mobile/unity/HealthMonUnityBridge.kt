@@ -5,6 +5,7 @@ import android.util.Log
 
 import com.healthmon.app.mobile.data.local.WorkoutStorage
 import com.healthmon.app.mobile.wear.LiveWorkoutRequestSender
+import com.healthmon.app.mobile.sync.ServerWorkoutSync
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -39,8 +40,44 @@ object HealthMonUnityBridge {
     @JvmStatic
     fun initialize(context: Context) {
         appContext = context.applicationContext
+        ServerWorkoutSync.schedule(appContext)
 
         //Log.d(TAG, "HealthMonUnityBridge 초기화 완료")
+    }
+
+    /** Call from a background thread; returns identity metadata, never credentials. */
+    @JvmStatic
+    fun configureServerSync(baseUrl: String, bearerToken: String, petId: String): String {
+        if (!::appContext.isInitialized) return "{\"status\":\"not_initialized\"}"
+        return runBlocking(Dispatchers.IO) {
+            ServerWorkoutSync.configure(appContext, baseUrl, bearerToken, petId)
+        }
+    }
+
+    @JvmStatic
+    fun clearServerSync(): Boolean {
+        if (!::appContext.isInitialized) return false
+        ServerWorkoutSync.clear(appContext)
+        return true
+    }
+
+    @JvmStatic
+    fun requestServerSync(): Boolean {
+        if (!::appContext.isInitialized) return false
+        ServerWorkoutSync.schedule(appContext)
+        return true
+    }
+
+    @JvmStatic
+    fun getServerSyncStatus(): String {
+        if (!::appContext.isInitialized) return "{\"status\":\"not_initialized\"}"
+        return runBlocking(Dispatchers.IO) { ServerWorkoutSync.status(appContext) }
+    }
+
+    @JvmStatic
+    fun confirmWorkoutUpload(workoutId: String): Boolean {
+        if (!::appContext.isInitialized || workoutId.isBlank()) return false
+        return runBlocking(Dispatchers.IO) { ServerWorkoutSync.confirm(appContext, workoutId) }
     }
 
     @JvmStatic

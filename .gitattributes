@@ -5,3 +5,6 @@
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 Ai/Vision/*.pth filter=lfs diff=lfs merge=lfs -text
+*.sh text eol=lf
+Server/assets/starter/lucan/model.glb -filter -diff -merge -text
+Server/assets/starter/lucan/manifest.json text eol=lf

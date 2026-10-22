@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+    id("androidx.room3") version "3.0.3"
 }
 
 android {
@@ -34,10 +35,15 @@ dependencies {
     implementation("androidx.room3:room3-runtime:${roomVersion}")
     implementation("androidx.sqlite:sqlite-framework:${sqliteVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
 
     ksp("androidx.room3:room3-compiler:$roomVersion")
 
     testImplementation(libs.junit)
+    testImplementation("org.json:json:20250517")
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation("androidx.work:work-testing:2.11.2")
 }
+
+room3 { schemaDirectory("$projectDir/schemas") }

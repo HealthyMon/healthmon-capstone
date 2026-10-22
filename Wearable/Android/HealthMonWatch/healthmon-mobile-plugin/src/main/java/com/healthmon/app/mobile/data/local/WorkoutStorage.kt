@@ -3,6 +3,7 @@ package com.healthmon.app.mobile.data.local
 import android.content.Context
 
 import com.healthmon.app.mobile.model.PhoneWorkoutResult
+import com.healthmon.app.mobile.sync.ServerWorkoutSync
 
 
 object WorkoutStorage {
@@ -25,6 +26,10 @@ object WorkoutStorage {
             .saveWorkout(
                 result.toEntity()
             )
+
+        // The durable Room row is committed first. Startup/manual recovery schedules
+        // again if the process dies between this commit and WorkManager enqueue.
+        ServerWorkoutSync.schedule(context)
     }
 
 
