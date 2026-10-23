@@ -433,21 +433,29 @@ def create_app(settings=None, database=None):
             if analysis.get('erased_at') or analysis['result'].get('_privacy_erased'):
                 raise HTTPException(410, 'Food analysis was erased')
             if analysis['confirmation']:
-                original = c.execute('SELECT valid FROM sources WHERE pet_id=%s AND id=%s', (pet, analysis['confirmation']['source_id'])).fetchone()
+                original = c.execute('SELECT valid,revision FROM sources WHERE pet_id=%s AND id=%s', (pet, analysis['confirmation']['source_id'])).fetchone()
                 if not original or not original['valid']:
                     raise HTTPException(410, 'Confirmed food record was erased')
                 prior_input = dict(analysis['confirmation']['input'])
                 prior_input.setdefault('synthetic', False)  # Earlier confirmations predate this optional fixture flag.
-                if prior_input != body.model_dump():
-                    raise HTTPException(409, 'Food was already confirmed with different contents')
-                return dict(analysis['confirmation'], duplicate=True)
+                if prior_input == body.model_dump():
+                    return dict(analysis['confirmation'], duplicate=True)
+                # Editing is explicit: the next revision updates the same meal,
+                # preserving occurrence/receipt times and its unique reward keys.
+                if (body.revision != original['revision'] + 1 or
+                        body.event_id not in (None, analysis['confirmation']['source_id'])):
+                    raise HTTPException(409, 'Food was already confirmed; use its next revision to edit the existing record')
             candidates = analysis['result']['candidates']
             if body.candidate_id >= len(candidates):
                 raise HTTPException(422, 'Choose a returned candidate')
             candidate = candidates[body.candidate_id]
             nutrients = {k: v['value'] * body.grams / 100 if v['available'] and body.grams is not None else None for k, v in candidate['per_100g'].items()}
             nutrients['vegetable_fruit_g'] = body.vegetable_fruit_g
-            event_id = body.event_id or ('food-image-' + analysis['result']['image_hash'])
+            # One confirmation belongs to one analysis, not to the image bytes:
+            # a fresh capture/selection may represent a different meal. Retries
+            # and explicit edits retain the original ID, including legacy IDs.
+            event_id = body.event_id or (analysis['confirmation']['source_id'] if analysis['confirmation']
+                                         else 'food-analysis-' + body.analysis_id)
             existing = c.execute('SELECT occurred_at,payload FROM sources WHERE pet_id=%s AND id=%s', (pet, event_id)).fetchone()
             original_analysis = existing['payload'].get('data', {}).get('analysis_id') if existing else None
             record = Meal(event_id=event_id, revision=body.revision, occurred_at=existing['occurred_at'] if existing else now(), food_name=candidate['food'], meal_type=body.meal_type,

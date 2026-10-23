@@ -179,7 +179,7 @@ public sealed class CommonServerQuestUI : MonoBehaviour
             offer.IsPendingProposal ? "새 제안" : "진행 중";
         string category = offer.is_proposal ? "헬스몬의 제안" : offer.slot == "weekly" ? "주간" : "일일";
         string reward = !offer.is_proposal && t != null ? $"  EXP +{t.exp} · 코인 +{t.coin}" : "";
-        return $"<b>{category} · {title}</b>\n{offer.progress:0.#} / {t?.target:0.#}  ·  {status}\n{offer.period_start}{reward}";
+        return $"<b>{category} · {title}</b>\n진행도  {offer.progress:0.#} / {t?.target:0.#}  ·  {status}\n{offer.period_start}{reward}";
     }
     private RectTransform Rect(string name, Transform parent, Vector2 min, Vector2 max)
     {

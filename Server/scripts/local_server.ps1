@@ -226,6 +226,15 @@ $($cards -join "`n")
 
 try {
     Set-Location -LiteralPath $ProjectRoot
+    $nativeProfile = Join-Path $ProjectRoot '.runtime/native-server.json'
+    if (Test-Path -LiteralPath $nativeProfile) {
+        $native = Get-Content -LiteralPath $nativeProfile -Raw | ConvertFrom-Json
+        $nativePython = if ([IO.Path]::IsPathRooted($native.python)) { $native.python } else { Join-Path $ProjectRoot $native.python }
+        $nativeArguments = @('-B', '-m', 'Server.local_probe.native_runtime', $Action.ToLowerInvariant(), '--profile', $nativeProfile)
+        if ($NoOpen) { $nativeArguments += '--no-open' }
+        & $nativePython @nativeArguments
+        exit $LASTEXITCODE
+    }
     if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot 'compose.yaml'))) { throw 'Run this launcher from the complete HealthMon project.' }
     $command = Get-Command docker.exe -ErrorAction SilentlyContinue
     $script:Docker = if ($command) { $command.Source } else {

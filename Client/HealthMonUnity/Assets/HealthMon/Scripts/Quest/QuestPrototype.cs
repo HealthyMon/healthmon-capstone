@@ -10,7 +10,11 @@ using UnityEngine.UI;
 public class QuestPrototype : MonoBehaviour
 {
     private static bool ServerMode => Healthmon.Common.CommonServerConnection.UsesServerAuthority;
-    private static void RefreshServer() { Healthmon.Common.CommonServerConnection.Instance?.RefreshState(); }
+    private static void RefreshServer()
+    {
+        var connection = Healthmon.Common.CommonServerConnection.Instance;
+        connection?.RefreshState(); connection?.RefreshQuests();
+    }
     [Header("Quest Progress Text")]
     [SerializeField] private TMP_Text walkProgressText;
     [SerializeField] private TMP_Text foodProgressText;

@@ -5,6 +5,11 @@
 
 ## 실행
 
+기존 `18092` 테스트 환경은 `.runtime/native-server.json` 설정이 있으면
+**`Start-HealthMon.cmd` 하나로 원래 PostgreSQL·AI·API를 시작**합니다.
+기존 DB·인증·펫·모델과 진화 저널을 그대로 사용하며, 다른 Docker DB로 전환하지 않습니다.
+연결 정보는 실행 후 브라우저에 표시합니다. 종료는 `Stop-HealthMon.cmd`입니다.
+
 Windows에서는 Docker Desktop과 사용할 AI 환경을 한 번 준비한 뒤 루트의
 **`Start-HealthMon.cmd`를 더블클릭**합니다. 로컬 AI를 설정한 PC에서는 대화 모델,
 음식 분석, 3D Gateway·자동 생성 worker, 서버·DB를 함께 실행하고 준비 상태를 확인합니다.

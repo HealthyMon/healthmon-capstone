@@ -26,6 +26,7 @@ public class DialoguePrototype : MonoBehaviour
     private TMP_Text sendLabel;
     private bool retryNeedsState;
     private bool conversationRequested, sessionStartPending;
+    private bool sendWhenReady;
     private float preparationStarted;
     public string ServerUrl => serverUrl;
     public string RuntimeToken { get => bearerToken; set => bearerToken = value; }
@@ -58,6 +59,7 @@ public class DialoguePrototype : MonoBehaviour
         if (api == null) api = Healthmon.Common.CommonServerConnection.Instance?.Api ?? FindAnyObjectByType<HealthmonApiClient>();
         if (api != null) BindApiEvents();
         if (sendButton != null) ConfigureRuntimeLayout();
+        if (conversationRequested && api != null && !api.ConversationReady) sessionStartPending = true;
     }
     private void ConfigureRuntimeLayout()
     {
@@ -68,7 +70,6 @@ public class DialoguePrototype : MonoBehaviour
     {
         api.ChatReceived -= Receive; api.ChatReceived += Receive;
         api.FoodConfirmed -= ReactToFood; api.FoodConfirmed += ReactToFood;
-        api.Failed -= Failure; api.Failed += Failure;
         api.ConversationChanged -= ConversationChanged; api.ConversationChanged += ConversationChanged;
         api.ConversationFailed -= ConversationFailed; api.ConversationFailed += ConversationFailed;
     }
@@ -90,7 +91,7 @@ public class DialoguePrototype : MonoBehaviour
         if (sessionStartPending && connected && !api.IsBusy) PrepareConversation();
         if (sendButton != null) sendButton.interactable = connected && !api.IsBusy && !api.ConversationLoading;
         if (sendLabel != null) sendLabel.text = api.HasPendingChat && !api.IsBusy ? "다시 시도"
-            : conversationRequested && !api.ConversationReady ? "대화 준비" : "보내기";
+            : api.ConversationLoading ? "준비 중" : waitingForReply && api.IsBusy ? "답변 중" : "보내기";
         if (conversationRequested && api.ConversationLoading && !waitingForReply && string.IsNullOrEmpty(LastSpeech))
             characterResponseText.text = $"대화 모델을 준비하고 있어… ({Mathf.FloorToInt(Time.realtimeSinceStartup - preparationStarted)}초)";
         if (waitingForReply && api.IsBusy)
@@ -111,6 +112,7 @@ public class DialoguePrototype : MonoBehaviour
     {
         conversationRequested = false;
         sessionStartPending = false;
+        sendWhenReady = false;
         if (api != null) api.CloseConversation();
     }
 
@@ -123,6 +125,8 @@ public class DialoguePrototype : MonoBehaviour
 
     private void ConversationChanged(bool ready)
     {
+        if (conversationRequested && ready && sendWhenReady)
+        { sendWhenReady = false; SendMessage(); return; }
         if (conversationRequested && ready && !waitingForReply && string.IsNullOrEmpty(LastSpeech))
             characterResponseText.text = "대화 준비됐어. 편하게 말해 줘.";
     }
@@ -184,6 +188,10 @@ public class DialoguePrototype : MonoBehaviour
         if (connected && api.HasPendingChat && !api.IsBusy) { RetryPendingChat(); return; }
         if (conversationRequested && !api.ConversationReady)
         {
+            // The first send keeps the entered message and sends it once the
+            // session opens, including after an editor reload or app resume.
+            if (string.IsNullOrWhiteSpace(messageInput.text)) return;
+            sendWhenReady = true;
             if (connected && !api.IsBusy && !api.ConversationLoading) PrepareConversation();
             return;
         }
@@ -196,7 +204,7 @@ public class DialoguePrototype : MonoBehaviour
         userMessageText.text = message;
         BeginWaiting();
         messageInput.text = "";
-        api.SendChat(message);
+        api.SendChat(message, failure: Failure);
     }
 
     public void RetryPendingChat()
@@ -204,8 +212,8 @@ public class DialoguePrototype : MonoBehaviour
         if (!api.HasPendingChat || api.IsBusy) return;
         BeginWaiting();
         if (retryNeedsState)
-            api.GetState(_ => { retryNeedsState = false; api.RebasePendingChatToLatestState(); api.RetryPendingChat(); });
-        else api.RetryPendingChat();
+            api.GetState(_ => { retryNeedsState = false; api.RebasePendingChatToLatestState(); api.RetryPendingChat(failure: Failure); }, Failure);
+        else api.RetryPendingChat(failure: Failure);
     }
 
     private void BeginWaiting()
@@ -234,11 +242,11 @@ public class DialoguePrototype : MonoBehaviour
 
     private void ReactToFood(FoodConfirmationResult result)
     {
-        if (connected && !api.IsBusy && !api.HasPendingChat)
+        if (connected && api.ConversationReady && !api.IsBusy && !api.HasPendingChat)
         {
             BeginWaiting();
             characterResponseText.text = "음식 기록을 보고 있어…";
-            api.SendChat("방금 확정한 음식 기록을 보고 짧게 한마디 해줘.");
+            api.SendChat("방금 확정한 음식 기록을 보고 짧게 한마디 해줘.", failure: Failure);
         }
     }
 
@@ -258,7 +266,6 @@ public class DialoguePrototype : MonoBehaviour
         if (api == null) return;
         api.ChatReceived -= Receive;
         api.FoodConfirmed -= ReactToFood;
-        api.Failed -= Failure;
         api.ConversationChanged -= ConversationChanged;
         api.ConversationFailed -= ConversationFailed;
         api.CloseConversation();

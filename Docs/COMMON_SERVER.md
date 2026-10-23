@@ -7,6 +7,16 @@ CPU FastAPI와 PostgreSQL pgvector가 운동·식사·대화 사건, v2.2 성장
 
 ### Windows에서 더블클릭 실행
 
+기존 `18092` 설치를 사용하는 경우 `.runtime/native-server.json`을 우선합니다.
+원래 PostgreSQL 데이터 폴더, API 환경·사용자 토큰 파일, AI 구성과 진화 저널을
+[프로필 예제](../Server/local_probe/native-server.example.json)에 지정합니다.
+이 프로필은 기존 설치 파일을 가리키며 DB·계정을 새로 만들지 않습니다.
+`Start-HealthMon.cmd`는 PostgreSQL → 기존 AI → API를 준비하고 기존 계정의 연결 정보를 표시합니다.
+같은 API가 이미 실행 중이면 재사용하며, 해당 포트의 서버 인스턴스가 다르면 중단합니다.
+선택한 펫이 없어도 임의의 새 펫으로 바꾸지 않습니다. 선택한 펫을 고정하려면 프로필의 `pet_id`를 사용합니다.
+`enable_worker`는 이 서버에 사용자가 요청한 진화 작업의 자동 처리를 켭니다.
+비공개 프로필·토큰·모델·DB는 Git에 포함하지 않습니다.
+
 각자 자기 PC에 서버를 실행하는 테스트는 [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
 설치 후 저장소 루트의 **`Start-HealthMon.cmd`**를 더블클릭합니다.
 Docker가 없으면 설치 안내를 열며, WSL 설정과 설치를 마친 뒤 다시 실행합니다.
