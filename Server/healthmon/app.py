@@ -132,7 +132,15 @@ def create_app(settings=None, database=None):
     @app.get('/pets/{pet}/state')
     def get_state(pet: str, owner=Depends(identity)):
         with db.connect() as c:
-            state, _ = service.refresh(c, service.owned(c, owner, pet, True), now(), settings.chat_available(owner))
+            p = service.owned(c, owner, pet, True)
+            timestamp, available = now(), settings.chat_available(owner)
+            state, _ = service.refresh(c, p, timestamp, available)
+            # Pets created before packaged starters existed also need a visible
+            # stage0 asset. Never replace a published model or reset progression.
+            if state['published_model_stage'] == 0 and not state.get('model_reference'):
+                from . import starters
+                if starters.bind_default(c, p, timestamp, available):
+                    state, _ = service.refresh(c, service.owned(c, owner, pet, True), timestamp, available)
         return state
 
     @app.put('/pets/{pet}/settings')

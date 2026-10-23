@@ -54,6 +54,90 @@ function Invoke-Compose {
     if ($Capture) { return ($output | Out-String) }
 }
 
+function Get-LocalAIConfiguration {
+    $directory = Join-Path $ProjectRoot '.runtime'
+    $path = Join-Path $directory 'local-services.json'
+    if (Test-Path -LiteralPath $path) { return $path }
+    # Reuse an already prepared local installation. Machine paths and secrets
+    # remain ignored; fresh PCs can supply the documented example configuration.
+    $llm = Join-Path $directory 'local-gpu-probe/base-only/private-base.json'
+    $vision = Join-Path $directory 'local-vision-probe/private.json'
+    $priorEvolution = Join-Path $directory 'evolution-stage-matrix.json'
+    $gpu = @((Join-Path $ProjectRoot '.venv/Scripts/python.exe'),
+             (Join-Path $ProjectRoot '../.venv-healthmon-v2/Scripts/python.exe'),
+             (Join-Path $ProjectRoot '../.venv/Scripts/python.exe')) |
+        Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $gpu) { return $null }
+    $cpu = [IO.Path]::GetFullPath($gpu)
+    foreach ($required in @($llm, $vision, $priorEvolution)) {
+        if (-not (Test-Path -LiteralPath $required)) { return $null }
+    }
+    $evolutionPath = Join-Path $directory 'local-evolution.json'
+    if (-not (Test-Path -LiteralPath $evolutionPath)) {
+        $prior = Get-Content -LiteralPath $priorEvolution -Raw | ConvertFrom-Json
+        $evolution = [ordered]@{work_root=(Join-Path $directory 'local-evolution'); model_root=$prior.model_root; vendor_root=$prior.vendor_root}
+        [IO.File]::WriteAllText($evolutionPath, ($evolution | ConvertTo-Json), $Utf8)
+    }
+    $value = [ordered]@{python=$cpu; llm_python=([IO.Path]::GetFullPath($gpu)); llm_config=$llm; vision_config=$vision; evolution_config=$evolutionPath}
+    [IO.File]::WriteAllText($path, ($value | ConvertTo-Json), $Utf8)
+    return $path
+}
+
+function Start-LocalAI {
+    param($Configuration)
+    $path = Get-LocalAIConfiguration
+    if (-not $path) {
+        $environment = $Configuration.services.api.environment
+        if ($environment.AI_MODE -ne 'remote' -or -not $environment.AI_BASE_URL) {
+            throw 'AI is not configured. Prepare .runtime/local-services.json using Server/local_probe/local-services.example.json, or set a shared AI Gateway in .env. See Server/local_probe/README.md. No AI-ready result was reported.'
+        }
+        $probeUrl = ([string]$environment.AI_BASE_URL).Replace('host.docker.internal', '127.0.0.1').TrimEnd('/') + '/health'
+        $null = Invoke-RestMethod -Uri $probeUrl -TimeoutSec 10
+        Write-Host 'Configured remote AI Gateway is reachable.'
+        return
+    }
+    $local = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+    $python = if ([IO.Path]::IsPathRooted($local.python)) { $local.python } else { [IO.Path]::GetFullPath((Join-Path $ProjectRoot $local.python)) }
+    Write-Host 'Checking local dialogue, food analysis and 3D prerequisites...'
+    $savedPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    & $python -B -m Server.local_probe.local_services configure --config '.runtime/local-services.json'
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $savedPreference
+    if ($code -ne 0) { throw 'Local AI prerequisites failed. See the message above; model files and their environments must be installed on this PC.' }
+    $directory = Join-Path $ProjectRoot '.runtime'
+    $statusPath = Join-Path $directory 'local-services-status.json'
+    $running = $false
+    if (Test-Path -LiteralPath $statusPath) {
+        $previous = Get-Content -LiteralPath $statusPath -Raw | ConvertFrom-Json
+        $running = (([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$previous.updated_at) -lt 15) -and
+            $previous.phase -notin @('stopped','failed') -and (Get-Process -Id $previous.pid -ErrorAction SilentlyContinue)
+    }
+    if (-not $running) {
+        $null = Start-Process -FilePath $python -ArgumentList @('-B','-m','Server.local_probe.local_services','run','--config','.runtime/local-services.json') -WorkingDirectory $ProjectRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $directory 'local-services.stdout.log') -RedirectStandardError (Join-Path $directory 'local-services.stderr.log') -PassThru
+    }
+    Write-Host 'Starting dialogue, food analysis, 3D Gateway and automatic generation worker. Model loading can take a few minutes...'
+    $deadline = [DateTime]::UtcNow.AddMinutes(6)
+    while ([DateTime]::UtcNow -lt $deadline) {
+        if (Test-Path -LiteralPath $statusPath) {
+            $status = Get-Content -LiteralPath $statusPath -Raw | ConvertFrom-Json
+            $fresh = ([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$status.updated_at) -lt 15
+            if ($fresh -and $status.phase -eq 'ready') { Write-Host 'All local AI services are ready.'; return }
+            if ($fresh -and $status.phase -eq 'generating_3d') { Write-Host 'Local AI is running; a requested 3D generation currently owns the GPU.'; return }
+            if ($fresh -and $status.phase -eq 'failed') { throw ('Local AI failed: ' + $status.message) }
+        }
+        Start-Sleep -Seconds 2
+    }
+    throw 'Local AI did not become ready. Inspect .runtime/local-services.stderr.log and local-*.stderr.log.'
+}
+
+function Stop-LocalAI {
+    $path = Join-Path $ProjectRoot '.runtime/local-services.json'
+    if (-not (Test-Path -LiteralPath $path)) { return }
+    [IO.File]::WriteAllText((Join-Path $ProjectRoot '.runtime/local-services.stop'), '', $Utf8)
+    Write-Host 'Local AI shutdown requested. An active 3D generation finishes before shutdown.'
+}
+
 function Get-DockerEngine {
     # A stalled WSL engine can also stall docker.exe; bound each probe itself.
     $probe = New-Object Diagnostics.Process
@@ -156,6 +240,7 @@ try {
     if ($Action -eq 'Stop') {
         if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot '.env'))) { Write-Host 'This project has no local server to stop.'; exit 0 }
         Invoke-Compose -Arguments @('stop')
+        Stop-LocalAI
         Write-Host 'Server stopped. Saved pets, records and credentials are kept.'
         exit 0
     }
@@ -163,6 +248,9 @@ try {
     Initialize-LocalEnvironment
     $configuration = Invoke-Compose -Arguments @('config', '--format', 'json') -Capture | ConvertFrom-Json
     if ($configuration.services.api.environment.APP_ENV -eq 'production') { throw 'This launcher is for a local development/test server. Existing production settings were kept.' }
+    Start-LocalAI -Configuration $configuration
+    # Local AI setup supplies the shared server credential and Docker-to-host URL.
+    $configuration = Invoke-Compose -Arguments @('config', '--format', 'json') -Capture | ConvertFrom-Json
     $apiPort = $configuration.services.api.ports | Where-Object { $_.target -eq 8000 } | Select-Object -First 1
     if (-not $apiPort -or -not $apiPort.published) { throw 'The API port is missing from compose.yaml/.env.' }
     $hostAddress = [string]$apiPort.host_ip

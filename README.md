@@ -5,12 +5,15 @@
 
 ## 실행
 
-Windows에서 각자 PC로 테스트할 때는 Docker Desktop을 한 번 설치한 뒤 루트의
-**`Start-HealthMon.cmd`를 더블클릭**합니다. Docker 시작, 서버·DB 빌드와 실행,
+Windows에서는 Docker Desktop과 사용할 AI 환경을 한 번 준비한 뒤 루트의
+**`Start-HealthMon.cmd`를 더블클릭**합니다. 로컬 AI를 설정한 PC에서는 대화 모델,
+음식 분석, 3D Gateway·자동 생성 worker, 서버·DB를 함께 실행하고 준비 상태를 확인합니다.
 테스트 펫 준비가 끝나면 Unity에 넣을 주소·토큰·펫 ID를 브라우저에 표시합니다.
-PC에 Python을 설치할 필요는 없습니다. 끌 때는 **`Stop-HealthMon.cmd`**를 실행합니다.
+공유 AI 서버를 사용하는 PC는 로컬 Python·GPU가 필요 없습니다. 끌 때는 **`Stop-HealthMon.cmd`**를 실행합니다.
 기존 설정·펫·기록은 유지하며 첫 설정의 기본 포트는 `18092`입니다.
-AI 대화·음식 분석·진화 생성은 별도의 AI 서버 설정이 필요합니다.
+AI 모델·Python/CUDA 환경은 코드에 포함되지 않으며 PC별로 준비하거나 공유 AI 서버를 지정합니다.
+준비가 빠지면 실행기가 원인을 표시하고 중단합니다. [AI 최초 설정](Server/local_probe/README.md)을 따릅니다.
+모델 연결이 없던 기존 펫에도 기본 3D 캐릭터를 자동 연결하며 레벨과 기록은 유지합니다.
 
 명령줄로 직접 실행하려면:
 

@@ -96,6 +96,24 @@ def test_starter_download_is_owner_and_pet_scoped(client,db,tmp_path):
     assert client.get(f'/pets/{unbound}/evolutions/{ident}').status_code==404
 
 
+def test_existing_pet_without_model_gets_starter_when_default_becomes_available(client,db,tmp_path):
+    pet=client.post('/pets',json={'name':'기존 캐릭터'}).json()['pet_id']
+    initial=client.get(f'/pets/{pet}/state').json()
+    assert initial['model_reference'] is None
+    path,model=files(tmp_path)
+    with db.connect() as c:registered=starters.register(c,path,set_default=True)
+    recovered=client.get(f'/pets/{pet}/state').json()
+    assert recovered['model_reference']==f"/pets/{pet}/assets/{registered['starter_id']}"
+    assert recovered['asset_status']=='ready'
+    for key in ('level','total_exp','coin','published_model_stage','evolution_target_stage'):
+        assert recovered[key]==initial[key]
+    assert client.get(recovered['model_reference']).content==model
+    assert client.get(f'/pets/{pet}/state').json()['state_version']==recovered['state_version']
+    with db.connect() as c:
+        assert c.execute('SELECT count(*) AS n FROM pet_starter_models WHERE pet_id=%s',(pet,)).fetchone()['n']==1
+        assert c.execute('SELECT count(*) AS n FROM ai_jobs WHERE pet_id=%s',(pet,)).fetchone()['n']==0
+
+
 def test_default_update_does_not_replace_existing_pet_starter_or_copy_blob(client,db,tmp_path):
     first,_=files(tmp_path,'lucan',0)
     with db.connect() as c:a=starters.register(c,first,set_default=True)

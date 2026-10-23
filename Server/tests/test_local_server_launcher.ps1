@@ -40,6 +40,9 @@ Write-ConnectionGuide -Configuration $configuration -BaseUrl 'http://127.0.0.1:1
 $guide = [IO.File]::ReadAllText((Join-Path $ProjectRoot '.runtime/local-server-connection.html'))
 Assert-Launcher ($guide.Contains('http://127.0.0.1:18766/health/ready') -and $guide.Contains('fixture-token') -and $guide.Contains(('e' * 32))) 'The guide omitted the actual API address or matching token and pet.'
 Assert-Launcher ($guide.Contains('&lt;owner&gt;') -and -not $guide.Contains('<h2><owner></h2>')) 'The guide did not escape server owner text.'
+$unconfiguredRejected = $false
+try { Start-LocalAI -Configuration $configuration } catch { $unconfiguredRejected = $_.Exception.Message.Contains('AI is not configured') }
+Assert-Launcher $unconfiguredRejected 'An unconfigured AI stack was incorrectly reported as ready.'
 # Simulate a stalled Docker CLI: the helper must kill only its own probe and return.
 $script:Docker = Join-Path $fixture 'stalled-docker.exe'
 Add-Type -TypeDefinition 'public class StalledDockerProbe { public static void Main() { System.Threading.Thread.Sleep(30000); } }' -OutputAssembly $script:Docker -OutputType ConsoleApplication
