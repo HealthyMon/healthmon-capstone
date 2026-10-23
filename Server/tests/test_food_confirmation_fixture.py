@@ -86,3 +86,36 @@ def test_confirmation_rejects_out_of_range_amount_before_meal_construction(clien
     response = client.post(f'/pets/{pet}/food/confirm', json={**body, 'vegetable_fruit_g': vegetable_fruit_g})
     assert response.status_code == 422
     assert client.get(f'/pets/{pet}/meals').json()['records'] == []
+
+
+@pytest.mark.parametrize('meal_type,grams,completed', [('snack', 100., False), ('dinner', None, False), ('dinner', 100., True)])
+def test_food_confirmation_reaches_quest_engine_and_pays_only_once(client, pet, settings, db, monkeypatch, meal_type, grams, completed):
+    body = prepare_analysis(client, pet, settings, monkeypatch, 'meal-quest-' + meal_type + str(grams))
+    with db.connect() as c:
+        easy = c.execute("SELECT id,template FROM quest_offers WHERE pet_id=%s AND slot='easy'", (pet,)).fetchone()
+        c.execute('UPDATE quest_offers SET template=%s WHERE pet_id=%s AND id=%s',
+                  (Jsonb(dict(easy['template'], candidate='meal1', target=1)), pet, easy['id']))
+    body.update(meal_type=meal_type, grams=grams)
+    if grams is None:
+        body.pop('grams')
+    first = client.post(f'/pets/{pet}/food/confirm', json=body)
+    assert first.status_code == 200, first.text
+    for _ in range(2):
+        duplicate = client.post(f'/pets/{pet}/food/confirm', json=body)
+        assert duplicate.status_code == 200 and duplicate.json()['duplicate']
+        client.get(f'/pets/{pet}/state')
+        offer = next(row for row in client.get(f'/pets/{pet}/quests').json()['offers'] if row['id'] == easy['id'])
+        assert offer['progress'] == (1 if completed else 0)
+        assert (offer['status'] == 'completed') is completed
+    with db.connect() as c:
+        rewards = c.execute('SELECT exp,coin FROM game_ledger WHERE pet_id=%s AND reward_key=%s',
+                            (pet, 'quest:' + easy['id'])).fetchall()
+    assert [(row['exp'], row['coin']) for row in rewards] == ([(30, 10)] if completed else [])
+
+
+def test_quest_response_has_server_periods_and_refresh_keeps_only_initial_three_slots(client, pet, db):
+    for _ in range(3):
+        result = client.get(f'/pets/{pet}/quests').json()
+        assert result['current_day'] == '2026-10-22'
+        assert result['current_week_start'] == '2026-10-19'
+        assert len(result['offers']) == 3

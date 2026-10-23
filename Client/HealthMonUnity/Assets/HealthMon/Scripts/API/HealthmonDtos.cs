@@ -174,6 +174,7 @@ namespace Healthmon.Beta
     [Serializable] public class PendingActivitySuggestion { public string source_id; public int revision; }
     [Serializable] public class QuestList
     {
+        public string current_day, current_week_start;
         public QuestOffer[] offers;
         public QuestTemplate[] candidates;
         public PendingActivitySuggestion[] pending_activity_suggestions;

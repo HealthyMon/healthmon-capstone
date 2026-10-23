@@ -5,6 +5,29 @@ CPU FastAPI와 PostgreSQL pgvector가 운동·식사·대화 사건, v2.2 성장
 
 ## 시작
 
+### Windows에서 더블클릭 실행
+
+각자 자기 PC에 서버를 실행하는 테스트는 [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
+설치 후 저장소 루트의 **`Start-HealthMon.cmd`**를 더블클릭합니다.
+Docker가 없으면 설치 안내를 열며, WSL 설정과 설치를 마친 뒤 다시 실행합니다.
+Docker Desktop이 꺼져 있으면 실행하고 Linux 엔진 준비를 기다립니다.
+호스트 Python 설치 없이 서버·DB 실행, 마이그레이션과 테스트 펫 준비까지 처리합니다.
+첫 실행에는 이미지 다운로드와 빌드 시간이 필요하고 이후에는 캐시를 재사용합니다.
+
+준비가 끝나면 `.runtime/local-server-connection.html`을 브라우저로 열어
+Unity에 넣을 API 주소·계정별 토큰·펫 ID를 표시합니다. 인증 정보가 있는 로컬 파일이므로 공유하지 않습니다.
+새 설정은 `APP_ENV=test`, `API_PORT=18092`, `AI_MODE=disabled`와 PC별 임의 토큰을 사용합니다.
+기존 `.env`가 있으면 그대로 유지하고 실제 Compose 포트를 안내하므로 기존 `8020` 설정도 유지됩니다.
+다른 사람이 실행할 때는 자기 PC에 생성된 설정을 사용하며 다른 PC의 `.env`를 복사하지 않습니다.
+
+`http://127.0.0.1:18092/health/ready`에서 준비 상태를 확인합니다. 기존 설정의 포트가 다르면 해당 포트를 사용합니다.
+`127.0.0.1`은 Unity와 서버를 같은 PC에서 실행할 때의 주소입니다.
+종료는 **`Stop-HealthMon.cmd`**로 하며 DB 볼륨·펫·기록·토큰을 삭제하지 않습니다.
+이 실행기는 기본 공용 서버를 실행합니다. `AI_MODE=disabled`에서는 AI 대화·음식 분석·진화 생성을 하지 않습니다.
+이 기능은 아래의 별도 AI Gateway를 설정해야 합니다.
+
+### 명령줄 실행
+
 Git, Python 3.10 이상, Docker Compose v2를 준비합니다.
 Windows Docker Desktop에서는 Linux 컨테이너를 사용합니다.
 

@@ -173,7 +173,9 @@ def sync_quests(c, pet, valid_events, timestamp, ai_available):
     rest_days = {row['day'] for row in c.execute('SELECT day FROM game_rest_days WHERE pet_id=%s', (pet,)).fetchall()}
     # Existing legacy pets do not accumulate years of invented retroactive slots.
     # Earliest persisted common-server slot anchors subsequent downtime recovery.
-    anchor = c.execute('SELECT min(period_start) AS day FROM quest_offers WHERE pet_id=%s AND slot IS NOT NULL', (pet,)).fetchone()['day']
+    # A weekly slot starts on Monday even if the first server visit is later.
+    # It cannot anchor daily downtime recovery before that first visit.
+    anchor = c.execute("SELECT min(period_start) AS day FROM quest_offers WHERE pet_id=%s AND slot IN ('easy','medium')", (pet,)).fetchone()['day']
     first = min([today] + ([anchor] if anchor is not None else []) + [rules._day(e['occurred_at']) for e in events])
     day = first
     while day <= today:

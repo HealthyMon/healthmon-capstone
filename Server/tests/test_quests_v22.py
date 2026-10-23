@@ -157,6 +157,19 @@ def test_pg_slots_ledger_are_unique_and_basic_quests_not_proposals(pg):
     assert c.execute('SELECT count(*) AS n FROM game_ledger WHERE pet_id=%s', (p['id'],)).fetchone()['n'] == 2
 
 
+def test_pg_repeated_refresh_does_not_backfill_daily_quests_from_weekly_monday(pg):
+    c, p = pg
+    for _ in range(3):
+        q.sync_quests(c, p['id'], [], now(), False)
+    daily = c.execute("SELECT period_start FROM quest_offers WHERE pet_id=%s AND slot IN ('easy','medium')", (p['id'],)).fetchall()
+    assert len(daily) == 2
+    assert {row['period_start'] for row in daily} == {now().date()}
+    q.sync_quests(c, p['id'], [], now(24), False)
+    daily = c.execute("SELECT period_start FROM quest_offers WHERE pet_id=%s AND slot IN ('easy','medium')", (p['id'],)).fetchall()
+    assert len(daily) == 6
+    assert {row['period_start'] for row in daily} == {now(day).date() for day in (22, 23, 24)}
+
+
 def test_pg_late_grace_and_downtime_completion_without_failure_penalty(pg):
     c, p = pg
     q.sync_quests(c, p['id'], [], now(), False)

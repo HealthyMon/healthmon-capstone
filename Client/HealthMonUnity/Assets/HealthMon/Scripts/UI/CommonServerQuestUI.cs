@@ -107,6 +107,10 @@ public sealed class CommonServerQuestUI : MonoBehaviour
         foreach (var offer in list?.offers ?? Array.Empty<QuestOffer>())
         {
             if (offer == null || offer.pet_id != connection.Api.PetId || offer.excluded || !string.IsNullOrEmpty(offer.cancelled_at)) continue;
+            // The server owns KST day/week boundaries. Historical rows remain in
+            // its ledger, but do not appear as today's unfinished quests.
+            if (!offer.is_proposal && !string.IsNullOrEmpty(list.current_day) &&
+                offer.period_start != (offer.slot == "weekly" ? list.current_week_start : list.current_day)) continue;
             var card = Rect("Quest-" + offer.id, content, Vector2.zero, Vector2.one);
             var background = card.gameObject.AddComponent<Image>(); background.color = new Color(.12f, .23f, .35f);
             card.gameObject.AddComponent<LayoutElement>().preferredHeight = 150;

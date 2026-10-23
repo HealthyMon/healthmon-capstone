@@ -5,6 +5,15 @@
 
 ## 실행
 
+Windows에서 각자 PC로 테스트할 때는 Docker Desktop을 한 번 설치한 뒤 루트의
+**`Start-HealthMon.cmd`를 더블클릭**합니다. Docker 시작, 서버·DB 빌드와 실행,
+테스트 펫 준비가 끝나면 Unity에 넣을 주소·토큰·펫 ID를 브라우저에 표시합니다.
+PC에 Python을 설치할 필요는 없습니다. 끌 때는 **`Stop-HealthMon.cmd`**를 실행합니다.
+기존 설정·펫·기록은 유지하며 첫 설정의 기본 포트는 `18092`입니다.
+AI 대화·음식 분석·진화 생성은 별도의 AI 서버 설정이 필요합니다.
+
+명령줄로 직접 실행하려면:
+
 Git, Python 3.10 이상, Docker Compose v2를 준비하고 저장소 루트에서 실행합니다.
 
 ```sh

@@ -239,7 +239,8 @@ def create_app(settings=None, database=None):
                     ELSE 2 END,
                     coalesce(shown_at,created_at) DESC,period_start DESC NULLS LAST,id
                 LIMIT 100""", (pet, day, rules._monday(day))).fetchall()
-        return {'quests': rows, 'offers': rows, 'state_version': state['state_version'], 'reward_balance': state['coin']}
+        return {'quests': rows, 'offers': rows, 'state_version': state['state_version'], 'reward_balance': state['coin'],
+                'current_day': day.isoformat(), 'current_week_start': rules._monday(day).isoformat()}
 
     @app.post('/pets/{pet}/quests/{offer_id}/decision')
     def decision(pet: str, offer_id: str, body: Decision, owner=Depends(identity)):
