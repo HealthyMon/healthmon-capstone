@@ -42,6 +42,7 @@ public class FoodScanPrototype : MonoBehaviour
     public long LastFailureStatus { get; private set; }
     public bool HasFoodFailure { get; private set; }
     public bool IsConfirming => confirming;
+    public string SelectedMealType => selectedMealType;
     public bool IsCheckingExistingRecord => false;
     public string DisplayedAnalysisOrigin => candidateOriginText == null ? null : candidateOriginText.text;
     private HealthmonApiClient Api => dialogue == null ? null : dialogue.Api;
@@ -334,6 +335,7 @@ public class FoodScanPrototype : MonoBehaviour
             if (label != null) label.text = (pair.Key == meal ? "● " : "") + MealLabel(pair.Key);
         }
         RenderSelection();
+        PortraitGameUI.Refresh();
     }
     private static string MealLabel(string meal) { return meal == "breakfast" ? "아침" : meal == "lunch" ? "점심" : meal == "dinner" ? "저녁" : "간식"; }
 #if UNITY_EDITOR
@@ -414,6 +416,7 @@ public class FoodScanPrototype : MonoBehaviour
         origin.pivot = new Vector2(.5f, 1); origin.anchoredPosition = new Vector2(0, -140); origin.sizeDelta = new Vector2(0, 70);
         candidateOriginText.alignment = TextAlignmentOptions.Center;
         SelectMealType(null);
+        PortraitGameUI.Refresh();
     }
     private static void LayoutHeight(GameObject target, float height)
     {

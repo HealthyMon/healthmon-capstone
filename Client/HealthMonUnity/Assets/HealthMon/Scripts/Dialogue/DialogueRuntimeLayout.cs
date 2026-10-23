@@ -107,8 +107,9 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         if (!plan.Valid) return;
         bool userChanged = lastUser != user.text, responseChanged = lastResponse != response.text;
         Place(InputArea, plan.Input); Place(UserBubble, plan.User); Place(ResponseBubble, plan.Response);
-        float sendWidth = (float)Math.Min(170, plan.Input.width * .25f);
-        float controlHeight = (float)Math.Max(1, plan.Input.height - 40);
+        bool portrait = panel.height > panel.width;
+        float sendWidth = (float)Math.Min(portrait ? 230 : 170, plan.Input.width * .25f);
+        float controlHeight = (float)Math.Max(1, plan.Input.height - (portrait ? 32 : 40));
         var sendBounds = new Rect(plan.Input.xMax - 20 - sendWidth, plan.Input.y + 20, sendWidth, controlHeight);
         var inputBounds = new Rect(plan.Input.x + 20, plan.Input.y + 20,
             (float)Math.Max(1, sendBounds.xMin - 20 - (plan.Input.x + 20)), controlHeight);
@@ -165,6 +166,21 @@ public sealed class DialogueLayoutPlan
         float userWidth, float responseWidth, float userPreferredHeight, float responsePreferredHeight)
     {
         var plan = new DialogueLayoutPlan();
+        if (height > width)
+        {
+            float marginPortrait = Math.Min(40, width * .04f), gapPortrait = 28;
+            plan.Input = new Rect(marginPortrait, Math.Max(0, navTop + 40), width - 2 * marginPortrait, 180);
+            float availablePortrait = Math.Min(height * .34f, headerBottom - plan.Input.yMax - 3 * gapPortrait);
+            if (width <= 0 || availablePortrait < 100) return plan;
+            float userHeightPortrait = Math.Min(Math.Max(112, userPreferredHeight), availablePortrait * .35f);
+            float responseHeightPortrait = Math.Min(Math.Max(155, responsePreferredHeight), availablePortrait - userHeightPortrait - gapPortrait);
+            userWidth = Math.Min(width * .78f, width - 2 * marginPortrait);
+            responseWidth = width - 2 * marginPortrait;
+            plan.User = new Rect(width - marginPortrait - userWidth, plan.Input.yMax + gapPortrait, userWidth, userHeightPortrait);
+            plan.Response = new Rect(marginPortrait, plan.User.yMax + gapPortrait, responseWidth, responseHeightPortrait);
+            plan.Valid = plan.Input.width > 0 && responseHeightPortrait > 0 && plan.Response.yMax < headerBottom;
+            return plan;
+        }
         float gap = 16, margin = (float)Math.Min(30, width * .04f);
         float inputHeight = (float)Math.Min(130, Math.Max(48, height * .15f));
         plan.Input = new Rect(margin, (float)Math.Max(0, navTop + gap), width - 2 * margin, inputHeight);

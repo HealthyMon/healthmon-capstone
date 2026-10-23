@@ -1,0 +1,87 @@
+{
+  "repository": "https://github.com/HealthyMon/healthmon-capstone",
+  "remote_files_verified": [
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Scenes/MainARScene.unity",
+      "git_blob": "065c6a50771695e11289eb8b5e130cab53d02726"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Scripts/UI/UIManager.cs",
+      "git_blob": "d2f657d627bc20692b7838b4d0302d6e0ca1edfc"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Scripts/UI/PetExperienceUI.cs",
+      "git_blob": "c3b39c925970bf9e70fef5b2aa0d5473c59cf3a5"
+    }
+  ],
+  "reviewed_local_sources": [
+    "UIManager.cs",
+    "PetExperienceUI.cs",
+    "FoodScanPrototype.cs",
+    "CommonServerQuestUI.cs",
+    "DialogueRuntimeLayout.cs",
+    "MobileAdminMenu.cs",
+    "WearablePageController.cs"
+  ],
+  "canvas_reference": [
+    1080,
+    2400
+  ],
+  "canvas_match_width_or_height": 0,
+  "landscape_canvas": [
+    1920,
+    1080
+  ],
+  "existing_navigation": [
+    "HomeButton",
+    "FoodButton",
+    "PetARButton",
+    "DialogueButton",
+    "QuestButton",
+    "CollectionButton",
+    "WearableButton"
+  ],
+  "home_layout_preserved": [
+    "TopInfoPanel",
+    "LeftStatusPanel",
+    "central 3D pet slot",
+    "StatusButton",
+    "HomeEvolutionButton",
+    "SpeechBubble",
+    "BottomNav",
+    "UnifiedSettingsButton"
+  ],
+  "additional_screen_designs": [
+    "start",
+    "select"
+  ],
+  "additional_screen_note": "Implemented using the existing authenticated ListPets, selection and named pet creation paths.",
+  "model_preview_note": "Actual saved rigged GLB in native verification. No 2D pet cutout is included in the Unity runtime.",
+  "ppt_layout_used": false,
+  "ppt_character_art_used": false,
+  "unity_project_modified": true,
+  "all_display_values_are_examples": false,
+  "design_revision": "Portrait phone game v3",
+  "target_platform": "Unity Android / iOS game",
+  "project_autorotation": "Portrait locked",
+  "layout_alternatives": [
+    "1080x2400 portrait",
+    "1080x1920 portrait"
+  ],
+  "requested_orientation": "portrait",
+  "design_reference": [
+    1080,
+    2400
+  ],
+  "fallback_reference": [
+    1080,
+    1920
+  ],
+  "navigation_layout": "Existing seven menus arranged in two rows, no new functions",
+  "project_orientation_setting_changed": true,
+  "base_branch": "main",
+  "base_commit": "8429a1b94ef1dc4bfae19b5314dbe8e77324324d",
+  "branch": "feature/ui",
+  "integrated": true,
+  "native_capture_values": "Offline scene values; saved GLB is a visual fixture. Live runtime uses authoritative server state."
+}

@@ -1,0 +1,24 @@
+{
+  "mode": "built-in image_gen",
+  "background": "Use case: stylized-concept. Asset type: background sprite for HealthMon, a Unity smartphone pet-raising health game. Generate a single wide 16:9 game background, no UI, no creatures, no typography. Cozy adventurous forest sanctuary clearing, painterly 3D mobile game environment with carefully simplified chunky forms and charming polish. Eye-level camera with a spacious flat circular pale limestone training terrace in the central lower area, green grass around the sides, rounded stylized trees, distant blue mountains and a small glimpse of turquoise waterfall, warm late-morning sun through leaves, a few warm gold dust motes. Center 50 percent deliberately clear to showcase the user's existing dark gray and orange wolf character. Background scenery does not compete with HUD. Harmonious rich blue-green foliage, sky blue, sunlit cream stone; vibrant yet balanced, premium game environment, clear materials, no photorealistic modern architecture, no giant ornamental gates, no busy objects in central character area. Full bleed landscape image, no frame, no logo, no words, no gradients pretending to be buttons.",
+  "background_file": "assets/home-stage.png",
+  "ui_components": "Authored editable SVG shapes, not generated image crops",
+  "pet_preview": {
+    "source": "Previous v1 AI-assisted cutout derived from the saved stage-2 wolf render",
+    "use": "Historical design mockup only; excluded from applied Unity project.",
+    "original_final_prompt": "Use case: background-extraction. The reference is an actual rendered saved 3D HealthMon wolf model from the current project. Produce a PNG cutout on a genuinely transparent background, keeping this exact charcoal, ivory and amber-gold canine creature, its exact proportions, face, mane, markings, paws and pose. Remove ONLY the flat gray studio background. Preserve the original full body without cropping any ears, tail or feet; no new design, no repaint, no accessories, no stylistic upgrade. This image is just a UI mockup insert of the existing project model, not a replacement model. No ground plane, no gray rectangle, no text, no watermark."
+  },
+  "portrait_background": {
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: portrait 9:20 background sprite for a Unity smartphone pet-raising game, HealthMon. Input image is the approved landscape game background, use it as a strict style, palette, material and environment reference. Make a companion PORTRAIT background composed specifically for a phone held upright, target aspect ratio 9:20, 1080x2400 composition. Same inviting hand-painted mobile game forest sanctuary, rounded lush trees along the upper side edges, blue sky and distant mountains in the upper third, small waterfall in the middle distance, warm morning light. Most of the lower half is a clear flat pale limestone clearing, extending across the center for a separately rendered saved wolf pet. A gentle low horizon below mid-height and generous empty stone floor, no trees or tall rocks in the central lower 60 percent. Landscape should feel spacious behind the pet on a vertical screen, with subdued contrast behind top HUD and bottom menu. A restrained and coherent real game art direction, clean stylized materials, rich but controlled green, blue and warm cream, no excessively intricate AI-like details. Do not add UI, panels, buttons, phone frames, text, logos, animals, characters, sparkles, runes, particle effects or gates. Full bleed portrait image.",
+    "reference_image": "../healthmon-mobile-game-ui-v2/assets/home-stage.png",
+    "output": "assets/home-stage-portrait.png",
+    "output_dimensions": [
+      841,
+      1870
+    ],
+    "ui_assets": "Authored SVG with PNG exports; not generated screenshots",
+    "project_modified": true,
+    "runtime_output": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Backgrounds/home-stage-portrait.png"
+  }
+}

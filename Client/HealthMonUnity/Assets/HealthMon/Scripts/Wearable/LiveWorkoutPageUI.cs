@@ -32,6 +32,27 @@ public class LiveWorkoutPageUI : MonoBehaviour
     [SerializeField]
     private TMP_Text distanceText;
 
+    private void Awake() { ShowWaitingState(); }
+    public void ShowWaitingState()
+    {
+        string[] values = { "운동 대기", "운동 시간: --:--", "현재 심박수: -- bpm", "평균 심박수: -- bpm", "최대 심박수: -- bpm", "소모 칼로리: -- kcal", "걸음 수: --", "거리: -- km" };
+        var labels = new[] { exerciseText, durationText, heartRateText, averageHeartRateText, maxHeartRateText, caloriesText, stepsText, distanceText };
+        for (int i = 0; i < labels.Length; i++) if (labels[i] != null) labels[i].text = values[i];
+    }
+    public void ApplyPortraitLayout(PortraitGameUI theme, Rect area)
+    {
+        foreach (var image in GetComponentsInChildren<UnityEngine.UI.Image>(true)) if (image.transform != transform) image.enabled = false;
+        var labels = new[] { exerciseText, durationText, heartRateText, averageHeartRateText, maxHeartRateText, caloriesText, stepsText, distanceText };
+        float row = Mathf.Min(145, (area.height - 190) / 8);
+        for (int i = 0; i < labels.Length; i++)
+        {
+            if (labels[i] == null) continue;
+            theme.Place(labels[i].rectTransform, new Rect(area.x + 45, area.yMax - 150 - (i + 1) * row, area.width - 90, row - 8));
+            labels[i].color = PortraitGameUI.Ink; labels[i].alignment = TextAlignmentOptions.MidlineLeft;
+            labels[i].fontSize = labels[i].fontSizeMax = i == 1 ? 44 : 36; labels[i].fontSizeMin = 30; labels[i].enableAutoSizing = true;
+        }
+    }
+
 
     public void UpdateUI(LiveWorkoutData data)
     {

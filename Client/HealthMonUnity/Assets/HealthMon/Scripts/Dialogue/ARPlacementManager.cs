@@ -128,6 +128,7 @@ public class ARPlacementManager : MonoBehaviour
         if (camera == null || !camera.isActiveAndEnabled) return;
         var pose = new Pose(camera.transform.position + camera.transform.forward * 1.2f - camera.transform.up * .15f,
             Quaternion.LookRotation(camera.transform.forward, camera.transform.up));
+        if (PortraitGameUI.TryPresentationPose(camera, out var portraitPose)) pose = portraitPose;
         if (spawnedHealthMon == null) PlaceAt(pose);
         else
         {

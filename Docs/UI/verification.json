@@ -1,0 +1,45 @@
+{
+  "unity_version": "6000.4.6f1",
+  "branch": "feature/ui",
+  "compilation": "passed",
+  "geometry_and_callback_assertions": 47,
+  "native_captures": 20,
+  "logical_resolutions": [
+    [
+      1080,
+      2400
+    ],
+    [
+      1080,
+      1920
+    ]
+  ],
+  "capture_resolutions": [
+    [
+      540,
+      1200
+    ],
+    [
+      540,
+      960
+    ]
+  ],
+  "saved_rigged_glb_visual_fixture": true,
+  "model_fixture_committed": false,
+  "checks": [
+    "existing persistent navigation, record and send events retained",
+    "meal tab callbacks select all four meal types",
+    "four admin tabs preserve the correct primary action across repeated layout",
+    "admin action mapping survives theme re-enable",
+    "legacy menu Update preserves the portrait settings launcher position",
+    "start menu callback enters the game"
+  ],
+  "test_mode": "offline Unity editor rendering and callback checks",
+  "live_backend_e2e": false,
+  "phone_watch_hardware_tested": false,
+  "backend_writes_performed": false,
+  "pass_markers": [
+    "HEALTHMON_PORTRAIT_GEOMETRY_PASS assertions=47",
+    "HEALTHMON_PORTRAIT_NATIVE_PASS screens=20 saved_rigged_model=True"
+  ]
+}

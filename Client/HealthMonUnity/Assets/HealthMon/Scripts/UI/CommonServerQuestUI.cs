@@ -134,6 +134,7 @@ public sealed class CommonServerQuestUI : MonoBehaviour
             row.reject.onClick.AddListener(() => Decide(row, false));
             rows.Add(row);
         }
+        PortraitGameUI.Refresh();
     }
     private void Decide(Row row, bool accept)
     {

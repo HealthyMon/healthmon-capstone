@@ -1,0 +1,1456 @@
+{
+  "components": [
+    {
+      "name": "navigation-panel-portrait",
+      "svg": "Source/components/navigation-panel-portrait.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/navigation-panel-portrait.png",
+      "width": 1080,
+      "height": 360,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "status-strip-portrait",
+      "svg": "Source/components/status-strip-portrait.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/status-strip-portrait.png",
+      "width": 900,
+      "height": 180,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-primary",
+      "svg": "Source/components/button-primary.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-primary.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-primary-pressed",
+      "svg": "Source/components/button-primary-pressed.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-primary-pressed.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-primary-disabled",
+      "svg": "Source/components/button-primary-disabled.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-primary-disabled.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-secondary",
+      "svg": "Source/components/button-secondary.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-secondary.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-secondary-pressed",
+      "svg": "Source/components/button-secondary-pressed.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-secondary-pressed.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-secondary-disabled",
+      "svg": "Source/components/button-secondary-disabled.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-secondary-disabled.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-danger",
+      "svg": "Source/components/button-danger.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-danger.png",
+      "width": 512,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-square",
+      "svg": "Source/components/button-square.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-square.png",
+      "width": 144,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "button-square-pressed",
+      "svg": "Source/components/button-square-pressed.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/button-square-pressed.png",
+      "width": 144,
+      "height": 144,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "card-default",
+      "svg": "Source/components/card-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/card-default.png",
+      "width": 640,
+      "height": 384,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "card-soft",
+      "svg": "Source/components/card-soft.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/card-soft.png",
+      "width": 640,
+      "height": 384,
+      "unity_image_type": "Sliced",
+      "border": [
+        44,
+        44,
+        44,
+        44
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "card-dark",
+      "svg": "Source/components/card-dark.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/card-dark.png",
+      "width": 640,
+      "height": 384,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "header-panel",
+      "svg": "Source/components/header-panel.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/header-panel.png",
+      "width": 1080,
+      "height": 180,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "navigation-panel",
+      "svg": "Source/components/navigation-panel.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/navigation-panel.png",
+      "width": 1080,
+      "height": 200,
+      "unity_image_type": "Sliced",
+      "border": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "navigation-item-default",
+      "svg": "Source/components/navigation-item-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/navigation-item-default.png",
+      "width": 220,
+      "height": 172,
+      "unity_image_type": "Sliced",
+      "border": [
+        42,
+        42,
+        42,
+        42
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "navigation-item-selected",
+      "svg": "Source/components/navigation-item-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/navigation-item-selected.png",
+      "width": 220,
+      "height": 172,
+      "unity_image_type": "Sliced",
+      "border": [
+        42,
+        42,
+        42,
+        42
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "navigation-item-pressed",
+      "svg": "Source/components/navigation-item-pressed.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/navigation-item-pressed.png",
+      "width": 220,
+      "height": 172,
+      "unity_image_type": "Sliced",
+      "border": [
+        42,
+        42,
+        42,
+        42
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "input-default",
+      "svg": "Source/components/input-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/input-default.png",
+      "width": 640,
+      "height": 132,
+      "unity_image_type": "Sliced",
+      "border": [
+        38,
+        38,
+        38,
+        38
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "input-focused",
+      "svg": "Source/components/input-focused.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/input-focused.png",
+      "width": 640,
+      "height": 132,
+      "unity_image_type": "Sliced",
+      "border": [
+        38,
+        38,
+        38,
+        38
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "badge-mint",
+      "svg": "Source/components/badge-mint.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/badge-mint.png",
+      "width": 280,
+      "height": 88,
+      "unity_image_type": "Sliced",
+      "border": [
+        43,
+        43,
+        43,
+        43
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "badge-gold",
+      "svg": "Source/components/badge-gold.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/badge-gold.png",
+      "width": 280,
+      "height": 88,
+      "unity_image_type": "Sliced",
+      "border": [
+        43,
+        43,
+        43,
+        43
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "progress-track",
+      "svg": "Source/components/progress-track.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/progress-track.png",
+      "width": 640,
+      "height": 40,
+      "unity_image_type": "Sliced",
+      "border": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "progress-fill",
+      "svg": "Source/components/progress-fill.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/progress-fill.png",
+      "width": 640,
+      "height": 40,
+      "unity_image_type": "Sliced",
+      "border": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "progress-fill-gold",
+      "svg": "Source/components/progress-fill-gold.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/progress-fill-gold.png",
+      "width": 640,
+      "height": 40,
+      "unity_image_type": "Sliced",
+      "border": [
+        19,
+        19,
+        19,
+        19
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "checkbox-off",
+      "svg": "Source/components/checkbox-off.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/checkbox-off.png",
+      "width": 88,
+      "height": 88,
+      "unity_image_type": "Sliced",
+      "border": [
+        33,
+        33,
+        33,
+        33
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "checkbox-on",
+      "svg": "Source/components/checkbox-on.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/checkbox-on.png",
+      "width": 88,
+      "height": 88,
+      "unity_image_type": "Sliced",
+      "border": [
+        33,
+        33,
+        33,
+        33
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "tab-default",
+      "svg": "Source/components/tab-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/tab-default.png",
+      "width": 400,
+      "height": 132,
+      "unity_image_type": "Sliced",
+      "border": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "tab-selected",
+      "svg": "Source/components/tab-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/tab-selected.png",
+      "width": 400,
+      "height": 132,
+      "unity_image_type": "Sliced",
+      "border": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "portrait-frame",
+      "svg": "Source/components/portrait-frame.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/portrait-frame.png",
+      "width": 300,
+      "height": 300,
+      "unity_image_type": "Sliced",
+      "border": [
+        69,
+        69,
+        69,
+        69
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "quest-icon-slot",
+      "svg": "Source/components/quest-icon-slot.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/quest-icon-slot.png",
+      "width": 180,
+      "height": 180,
+      "unity_image_type": "Sliced",
+      "border": [
+        49,
+        49,
+        49,
+        49
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "reward-panel",
+      "svg": "Source/components/reward-panel.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/reward-panel.png",
+      "width": 800,
+      "height": 700,
+      "unity_image_type": "Sliced",
+      "border": [
+        62,
+        62,
+        62,
+        62
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "speech-bubble",
+      "svg": "Source/components/speech-bubble.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Components/speech-bubble.png",
+      "width": 800,
+      "height": 240,
+      "unity_image_type": "Sliced",
+      "border": [
+        170,
+        42,
+        42,
+        65
+      ],
+      "pixels_per_unit": 100,
+      "alpha": true,
+      "text_baked": false
+    }
+  ],
+  "icons": [
+    {
+      "name": "home",
+      "variant": "default",
+      "svg": "Source/icons/home-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/home-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "home",
+      "variant": "selected",
+      "svg": "Source/icons/home-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/home-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "home",
+      "variant": "white",
+      "svg": "Source/icons/home-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/home-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "food",
+      "variant": "default",
+      "svg": "Source/icons/food-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/food-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "food",
+      "variant": "selected",
+      "svg": "Source/icons/food-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/food-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "food",
+      "variant": "white",
+      "svg": "Source/icons/food-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/food-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ar",
+      "variant": "default",
+      "svg": "Source/icons/ar-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ar-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ar",
+      "variant": "selected",
+      "svg": "Source/icons/ar-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ar-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ar",
+      "variant": "white",
+      "svg": "Source/icons/ar-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ar-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "chat",
+      "variant": "default",
+      "svg": "Source/icons/chat-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/chat-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "chat",
+      "variant": "selected",
+      "svg": "Source/icons/chat-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/chat-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "chat",
+      "variant": "white",
+      "svg": "Source/icons/chat-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/chat-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "quest",
+      "variant": "default",
+      "svg": "Source/icons/quest-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/quest-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "quest",
+      "variant": "selected",
+      "svg": "Source/icons/quest-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/quest-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "quest",
+      "variant": "white",
+      "svg": "Source/icons/quest-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/quest-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "book",
+      "variant": "default",
+      "svg": "Source/icons/book-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/book-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "book",
+      "variant": "selected",
+      "svg": "Source/icons/book-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/book-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "book",
+      "variant": "white",
+      "svg": "Source/icons/book-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/book-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "watch",
+      "variant": "default",
+      "svg": "Source/icons/watch-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/watch-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "watch",
+      "variant": "selected",
+      "svg": "Source/icons/watch-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/watch-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "watch",
+      "variant": "white",
+      "svg": "Source/icons/watch-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/watch-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "back",
+      "variant": "default",
+      "svg": "Source/icons/back-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/back-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "back",
+      "variant": "selected",
+      "svg": "Source/icons/back-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/back-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "back",
+      "variant": "white",
+      "svg": "Source/icons/back-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/back-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "close",
+      "variant": "default",
+      "svg": "Source/icons/close-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/close-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "close",
+      "variant": "selected",
+      "svg": "Source/icons/close-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/close-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "close",
+      "variant": "white",
+      "svg": "Source/icons/close-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/close-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gear",
+      "variant": "default",
+      "svg": "Source/icons/gear-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gear-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gear",
+      "variant": "selected",
+      "svg": "Source/icons/gear-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gear-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gear",
+      "variant": "white",
+      "svg": "Source/icons/gear-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gear-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "check",
+      "variant": "default",
+      "svg": "Source/icons/check-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/check-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "check",
+      "variant": "selected",
+      "svg": "Source/icons/check-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/check-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "check",
+      "variant": "white",
+      "svg": "Source/icons/check-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/check-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "heart",
+      "variant": "default",
+      "svg": "Source/icons/heart-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/heart-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "heart",
+      "variant": "selected",
+      "svg": "Source/icons/heart-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/heart-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "heart",
+      "variant": "white",
+      "svg": "Source/icons/heart-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/heart-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "camera",
+      "variant": "default",
+      "svg": "Source/icons/camera-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/camera-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "camera",
+      "variant": "selected",
+      "svg": "Source/icons/camera-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/camera-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "camera",
+      "variant": "white",
+      "svg": "Source/icons/camera-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/camera-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "coin",
+      "variant": "default",
+      "svg": "Source/icons/coin-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/coin-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "coin",
+      "variant": "selected",
+      "svg": "Source/icons/coin-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/coin-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "coin",
+      "variant": "white",
+      "svg": "Source/icons/coin-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/coin-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "leaf",
+      "variant": "default",
+      "svg": "Source/icons/leaf-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/leaf-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "leaf",
+      "variant": "selected",
+      "svg": "Source/icons/leaf-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/leaf-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "leaf",
+      "variant": "white",
+      "svg": "Source/icons/leaf-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/leaf-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "bolt",
+      "variant": "default",
+      "svg": "Source/icons/bolt-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/bolt-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "bolt",
+      "variant": "selected",
+      "svg": "Source/icons/bolt-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/bolt-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "bolt",
+      "variant": "white",
+      "svg": "Source/icons/bolt-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/bolt-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gift",
+      "variant": "default",
+      "svg": "Source/icons/gift-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gift-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gift",
+      "variant": "selected",
+      "svg": "Source/icons/gift-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gift-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "gift",
+      "variant": "white",
+      "svg": "Source/icons/gift-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/gift-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "plus",
+      "variant": "default",
+      "svg": "Source/icons/plus-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/plus-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "plus",
+      "variant": "selected",
+      "svg": "Source/icons/plus-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/plus-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "plus",
+      "variant": "white",
+      "svg": "Source/icons/plus-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/plus-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "arrow",
+      "variant": "default",
+      "svg": "Source/icons/arrow-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/arrow-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "arrow",
+      "variant": "selected",
+      "svg": "Source/icons/arrow-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/arrow-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "arrow",
+      "variant": "white",
+      "svg": "Source/icons/arrow-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/arrow-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "refresh",
+      "variant": "default",
+      "svg": "Source/icons/refresh-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/refresh-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "refresh",
+      "variant": "selected",
+      "svg": "Source/icons/refresh-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/refresh-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "refresh",
+      "variant": "white",
+      "svg": "Source/icons/refresh-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/refresh-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "walk",
+      "variant": "default",
+      "svg": "Source/icons/walk-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/walk-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "walk",
+      "variant": "selected",
+      "svg": "Source/icons/walk-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/walk-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "walk",
+      "variant": "white",
+      "svg": "Source/icons/walk-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/walk-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ring",
+      "variant": "default",
+      "svg": "Source/icons/ring-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ring-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ring",
+      "variant": "selected",
+      "svg": "Source/icons/ring-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ring-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "ring",
+      "variant": "white",
+      "svg": "Source/icons/ring-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/ring-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "link",
+      "variant": "default",
+      "svg": "Source/icons/link-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/link-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "link",
+      "variant": "selected",
+      "svg": "Source/icons/link-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/link-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "link",
+      "variant": "white",
+      "svg": "Source/icons/link-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/link-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "shield",
+      "variant": "default",
+      "svg": "Source/icons/shield-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/shield-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "shield",
+      "variant": "selected",
+      "svg": "Source/icons/shield-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/shield-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "shield",
+      "variant": "white",
+      "svg": "Source/icons/shield-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/shield-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "cloud",
+      "variant": "default",
+      "svg": "Source/icons/cloud-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/cloud-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "cloud",
+      "variant": "selected",
+      "svg": "Source/icons/cloud-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/cloud-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "cloud",
+      "variant": "white",
+      "svg": "Source/icons/cloud-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/cloud-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "clock",
+      "variant": "default",
+      "svg": "Source/icons/clock-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/clock-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "clock",
+      "variant": "selected",
+      "svg": "Source/icons/clock-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/clock-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "clock",
+      "variant": "white",
+      "svg": "Source/icons/clock-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/clock-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "star",
+      "variant": "default",
+      "svg": "Source/icons/star-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/star-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "star",
+      "variant": "selected",
+      "svg": "Source/icons/star-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/star-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "star",
+      "variant": "white",
+      "svg": "Source/icons/star-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/star-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "trophy",
+      "variant": "default",
+      "svg": "Source/icons/trophy-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/trophy-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "trophy",
+      "variant": "selected",
+      "svg": "Source/icons/trophy-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/trophy-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "trophy",
+      "variant": "white",
+      "svg": "Source/icons/trophy-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/trophy-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "lock",
+      "variant": "default",
+      "svg": "Source/icons/lock-default.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/lock-default.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "lock",
+      "variant": "selected",
+      "svg": "Source/icons/lock-selected.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/lock-selected.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    },
+    {
+      "name": "lock",
+      "variant": "white",
+      "svg": "Source/icons/lock-white.svg",
+      "png": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/Icons/lock-white.png",
+      "width": 192,
+      "height": 192,
+      "alpha": true,
+      "text_baked": false
+    }
+  ],
+  "integrated_branch": "feature/ui",
+  "runtime_root": "../../Client/HealthMonUnity/Assets/HealthMon/Resources/HealthMon/PortraitUI/"
+}

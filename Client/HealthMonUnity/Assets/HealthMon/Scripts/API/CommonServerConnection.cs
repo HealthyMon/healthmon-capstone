@@ -167,14 +167,28 @@ namespace Healthmon.Common
                         System.Text.Encoding.UTF8.GetBytes(ServerInstanceId + "\n" + OwnerId))).Replace("-", "");
             }
         }
-        private void CreatePet()
+        private void CreatePet(string name = "헬스몬")
         {
             if (Api.IsBusy || string.IsNullOrEmpty(OwnerId)) return;
             connecting = true;
             IsConnected = false; LatestState = null;
             Status = "Creating a new pet; previous pets are retained…";
             foreach (var state in FindObjectsByType<PetStateManager>(FindObjectsInactive.Include)) state.ClearServerState();
-            Api.CreatePet(new PetSettings { name = "헬스몬", profanity = "none" }, result => SelectPet(result.pet_id), Failed);
+            Api.CreatePet(new PetSettings { name = name, profanity = "none" }, result => SelectPet(result.pet_id), Failed);
+        }
+        private bool CanChangePetFromMenu => Api != null && !string.IsNullOrEmpty(OwnerId) && !connecting && !Api.IsBusy && !Api.HasPendingChat &&
+            string.IsNullOrEmpty(Healthmon.Evolution.EvolutionClient.Instance?.ActiveRequestId);
+        public bool TryChooseOwnedPet(string petId)
+        {
+            if (!CanChangePetFromMenu || string.IsNullOrWhiteSpace(petId)) return false;
+            // Reuse the existing authenticated connection/generation reset, including phone sync.
+            Connect(BaseUrl, runtimeToken, petId); return true;
+        }
+        public bool TryCreateNamedPet(string name)
+        {
+            name = name?.Trim();
+            if (!CanChangePetFromMenu || string.IsNullOrEmpty(name) || name.Length > 24) return false;
+            CreatePet(name); return true;
         }
         public void CreateFreshTestPet()
         {

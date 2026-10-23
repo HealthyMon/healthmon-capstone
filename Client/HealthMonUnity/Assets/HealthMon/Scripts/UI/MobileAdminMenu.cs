@@ -174,17 +174,22 @@ public sealed class MobileAdminMenu : MonoBehaviour
         pageIndex = index;
         for (int i = 0; i < pages.Count; i++) { pages[i].SetActive(i == index); tabs[i].GetComponent<Image>().color = i == index ? Accent : Card; }
         content.anchoredPosition = Vector2.zero;
+        PortraitGameUI.Refresh();
     }
     private void Update()
     {
         if (panel == null || launcher == null || safeRoot == null) return;
         bool open = panel.activeInHierarchy;
-        launcher.gameObject.SetActive(!open);
-        Rect safe = Screen.safeArea;
-        safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
-        safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
-        float scale = launcher.GetComponentInParent<Canvas>().scaleFactor;
-        launcher.anchoredPosition = new Vector2(-(Screen.width - safe.xMax) / scale - 24, -(Screen.height - safe.yMax) / scale - 24);
+        var portrait = launcher.GetComponentInParent<PortraitGameUI>();
+        launcher.gameObject.SetActive(!open && (portrait == null || portrait.SettingsLauncherVisible));
+        if (portrait == null)
+        {
+            Rect safe = Screen.safeArea;
+            safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
+            safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
+            float scale = launcher.GetComponentInParent<Canvas>().scaleFactor;
+            launcher.anchoredPosition = new Vector2(-(Screen.width - safe.xMax) / scale - 24, -(Screen.height - safe.yMax) / scale - 24);
+        }
         if (!open) { wasOpen = false; return; }
         panel.transform.SetAsLastSibling();
         var connection = Connection;
