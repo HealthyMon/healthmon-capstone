@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject rewardPanel;
     [SerializeField] private GameObject customizationPanel;
     [SerializeField] private GameObject collectionPanel;
+    [SerializeField] private GameObject wearablePanel;
 
     // 관리자 패널 추가
     [Header("Admin Panel")]
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
         rewardPanel.SetActive(false);
         customizationPanel.SetActive(false);
         collectionPanel.SetActive(false);
+        wearablePanel.SetActive(false);
 
         if (adminPanel != null)
             adminPanel.SetActive(false);
@@ -83,6 +85,14 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         collectionPanel.SetActive(true);
     }
+
+    
+    public void ShowWearable()
+    {
+        HideAllPanels();
+        wearablePanel.SetActive(true);
+    }
+
 
     // 관리자 모드 열기
     public void ShowAdmin()
