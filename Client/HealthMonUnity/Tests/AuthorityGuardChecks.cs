@@ -54,6 +54,18 @@ public static class AuthorityGuardChecks
             if (!typeof(FoodScanPrototype).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).IsNotSerialized)
                 throw new Exception("Synthetic food fixture state permits hot-reload serialization.");
         Console.WriteLine("HEALTHMON_FOOD_FIXTURE_GUARDS_PASS editor_entrypoint_excluded=1 runtime_flags=2");
+        typeof(Healthmon.Beta.HealthmonApiClient).GetProperty("PetId").SetValue(client, "pending-food-test");
+        Healthmon.Beta.ApiFailure foodError = null;
+        client.AnalyzeFood(new byte[0], _ => { throw new Exception("Invalid image accepted."); }, error => foodError = error);
+        if (foodError == null || !foodError.Message.Contains("Use an image"))
+            throw new Exception("Failed chat blocked food validation.");
+        foodError = null;
+        client.ConfirmFood("analysis-for-new-meal", 0, -1, _ => { throw new Exception("Invalid quantity accepted."); }, error => foodError = error);
+        if (foodError == null || !foodError.Message.Contains("Invalid explicitly confirmed"))
+            throw new Exception("Failed chat blocked food confirmation.");
+        if (!client.HasPendingChat || client.PendingRequestId != real.request_id || real.state_version != 17 || real.text != "retained test message")
+            throw new Exception("Independent food operation changed pending chat retry identity.");
+        Console.WriteLine("HEALTHMON_PENDING_CHAT_FOOD_ISOLATION_PASS operations=2 retry_preserved=1");
         return 0;
     }
 }

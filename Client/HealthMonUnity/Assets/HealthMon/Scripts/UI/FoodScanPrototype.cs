@@ -54,10 +54,50 @@ public class FoodScanPrototype : MonoBehaviour
         }
     }
 
+    private void OnEnable() { BindRuntimeCallbacks(); }
+
+    private void BindRuntimeCallbacks()
+    {
+        if (cameraCapture != null)
+        {
+            cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureCompleted += HandleCaptureCompleted;
+            cameraCapture.OnCaptureFailed -= HandleCaptureFailed; cameraCapture.OnCaptureFailed += HandleCaptureFailed;
+        }
+        if (candidateView != null)
+            foreach (var button in candidateView.GetComponentsInChildren<Button>(true))
+                for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
+                    if (button.onClick.GetPersistentTarget(i) == this)
+                    {
+                        string method = button.onClick.GetPersistentMethodName(i);
+                        int index = method == nameof(SelectChickenSalad) ? 0 : method == nameof(SelectChickenRice) ? 1 : method == nameof(SelectCaesarSalad) ? 2 : -1;
+                        if (index >= 0) candidateButtons[index] = button;
+                    }
+        if (resultView != null)
+            foreach (var button in resultView.GetComponentsInChildren<Button>(true))
+                foreach (string meal in new[] { "breakfast", "lunch", "dinner", "snack" })
+                    if (button.name == "Meal_" + meal)
+                    {
+                        string selectedMeal = meal; mealButtons[meal] = button;
+                        button.onClick.RemoveAllListeners(); button.onClick.AddListener(() => SelectMealType(selectedMeal));
+                    }
+        if (estimateButton != null)
+        { estimateButton.onClick.RemoveAllListeners(); estimateButton.onClick.AddListener(UseEstimatedQuantity); }
+        foreach (var field in new[] { gramsInput, vegetablesInput })
+            if (field != null) { field.onValueChanged.RemoveAllListeners(); field.onValueChanged.AddListener(_ => RenderSelection()); }
+        if (quantityConfirmed != null)
+        { quantityConfirmed.onValueChanged.RemoveAllListeners(); quantityConfirmed.onValueChanged.AddListener(_ => RenderSelection()); }
+#if UNITY_EDITOR
+        if (analyzeButton != null)
+            foreach (var button in analyzeButton.transform.parent.GetComponentsInChildren<Button>(true))
+                if (button.name == "ChooseDesktopFoodPhoto")
+                { button.onClick.RemoveAllListeners(); button.onClick.AddListener(ChooseDesktopPhoto); }
+#endif
+    }
+
     private void Start()
     {
         dialogue = FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include);
-        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted += HandleCaptureCompleted; cameraCapture.OnCaptureFailed += HandleCaptureFailed; }
+        BindRuntimeCallbacks();
         foreach (var button in candidateView.GetComponentsInChildren<Button>(true))
             for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
                 if (button.onClick.GetPersistentTarget(i) == this)
@@ -93,8 +133,8 @@ public class FoodScanPrototype : MonoBehaviour
     }
     private void Update()
     {
-        if (analyzeButton != null) analyzeButton.interactable = capturedBytes != null && Api != null && dialogue.IsConnected && !Api.IsBusy && !Api.HasPendingChat;
-        if (saveButton != null) saveButton.interactable = selected != null && Api != null && !Api.IsBusy && !Api.HasPendingChat && !confirming;
+        if (analyzeButton != null) analyzeButton.interactable = capturedBytes != null && Api != null && dialogue.IsConnected && !Api.IsBusy;
+        if (saveButton != null) saveButton.interactable = selected != null && Api != null && !Api.IsBusy && !confirming;
     }
     public void CaptureRealPhoto()
     {
@@ -211,7 +251,7 @@ public class FoodScanPrototype : MonoBehaviour
     }
     public void ConfirmFood()
     {
-        if (confirming || selected == null || Api == null || Api.IsBusy || Api.HasPendingChat) return;
+        if (confirming || selected == null || Api == null || Api.IsBusy) return;
         if (string.IsNullOrEmpty(analysisScope) || analysisScope != CurrentScope || (syntheticFixture && syntheticFixtureScope != CurrentScope))
         { StatusInConfirmation("분석 이후 연결이 바뀌었습니다. 현재 연결에서 사진을 다시 분석하세요."); return; }
         if (selectedMealType == null)

@@ -12,8 +12,9 @@ namespace Healthmon.Evolution
         private GameObject displayed;
         private GltfImport displayedImport;
         private Renderer[] placeholderRenderers;
-        private bool loading;
+        [NonSerialized] private bool loading;
         private ModelManifest desired;
+        [NonSerialized] private EvolutionClient observedClient;
 
         public static ArEvolutionModel Attach(GameObject arCharacter)
         {
@@ -26,10 +27,22 @@ namespace Healthmon.Evolution
             var accessories = GetComponent<HealthMonAccessoryView>();
             placeholderRenderers = System.Array.FindAll(GetComponentsInChildren<Renderer>(true),
                 renderer => accessories == null || !accessories.ContainsAccessory(renderer.transform));
-            if (EvolutionClient.Instance != null)
+            BindClient();
+        }
+
+        private void Update() { BindClient(); }
+
+        private void BindClient()
+        {
+            var client = EvolutionClient.Instance;
+            if (client == null || observedClient == client) return;
+            if (observedClient != null) observedClient.ModelChanged -= Changed;
+            observedClient = client;
+            client.ModelChanged -= Changed;
+            client.ModelChanged += Changed;
+            if (client.Current != null)
             {
-                EvolutionClient.Instance.ModelChanged += Changed;
-                if (EvolutionClient.Instance.Current != null) Changed(EvolutionClient.Instance.Current);
+                Changed(client.Current);
             }
         }
 

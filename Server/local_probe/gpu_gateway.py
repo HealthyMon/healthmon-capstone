@@ -23,6 +23,8 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from Server.healthmon.gateway import Speech, EmbeddingResult
 from Server.healthmon.rules import personality_bands, proposal_policy
+from .speech_display import parse_generated_speech
+from .checkpoint_loading import load_pretrained
 
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = 'healthmon.ai.v1'
@@ -473,7 +475,7 @@ class LocalModels:
                     raise RuntimeError('Insufficient free VRAM; no quantization or fallback is allowed')
                 started = time.monotonic()
                 self.tokenizer = AutoTokenizer.from_pretrained(base, local_files_only=True)
-                model = Qwen3_5ForConditionalGeneration.from_pretrained(base, dtype=torch.bfloat16,
+                model = load_pretrained(Qwen3_5ForConditionalGeneration, base, dtype=torch.bfloat16,
                     device_map='cuda:0', attn_implementation='sdpa', local_files_only=True)
                 if mode == 'lora':
                     from peft import PeftModel
@@ -591,7 +593,9 @@ class LocalModels:
                     raise
                 attempts.append(dict(self.last_metrics, phase=phase))
                 try:
-                    output = Speech.model_validate_json(raw)
+                    output, defaults = parse_generated_speech(raw)
+                    if defaults:
+                        attempts[-1]['display_metadata_defaults'] = defaults
                     validate_contract(output, payload)
                     break
                 except (ValidationError, ValueError) as exc:
@@ -694,7 +698,9 @@ class LocalModels:
                 trial['raw_sha256'] = attempts[-1].get('raw_sha256')
                 refinement['last_generated_raw_sha256'] = trial['raw_sha256']
                 try:
-                    rewritten = Speech.model_validate_json(rewritten_raw)
+                    rewritten, defaults = parse_generated_speech(rewritten_raw)
+                    if defaults:
+                        attempts[-1]['display_metadata_defaults'] = defaults
                     result = rewritten.model_dump(mode='json')
                     candidate = {'phase': 'refined', 'candidate_sha256': digest(result), 'result': result,
                                  'contract_valid': False, 'candidate_index': index + 1, 'generation_seed': seed,
@@ -859,6 +865,8 @@ def create_app(config_path):
 
 
 def main():
+    import faulthandler
+    faulthandler.enable()
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=Path, required=True)
     args = parser.parse_args()

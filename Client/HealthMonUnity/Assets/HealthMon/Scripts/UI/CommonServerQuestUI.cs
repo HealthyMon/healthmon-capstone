@@ -61,7 +61,18 @@ public sealed class CommonServerQuestUI : MonoBehaviour
         configured = true;
     }
 
-    private void OnEnable() { nextRefresh = 0; Canvas.willRenderCanvases += ObserveVisibleRows; }
+    private void OnEnable()
+    {
+        nextRefresh = 0;
+        Canvas.willRenderCanvases -= ObserveVisibleRows; Canvas.willRenderCanvases += ObserveVisibleRows;
+        if (content == null) return;
+        foreach (Transform child in content)
+        { child.gameObject.SetActive(false); Destroy(child.gameObject); }
+        rows.Clear(); rendered = null; renderedScope = null;
+        foreach (var button in GetComponentsInChildren<Button>(true))
+            if (button.name == "RefreshQuests")
+            { button.onClick.RemoveAllListeners(); button.onClick.AddListener(() => { nextRefresh = 0; lastError = null; }); }
+    }
     private void OnDisable()
     {
         Canvas.willRenderCanvases -= ObserveVisibleRows;

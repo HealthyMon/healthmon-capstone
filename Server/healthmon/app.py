@@ -97,7 +97,8 @@ def create_app(settings=None, database=None):
 
     @app.get('/identity')
     def get_identity(owner=Depends(identity)):
-        return {'owner_id': owner, 'authentication': 'provisioned_bearer', 'development_auth': settings.environment != 'production'}
+        return {'owner_id': owner, 'authentication': 'provisioned_bearer', 'development_auth': settings.environment != 'production',
+                'test_controls_available': settings.environment == 'test' and owner in settings.test_owners}
 
     @app.get('/ecosystem/health')
     @app.get('/health/dependencies')
@@ -636,4 +637,6 @@ def create_app(settings=None, database=None):
                            'created_at': row['created_at'], 'response': cached.get('response'), 'execution': cached.get('execution', {}), 'metrics': cached.get('metrics')})
         return {'pet_id': pet, 'state_version': p['version'], 'limit': limit, 'has_more': len(rows) > limit, 'messages': result}
 
+    from . import test_controls
+    test_controls.register(app, settings, db, identity, now)
     return app

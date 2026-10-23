@@ -290,6 +290,25 @@ namespace Healthmon.Beta
             if (RequirePet(failure)) Begin("GET", PetPath("/quests"), null, success, failure);
         }
 
+        public void ApplyTestState(TestPetStateRequest value, Action<PetState> success, Action<ApiFailure> failure = null)
+        { TestControl("PUT", "/state", JsonUtility.ToJson(value), success, failure); }
+        public void ClearTestState(Action<PetState> success, Action<ApiFailure> failure = null)
+        { TestControl("DELETE", "/state", null, success, failure); }
+        public void RecordTestWorkout(string exercise, float actual, Action<PetState> success, Action<ApiFailure> failure = null)
+        { TestControl("POST", "/workout", JsonUtility.ToJson(new TestWorkoutRequest { request_id = Guid.NewGuid().ToString("N"), exercise = exercise, actual = actual }), success, failure); }
+        public void SelectTestQuest(string slot, string candidate, Action<PetState> success, Action<ApiFailure> failure = null)
+        { TestControl("PUT", "/quests", JsonUtility.ToJson(new TestQuestRequest { slot = slot, candidate = candidate }), success, failure); }
+        private void TestControl(string method, string path, string body, Action<PetState> success, Action<ApiFailure> failure)
+        {
+            if (!RequirePet(failure)) return;
+            if (HasPendingChat) { Fail(0, "Resolve pending chat before using test controls.", failure); return; }
+            Begin<PetState>(method, PetPath("/test-controls" + path), body, state =>
+            {
+                if (!state.IsValidCommonState(PetId)) { Fail(0, "Invalid test state response.", failure); return; }
+                ObserveVersion(state.state_version); StateReceived?.Invoke(state); success?.Invoke(state);
+            }, failure);
+        }
+
         public void MarkProposalShown(string offerId, Action<QuestOffer> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
@@ -308,7 +327,7 @@ namespace Healthmon.Beta
         public void AnalyzeFood(byte[] image, Action<FoodAnalysis> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
-            if (HasPendingChat) { Fail(0, "Resolve pending chat before food analysis.", failure); return; }
+            // A retained failed chat can be retried independently of meal recording.
             if (image == null || image.Length == 0 || image.Length > 12 * 1024 * 1024)
             { Fail(0, "Use an image up to 12 MiB.", failure); return; }
             Begin<FoodAnalysis>("POST", PetPath("/food/analyze"), null, result =>
@@ -318,14 +337,23 @@ namespace Healthmon.Beta
             }, failure, image);
         }
 
-        public void ConfirmFood(string analysisId, int candidateId, float? grams,
-            Action<FoodConfirmationResult> success, Action<ApiFailure> failure = null,
-            string mealType = "snack", bool kcalReconfirmed = false, float? vegetableFruitGrams = null, bool syntheticFixture = false)
+        public void GetFoodRecords(Action<FoodRecordHistory> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
-            if (HasPendingChat) { Fail(0, "Resolve pending chat before confirming food.", failure); return; }
+            Begin<FoodRecordHistory>("GET", PetPath("/meals"), null, result =>
+            {
+                if (result.records == null) { Fail(0, "Invalid food record history.", failure); return; }
+                success?.Invoke(result);
+            }, failure);
+        }
+        public void ConfirmFood(string analysisId, int candidateId, float? grams,
+            Action<FoodConfirmationResult> success, Action<ApiFailure> failure = null,
+            string mealType = "snack", bool kcalReconfirmed = false, float? vegetableFruitGrams = null, bool syntheticFixture = false, int revision = 1)
+        {
+            if (!RequirePet(failure)) return;
+            // A retained failed chat can be retried independently of meal recording.
             string body;
-            try { body = JsonUtility.ToJson(CommonServerContract.FoodConfirmationPayload(analysisId, candidateId, grams, vegetableFruitGrams, mealType, kcalReconfirmed, syntheticFixture)); }
+            try { body = JsonUtility.ToJson(CommonServerContract.FoodConfirmationPayload(analysisId, candidateId, grams, vegetableFruitGrams, mealType, kcalReconfirmed, syntheticFixture, revision)); }
             catch (ArgumentException) { Fail(0, "Invalid explicitly confirmed food quantities.", failure); return; }
             Begin<FoodConfirmationResult>("POST", PetPath("/food/confirm"), body, result =>
             {

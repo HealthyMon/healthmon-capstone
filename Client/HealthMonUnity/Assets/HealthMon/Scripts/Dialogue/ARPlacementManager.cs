@@ -112,7 +112,7 @@ public class ARPlacementManager : MonoBehaviour
         var connection = Healthmon.Common.CommonServerConnection.Instance;
         var model = Healthmon.Evolution.EvolutionClient.Instance?.Current;
         if (healthMonPrefab == null || connection == null ||
-            !connection.IsConnected || connection.LatestState == null ||
+            connection.LatestState == null ||
             string.IsNullOrEmpty(connection.LatestState.model_reference) ||
             model == null || model.pet_id != connection.LatestState.pet_id)
         {

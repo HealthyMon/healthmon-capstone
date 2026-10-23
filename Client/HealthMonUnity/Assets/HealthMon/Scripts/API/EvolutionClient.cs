@@ -27,6 +27,7 @@ namespace Healthmon.Evolution
         [NonSerialized] private string bearerToken;
         private EvolutionRequest pending;
         private bool submitting;
+        [NonSerialized] private bool commonLoopStarted;
         [Serializable] private sealed class CommonPending { public string request_id, job_id; }
         private CommonPending commonPending;
         private string commonScope, commonPendingKey;
@@ -56,7 +57,7 @@ namespace Healthmon.Evolution
 
         private async void Start()
         {
-            if (CommonServerConnection.UsesServerAuthority) { await RunCommonServer(); return; }
+            if (CommonServerConnection.UsesServerAuthority) return;
             while (!lifetime.IsCancellationRequested)
             {
                 BindGrowth();
@@ -77,6 +78,17 @@ namespace Healthmon.Evolution
                 catch (Exception error) { LastError = error.Message; }
                 try { await Task.Delay(3000, lifetime.Token); }
                 catch (OperationCanceledException) { break; }
+            }
+        }
+
+        private void OnEnable()
+        {
+            if (Instance != null && Instance != this) return;
+            Instance = this;
+            if (CommonServerConnection.UsesServerAuthority && !commonLoopStarted)
+            {
+                commonLoopStarted = true;
+                _ = RunCommonServer();
             }
         }
 

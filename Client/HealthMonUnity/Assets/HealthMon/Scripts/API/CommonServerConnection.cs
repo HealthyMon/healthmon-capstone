@@ -21,6 +21,8 @@ namespace Healthmon.Common
         public string OwnerId { get; private set; }
         public string EnvironmentName { get; private set; }
         public bool IsConnected { get; private set; }
+        public bool CanUseTestControls { get; private set; }
+        public string ConnectionAddress => urlInput;
         public string BaseUrl { get; private set; }
         public string Status { get; private set; } = "Configure the common server and a development user token.";
         public PhoneSyncStatus PhoneStatus { get; private set; }
@@ -56,6 +58,10 @@ namespace Healthmon.Common
                 System.Environment.GetEnvironmentVariable("HEALTHMON_SERVER_URL") ?? "http://127.0.0.1:8000";
             tokenInput = System.Environment.GetEnvironmentVariable("HEALTHMON_USER_TOKEN") ?? "";
             petInput = System.Environment.GetEnvironmentVariable("HEALTHMON_PET_ID") ?? "";
+#if UNITY_EDITOR
+            if (string.IsNullOrEmpty(tokenInput) && EditorConnectionSession.TryRead(out var restoredUrl, out var restoredToken, out var restoredPet))
+            { urlInput = restoredUrl; tokenInput = restoredToken; petInput = restoredPet; }
+#endif
             expanded = false;
         }
         private void Start()
@@ -74,8 +80,21 @@ namespace Healthmon.Common
             {
                 IsConnected = false; connecting = false;
                 Status = Api.HasPendingChat ? "Re-enter the same account token to recover the retained chat." : "Open developer settings and enter a user token.";
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.delayCall += RestoreEditorConnection;
+#endif
             }
         }
+#if UNITY_EDITOR
+        private void RestoreEditorConnection()
+        {
+            if (this == null || !Application.isPlaying || !UsesServerAuthority || IsConnected || connecting || Api == null || Api.IsBusy) return;
+            if (!EditorConnectionSession.TryRead(out var url, out var token, out var pet)) return;
+            urlInput = url; petInput = pet;
+            if (Api.HasPendingChat) ReauthenticatePendingToken(token);
+            else Connect(url, token, pet);
+        }
+#endif
         public void Connect(string url, string token, string petId = null)
         {
             if (connecting || Api.IsBusy || Api.HasPendingChat)
@@ -90,7 +109,7 @@ namespace Healthmon.Common
             catch (ArgumentException) { Status = "Invalid URL or token format."; return; }
             configGeneration++;
             quests = null; proposalDisplays.Reset(null, null, null);
-            IsConnected = false; connecting = true; LatestState = null;
+            IsConnected = false; CanUseTestControls = false; connecting = true; LatestState = null;
             ServerInstanceId = OwnerId = EnvironmentName = null;
             BaseUrl = url; runtimeToken = token; tokenInput = "";
             foreach (var state in FindObjectsByType<PetStateManager>(FindObjectsInactive.Include)) state.ClearServerState();
@@ -106,6 +125,7 @@ namespace Healthmon.Common
                 {
                     if (string.IsNullOrWhiteSpace(identity.owner_id)) { Failed(new ApiFailure(0, "Invalid account identity.")); return; }
                     OwnerId = identity.owner_id;
+                    CanUseTestControls = identity.test_controls_available;
                     Api.BindIdentity(ServerInstanceId, OwnerId);
                     if (!string.IsNullOrWhiteSpace(petId)) SelectPet(petId);
                     else Api.ListPets(list =>
@@ -131,6 +151,9 @@ namespace Healthmon.Common
                 urlInput = BaseUrl;
                 Status = "Connected — " + EnvironmentName + " / " + CommonServerContract.RuleVersion;
                 PlayerPrefs.SetString(SelectedPetKey, Api.PetId); PlayerPrefs.Save();
+#if UNITY_EDITOR
+                EditorConnectionSession.Remember(BaseUrl, runtimeToken, Api.PetId);
+#endif
                 ConfigurePhone(configGeneration);
                 RefreshQuests();
             }, Failed);
@@ -184,6 +207,9 @@ namespace Healthmon.Common
                 BaseUrl = Api.BaseUrl; urlInput = BaseUrl; petInput = Api.PetId;
                 ServerInstanceId = Api.VerifiedServerInstanceId; OwnerId = Api.VerifiedOwnerId;
                 IsConnected = true; connecting = false;
+#if UNITY_EDITOR
+                EditorConnectionSession.Remember(BaseUrl, runtimeToken, Api.PetId);
+#endif
                 Status = "Same connection verified. Retry the retained chat with its original request ID.";
                 ConfigurePhone(configGeneration);
                 success?.Invoke(state);
@@ -320,6 +346,7 @@ namespace Healthmon.Common
         private void OnApplicationFocus(bool focused) { if (focused) { RefreshState(); RefreshPhoneStatus(); } }
         private void OnGUI()
         {
+            if (MobileAdminMenu.Instance != null) return;
             GUI.depth = -100;
             if (!expanded)
             {

@@ -66,20 +66,21 @@ public sealed class PetExperienceUI : MonoBehaviour
         }
 
         if (admin != null && CommonServerConnection.UsesServerAuthority)
-        {
-            // Local reward/slider controls cannot modify a server-owned pet.
-            var oldControls = admin.transform.Find("AdminScrollView");
-            if (oldControls != null) oldControls.gameObject.SetActive(false);
-            var adminTitle = admin.transform.Find("TitleText")?.GetComponent<TMP_Text>();
-            if (adminTitle != null) adminTitle.text = "서버 테스트 관리";
-            freshPetButton = MakeButton("FreshServerTestPet", admin.transform, "새 테스트 펫으로 시작", StartFreshPet,
-                new Vector2(.25f, .15f), new Vector2(.75f, .27f));
-            var notice = MakeText("ServerAuthorityNotice", admin.transform,
-                "서버 스탯은 운동·식사 기록으로 변경돼요.\n\n처음부터 테스트하려면 새 펫으로 시작하세요.\n기존 펫과 기록은 보존됩니다.",
-                new Vector2(.12f, .34f), new Vector2(.88f, .73f));
-            notice.fontSizeMax = 38;
-            notice.color = Color.white;
-        }
+            gameObject.AddComponent<MobileAdminMenu>().Configure(manager, admin, canvas, font);
+    }
+
+    private void OnEnable()
+    {
+        if (manager == null) manager = GetComponent<UIManager>();
+        if (evolutionButton != null)
+        { evolutionButton.onClick.RemoveAllListeners(); evolutionButton.onClick.AddListener(RequestEvolution); }
+        if (freshPetButton != null)
+        { freshPetButton.onClick.RemoveAllListeners(); freshPetButton.onClick.AddListener(StartFreshPet); }
+        var canvas = arPanel == null ? null : arPanel.GetComponentInParent<Canvas>();
+        if (canvas != null && manager != null)
+            foreach (var button in canvas.GetComponentsInChildren<Button>(true))
+                if (button.name == "PetARButton")
+                { button.onClick.RemoveAllListeners(); button.onClick.AddListener(manager.ShowAR); }
     }
 
     private void Update()
@@ -94,7 +95,8 @@ public sealed class PetExperienceUI : MonoBehaviour
             evolutionButton.interactable = available && evolution != null && (!pending || !string.IsNullOrEmpty(evolution.LastError));
             evolutionLabel.text = state == null ? "진화 · 연결 필요" :
                 pending ? (string.IsNullOrEmpty(evolution.LastError) ? "진화 진행 중" : "진화 다시 시도") :
-                available ? "진화하기" : state.published_model_stage >= 3 ? "3차 진화 완료" : "진화 조건 대기";
+                available ? "진화하기" : state.published_model_stage >= 3 ? "3차 진화 완료" :
+                state.published_model_stage > 0 ? $"{state.published_model_stage}차 진화 완료 · 다음 Lv.{(state.published_model_stage + 1) * 10}" : "첫 진화 · Lv.10";
         }
         if (freshPetButton != null)
             freshPetButton.interactable = state != null && connection.EnvironmentName == "test" &&

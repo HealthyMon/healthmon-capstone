@@ -19,7 +19,7 @@ namespace Healthmon.Beta
     }
     [Serializable] public class FoodAnalysis
     {
-        public string schema_version, analysis_id, backend, provenance;
+        public string schema_version, analysis_id, image_hash, backend, provenance;
         public bool consumption_confirmed, synthetic;
         public FoodCandidate[] candidates;
         public bool IsSynthetic { get { return synthetic || provenance == "synthetic" || backend == "mock"; } }
@@ -28,6 +28,7 @@ namespace Healthmon.Beta
     {
         public string analysis_id;
         public int candidate_id;
+        public int revision = 1;
         public string meal_type = "snack";
         public bool kcal_reconfirmed, synthetic;
     }
@@ -46,6 +47,8 @@ namespace Healthmon.Beta
         public string evaluation_status;
         public FoodRecord record;
     }
+    [Serializable] public class FoodSavedRecord { public string event_id, occurred_at; public int revision; }
+    [Serializable] public class FoodRecordHistory { public FoodSavedRecord[] records; }
     // Public fields and object wrappers keep this contract compatible with JsonUtility.
     [Serializable] public class PetSettings
     {

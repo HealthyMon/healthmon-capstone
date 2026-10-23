@@ -164,6 +164,12 @@ public static class ContractChecks
         Check(unknownFood.GetType().GetField("grams") == null && unknownFood.GetType().GetField("vegetable_fruit_g") == null,
             "unknown consumption quantities cannot silently serialize fabricated zero values");
         Check(!unknownFood.synthetic && !unknownFood.kcal_reconfirmed, "real consumption and calorie reconfirmation are opt-in flags");
+        Check(unknownFood.revision == 1 && CommonServerContract.FoodConfirmationPayload("analysis", 0, 100, null, "breakfast", revision: 2).revision == 2,
+            "food correction carries an explicit next revision without creating another meal");
+        bool invalidRevisionRejected = false;
+        try { CommonServerContract.FoodConfirmationPayload("analysis", 0, 100, null, "breakfast", revision: 0); }
+        catch (ArgumentException) { invalidRevisionRejected = true; }
+        Check(invalidRevisionRejected, "invalid food revision is rejected before transport");
         var knownFood = CommonServerContract.FoodConfirmationPayload("analysis", 2, 120, 0, "lunch", true, true);
         Check(knownFood is FoodConfirmationWithVegetables && ((FoodConfirmationWithVegetables)knownFood).grams == 120 &&
             ((FoodConfirmationWithVegetables)knownFood).vegetable_fruit_g == 0 && knownFood.synthetic && knownFood.kcal_reconfirmed && knownFood.meal_type == "lunch",

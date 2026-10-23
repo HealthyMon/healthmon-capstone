@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Healthmon.Common
 {
     [Serializable] public sealed class ServerInfo { public string server_instance_id, environment; }
-    [Serializable] public sealed class ServerIdentity { public string owner_id; }
+    [Serializable] public sealed class ServerIdentity { public string owner_id; public bool test_controls_available; }
     [Serializable] public sealed class CommonEvolutionRequest { public string request_id; }
     [Serializable] public sealed class CommonEvolutionJob
     {
@@ -108,9 +108,9 @@ namespace Healthmon.Common
     {
         public const string RuleVersion = "healthmon.v2.2";
         public static Healthmon.Beta.FoodConfirmationWithoutQuantity FoodConfirmationPayload(string analysisId, int candidate,
-            float? grams, float? vegetableFruitGrams, string mealType, bool kcalReconfirmed = false, bool synthetic = false)
+            float? grams, float? vegetableFruitGrams, string mealType, bool kcalReconfirmed = false, bool synthetic = false, int revision = 1)
         {
-            if (string.IsNullOrWhiteSpace(analysisId) || candidate < 0 || candidate > 2 ||
+            if (string.IsNullOrWhiteSpace(analysisId) || candidate < 0 || candidate > 2 || revision < 1 ||
                 (grams.HasValue && (!Bounded(grams.Value, 0, 10000) || grams.Value == 0)) ||
                 (vegetableFruitGrams.HasValue && !Bounded(vegetableFruitGrams.Value, 0, 10000)) ||
                 (mealType != "breakfast" && mealType != "lunch" && mealType != "dinner" && mealType != "snack"))
@@ -124,7 +124,7 @@ namespace Healthmon.Common
                     ? new Healthmon.Beta.FoodConfirmationWithoutQuantityWithVegetables { vegetable_fruit_g = vegetableFruitGrams.Value }
                     : new Healthmon.Beta.FoodConfirmationWithoutQuantity();
             payload.analysis_id = analysisId; payload.candidate_id = candidate; payload.meal_type = mealType;
-            payload.kcal_reconfirmed = kcalReconfirmed; payload.synthetic = synthetic;
+            payload.kcal_reconfirmed = kcalReconfirmed; payload.synthetic = synthetic; payload.revision = revision;
             return payload;
         }
         public static bool ValidFoodAnalysis(Healthmon.Beta.FoodAnalysis analysis)
