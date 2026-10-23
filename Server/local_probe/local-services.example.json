@@ -1,0 +1,7 @@
+{
+  "python": ".venv/Scripts/python.exe",
+  "llm_python": ".venv/Scripts/python.exe",
+  "llm_config": ".runtime/local-gpu-probe/base-only/private-base.json",
+  "vision_config": ".runtime/local-vision-probe/private.json",
+  "evolution_config": ".runtime/local-evolution.json"
+}

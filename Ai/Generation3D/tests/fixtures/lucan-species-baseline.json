@@ -1,0 +1,392 @@
+{
+  "profile": {
+    "species": "lucan",
+    "previous_level": 14,
+    "level": 15,
+    "seed": 42,
+    "stats": {
+      "UpperBody": 60,
+      "LowerBody": 60,
+      "Nutrition": 65,
+      "EnergyBalance": 0,
+      "Activity": 55,
+      "Affinity": 60,
+      "Initiative": 75,
+      "Mood": 50
+    },
+    "history": [],
+    "history_origin": "missing"
+  },
+  "compiled": {
+    "version": "individual-v2.11-grounded-wholeform",
+    "body_key": "98b56abdac42840761ab70b8b5e4cf25bfbeaca62101ff494882efdd88fc82c8",
+    "expression_key": "7b01c7acb82e9e5dca44ca6fb80b2bf447a8fe8c0cee770943b7c4ef813d6e53",
+    "recipe": {
+      "version": "individual-v2.11-grounded-wholeform",
+      "species": "lucan",
+      "source_stage": 0,
+      "target_stage": 1,
+      "level": 15,
+      "seed": 42,
+      "current": {
+        "UpperBody": 60.0,
+        "LowerBody": 60.0,
+        "Nutrition": 65.0,
+        "EnergyBalance": 0.0,
+        "Activity": 55.0,
+        "Affinity": 60.0,
+        "Initiative": 75.0
+      },
+      "history": {
+        "available": false,
+        "origin": "missing",
+        "days": 0,
+        "record_count": 0,
+        "mean": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0,
+          "Nutrition": 65.0,
+          "EnergyBalance": 0.0,
+          "Activity": 55.0,
+          "Affinity": 60.0,
+          "Initiative": 75.0
+        },
+        "effective": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0,
+          "Nutrition": 65.0,
+          "EnergyBalance": 0.0,
+          "Activity": 55.0,
+          "Affinity": 60.0,
+          "Initiative": 75.0
+        },
+        "trend": {
+          "UpperBody": 0,
+          "LowerBody": 0,
+          "Activity": 0
+        },
+        "peak": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0
+        },
+        "memory_weight": 0.0,
+        "diet": null,
+        "chronological_order": "oldest_to_newest",
+        "limitation": "No historical records; current snapshot only. No duration inferred."
+      },
+      "history_records": [],
+      "dimensions": {
+        "adiposity": 0.28,
+        "kinetic_flow": 0.6365,
+        "support_distribution": 0.482,
+        "spatial_spread": 0.6632,
+        "visual_density": 0.5318,
+        "social_openness": 0.5575,
+        "self_direction": 0.61,
+        "surface_integration": 0.58,
+        "developmental_momentum": 0.5,
+        "structural_persistence": 0.4175,
+        "contrast_rhythm": 0.43,
+        "coiled_to_expansive": 0.5975,
+        "overall_presence": 0.564
+      },
+      "tendencies": {
+        "kinetic_flow": 0.6365,
+        "support_distribution": 0.482,
+        "spatial_spread": 0.6632,
+        "visual_density": 0.5318,
+        "social_openness": 0.5575,
+        "self_direction": 0.61,
+        "developmental_momentum": 0.5,
+        "contrast_rhythm": 0.43,
+        "coiled_to_expansive": 0.5975
+      },
+      "condition": {
+        "adiposity": 0.28,
+        "energy_balance": 0.0,
+        "exercise_development": 0.6,
+        "nutrition_support": 0.65,
+        "dietary_protein_evidence": 0,
+        "role": "physical condition informs, but does not select, the evolved body plan"
+      },
+      "individual_variation": {
+        "contour_rhythm": 0.167354,
+        "symmetry_play": 0.888276,
+        "motif_migration": 0.951138,
+        "negative_space": 0.401742,
+        "movement_invention": 0.015695,
+        "surface_rhythm": 0.956178
+      },
+      "process_weights": {
+        "orientation_reinvention": 0.519854,
+        "enclosure_and_release": 0.564848,
+        "mass_redistribution": 0.407603,
+        "rhythmic_repetition": 0.723736,
+        "motif_repurposing": 0.670228,
+        "locomotor_metamorphosis": 0.517354,
+        "negative_space_composition": 0.640348
+      },
+      "transformation_reference": {
+        "version": "builtin-processes-v1",
+        "principles": [
+          "Retain palette and thematic motifs while freely reorganizing the entire anatomy.",
+          "Redistribute mass, negative space, support and locomotion as one coherent organism.",
+          "Enclosure, release, orientation reversal and motif repurposing are processes, not fixed final forms.",
+          "Branches may have different body plans. Do not copy an existing franchise character."
+        ]
+      },
+      "structural_brief": "First transition: leave the infant form behind and establish a fresh stylized fantasy creature silhouette. Invent an acquired thunder-related visual structure that can be transformed at later stages. Preserve recognizable lineage, not realistic mammalian anatomy.",
+      "prompt": "Create a newly invented evolved Lucan from the full combined design state below. The previous image supplies lineage identity, not target proportions. Preserve selected charcoal/ivory/gold and thunder motifs while freely redesigning the entire mythical body, scale, structural rhythm and locomotion. Natural anatomy is not mandatory; fantasy anatomy must read as a deliberate connected design. Final-stage bipedal evolution is optional when prepared by previous-stage balance. Do not reduce the outcome to a realistic animal, automatic armored humanoid, muscular warrior or weight-only edit. Use a calm expression; mood is a separate runtime channel.\n{\"condition\": {\"adiposity\": 0.28, \"dietary_protein_evidence\": 0, \"energy_balance\": 0.0, \"exercise_development\": 0.6, \"nutrition_support\": 0.65, \"role\": \"physical condition informs, but does not select, the evolved body plan\"}, \"current\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"dimensions\": {\"adiposity\": 0.28, \"coiled_to_expansive\": 0.5975, \"contrast_rhythm\": 0.43, \"developmental_momentum\": 0.5, \"kinetic_flow\": 0.6365, \"overall_presence\": 0.564, \"self_direction\": 0.61, \"social_openness\": 0.5575, \"spatial_spread\": 0.6632, \"structural_persistence\": 0.4175, \"support_distribution\": 0.482, \"surface_integration\": 0.58, \"visual_density\": 0.5318}, \"history\": {\"available\": false, \"chronological_order\": \"oldest_to_newest\", \"days\": 0, \"diet\": null, \"effective\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"limitation\": \"No historical records; current snapshot only. No duration inferred.\", \"mean\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"memory_weight\": 0.0, \"origin\": \"missing\", \"peak\": {\"LowerBody\": 60.0, \"UpperBody\": 60.0}, \"record_count\": 0, \"trend\": {\"Activity\": 0, \"LowerBody\": 0, \"UpperBody\": 0}}, \"history_records\": [], \"individual_variation\": {\"contour_rhythm\": 0.167354, \"motif_migration\": 0.951138, \"movement_invention\": 0.015695, \"negative_space\": 0.401742, \"surface_rhythm\": 0.956178, \"symmetry_play\": 0.888276}, \"level\": 15, \"process_weights\": {\"enclosure_and_release\": 0.564848, \"locomotor_metamorphosis\": 0.517354, \"mass_redistribution\": 0.407603, \"motif_repurposing\": 0.670228, \"negative_space_composition\": 0.640348, \"orientation_reinvention\": 0.519854, \"rhythmic_repetition\": 0.723736}, \"seed\": 42, \"source_stage\": 0, \"species\": \"lucan\", \"structural_brief\": \"First transition: leave the infant form behind and establish a fresh stylized fantasy creature silhouette. Invent an acquired thunder-related visual structure that can be transformed at later stages. Preserve recognizable lineage, not realistic mammalian anatomy.\", \"target_stage\": 1, \"tendencies\": {\"coiled_to_expansive\": 0.5975, \"contrast_rhythm\": 0.43, \"developmental_momentum\": 0.5, \"kinetic_flow\": 0.6365, \"self_direction\": 0.61, \"social_openness\": 0.5575, \"spatial_spread\": 0.6632, \"support_distribution\": 0.482, \"visual_density\": 0.5318}, \"transformation_reference\": {\"principles\": [\"Retain palette and thematic motifs while freely reorganizing the entire anatomy.\", \"Redistribute mass, negative space, support and locomotion as one coherent organism.\", \"Enclosure, release, orientation reversal and motif repurposing are processes, not fixed final forms.\", \"Branches may have different body plans. Do not copy an existing franchise character.\"], \"version\": \"builtin-processes-v1\"}, \"version\": \"individual-v2.11-grounded-wholeform\"}"
+    },
+    "expression": {
+      "mood": 50.0,
+      "smile": 0.0,
+      "ear_tilt": 0.0,
+      "implementation": "expression_parameters_only",
+      "body_regeneration_required": false,
+      "note_ko": "표정용 값만 갱신합니다. 현재 GLB에는 표정 블렌드셰이프가 없어 자동 표정 변형은 아직 적용하지 않습니다."
+    },
+    "history": {
+      "available": false,
+      "origin": "missing",
+      "days": 0,
+      "record_count": 0,
+      "mean": {
+        "UpperBody": 60.0,
+        "LowerBody": 60.0,
+        "Nutrition": 65.0,
+        "EnergyBalance": 0.0,
+        "Activity": 55.0,
+        "Affinity": 60.0,
+        "Initiative": 75.0
+      },
+      "effective": {
+        "UpperBody": 60.0,
+        "LowerBody": 60.0,
+        "Nutrition": 65.0,
+        "EnergyBalance": 0.0,
+        "Activity": 55.0,
+        "Affinity": 60.0,
+        "Initiative": 75.0
+      },
+      "trend": {
+        "UpperBody": 0,
+        "LowerBody": 0,
+        "Activity": 0
+      },
+      "peak": {
+        "UpperBody": 60.0,
+        "LowerBody": 60.0
+      },
+      "memory_weight": 0.0,
+      "diet": null,
+      "records": [],
+      "chronological_order": "oldest_to_newest",
+      "limitation": "No historical records; current snapshot only. No duration inferred."
+    },
+    "dimensions": {
+      "adiposity": 0.28,
+      "kinetic_flow": 0.6365,
+      "support_distribution": 0.482,
+      "spatial_spread": 0.6632,
+      "visual_density": 0.5318,
+      "social_openness": 0.5575,
+      "self_direction": 0.61,
+      "surface_integration": 0.58,
+      "developmental_momentum": 0.5,
+      "structural_persistence": 0.4175,
+      "contrast_rhythm": 0.43,
+      "coiled_to_expansive": 0.5975,
+      "overall_presence": 0.564
+    },
+    "tendencies": {
+      "kinetic_flow": 0.6365,
+      "support_distribution": 0.482,
+      "spatial_spread": 0.6632,
+      "visual_density": 0.5318,
+      "social_openness": 0.5575,
+      "self_direction": 0.61,
+      "developmental_momentum": 0.5,
+      "contrast_rhythm": 0.43,
+      "coiled_to_expansive": 0.5975
+    },
+    "condition": {
+      "adiposity": 0.28,
+      "energy_balance": 0.0,
+      "exercise_development": 0.6,
+      "nutrition_support": 0.65,
+      "dietary_protein_evidence": 0,
+      "role": "physical condition informs, but does not select, the evolved body plan"
+    },
+    "individual_variation": {
+      "contour_rhythm": 0.167354,
+      "symmetry_play": 0.888276,
+      "motif_migration": 0.951138,
+      "negative_space": 0.401742,
+      "movement_invention": 0.015695,
+      "surface_rhythm": 0.956178
+    },
+    "prompt": "Create a newly invented evolved Lucan from the full combined design state below. The previous image supplies lineage identity, not target proportions. Preserve selected charcoal/ivory/gold and thunder motifs while freely redesigning the entire mythical body, scale, structural rhythm and locomotion. Natural anatomy is not mandatory; fantasy anatomy must read as a deliberate connected design. Final-stage bipedal evolution is optional when prepared by previous-stage balance. Do not reduce the outcome to a realistic animal, automatic armored humanoid, muscular warrior or weight-only edit. Use a calm expression; mood is a separate runtime channel.\n{\"condition\": {\"adiposity\": 0.28, \"dietary_protein_evidence\": 0, \"energy_balance\": 0.0, \"exercise_development\": 0.6, \"nutrition_support\": 0.65, \"role\": \"physical condition informs, but does not select, the evolved body plan\"}, \"current\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"dimensions\": {\"adiposity\": 0.28, \"coiled_to_expansive\": 0.5975, \"contrast_rhythm\": 0.43, \"developmental_momentum\": 0.5, \"kinetic_flow\": 0.6365, \"overall_presence\": 0.564, \"self_direction\": 0.61, \"social_openness\": 0.5575, \"spatial_spread\": 0.6632, \"structural_persistence\": 0.4175, \"support_distribution\": 0.482, \"surface_integration\": 0.58, \"visual_density\": 0.5318}, \"history\": {\"available\": false, \"chronological_order\": \"oldest_to_newest\", \"days\": 0, \"diet\": null, \"effective\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"limitation\": \"No historical records; current snapshot only. No duration inferred.\", \"mean\": {\"Activity\": 55.0, \"Affinity\": 60.0, \"EnergyBalance\": 0.0, \"Initiative\": 75.0, \"LowerBody\": 60.0, \"Nutrition\": 65.0, \"UpperBody\": 60.0}, \"memory_weight\": 0.0, \"origin\": \"missing\", \"peak\": {\"LowerBody\": 60.0, \"UpperBody\": 60.0}, \"record_count\": 0, \"trend\": {\"Activity\": 0, \"LowerBody\": 0, \"UpperBody\": 0}}, \"history_records\": [], \"individual_variation\": {\"contour_rhythm\": 0.167354, \"motif_migration\": 0.951138, \"movement_invention\": 0.015695, \"negative_space\": 0.401742, \"surface_rhythm\": 0.956178, \"symmetry_play\": 0.888276}, \"level\": 15, \"process_weights\": {\"enclosure_and_release\": 0.564848, \"locomotor_metamorphosis\": 0.517354, \"mass_redistribution\": 0.407603, \"motif_repurposing\": 0.670228, \"negative_space_composition\": 0.640348, \"orientation_reinvention\": 0.519854, \"rhythmic_repetition\": 0.723736}, \"seed\": 42, \"source_stage\": 0, \"species\": \"lucan\", \"structural_brief\": \"First transition: leave the infant form behind and establish a fresh stylized fantasy creature silhouette. Invent an acquired thunder-related visual structure that can be transformed at later stages. Preserve recognizable lineage, not realistic mammalian anatomy.\", \"target_stage\": 1, \"tendencies\": {\"coiled_to_expansive\": 0.5975, \"contrast_rhythm\": 0.43, \"developmental_momentum\": 0.5, \"kinetic_flow\": 0.6365, \"self_direction\": 0.61, \"social_openness\": 0.5575, \"spatial_spread\": 0.6632, \"support_distribution\": 0.482, \"visual_density\": 0.5318}, \"transformation_reference\": {\"principles\": [\"Retain palette and thematic motifs while freely reorganizing the entire anatomy.\", \"Redistribute mass, negative space, support and locomotion as one coherent organism.\", \"Enclosure, release, orientation reversal and motif repurposing are processes, not fixed final forms.\", \"Branches may have different body plans. Do not copy an existing franchise character.\"], \"version\": \"builtin-processes-v1\"}, \"version\": \"individual-v2.11-grounded-wholeform\"}",
+    "transition": {
+      "source_stage": 0,
+      "target_stage": 1,
+      "level": 15
+    },
+    "stats": {
+      "UpperBody": 60.0,
+      "LowerBody": 60.0,
+      "Nutrition": 65.0,
+      "EnergyBalance": 0.0,
+      "Activity": 55.0,
+      "Affinity": 60.0,
+      "Initiative": 75.0,
+      "Mood": 50.0
+    },
+    "seed": 42,
+    "visual_quality": "REQUIRES_REVIEW",
+    "explanations_ko": [
+      "활동·하체·주도성·에너지를 함께 해석한 운동 흐름 0.636",
+      "상하체 균형·활동·친화성·주도성 → 몸 전체의 지지 분포 0.482; 팔다리 크기를 직접 지정하지 않음",
+      "복합 수치 → 공간 확장 0.663, 시각 밀도 0.532, 형태 리듬 0.430",
+      "친화성·영양·주도성 → 관계 표현 0.557; 활동·독립성·주도성 → 자기 방향성 0.610",
+      "신체 상태 채널: 지방 지수 0.280; 낮은 활동성 자체로 비만을 만들지 않음",
+      "관측 이력 0일 (missing), 개체 시드 42; Mood는 표정 채널만 갱신",
+      "몸 구조와 이동 방식을 Qwen이 새로 설계합니다. 수치 지수의 연속성이 이미지의 연속성을 보장하지는 않습니다."
+    ],
+    "exp_policy": "No EXP conversion exists in the inspected release; accept authoritative current Level. Do not invent EXP."
+  },
+  "request": {
+    "version": "lucan-generative-director-v7-grounded",
+    "seed": 42,
+    "grounding": {
+      "current": {
+        "UpperBody": 60.0,
+        "LowerBody": 60.0,
+        "Nutrition": 65.0,
+        "EnergyBalance": 0.0,
+        "Activity": 55.0,
+        "Affinity": 60.0,
+        "Initiative": 75.0
+      },
+      "history": {
+        "available": false,
+        "origin": "missing",
+        "days": 0,
+        "record_count": 0,
+        "mean": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0,
+          "Nutrition": 65.0,
+          "EnergyBalance": 0.0,
+          "Activity": 55.0,
+          "Affinity": 60.0,
+          "Initiative": 75.0
+        },
+        "effective": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0,
+          "Nutrition": 65.0,
+          "EnergyBalance": 0.0,
+          "Activity": 55.0,
+          "Affinity": 60.0,
+          "Initiative": 75.0
+        },
+        "trend": {
+          "UpperBody": 0,
+          "LowerBody": 0,
+          "Activity": 0
+        },
+        "peak": {
+          "UpperBody": 60.0,
+          "LowerBody": 60.0
+        },
+        "memory_weight": 0.0,
+        "diet": null,
+        "chronological_order": "oldest_to_newest",
+        "limitation": "No historical records; current snapshot only. No duration inferred."
+      },
+      "axis_sources": {
+        "kinetic_flow": [
+          "Activity",
+          "LowerBody",
+          "Initiative",
+          "EnergyBalance"
+        ],
+        "support_distribution": [
+          "UpperBody",
+          "LowerBody",
+          "Activity",
+          "Affinity",
+          "Initiative"
+        ],
+        "spatial_spread": [
+          "Activity",
+          "Initiative",
+          "EnergyBalance",
+          "UpperBody",
+          "LowerBody"
+        ],
+        "visual_density": [
+          "EnergyBalance",
+          "UpperBody",
+          "LowerBody",
+          "Activity",
+          "Nutrition"
+        ],
+        "social_openness": [
+          "Affinity",
+          "Nutrition",
+          "Initiative"
+        ],
+        "self_direction": [
+          "Initiative",
+          "Activity",
+          "Affinity"
+        ],
+        "surface_integration": [
+          "Nutrition",
+          "Affinity",
+          "diet"
+        ],
+        "developmental_momentum": [
+          "history"
+        ],
+        "structural_persistence": [
+          "history",
+          "UpperBody",
+          "LowerBody",
+          "Nutrition"
+        ],
+        "contrast_rhythm": [
+          "UpperBody",
+          "LowerBody",
+          "Initiative",
+          "Affinity"
+        ],
+        "coiled_to_expansive": [
+          "Activity",
+          "LowerBody",
+          "Initiative",
+          "Affinity"
+        ],
+        "overall_presence": [
+          "UpperBody",
+          "LowerBody",
+          "Nutrition",
+          "Initiative",
+          "EnergyBalance",
+          "history"
+        ]
+      }
+    },
+    "system": "You are the art director of a stylized monster-raising fantasy game. Invent ONE original evolved creature from the combined evidence. Return ONLY valid JSON with keys design_thesis_ko (one concise Korean sentence), reasoning (three entries), structural_changes (three English phrases), lineage_anchors (two English phrases), image_prompt (130-170 English words). Each reasoning entry has source_axes (two or more exact names from whole_form_axes), decision_ko and form_why_ko (concise Korean sentences about the chosen shapes). Raw numeric interpretation and historical evidence are calculated by code and attached separately. You receive coupled WHOLE-FORM coordinates, not anatomical measurements. Do not make factual claims about exercise, diet, calories or unobserved history. Explain only how your proposed shapes express the supplied axes. First decide ONE coherent main identity and explain WHY the input mixture supports its mass arrangement, movement and overall impression. Then create the image prompt from that plan. Different mixtures should produce different overall feelings and organizing structures, not a single body with many accessories. Do not default to long-necked thunder dragons for every mixture. An evolution may look gentle, awkward, quirky, imposing, ungainly, elegant or formidable. Do not make every result majestic, ornate or aggressively cool. Start with a distinctive WHOLE-BODY silhouette and organizing structure, then describe locomotion, scale and presence. Read ALL physical, behavioral and historical inputs together. Lean, fat, muscular and reserve-carrying bodies are valid when supported by exercise, food and energy evidence; Activity alone never determines fatness. Body condition participates in a new whole form, not a weight edit. Invent three coordinated structural transformations: a new distribution of main body volumes, a new relation of head/trunk/support, and a transformed inherited thunder motif that participates in the silhouette. The creature can become a powerful mythical being, including immense forms. Natural mammalian anatomy, paws, bilateral symmetry, fixed appendage counts, all-over fur and a realistic animal silhouette are NOT requirements. A quadruped may remain quadrupedal with a completely new design; at the FINAL evolution it may become bipedal when connected to previous balance structures. Never force a default humanoid warrior. The form must be appealing, intentional, connected and legible as one creature. Fantasy locomotion is allowed; avoid random grotesque protrusions and unexplained aquatic paddles. Scale ranges from compact to colossal, guided by overall_presence and the full condition mixture, not a template or single threshold. kinetic_flow and coiled_to_expansive influence the entire movement rhythm; support_distribution places the center of visual gravity, never sizes an isolated limb. social_openness, self_direction and spatial_spread influence open/contained forms and negative space across the whole organism. History and persistent seed influence structural rhythm and motif migration. Abstract process weights are soft priorities, never finished-form IDs. Retain TWO Lucan identity anchors from charcoal/ivory/gold relationships, amber eyes, lightning brow or branching thunder motif. Transform face, ears, coat, limbs and tail as needed. No ordinary photoreal wolf or cat with decorative stripes. No named franchise character, copied silhouette, clothing, props, weapons or letters. Art style: iconic stylized animation creature, bold graphic color blocks, smooth simplified sculpted surfaces, clean expressive shapes, cel-shaded game concept. No realistic fur strands, wildlife photography, anatomical realism or grim horror. Full body in central sixty percent, all structures inside frame, wide white margins, plain white background.",
+    "user": "{\"condition_role\": \"Secondary physical nuance only; first invent the entire evolved form from all persistent attributes.\", \"individual_variation\": {\"contour_rhythm\": 0.167354, \"motif_migration\": 0.951138, \"movement_invention\": 0.015695, \"negative_space\": 0.401742, \"surface_rhythm\": 0.956178, \"symmetry_play\": 0.888276}, \"level\": 15, \"physical_condition\": {\"exercise_development\": 0.6, \"food_support\": 0.65, \"reserve_density\": 0.28, \"role\": \"Secondary whole-body physical nuance; reserves are not magical power. Never select the final anatomy from these alone.\"}, \"process_weights\": {\"enclosure_and_release\": 0.564848, \"locomotor_metamorphosis\": 0.517354, \"mass_redistribution\": 0.407603, \"motif_repurposing\": 0.670228, \"negative_space_composition\": 0.640348, \"orientation_reinvention\": 0.519854, \"rhythmic_repetition\": 0.723736}, \"seed\": 42, \"source_stage\": 0, \"species\": \"lucan\", \"structural_brief\": \"First transition: leave the infant form behind and establish a fresh stylized fantasy creature silhouette. Invent an acquired thunder-related visual structure that can be transformed at later stages. Preserve recognizable lineage, not realistic mammalian anatomy.\", \"target_stage\": 1, \"transformation_reference\": {\"principles\": [\"Retain palette and thematic motifs while freely reorganizing the entire anatomy.\", \"Redistribute mass, negative space, support and locomotion as one coherent organism.\", \"Enclosure, release, orientation reversal and motif repurposing are processes, not fixed final forms.\", \"Branches may have different body plans. Do not copy an existing franchise character.\"], \"version\": \"builtin-processes-v1\"}, \"version\": \"individual-v2.11-grounded-wholeform\", \"visual_principles\": [\"A small ancestor may become a monumental mythical presence through a new distribution of whole-body masses, not a swollen belly.\", \"Identity can survive a change of organizing axis and anatomy through graphic motifs, color relationships and thematic continuity.\", \"Use broad designed volumes, intentional negative space and few iconic shapes; intricate realistic fur obscures silhouette.\", \"Fantasy form is allowed, including integrated supernatural structures; acquired motifs should explain new structures visually, never random accessories.\"], \"whole_form_axes\": {\"coiled_to_expansive\": 0.5975, \"contrast_rhythm\": 0.43, \"developmental_momentum\": 0.5, \"kinetic_flow\": 0.6365, \"overall_presence\": 0.564, \"self_direction\": 0.61, \"social_openness\": 0.5575, \"spatial_spread\": 0.6632, \"structural_persistence\": 0.4175, \"support_distribution\": 0.482, \"surface_integration\": 0.58, \"visual_density\": 0.5318}}",
+    "inference": {
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.05,
+      "max_new_tokens": 1100
+    }
+  }
+}

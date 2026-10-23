@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class PetStateManager : MonoBehaviour
 {
+    private bool ServerAuthority => Healthmon.Common.CommonServerConnection.UsesServerAuthority;
+    private Healthmon.Beta.PetState serverState;
+    public bool HasVerifiedServerState => serverState != null;
+    public int Level => level;
+    public event System.Action<int> LevelChanged;
+
     [Header("Basic State")]
     [SerializeField] private string petName = "헬스몬";
 
@@ -65,12 +71,20 @@ public class PetStateManager : MonoBehaviour
 
     private void Start()
     {
+        if (ServerAuthority)
+        {
+            var state = Healthmon.Common.CommonServerConnection.Instance?.LatestState;
+            if (state != null) ApplyServerState(state);
+            else ClearServerState();
+            return;
+        }
         LoadPetData();
         RefreshAllUI();
     }
 
     public void AddReward(int expAmount, int coinAmount)
     {
+        if (ServerAuthority) return;
         AddExp(expAmount);
 
         coin += coinAmount;
@@ -85,12 +99,14 @@ public class PetStateManager : MonoBehaviour
 
     public void AddExp(int amount)
     {
+        if (ServerAuthority) return;
         currentExp += amount;
 
         while (currentExp >= expToNextLevel)
         {
             currentExp -= expToNextLevel;
             level++;
+            LevelChanged?.Invoke(level);
 
             Debug.Log(
                 $"[PetState] Level Up! 현재 레벨: {level}"
@@ -103,6 +119,7 @@ public class PetStateManager : MonoBehaviour
 
     public void AddIntimacy(int amount)
     {
+        if (ServerAuthority) return;
         intimacy += amount;
 
         intimacy = Mathf.Clamp(intimacy, 0, 100);
@@ -113,6 +130,7 @@ public class PetStateManager : MonoBehaviour
 
     public void AddActivity(int amount)
     {
+        if (ServerAuthority) return;
         activity += amount;
 
         activity = Mathf.Clamp(activity, 0, 100);
@@ -123,6 +141,7 @@ public class PetStateManager : MonoBehaviour
 
     public void AddKindness(int amount)
     {
+        if (ServerAuthority) return;
         kindness += amount;
 
         kindness = Mathf.Clamp(kindness, 0, 100);
@@ -133,6 +152,7 @@ public class PetStateManager : MonoBehaviour
 
     public void AddCuriosity(int amount)
     {
+        if (ServerAuthority) return;
         curiosity += amount;
 
         curiosity = Mathf.Clamp(curiosity, 0, 100);
@@ -141,8 +161,41 @@ public class PetStateManager : MonoBehaviour
         SavePetData();
     }
 
+    public void ApplyEvolutionStage(int stage)
+    {
+        if (ServerAuthority) return;
+        int completedStage = Mathf.Clamp(stage, 0, 3);
+        growthStage = new[] { "초기형", "1차 진화", "2차 진화", "3차 진화" }[completedStage];
+        level = Mathf.Max(level, new[] { 1, 15, 30, 50 }[completedStage]);
+        RefreshAllUI();
+        SavePetData();
+    }
+
+    public void ClearServerState()
+    {
+        serverState = null;
+        foreach (var label in new[] { homeLevelText, homeExpText, homeCoinText, homeIntimacyText,
+            homeActivityText, statusLevelText, statusExpText, statusIntimacyText, statusActivityText,
+            statusKindnessText, statusCuriosityText, growthStageText, evolutionConditionText })
+            if (label != null) label.text = "서버 연결 대기";
+    }
+
+    public void ApplyServerState(Healthmon.Beta.PetState state)
+    {
+        if (!ServerAuthority || state == null || !state.IsValidCommonState(state.pet_id)) return;
+        int previousLevel = level;
+        serverState = state;
+        if (state.settings != null && !string.IsNullOrWhiteSpace(state.settings.name)) petName = state.settings.name;
+        level = state.level; currentExp = state.current_exp; expToNextLevel = state.required_exp;
+        coin = state.coin; intimacy = Mathf.RoundToInt(state.affinity); activity = Mathf.RoundToInt(state.activity);
+        growthStage = "목표 " + state.evolution_target_stage + " / 모델 " + state.published_model_stage + " (" + state.asset_status + ")";
+        RefreshAllUI();
+        if (previousLevel != level) LevelChanged?.Invoke(level);
+    }
+
     public void RefreshAllUI()
     {
+        if (ServerAuthority && serverState == null) { ClearServerState(); return; }
         // Home
         if (homeLevelText != null)
             homeLevelText.text = $"Lv. {level}";
@@ -187,11 +240,11 @@ public class PetStateManager : MonoBehaviour
 
         if (statusKindnessText != null)
             statusKindnessText.text =
-                kindness.ToString();
+                ServerAuthority ? "공용 서버 상세 패널 참조" : kindness.ToString();
 
         if (statusCuriosityText != null)
             statusCuriosityText.text =
-                curiosity.ToString();
+                ServerAuthority ? "공용 서버 상세 패널 참조" : curiosity.ToString();
 
         if (growthStageText != null)
             growthStageText.text =
@@ -211,6 +264,7 @@ public class PetStateManager : MonoBehaviour
 
     public void SavePetData()
     {
+        if (ServerAuthority) return;
         PetSaveData data = new PetSaveData
         {
             petName = petName,
@@ -232,11 +286,12 @@ public class PetStateManager : MonoBehaviour
         PlayerPrefs.SetString(SaveKey, json);
         PlayerPrefs.Save();
 
-        Debug.Log("[PetState] 저장 완료: " + json);
+        Debug.Log("[PetState] LOCAL DEMO state saved.");
     }
 
     public void LoadPetData()
     {
+        if (ServerAuthority) return;
         if (!PlayerPrefs.HasKey(SaveKey))
         {
             Debug.Log("[PetState] 기존 저장 데이터 없음");
@@ -301,6 +356,7 @@ public class PetStateManager : MonoBehaviour
         int newKindness,
         int newCuriosity)
     {
+        if (ServerAuthority) return;
         level = Mathf.Max(1, newLevel);
         coin = Mathf.Max(0, newCoin);
 
@@ -308,6 +364,8 @@ public class PetStateManager : MonoBehaviour
         activity = Mathf.Clamp(newActivity, 0, 100);
         kindness = Mathf.Clamp(newKindness, 0, 100);
         curiosity = Mathf.Clamp(newCuriosity, 0, 100);
+
+        LevelChanged?.Invoke(level);
 
         // 화면 갱신
         RefreshAllUI();

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "healthmon-evolution"
+version = "0.1.0"
+description = "Local reference-guided creature evolution inference proof of concept"
+requires-python = ">=3.10"
+dependencies = ["Pillow>=10", "numpy>=1.26", "scipy>=1.11"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

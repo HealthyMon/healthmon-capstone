@@ -1,0 +1,963 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "HEALTHMON remote AI server implementation contract",
+    "version": "healthmon.ai.v1",
+    "description": "New gateway contract, not a claim that legacy GPU services already implement these endpoints. Evolution PUT must atomically deduplicate the same job_id and frozen input."
+  },
+  "paths": {
+    "/v1/chat": {
+      "post": {
+        "operationId": "chat",
+        "security": [
+          {
+            "serverBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "contract_version",
+                  "request_id",
+                  "pet_id",
+                  "input"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "contract_version": {
+                    "const": "healthmon.ai.v1"
+                  },
+                  "request_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "pet_id": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "required": [
+                      "text",
+                      "context"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "context": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validated result with the same request_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract_version",
+                    "request_id",
+                    "provenance",
+                    "result"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "contract_version": {
+                      "const": "healthmon.ai.v1"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "provenance": {
+                      "enum": [
+                        "real",
+                        "synthetic"
+                      ]
+                    },
+                    "result": {
+                      "$ref": "#/components/schemas/Speech"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Server authentication required"
+          },
+          "409": {
+            "description": "ID reused with different input"
+          }
+        }
+      }
+    },
+    "/v1/food": {
+      "post": {
+        "operationId": "food",
+        "security": [
+          {
+            "serverBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "contract_version",
+                  "request_id",
+                  "pet_id",
+                  "input"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "contract_version": {
+                    "const": "healthmon.ai.v1"
+                  },
+                  "request_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "pet_id": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "required": [
+                      "image_base64",
+                      "content_type"
+                    ],
+                    "properties": {
+                      "image_base64": {
+                        "type": "string",
+                        "contentEncoding": "base64"
+                      },
+                      "content_type": {
+                        "enum": [
+                          "image/jpeg",
+                          "image/png"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validated result with the same request_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract_version",
+                    "request_id",
+                    "provenance",
+                    "result"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "contract_version": {
+                      "const": "healthmon.ai.v1"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "provenance": {
+                      "enum": [
+                        "real",
+                        "synthetic"
+                      ]
+                    },
+                    "result": {
+                      "$ref": "#/components/schemas/FoodResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Server authentication required"
+          },
+          "409": {
+            "description": "ID reused with different input"
+          }
+        }
+      }
+    },
+    "/v1/embedding": {
+      "post": {
+        "operationId": "embedding",
+        "security": [
+          {
+            "serverBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "contract_version",
+                  "request_id",
+                  "pet_id",
+                  "input"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "contract_version": {
+                    "const": "healthmon.ai.v1"
+                  },
+                  "request_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "pet_id": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "required": [
+                      "text"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validated result with the same request_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract_version",
+                    "request_id",
+                    "provenance",
+                    "result"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "contract_version": {
+                      "const": "healthmon.ai.v1"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "provenance": {
+                      "enum": [
+                        "real",
+                        "synthetic"
+                      ]
+                    },
+                    "result": {
+                      "$ref": "#/components/schemas/EmbeddingResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Server authentication required"
+          },
+          "409": {
+            "description": "ID reused with different input"
+          }
+        }
+      }
+    },
+    "/v1/evolutions/{job_id}": {
+      "put": {
+        "operationId": "evolutions",
+        "security": [
+          {
+            "serverBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "contract_version",
+                  "request_id",
+                  "pet_id",
+                  "input"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "contract_version": {
+                    "const": "healthmon.ai.v1"
+                  },
+                  "request_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "pet_id": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "required": [
+                      "stage",
+                      "state",
+                      "profile",
+                      "rule_version",
+                      "adapter_version"
+                    ],
+                    "properties": {
+                      "stage": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 3
+                      },
+                      "state": {
+                        "type": "object"
+                      },
+                      "profile": {
+                        "type": "object"
+                      },
+                      "rule_version": {
+                        "const": "healthmon.v2.2"
+                      },
+                      "adapter_version": {
+                        "const": "healthmon.evolution.v2.2"
+                      },
+                      "source_contract": {
+                        "type": "string"
+                      },
+                      "legacy_compatibility": {
+                        "type": "object"
+                      },
+                      "parent_asset": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "description": "Optional authenticated common-server starter binding for stage0 to1. Never supplied by a game client. PNG bytes are bounded to1MiB and verified against their immutable hash.",
+                        "required": [
+                          "stage",
+                          "revision",
+                          "species",
+                          "species_contract",
+                          "image_base64",
+                          "image_sha256",
+                          "model_sha256",
+                          "source_kind"
+                        ],
+                        "properties": {
+                          "stage": {
+                            "const": 0
+                          },
+                          "revision": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,100}$"
+                          },
+                          "species": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,100}$"
+                          },
+                          "species_contract": {
+                            "type": [
+                              "object",
+                              "null"
+                            ]
+                          },
+                          "image_base64": {
+                            "type": "string",
+                            "contentEncoding": "base64",
+                            "maxLength": 1398104
+                          },
+                          "image_sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "model_sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "source_kind": {
+                            "const": "common_server_verified_starter"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validated result with the same request_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract_version",
+                    "request_id",
+                    "provenance",
+                    "result"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "contract_version": {
+                      "const": "healthmon.ai.v1"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "provenance": {
+                      "enum": [
+                        "real",
+                        "synthetic"
+                      ]
+                    },
+                    "result": {
+                      "$ref": "#/components/schemas/EvolutionResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Server authentication required"
+          },
+          "409": {
+            "description": "ID reused with different input"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "get": {
+        "operationId": "evolutions_status",
+        "security": [
+          {
+            "serverBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validated result with the same request_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract_version",
+                    "request_id",
+                    "provenance",
+                    "result"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "contract_version": {
+                      "const": "healthmon.ai.v1"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "provenance": {
+                      "enum": [
+                        "real",
+                        "synthetic"
+                      ]
+                    },
+                    "result": {
+                      "$ref": "#/components/schemas/EvolutionResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Server authentication required"
+          },
+          "409": {
+            "description": "ID reused with different input"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "serverBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Classification": {
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "enum": [
+              "character",
+              "proposal",
+              "exercise",
+              "food",
+              "other"
+            ],
+            "title": "Target",
+            "type": "string"
+          },
+          "sentiment": {
+            "enum": [
+              "positive",
+              "neutral",
+              "negative"
+            ],
+            "title": "Sentiment",
+            "type": "string"
+          },
+          "motivation": {
+            "enum": [
+              "high",
+              "neutral",
+              "low"
+            ],
+            "title": "Motivation",
+            "type": "string"
+          },
+          "character_affection": {
+            "enum": [
+              "positive",
+              "neutral",
+              "negative"
+            ],
+            "title": "Character Affection",
+            "type": "string"
+          },
+          "acceptance": {
+            "enum": [
+              "accept",
+              "reject",
+              "none"
+            ],
+            "title": "Acceptance",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "proposal_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Proposal Id"
+          }
+        },
+        "required": [
+          "target",
+          "sentiment",
+          "motivation",
+          "character_affection",
+          "acceptance",
+          "confidence"
+        ],
+        "title": "Classification",
+        "type": "object"
+      },
+      "EmbeddingResult": {
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "title": "Model Id",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "dimension": {
+            "title": "Dimension",
+            "type": "integer"
+          },
+          "vector": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Vector",
+            "type": "array"
+          }
+        },
+        "required": [
+          "model_id",
+          "model_version",
+          "dimension",
+          "vector"
+        ],
+        "title": "EmbeddingResult",
+        "type": "object"
+      },
+      "Envelope": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "provenance": {
+            "enum": [
+              "real",
+              "synthetic"
+            ],
+            "title": "Provenance",
+            "type": "string"
+          },
+          "result": {
+            "additionalProperties": true,
+            "title": "Result",
+            "type": "object"
+          }
+        },
+        "required": [
+          "contract_version",
+          "request_id",
+          "provenance",
+          "result"
+        ],
+        "title": "Envelope",
+        "type": "object"
+      },
+      "EvolutionResult": {
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          },
+          "stage": {
+            "maximum": 3,
+            "minimum": 0,
+            "title": "Stage",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "unsupported"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "model_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model Url"
+          },
+          "model_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model Sha256"
+          },
+          "size_bytes": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "maximum": 67108864,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Size Bytes"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error"
+          }
+        },
+        "required": [
+          "job_id",
+          "stage",
+          "status"
+        ],
+        "title": "EvolutionResult",
+        "type": "object"
+      },
+      "FoodCandidate": {
+        "additionalProperties": false,
+        "properties": {
+          "food": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Food",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "per_100g": {
+            "$ref": "#/components/schemas/Nutrients"
+          },
+          "estimated_grams": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Estimated Grams"
+          }
+        },
+        "required": [
+          "food",
+          "confidence",
+          "per_100g"
+        ],
+        "title": "FoodCandidate",
+        "type": "object"
+      },
+      "Nutrients": {
+        "additionalProperties": false,
+        "properties": {
+          "energy_kcal": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Energy Kcal"
+          },
+          "carbohydrate_g": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Carbohydrate G"
+          },
+          "protein_g": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Protein G"
+          },
+          "fat_g": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Fat G"
+          },
+          "vegetable_fruit_g": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Vegetable Fruit G"
+          }
+        },
+        "title": "Nutrients",
+        "type": "object"
+      },
+      "FoodResult": {
+        "additionalProperties": false,
+        "properties": {
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/FoodCandidate"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Candidates",
+            "type": "array"
+          }
+        },
+        "required": [
+          "candidates"
+        ],
+        "title": "FoodResult",
+        "type": "object"
+      },
+      "Speech": {
+        "additionalProperties": false,
+        "properties": {
+          "speech": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Speech",
+            "type": "string"
+          },
+          "emotion": {
+            "enum": [
+              "neutral",
+              "happy",
+              "encouraging",
+              "sad",
+              "tired",
+              "grumpy",
+              "playful"
+            ],
+            "title": "Emotion",
+            "type": "string"
+          },
+          "animation": {
+            "enum": [
+              "idle",
+              "wave",
+              "cheer",
+              "encourage",
+              "rest",
+              "pout",
+              "laugh"
+            ],
+            "title": "Animation",
+            "type": "string"
+          },
+          "memory_ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 3,
+            "title": "Memory Ids",
+            "type": "array"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/Classification"
+          }
+        },
+        "required": [
+          "speech",
+          "emotion",
+          "animation",
+          "classification"
+        ],
+        "title": "Speech",
+        "type": "object"
+      }
+    }
+  }
+}

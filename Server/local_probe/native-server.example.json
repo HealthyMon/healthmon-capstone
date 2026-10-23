@@ -1,0 +1,13 @@
+{
+  "python": ".runtime/cpu-venv/Scripts/python.exe",
+  "pg_ctl": "../runtime/pgsql/bin/pg_ctl.exe",
+  "pg_data": ".runtime/pg-integration",
+  "pg_port": 55435,
+  "api_env": ".runtime/unity-native-api-env.json",
+  "session": ".runtime/manual-pet-preview-session.json",
+  "ai_config": ".runtime/local-services.json",
+  "evolution_config": ".runtime/evolution-stage-matrix.json",
+  "api_port": 18092,
+  "base_url": "http://127.0.0.1:18092",
+  "enable_worker": true
+}

@@ -1,0 +1,393 @@
+{
+  "files": [
+    {
+      "path": "configs/branch_evolution.json",
+      "source": "/workspace/generation/configs/branch_evolution.json",
+      "exists": true,
+      "sha256": "60bc0a58b1b95fe816c073f55d371dd7905ee8bc74e37c010fb6be29c6ed6ac9",
+      "copied_sha256": "60bc0a58b1b95fe816c073f55d371dd7905ee8bc74e37c010fb6be29c6ed6ac9",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/evolution.json",
+      "source": "/workspace/generation/configs/evolution.json",
+      "exists": true,
+      "sha256": "449cd2869caec1d35efeae57e1a1a929a5cf7ee62fead42894abf19449c28253",
+      "copied_sha256": "449cd2869caec1d35efeae57e1a1a929a5cf7ee62fead42894abf19449c28253",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/evolution_art_direction.json",
+      "source": "/workspace/generation/configs/evolution_art_direction.json",
+      "exists": true,
+      "sha256": "95f9e7e650212cd6991f24f4dbf5ff95758d39726789c0f17b930722ebb95ab8",
+      "copied_sha256": "95f9e7e650212cd6991f24f4dbf5ff95758d39726789c0f17b930722ebb95ab8",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/numeric_sacred_profiles.json",
+      "source": "/workspace/generation/configs/numeric_sacred_profiles.json",
+      "exists": true,
+      "sha256": "1a35dc4049abce34bc7261b395d52a5d9961ceaa23300fb916da4b250bb6d587",
+      "copied_sha256": "1a35dc4049abce34bc7261b395d52a5d9961ceaa23300fb916da4b250bb6d587",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/reference_regions.json",
+      "source": "/workspace/generation/configs/reference_regions.json",
+      "exists": true,
+      "sha256": "94e8564c222594a11b485392e0d11bca0dc8ae4d944743687bda1a5f107b80b9",
+      "copied_sha256": "94e8564c222594a11b485392e0d11bca0dc8ae4d944743687bda1a5f107b80b9",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/runtime.json",
+      "source": "/workspace/generation/configs/runtime.json",
+      "exists": true,
+      "sha256": "0672cf6a98a84b6ae36e366ce2114ea19c294c5b90ff0e5a36311ac5e9002891",
+      "copied_sha256": "d7716903fec29a5fcb7f10ad34dfee3a63a1b7e9c3c0344360b0f324c5f09813",
+      "same_as_original": false,
+      "allowed_path_template_change": true
+    },
+    {
+      "path": "configs/serak_numeric_profiles.json",
+      "source": "/workspace/generation/configs/serak_numeric_profiles.json",
+      "exists": true,
+      "sha256": "95817ccdb67f449abf04efe4528e9b6066c306b97cf3f7096914287e2043e404",
+      "copied_sha256": "95817ccdb67f449abf04efe4528e9b6066c306b97cf3f7096914287e2043e404",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/species/serak.json",
+      "source": "/workspace/generation/configs/species/serak.json",
+      "exists": true,
+      "sha256": "01ff59ae22eebe5dad93a257f816eabd3b1cee9096f1e3bb317d3e42ae627c83",
+      "copied_sha256": "01ff59ae22eebe5dad93a257f816eabd3b1cee9096f1e3bb317d3e42ae627c83",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/structural_evolution.json",
+      "source": "/workspace/generation/configs/structural_evolution.json",
+      "exists": true,
+      "sha256": "c73e6ddf1838ce26217a0de429b4268757eee2899ba8a304f5afe9b527dae128",
+      "copied_sha256": "c73e6ddf1838ce26217a0de429b4268757eee2899ba8a304f5afe9b527dae128",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "configs/web_stage_designs.json",
+      "source": "/workspace/generation/configs/web_stage_designs.json",
+      "exists": true,
+      "sha256": "d80a66b1cf8641cd0c60797e4eb11c7cec7201a90604751e50263599b1b6be6f",
+      "copied_sha256": "d80a66b1cf8641cd0c60797e4eb11c7cec7201a90604751e50263599b1b6be6f",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/LICENSES.md",
+      "source": "/workspace/generation/docs/LICENSES.md",
+      "exists": true,
+      "sha256": "75d6a691dcdc304b42634f7dad5ab0fa3e01d18f516d033e0c05d3a7490e7c91",
+      "copied_sha256": "75d6a691dcdc304b42634f7dad5ab0fa3e01d18f516d033e0c05d3a7490e7c91",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/QWEN.md",
+      "source": "/workspace/generation/docs/QWEN.md",
+      "exists": true,
+      "sha256": "67040d3f4b44f8e9c17ab878e0b6c4deb71db02b602fc916902c62874f825008",
+      "copied_sha256": "67040d3f4b44f8e9c17ab878e0b6c4deb71db02b602fc916902c62874f825008",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/QWEN_MODEL_CARD.md",
+      "source": "/workspace/generation/docs/QWEN_MODEL_CARD.md",
+      "exists": true,
+      "sha256": "d4aee8d372df2a890b6283e7d1885e3f68b57190c7d3f4b9466a61beffc16016",
+      "copied_sha256": "d4aee8d372df2a890b6283e7d1885e3f68b57190c7d3f4b9466a61beffc16016",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/QWEN_MODEL_LICENSE.txt",
+      "source": "/workspace/generation/docs/QWEN_MODEL_LICENSE.txt",
+      "exists": true,
+      "sha256": "8dc973f024ff95966bea25866efa443fd16776dcb1001e681e3d467ea572b28d",
+      "copied_sha256": "8dc973f024ff95966bea25866efa443fd16776dcb1001e681e3d467ea572b28d",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/RIGGING.md",
+      "source": "/workspace/generation/docs/RIGGING.md",
+      "exists": true,
+      "sha256": "16d53a14751e7f7858f199f1ad78ecd3cf0cf0619b73c842cead27df31d34397",
+      "copied_sha256": "16d53a14751e7f7858f199f1ad78ecd3cf0cf0619b73c842cead27df31d34397",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "docs/TRELLIS.md",
+      "source": "/workspace/generation/docs/TRELLIS.md",
+      "exists": true,
+      "sha256": "8a1f9c2d91729c64a88168f3c51d6caed1f3f042a6c3ba79e0593ead11394105",
+      "copied_sha256": "8a1f9c2d91729c64a88168f3c51d6caed1f3f042a6c3ba79e0593ead11394105",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "pyproject.toml",
+      "source": "/workspace/generation/pyproject.toml",
+      "exists": true,
+      "sha256": "3be3179d3a9a05ac00d28b981bb0e8602d3a9e367f6217418951d38fb8c52654",
+      "copied_sha256": "3be3179d3a9a05ac00d28b981bb0e8602d3a9e367f6217418951d38fb8c52654",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "run_pipeline.py",
+      "source": "/workspace/generation/run_pipeline.py",
+      "exists": true,
+      "sha256": "7cb25fa2dd9b19cdc6739d39d82794518b0de7b09c9be0b28bafd5707625d383",
+      "copied_sha256": "7cb25fa2dd9b19cdc6739d39d82794518b0de7b09c9be0b28bafd5707625d383",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/background_matte.py",
+      "source": "/workspace/generation/scripts/background_matte.py",
+      "exists": true,
+      "sha256": "07ccd3a965b07b0932b3b443e70be2c201628d9612d846dc45bd62a48615ac9a",
+      "copied_sha256": "07ccd3a965b07b0932b3b443e70be2c201628d9612d846dc45bd62a48615ac9a",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/prepare_3d_input.py",
+      "source": "/workspace/generation/scripts/prepare_3d_input.py",
+      "exists": true,
+      "sha256": "159674cdccf590584a4647ecdd12ec5808dff6e4863ab3865be613cf5204938f",
+      "copied_sha256": "159674cdccf590584a4647ecdd12ec5808dff6e4863ab3865be613cf5204938f",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/prepare_branch_evolution.py",
+      "source": "/workspace/generation/scripts/prepare_branch_evolution.py",
+      "exists": true,
+      "sha256": "20db9a0d804973ff27d927df6f1414b81be412e0c7a24369c9cf995ab7bb5a56",
+      "copied_sha256": "20db9a0d804973ff27d927df6f1414b81be412e0c7a24369c9cf995ab7bb5a56",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/prepare_numeric_evolution.py",
+      "source": "/workspace/generation/scripts/prepare_numeric_evolution.py",
+      "exists": true,
+      "sha256": "e55f3fa80b569d440ce8b53bba71caf02be9e1df59cf6cb809cc53cadd760a73",
+      "copied_sha256": "e55f3fa80b569d440ce8b53bba71caf02be9e1df59cf6cb809cc53cadd760a73",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/qwen_branch_worker.py",
+      "source": "/workspace/generation/scripts/qwen_branch_worker.py",
+      "exists": true,
+      "sha256": "e9fab8de8274ffb618aed815a474f5549d9763e567b284c591131fbed14f170a",
+      "copied_sha256": "e9fab8de8274ffb618aed815a474f5549d9763e567b284c591131fbed14f170a",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/run_image_to_rigged.py",
+      "source": "/workspace/generation/scripts/run_image_to_rigged.py",
+      "exists": true,
+      "sha256": "ce8abf4e3812a31e071314e9c5b2b880e4b828aba7d75b55dc2f06916280c288",
+      "copied_sha256": "ce8abf4e3812a31e071314e9c5b2b880e4b828aba7d75b55dc2f06916280c288",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/run_numeric_evolution.py",
+      "source": "/workspace/generation/scripts/run_numeric_evolution.py",
+      "exists": true,
+      "sha256": "46a9e0d5368b8c72f0ba624a381141373230c64f23cc1977673fbf00292b8dc2",
+      "copied_sha256": "46a9e0d5368b8c72f0ba624a381141373230c64f23cc1977673fbf00292b8dc2",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/run_selected_3d.py",
+      "source": "/workspace/generation/scripts/run_selected_3d.py",
+      "exists": true,
+      "sha256": "5257ae91ebf0e936e69a1572753ad57a3a46b6409ac47fd85de8153b6e4d8217",
+      "copied_sha256": "5257ae91ebf0e936e69a1572753ad57a3a46b6409ac47fd85de8153b6e4d8217",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/setup_qwen.sh",
+      "source": "/workspace/generation/scripts/setup_qwen.sh",
+      "exists": true,
+      "sha256": "b9b12fc13b6eaf4c48a250b8ca6fb796b709f939ba89c19f746cb422f34922cc",
+      "copied_sha256": "b9b12fc13b6eaf4c48a250b8ca6fb796b709f939ba89c19f746cb422f34922cc",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/setup_qwen_download.py",
+      "source": "/workspace/generation/scripts/setup_qwen_download.py",
+      "exists": true,
+      "sha256": "28314fb5bebc8b08bb2cbfedc3f6767007f2ebc8bd532623a04b1b9d3a54ddf6",
+      "copied_sha256": "28314fb5bebc8b08bb2cbfedc3f6767007f2ebc8bd532623a04b1b9d3a54ddf6",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/setup_rigging.py",
+      "source": "/workspace/generation/scripts/setup_rigging.py",
+      "exists": true,
+      "sha256": "3b4eba462527941db59fb30c8c39e106210b3fe3955b585a12d8a60f57324567",
+      "copied_sha256": "3b4eba462527941db59fb30c8c39e106210b3fe3955b585a12d8a60f57324567",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/setup_rigging.sh",
+      "source": "/workspace/generation/scripts/setup_rigging.sh",
+      "exists": true,
+      "sha256": "b89e71fc0ad0cb1599f1108e32dff85e897c7f8f5eed7e6899d58ebd6dd52943",
+      "copied_sha256": "b89e71fc0ad0cb1599f1108e32dff85e897c7f8f5eed7e6899d58ebd6dd52943",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "scripts/setup_trellis.py",
+      "source": "/workspace/generation/scripts/setup_trellis.py",
+      "exists": true,
+      "sha256": "f115a44c809d984b8c949b951b9ab52995bac6517f9a0d6f2e798fbaed8632eb",
+      "copied_sha256": "f115a44c809d984b8c949b951b9ab52995bac6517f9a0d6f2e798fbaed8632eb",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/__init__.py",
+      "source": "/workspace/generation/src/healthmon/__init__.py",
+      "exists": true,
+      "sha256": "1c503f7739e63b969996c18b8f3f84111ac2a064e65fcf41436b8f1b6f24a718",
+      "copied_sha256": "1c503f7739e63b969996c18b8f3f84111ac2a064e65fcf41436b8f1b6f24a718",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/blender_tool.py",
+      "source": "/workspace/generation/src/healthmon/blender_tool.py",
+      "exists": true,
+      "sha256": "f3080c83f646816b62296269b3e0c3ed46d24e78875c56538ace4d835c8f11da",
+      "copied_sha256": "f3080c83f646816b62296269b3e0c3ed46d24e78875c56538ace4d835c8f11da",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/individual_evolution.py",
+      "source": "/workspace/generation/src/healthmon/individual_evolution.py",
+      "exists": true,
+      "sha256": "a3dc6c0baaad7d88fd9a373bd64a2c714a53744545da3b1afcb5bfdfff23c7b3",
+      "copied_sha256": "a3dc6c0baaad7d88fd9a373bd64a2c714a53744545da3b1afcb5bfdfff23c7b3",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/numeric_router.py",
+      "source": "/workspace/generation/src/healthmon/numeric_router.py",
+      "exists": true,
+      "sha256": "b7a653eae1712cbdd9df035d2a5860998020034b00025dcc43a3a8b8deb0e8d3",
+      "copied_sha256": "b7a653eae1712cbdd9df035d2a5860998020034b00025dcc43a3a8b8deb0e8d3",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/numeric_source_guard.py",
+      "source": "/workspace/generation/src/healthmon/numeric_source_guard.py",
+      "exists": true,
+      "sha256": "90230488c8d2ba968b7298e1ab4dd677bf1e379ae2d17f0f4558205153ae9dff",
+      "copied_sha256": "90230488c8d2ba968b7298e1ab4dd677bf1e379ae2d17f0f4558205153ae9dff",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/prompts.py",
+      "source": "/workspace/generation/src/healthmon/prompts.py",
+      "exists": true,
+      "sha256": "f140f6ac0853a6add72025b3c190860b8c3f6d98199e26b52cce8df75a976753",
+      "copied_sha256": "f140f6ac0853a6add72025b3c190860b8c3f6d98199e26b52cce8df75a976753",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/quality.py",
+      "source": "/workspace/generation/src/healthmon/quality.py",
+      "exists": true,
+      "sha256": "2fc30c1693a031cf215e20ffe7d552e5c44a2ac9c20e8bae3f6ee6c1787442b1",
+      "copied_sha256": "2fc30c1693a031cf215e20ffe7d552e5c44a2ac9c20e8bae3f6ee6c1787442b1",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/qwen_runner.py",
+      "source": "/workspace/generation/src/healthmon/qwen_runner.py",
+      "exists": true,
+      "sha256": "54394d58e1e791db8fb1e1e43e4bcedf43390329173483e7051f7601f3cae5f4",
+      "copied_sha256": "54394d58e1e791db8fb1e1e43e4bcedf43390329173483e7051f7601f3cae5f4",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/references.py",
+      "source": "/workspace/generation/src/healthmon/references.py",
+      "exists": true,
+      "sha256": "9bb02d9fd9c3b830ae46178647284c689c3464b28981bfa9b1d90230f39f67eb",
+      "copied_sha256": "9bb02d9fd9c3b830ae46178647284c689c3464b28981bfa9b1d90230f39f67eb",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/riganything_blender_entry.py",
+      "source": "/workspace/generation/src/healthmon/riganything_blender_entry.py",
+      "exists": true,
+      "sha256": "a9d167168a2c40c7bd37583901a39b8e1a7dddeb81d60db1451ffaefbe2eb60f",
+      "copied_sha256": "a9d167168a2c40c7bd37583901a39b8e1a7dddeb81d60db1451ffaefbe2eb60f",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/rigging_runner.py",
+      "source": "/workspace/generation/src/healthmon/rigging_runner.py",
+      "exists": true,
+      "sha256": "a048d5e35ad30c9a3462a841074ffda6ad27eaa44c6b0541942eb1d6f813d14d",
+      "copied_sha256": "a048d5e35ad30c9a3462a841074ffda6ad27eaa44c6b0541942eb1d6f813d14d",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    },
+    {
+      "path": "src/healthmon/trellis_runner.py",
+      "source": "/workspace/generation/src/healthmon/trellis_runner.py",
+      "exists": true,
+      "sha256": "cf4b9a88a621c83d86e084c637a4c5ef5c1a840fa1fce00c9d038f42e9673240",
+      "copied_sha256": "cf4b9a88a621c83d86e084c637a4c5ef5c1a840fa1fce00c9d038f42e9673240",
+      "same_as_original": true,
+      "allowed_path_template_change": false
+    }
+  ],
+  "unexplained_changes": [],
+  "note": "Only runtime path template changes are allowed. All copied inference Python and shell code is byte-identical to original Spark."
+}

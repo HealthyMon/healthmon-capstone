@@ -1,0 +1,32 @@
+[
+  {
+    "source": "/workspace/generation/web/fixed/references/01_five_species_fit_design.png",
+    "destination": "assets/healthmon_references/original_posters/01_five_species_fit_design.png",
+    "bytes": 2331585,
+    "sha256": "236f1385c7d060eec56238f18ebf753db2d746e34875904678768ca50cd66183"
+  },
+  {
+    "source": "/workspace/generation/web/fixed/references/02_five_species_heavy_design.png",
+    "destination": "assets/healthmon_references/original_posters/02_five_species_heavy_design.png",
+    "bytes": 2681752,
+    "sha256": "c8a9dcc5b7ee73252b65972ca9e5e3eb9cd34e77c8eb61c235461659a9c429fa"
+  },
+  {
+    "source": "/workspace/generation/web/fixed/references/04_five_species_two_paths.png",
+    "destination": "assets/healthmon_references/original_posters/04_five_species_two_paths.png",
+    "bytes": 2890922,
+    "sha256": "4c8d6a198b7dd4722fae2d44da67c99899ed810b54dbba00047ece76800369e5"
+  },
+  {
+    "source": "/workspace/generation/web/fixed/references/05_three_species_first_draft.png",
+    "destination": "assets/healthmon_references/original_posters/05_three_species_first_draft.png",
+    "bytes": 2874305,
+    "sha256": "ea8d47236f0bdda3e661dfb2322a1c0fcef102d943f9b261ac59623552bcb3ac"
+  },
+  {
+    "source": "/workspace/generation/web/fixed/references/06_three_species_revised_draft.png",
+    "destination": "assets/healthmon_references/original_posters/06_three_species_revised_draft.png",
+    "bytes": 2864840,
+    "sha256": "e62f43f9eec26d9a47138bf35fa7c8063b44e80c7120b2ff0fb9cd7fb1283346"
+  }
+]

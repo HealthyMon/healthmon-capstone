@@ -1,0 +1,9 @@
+{
+  "python_files_parsed": 42,
+  "shell_syntax_passed": true,
+  "preserved_primary_source_files": 43,
+  "original_source_bytes_unchanged": true,
+  "model_weights_in_code_package": [],
+  "gpu_inference_performed": false,
+  "docker_build_performed": false
+}

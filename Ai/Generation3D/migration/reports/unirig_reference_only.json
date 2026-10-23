@@ -1,0 +1,162 @@
+{
+  "scope": "Reference only. NOT the missing original installed revision. Not downloaded or integrated.",
+  "url": "https://huggingface.co/api/models/VAST-AI/UniRig?blobs=true",
+  "remote_current_revision": "36842e2b5947e9e60f89275b83208c8e74071c63",
+  "files": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+      "size": 1519
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "950561d4fed87c0ce279a516a6f08ef61682087d",
+      "size": 2947
+    },
+    {
+      "rfilename": "data/rignet/processed.zip",
+      "blobId": "86d97841e104be95b278c1cbabb65b3739651f4a",
+      "size": 163791994,
+      "lfs": {
+        "sha256": "2b1742d34f24eccde1fb78f1992304b26a27562daff3b5d9c9f457225221b45f",
+        "size": 163791994,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "data/rigxl/datalist/biped_test.txt",
+      "blobId": "55ad278b08b1d153d2b12fb1fa7a2ec76da1d0a1",
+      "size": 299
+    },
+    {
+      "rfilename": "data/rigxl/datalist/biped_train.txt",
+      "blobId": "9b1c6071847de518bf7950fcf1a1bee7d65872c5",
+      "size": 17249
+    },
+    {
+      "rfilename": "data/rigxl/datalist/bird_flyer_test.txt",
+      "blobId": "19d620a2cb436ced2ff6ef48d499ee318ba04306",
+      "size": 119
+    },
+    {
+      "rfilename": "data/rigxl/datalist/bird_flyer_train.txt",
+      "blobId": "e93024852eedba0286be0e82396213903e833a60",
+      "size": 3275
+    },
+    {
+      "rfilename": "data/rigxl/datalist/insect_arachnid_test.txt",
+      "blobId": "f0b66cfdc382af66f9f4cf9a6a28bea5137d455d",
+      "size": 89
+    },
+    {
+      "rfilename": "data/rigxl/datalist/insect_arachnid_train.txt",
+      "blobId": "b7ad5525830d16f4c121b5a9dae461b3bd46a9c2",
+      "size": 1883
+    },
+    {
+      "rfilename": "data/rigxl/datalist/mixamo_test.txt",
+      "blobId": "79243fa3af2f05a8d42b40050e6413b2e4940098",
+      "size": 299
+    },
+    {
+      "rfilename": "data/rigxl/datalist/mixamo_train.txt",
+      "blobId": "21ff1e15a520d60b0484b6bc9026e8b73a6917d1",
+      "size": 45875
+    },
+    {
+      "rfilename": "data/rigxl/datalist/other_test.txt",
+      "blobId": "b7512e5ffcfba72cfa7f26accbb4e8ee3604a7e7",
+      "size": 89
+    },
+    {
+      "rfilename": "data/rigxl/datalist/other_train.txt",
+      "blobId": "b3cebbc33779ffcfd296e8742569b4f7ab3df4ff",
+      "size": 1763
+    },
+    {
+      "rfilename": "data/rigxl/datalist/quadruped_test.txt",
+      "blobId": "9694087e5f6bee20145351cc17ee845b70785a3a",
+      "size": 149
+    },
+    {
+      "rfilename": "data/rigxl/datalist/quadruped_train.txt",
+      "blobId": "18433676328bf070752fd1e6d2400d6a8c67fac4",
+      "size": 5579
+    },
+    {
+      "rfilename": "data/rigxl/datalist/static_test.txt",
+      "blobId": "dbde4e7799aaff29cb2d18f6431e56d193b3bad1",
+      "size": 149
+    },
+    {
+      "rfilename": "data/rigxl/datalist/static_train.txt",
+      "blobId": "c934d774c58d4a1c588f10596b39ab6dd6399ebe",
+      "size": 8975
+    },
+    {
+      "rfilename": "data/rigxl/datalist/vroid_test.txt",
+      "blobId": "ef3f988610e0e780c7c3936af966ba77791e47e6",
+      "size": 299
+    },
+    {
+      "rfilename": "data/rigxl/datalist/vroid_train.txt",
+      "blobId": "6ee10de28c75b975fb1024508d695cb994b4a502",
+      "size": 12065
+    },
+    {
+      "rfilename": "data/rigxl/datalist/water_creature_test.txt",
+      "blobId": "ea5c4f8144adb923d4dafaffa6ba556c77160576",
+      "size": 89
+    },
+    {
+      "rfilename": "data/rigxl/datalist/water_creature_train.txt",
+      "blobId": "f8b75f71245e7d33ef572ba56000b34e20e42b7c",
+      "size": 1583
+    },
+    {
+      "rfilename": "data/rigxl/mapping.json",
+      "blobId": "643b925fe4d80d725a011de70a40e6cd81963d8d",
+      "size": 3009643
+    },
+    {
+      "rfilename": "data/rigxl/processed.7z",
+      "blobId": "b88d802bc86bb791b0eb2a1605c508d236add63a",
+      "size": 4871969622,
+      "lfs": {
+        "sha256": "1574d3eab8c6f02c64c7120dde5228e7c269e02429d8abc5bd14832dfcea7bb7",
+        "size": 4871969622,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "skeleton/articulation-xl_quantization_256/model.ckpt",
+      "blobId": "7e8d4f03126bf8ab4fa4c9daf72009181ebf4f41",
+      "size": 1439617174,
+      "lfs": {
+        "sha256": "d8cf9b42d56e7bc316d293597ecf8c4c39a8631cdd44a261ecf388242fabd0f4",
+        "size": 1439617174,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "skeleton/rignet/model.ckpt",
+      "blobId": "92c55808552a3132e33c3c0fe0bdd7b47187df46",
+      "size": 621660032,
+      "lfs": {
+        "sha256": "e68121ed9ef1ad8bd396c51e8c5e985048e45951d7e4be740b44723653659c45",
+        "size": 621660032,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "skin/articulation-xl/model.ckpt",
+      "blobId": "193586d806de3f2c4cf15dbf40a84e18a73fc076",
+      "size": 4375464854,
+      "lfs": {
+        "sha256": "9d40cf42fb9d4c10d8b373d9f4f557c6fbbc5ebacae7ae6b3dce5a0d8a18bc33",
+        "size": 4375464854,
+        "pointerSize": 135
+      }
+    }
+  ]
+}

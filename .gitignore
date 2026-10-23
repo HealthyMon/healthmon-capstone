@@ -182,3 +182,21 @@ desktop.ini
 # =========================================================
 
 .vscode/
+# Local verification output and Android build symbol dumps
+**/Android_BackUpThisFolder_ButDontShipItWithYourGame/
+**/BurstDebugInformation_DoNotShip/
+Docs/verification/
+**/PerformanceTestRunInfo.json
+**/PerformanceTestRunInfo.json.meta
+**/PerformanceTestRunSettings.json
+**/PerformanceTestRunSettings.json.meta
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Common server local state and PostgreSQL exports
+/backups/
+/.runtime/
+*.dump
+*.sql.gz

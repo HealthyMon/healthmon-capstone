@@ -1,0 +1,306 @@
+[
+  {
+    "stage": "qwen",
+    "metadata": "/workspace/generation/outputs/v2/pilot/images/fb8a2079fc8b041d060f.png.json",
+    "output": "/workspace/generation/outputs/v2/pilot/images/fb8a2079fc8b041d060f.png",
+    "expected_sha256": "39a8e5b8dcf00e7dc50248e1e7f92234c333f9f875a1c528251093023400dcab",
+    "actual_sha256": "39a8e5b8dcf00e7dc50248e1e7f92234c333f9f875a1c528251093023400dcab",
+    "matches": true,
+    "peak_cuda_allocated_gb": 39.21474304,
+    "parameters": {
+      "seed": 42,
+      "width": 768,
+      "height": 768,
+      "num_inference_steps": 40,
+      "output_resolution": 768,
+      "torch_dtype": "bfloat16",
+      "true_cfg_scale": 1.0,
+      "use_kv_cache": true,
+      "num_images_per_prompt": 1,
+      "generator_device": "cuda",
+      "memory_mode": "cuda",
+      "vae_tiling": false,
+      "negative_prompt": null
+    }
+  },
+  {
+    "case": "s0_starter",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        28
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/fixed_design_release/three_starters/lucan/trellis/model.glb",
+        "expected_sha256": "49a66d2c212e1c8fcd0496003716597f3fcd766b9b8320c8bd8bf603562b7714",
+        "exists": true,
+        "actual_sha256": "49a66d2c212e1c8fcd0496003716597f3fcd766b9b8320c8bd8bf603562b7714",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/fixed_design_release/three_starters/lucan/rigging/final_rigged.glb",
+        "expected_sha256": "f908ef9612bd74ed5a9ebca7a80c4a9439f6b2814bd5a5ede812d506b19dc6a6",
+        "exists": true,
+        "actual_sha256": "f908ef9612bd74ed5a9ebca7a80c4a9439f6b2814bd5a5ede812d506b19dc6a6",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s1_healthy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        29
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s1_healthy/trellis/model.glb",
+        "expected_sha256": "3ff6b83c69e83dd635361bb2e7bfe2efb465634e037b3721305dd056d62f6440",
+        "exists": true,
+        "actual_sha256": "3ff6b83c69e83dd635361bb2e7bfe2efb465634e037b3721305dd056d62f6440",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s1_healthy/rigging/final_rigged.glb",
+        "expected_sha256": "cb61ac9b20b393c504fd0f4a24634420d333c93adde9388ea39024226a4da2a2",
+        "exists": true,
+        "actual_sha256": "cb61ac9b20b393c504fd0f4a24634420d333c93adde9388ea39024226a4da2a2",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s1_heavy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        34
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s1_heavy/trellis/model.glb",
+        "expected_sha256": "5a9f7343f74e96ac5b1cc473ab0e2fd87aaaba1a48fd153f6e0e16beb8a74b5f",
+        "exists": true,
+        "actual_sha256": "5a9f7343f74e96ac5b1cc473ab0e2fd87aaaba1a48fd153f6e0e16beb8a74b5f",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s1_heavy/rigging/final_rigged.glb",
+        "expected_sha256": "b6fda32f9979e8ffe12e6122866069ef2327de1c0dea70c004861984345d93c8",
+        "exists": true,
+        "actual_sha256": "b6fda32f9979e8ffe12e6122866069ef2327de1c0dea70c004861984345d93c8",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s2_healthy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        27
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s2_healthy/trellis/model.glb",
+        "expected_sha256": "37f0d5325e2a29c330b324fe7a97ed19225282be0e14d761fc980e400f02031b",
+        "exists": true,
+        "actual_sha256": "37f0d5325e2a29c330b324fe7a97ed19225282be0e14d761fc980e400f02031b",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s2_healthy/rigging/final_rigged.glb",
+        "expected_sha256": "4bfd03ea874b712e896f4ddfa276a7fb02e3a96f7a68ddf3e78ca1cf0e1cc0f2",
+        "exists": true,
+        "actual_sha256": "4bfd03ea874b712e896f4ddfa276a7fb02e3a96f7a68ddf3e78ca1cf0e1cc0f2",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s2_heavy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        27
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s2_heavy/trellis/model.glb",
+        "expected_sha256": "6cfd7dc30e7bd47148ca3ac86fdf4470842d0f536fef043197e96868fd76d5f8",
+        "exists": true,
+        "actual_sha256": "6cfd7dc30e7bd47148ca3ac86fdf4470842d0f536fef043197e96868fd76d5f8",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s2_heavy/rigging/final_rigged.glb",
+        "expected_sha256": "af38b4b554c64672f33623bd1e632d5b2dab2d913594318928b5b7b22354db25",
+        "exists": true,
+        "actual_sha256": "af38b4b554c64672f33623bd1e632d5b2dab2d913594318928b5b7b22354db25",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s3_healthy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        32
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s3_healthy/trellis/model.glb",
+        "expected_sha256": "f8915990af35da81d81ad474a3c8e79d11481dd46ce7007bfa8df86d4ed02a4b",
+        "exists": true,
+        "actual_sha256": "f8915990af35da81d81ad474a3c8e79d11481dd46ce7007bfa8df86d4ed02a4b",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s3_healthy/rigging/final_rigged.glb",
+        "expected_sha256": "59949d81aa40dbb0305c4fdd2651dc5a7f692cacca1d7441fa51b6bf7d7dc569",
+        "exists": true,
+        "actual_sha256": "59949d81aa40dbb0305c4fdd2651dc5a7f692cacca1d7441fa51b6bf7d7dc569",
+        "matches": true
+      }
+    ]
+  },
+  {
+    "case": "s3_heavy",
+    "stage_statuses": {
+      "trellis": "PASS",
+      "validate_unrigged": "PASS",
+      "render_unrigged": "PASS",
+      "rigging": "PASS"
+    },
+    "trellis_inference_record": true,
+    "blender_version": "4.0.2",
+    "glb_structure": {
+      "skins": 1,
+      "joints": [
+        27
+      ],
+      "primitives": 1,
+      "skinned_primitives": 1,
+      "materials": 1,
+      "textures": 2,
+      "images": 2,
+      "images_embedded": true
+    },
+    "rig_valid": true,
+    "artifacts": [
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s3_heavy/trellis/model.glb",
+        "expected_sha256": "630ec11f744bfe85f773da0dd8f6a0f37015727196f74f1ada4d4508ffaae2fa",
+        "exists": true,
+        "actual_sha256": "630ec11f744bfe85f773da0dd8f6a0f37015727196f74f1ada4d4508ffaae2fa",
+        "matches": true
+      },
+      {
+        "path": "/workspace/healthmon-evolution/outputs/lucan_evolution_3d_20261011/s3_heavy/rigging/final_rigged.glb",
+        "expected_sha256": "b9e83cb5b8bb41c0c2e3743ea798125161a48daba7a92d07cd385f1b5ba57b8b",
+        "exists": true,
+        "actual_sha256": "b9e83cb5b8bb41c0c2e3743ea798125161a48daba7a92d07cd385f1b5ba57b8b",
+        "matches": true
+      }
+    ]
+  }
+]

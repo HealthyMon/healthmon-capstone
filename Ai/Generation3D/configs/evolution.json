@@ -1,0 +1,34 @@
+{
+  "scenario_forms": {
+    "A_fit_then_heavy": ["BALANCED", "FIT", "FIT", "HEAVY"],
+    "B_heavy_then_recovery": ["BALANCED", "HEAVY", "RECOVERY", "RECOVERY"]
+  },
+  "scenario_histories": {
+    "A_fit_then_heavy": {
+      "exercise": "Previously active, followed by prolonged inactivity",
+      "diet": "Sustained excess energy intake",
+      "prolonged_low_activity": true,
+      "sustained_energy_excess": true
+    },
+    "B_heavy_then_recovery": {
+      "exercise": "Previously inactive; consistent exercise and walking have gradually resumed",
+      "diet": "Improved regular meals and reduced excess energy intake",
+      "prolonged_low_activity": false,
+      "sustained_energy_excess": false
+    }
+  },
+  "personality": "Confident and proud, with an appealing expression",
+  "species": {
+    "mongle": "Soft, warm, fluffy creature. Preserve the actual reference's wool, colors, face and distinctive motifs; athletic forms may become agile or protective.",
+    "tori": "Nature creature with vegetation and leaf motifs. Preserve the actual reference's plant structures, coloring and lineage; mature forms may become a balanced nature guardian.",
+    "lucan": "Powerful quadrupedal beast. In this pack it has charcoal fur, amber-gold eyes, a pale cheek and chest ruff, pointed ears, and gold-edged dark plates and accents. Preserve these visible lineage motifs."
+  },
+  "form_prompts": {
+    "FIT": "Regular exercise and appropriate meals: athletic species-appropriate proportions, energetic carriage and a clear mature silhouette.",
+    "BALANCED": "Moderate everyday activity and balanced meals: healthy, proportionate anatomy. Walking alone must never produce obesity.",
+    "INACTIVE": "Low activity without established sustained energy excess: quieter posture and possible mild softness. Do not automatically make the creature obese.",
+    "HEAVY": "Prolonged low activity AND sustained energy surplus: clearly increased BODY FAT, a round protruding abdomen, broader waist, softer flanks and an appreciably heavier silhouette. Keep a commanding, attractive, strong guardian presence. Additional muscle, thicker armor or global scale alone is insufficient.",
+    "RECOVERY": "A previously heavy or inactive creature after consistent exercise and improved meals: gradual recovery, some retained softness, better posture and endurance. Do not instantly transform into an extreme athlete."
+  },
+  "form_mapping_note": "The archive describes narrative paths rather than a machine-readable stage/form table. These four-stage defaults are explicit implementation interpretations of the visible sequence, editable independently from stage."
+}

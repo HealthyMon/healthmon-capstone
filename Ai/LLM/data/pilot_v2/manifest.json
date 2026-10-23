@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "train": 34,
+    "validation": 8
+  },
+  "max_tokens": 660,
+  "truncated": 0,
+  "group_leakage": false,
+  "reviewer": "Codex agent",
+  "human_review": false,
+  "final_test_count": 0,
+  "status": "small authored pilot; expansion 800/100/200 incomplete",
+  "sha256": {
+    "train.jsonl": "deba63eea7351b6ef9e4054e26dbc0591d6e1feed4f644ffaec290e1072e32bc",
+    "validation.jsonl": "90b3bf3b90946e6677e302f4e0486331b3e63f72ecdbc89745e1e306fafe0a41"
+  }
+}

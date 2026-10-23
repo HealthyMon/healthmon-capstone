@@ -1,0 +1,87 @@
+version: character-lab.v2
+scope: synthetic Character Lab only; legacy persona-growth.v1 remains unchanged
+sources:
+  personality_ranges: config/persona_rules.json
+  quest_catalog: config/quest_catalog.json
+  legacy_rewards: config/rules.json quest_templates reward (walk_500=5, walk_1000=8)
+  exercise_food_weekly_mood: user specification, Character Lab sandbox policy
+provisional:
+  reason: No existing body growth, numeric Mood, level or evolution engine was found.
+  level_exp: true
+  evolution: true
+  nutrition: true
+  energy_balance: true
+  mood: true
+  weekly_personality: true
+  definitions: true
+ranges:
+  upper_body: [0, 100]
+  lower_body: [0, 100]
+  nutrition: [0, 100]
+  energy_balance: [-100, 100]
+  activity: [0, 100]
+  affection: [0, 100]
+  initiative: [0, 100]
+  curiosity: [0, 100]
+  confidence: [0, 100]
+  roughness: [0, 100]
+  bluntness: [0, 100]
+  courtesy: [0, 100]
+  mood: [-100, 100]
+  level: [1, 100]
+  exp: [0, 1000000]
+exercise:
+  thresholds: [[120, 3], [100, 2], [70, 1], [40, 0], [0.000001, -1]]
+  missed: -2
+  daily_positive: 3
+  daily_negative: 2
+  zero_requires_expired_explicit_goal: true
+food:
+  deviation_delta: [2, 1, 0, -1, -2, -2]
+  energy: {low: -2, proper: 0, high: 2}
+  extreme_energy: {low: -3, proper: 0, high: 3}
+mood:
+  daily_positive: 15
+  daily_negative: 15
+  decay: 0.7
+  zero_epsilon: 0.1
+  effects: {exercise_success: 5, exercise_exceeded: 8, exercise_shortfall: -3, quest_completed: 5, quest_failed: -3, character_positive: 5, activity_positive: 3, low_motivation: -5, character_negative: -5}
+weekly:
+  window_days: 7
+  max_delta: 3
+  minimum_analysis_confidence: 0.6
+  repeated_count: 2
+  almost_daily: 7
+  activity_thresholds: [[5, 100, 3], [4, 70, 2], [3, 0, 1]]
+  inactive_days: 1
+  inactive_delta: -1
+  inactive_low_motivation_delta: -2
+  affinity_negative_delta: -2
+  affinity_daily_positive_delta: 3
+  affinity_day_thresholds: [[4, 2], [2, 1], [1, 0], [0, -1]]
+  initiative_thresholds: [[0.8, 3], [0.6, 2], [0.4, 0], [0.2, -1], [0, -2]]
+  initiative_denominator: resolved character proposals created in window; accepted AND completed numerator; pending excluded
+exp:
+  exercise_record: 5
+  food_record: 3
+  conversation: 1
+  daily_conversation_cap: 3
+  required_per_level: 20
+  level_requirement_formula: required_per_level * current_level
+  max_quest_reward: 10000
+  idempotency: event_id; quest_id reward once; conversation daily cap
+evolution:
+  levels: [10, 20, 30]
+  strong: 70
+  asymmetry: 15
+  fat_energy: 40
+  low_energy: -40
+  healthy_nutrition: 60
+  recovered_body_types: [balanced_exercise, upper_exercise, lower_exercise]
+  appearance_fields: [evolution_stage, final_body_type]
+agent:
+  initiative_low: 40
+  initiative_high: 70
+  high_guidance: Offer one optional concrete next step; never override a refusal.
+  medium_guidance: Offer an option when the user asks or shows interest.
+  low_guidance: Listen first; avoid unsolicited tasks and questions.

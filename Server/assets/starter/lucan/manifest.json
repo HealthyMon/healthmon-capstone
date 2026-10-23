@@ -1,0 +1,9 @@
+{
+  "stage": 0,
+  "model_sha256": "77a7b4d49b6561b7d20206d1c1a405b90e160005a69c81decc806cf9452d269d",
+  "image_sha256": "8104f93d8adde21ef4c9d76a36fc2a325301e7a625eaf4552aa53cfd892a0872",
+  "species": "lucan",
+  "revision": "lucan-starter-v1",
+  "source_kind": "verified_existing_stage0_game_asset",
+  "new_generation": false
+}

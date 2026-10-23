@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+apply from: '../shared/keepUnitySymbols.gradle'
+apply from: '../shared/common.gradle'
+**APPLY_PLUGINS**
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // HealthMon Wear OS ↔ Android Data Layer
+    implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+
+    // Android 기본 지원 라이브러리
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.17.0'
+    implementation 'androidx.core:core-ktx:1.17.0'
+
+    // Material
+    implementation 'com.google.android.material:material:1.10.0'
+
+    // HealthMon Phone Room Database
+    implementation 'androidx.room3:room3-runtime:3.0.3'
+
+    // Room3에서 사용하는 SQLite 구현
+    implementation 'androidx.sqlite:sqlite-framework:2.7.1'
+
+    // Durable Room -> common-server uploads, including process/phone restart recovery.
+    implementation 'androidx.work:work-runtime-ktx:2.11.2'
+
+    // Google Play Services Task → Kotlin Coroutine await()
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
+
+**DEPS**
+}
+
+android {
+    namespace "com.unity3d.player"
+    ndkPath "**NDKPATH**"
+    ndkVersion "**NDKVERSION**"
+    compileSdk **APIVERSION**
+    buildToolsVersion "**BUILDTOOLS**"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        minSdk **MINSDK**
+        targetSdk **TARGETSDK**
+        ndk {
+            abiFilters **ABIFILTERS**
+            debugSymbolLevel **DEBUGSYMBOLLEVEL**
+        }
+        consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
+**DEFAULT_CONFIG_SETUP**
+    }
+
+    lint {
+        abortOnError false
+    }
+
+    androidResources {
+        noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }**PACKAGING**
+}
+**IL_CPP_BUILD_SETUP**
+**SOURCE_BUILD_SETUP**
+**EXTERNAL_SOURCES**

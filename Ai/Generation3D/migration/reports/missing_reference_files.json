@@ -1,0 +1,25 @@
+{
+  "original_zip": "healthmon_evolution_reference_pack.zip",
+  "original_zip_status": "absent; no original ZIP hash can be reproduced",
+  "recovered_zip": "healthmon_evolution_reference_pack_RECOVERED_PARTIAL.zip",
+  "primary_poster_recovered": true,
+  "missing": [
+    "healthmon_references/species_sheets/mongle/A_fit_then_heavy.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/A_fit_then_heavy/stage_0.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/A_fit_then_heavy/stage_1.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/A_fit_then_heavy/stage_2.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/A_fit_then_heavy/stage_3.png",
+    "healthmon_references/species_sheets/mongle/B_heavy_then_recovery.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/B_heavy_then_recovery/stage_0.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/B_heavy_then_recovery/stage_1.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/B_heavy_then_recovery/stage_2.png",
+    "healthmon_references/candidate_crops_NOT_CLEAN/mongle/B_heavy_then_recovery/stage_3.png"
+  ],
+  "supported_reference_species": [
+    "lucan",
+    "tori"
+  ],
+  "unsupported_reference_species": [
+    "mongle"
+  ]
+}

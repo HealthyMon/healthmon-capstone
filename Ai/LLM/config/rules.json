@@ -1,0 +1,11 @@
+{
+  "version": "rules.v1",
+  "initial": {"sociability":50,"initiative":50,"playfulness":50,"courtesy":60,"bluntness":20,"roughness":10,"bond":30},
+  "max_delta":2,"daily_absolute_limit":5,
+  "dialogue_review_every":5,"dialogue_min_evidence":3,"dialogue_min_sessions":2,
+  "session_gap_minutes":30,"valence_half_life_minutes":30,"energy_half_life_minutes":60,
+  "activity_min_dates":2,"activity_min_events":3,
+  "quest_cooldown_minutes":30,"quest_expiry_minutes":120,
+  "memory_threshold":0.5,"memory_top_k":3,"recent_exchanges":6,
+  "quest_templates":[{"id":"walk_500","kind":"walk","target":500,"unit":"steps","reward":5}, {"id":"walk_1000","kind":"walk","target":1000,"unit":"steps","reward":8}]
+}

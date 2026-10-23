@@ -1,0 +1,165 @@
+{
+  "date": "2026-09-29",
+  "status": "local_browser_beta_ready",
+  "reviewer": "Codex agent; browser automation and code tests",
+  "human_review": false,
+  "url": "http://127.0.0.1:8000/",
+  "adapter": "runs/expanded-20260929/checkpoint-epoch-1",
+  "backend_tests": {
+    "file": "tests/test_beta.py",
+    "passed": 13,
+    "real_postgresql": true,
+    "gpu_inference_in_unit_tests": false
+  },
+  "transport_tests": {
+    "file": "tests/test_web_api.mjs",
+    "passed": 5,
+    "command": "node --test tests/test_web_api.mjs"
+  },
+  "syntax_checks": {
+    "javascript": "node --check web/app.js and web/api.js",
+    "python": "py_compile src/app.py src/beta.py",
+    "passed": true
+  },
+  "browser": {
+    "synthetic_pet_id": "bb8f302329014352be0adf3b85f0904d",
+    "real_model_request_turns": 5,
+    "observed_fallbacks": 0,
+    "semantic_success_count": null,
+    "checks": [
+      "Root page loads and local same-origin session authenticates without a token in HTML/JS",
+      "User text sent through chat form; waiting indicator and disabled send button observed",
+      "Real model reply rendered in bubble and emotion applied to character",
+      "Browser reload restores the same pet and canonical conversation",
+      "Memory tab shows actual stored preference",
+      "Memory dialog changes source revision and registers the swimming preference",
+      "Old invalidated assistant reply removed after correction",
+      "New model answer references the corrected swimming preference",
+      "Quest model request creates an actual offered quest",
+      "Accept button changes server quest status to active and shows 0 / 500 steps"
+    ],
+    "actual_corrected_memory_reply": "아, 걷기보다는 수영이 더 좋다고 해.",
+    "actual_quest_reply": "오늘은 가볍게 500 걸음만 목표로 하는 걸기 퀘스트를 추천해 줄게.",
+    "known_output_quality_issues": [
+      "First response mixes speech levels",
+      "Quest reply contains 걸기 typo; raw speech displayed unchanged",
+      "Expanded model recalls swimming but overstates relative preference as walking is not preferred; this remains a semantic model error"
+    ],
+    "memory_delete": "Backend and transport tests covered; not executed through browser in this verification",
+    "settings_save": "Implemented; not separately exercised in this browser verification",
+    "phases": [
+      {
+        "model": "base Qwen",
+        "request_turns": 3,
+        "fallbacks": 0,
+        "reason": "Initial UI smoke before omitted-adapter startup issue was found; not expanded-LoRA results"
+      },
+      {
+        "model": "runs/expanded-20260929/checkpoint-epoch-1",
+        "request_turns": 2,
+        "fallbacks": 0,
+        "turns": [
+          {
+            "input": "내가 좋아한다고 알려준 운동 기억해?",
+            "response": {
+              "action": {
+                "type": "none",
+                "target_id": null
+              },
+              "speech": "수영을 좋아한다고 알려 준 적이 있어. 걷기는 취향이 아니야.",
+              "emotion": "neutral",
+              "animation": "idle",
+              "memory_ids": [
+                "0e86f6066e9d52366e34eb74"
+              ],
+              "personality_update": null
+            },
+            "metrics": {
+              "errors": [],
+              "attempts": 1,
+              "fallback": false,
+              "repaired": false,
+              "raw_valid": true,
+              "latency_seconds": 7.438000000001921
+            }
+          },
+          {
+            "input": "오늘은 그냥 네 옆에서 잠깐 쉬고 싶어.",
+            "response": {
+              "action": {
+                "type": "none",
+                "target_id": null
+              },
+              "speech": "알겠어. 지금은 조용히 쉬어 가자.",
+              "emotion": "neutral",
+              "animation": "idle",
+              "memory_ids": [],
+              "personality_update": null
+            },
+            "metrics": {
+              "errors": [],
+              "attempts": 1,
+              "fallback": false,
+              "repaired": false,
+              "raw_valid": true,
+              "latency_seconds": 4.546999999998661
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "responsive_checks": [
+    {
+      "width": 393,
+      "height": 852,
+      "result": "Mobile chat, memory dialog and quest card visually checked"
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "result": "No horizontal overflow; detail panel scrolls"
+    },
+    {
+      "width": 1200,
+      "height": 900,
+      "result": "Desktop side introduction and 430px app frame; composer bottom 808.33px; no horizontal overflow"
+    },
+    {
+      "width": 393,
+      "height": 430,
+      "result": "Short viewport simulation: composer bottom 422px; chat scroll height 176.67px; no horizontal overflow"
+    }
+  ],
+  "screenshot": "docs/beta-preview/mobile-chat.png",
+  "unity": {
+    "files": [
+      "integrations/unity/HealthmonApiClient.cs",
+      "integrations/unity/HealthmonDtos.cs",
+      "integrations/unity/HealthmonCharacterBridge.cs"
+    ],
+    "host_csharp_check_with_minimal_unity_stubs": "passed",
+    "actual_unity_editor_import_build_device_test": "not performed; no Unity project or Editor supplied"
+  },
+  "limits": [
+    "Local same-computer beta; external phone access not enabled",
+    "Browser cookie shares the first configured development account; not production multi-user login",
+    "2D SVG character; no Unity 3D model or rig created",
+    "Existing model factual, tone and repetition errors remain",
+    "Fallback conversation cannot be restored from current server history storage",
+    "Pending browser request survives retry within the page but not a page reload",
+    "Physical mobile keyboard and device networking not tested"
+  ],
+  "startup_tests": {
+    "file": "tests/test_serving_config.py",
+    "passed": 2,
+    "fix": "Default serve command reads selected adapter from config; explicit --base available"
+  },
+  "verified_current_health": {
+    "status": "ok",
+    "backend": "qwen3.5-9b-bf16-lora",
+    "loaded": true,
+    "adapter": "runs/expanded-20260929/checkpoint-epoch-1",
+    "pgvector": "0.8.2"
+  }
+}

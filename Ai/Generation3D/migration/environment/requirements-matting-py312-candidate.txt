@@ -1,0 +1,5 @@
+# Target-only candidate: original matting used Python 3.10.21 / NumPy 1.24.4.
+# NumPy 1.26.4 permits Python 3.12; this substitution has NOT been inference-tested.
+numpy==1.26.4
+Pillow==12.3.0
+onnxruntime==1.23.2

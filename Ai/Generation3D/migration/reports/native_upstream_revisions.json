@@ -1,0 +1,16 @@
+[
+  {
+    "name": "nvdiffrast",
+    "url": "https://github.com/NVlabs/nvdiffrast.git",
+    "commit": "253ac4fcea7de5f396371124af597e6cc957bfae",
+    "tag": "v0.4.0",
+    "provenance": "Target build source: upstream tag resolved now; source binary build provenance unverified"
+  },
+  {
+    "name": "flash-attention",
+    "url": "https://github.com/Dao-AILab/flash-attention.git",
+    "commit": "89c5a7dd4e6a8644575bd0c04a286f48c42763ec",
+    "tag": "v2.7.3",
+    "provenance": "Target build source: upstream tag resolved now; source binary build provenance unverified"
+  }
+]

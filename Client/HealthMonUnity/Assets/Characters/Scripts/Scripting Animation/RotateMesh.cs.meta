@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5dbe50bc21ef4661b43ee7a9c0e06796
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304019
+  packageName: Accessories - Spheres
+  packageVersion: 1.0
+  assetPath: Assets/Characters/Scripts/Scripting Animation/RotateMesh.cs
+  uploadId: 806838

@@ -1,0 +1,33 @@
+{
+  "excluded_sensitive_examples": [
+    "models/RigAnything/riganything_ckpt.pt",
+    "models/matting/bria-rmbg.onnx",
+    "vendor/TRELLIS.2/trellis2/models/__init__.py",
+    "assets/examples/lucan_s2_healthy.glb",
+    ".env",
+    ".env.local",
+    ".venvs/qwen/bin/python",
+    "cache/tmp",
+    "logs/test.log",
+    "outputs/result.glb",
+    "configs/runtime.local.json"
+  ],
+  "included_required_code": [
+    "README.md",
+    "Dockerfile",
+    "compose.yaml",
+    "requirements.txt",
+    ".env.example",
+    "configs/runtime.json",
+    "run_pipeline.py",
+    "scripts/run_stages.sh",
+    "src/healthmon/qwen_runner.py",
+    "src/healthmon/trellis_runner.py",
+    "src/healthmon/rigging_runner.py",
+    "migration/model_manifest.json",
+    "migration/source_manifest.json"
+  ],
+  "passed": true,
+  "actual_push_performed": false,
+  "temporary_index_only": true
+}

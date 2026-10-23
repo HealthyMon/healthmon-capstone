@@ -1,0 +1,473 @@
+{
+  "utc": "2026-10-17T15:42:12.252810+00:00",
+  "active_configs": {
+    "/workspace/generation/configs/runtime.local.json": {
+      "qwen_python": "/workspace/healthmon-evolution/.venvs/qwen/bin/python",
+      "qwen_model": "Qwen/Qwen-Image-2.1",
+      "qwen_width": 768,
+      "qwen_height": 768,
+      "qwen_steps": 40,
+      "qwen_identity_views": [
+        "three_quarter"
+      ],
+      "trellis_python": "/workspace/healthmon-evolution/.venvs/trellis/bin/python",
+      "trellis_model": "microsoft/TRELLIS.2-4B",
+      "trellis_repo": "/workspace/healthmon-evolution/vendor/TRELLIS.2",
+      "trellis_low_vram": true,
+      "trellis_skip_rembg": true,
+      "blender": "/workspace/healthmon-evolution/scripts/blender",
+      "rigging_backend": "riganything",
+      "rigging_python": "/workspace/healthmon-evolution/.venvs/riganything/bin/python",
+      "rigging_repo": "/workspace/healthmon-evolution/vendor/RigAnything",
+      "rigging_checkpoint": "/workspace/healthmon-evolution/models/RigAnything/riganything_ckpt.pt",
+      "trellis_cache": "/workspace/healthmon-evolution/cache/trellis",
+      "trellis_texture_size": 2048,
+      "trellis_decimation_target": 1000000,
+      "trellis_remesh": true,
+      "blender_binary": "/workspace/3d_pipeline_lab/runtime/blender_arm/root/usr/bin/blender",
+      "blender_environment": {
+        "LD_LIBRARY_PATH": "/usr/local/lib/python3.12/dist-packages/torch/lib:/usr/local/lib/python3.12/dist-packages/torch_tensorrt/lib:/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64"
+      },
+      "matting_python": "/workspace/healthmon-evolution/.venvs/matting/bin/python",
+      "matting_checkpoint": "/workspace/3d_model_comparison/20261005/cache/u2net/models/bria-rmbg/bria-rmbg.onnx",
+      "accepted_job": "/workspace/healthmon-evolution/outputs/serak_3d/tide_breaker_final",
+      "qwen_cache": "/workspace/healthmon-evolution/models/huggingface",
+      "qwen_pipeline_file": "/workspace/healthmon-evolution/vendor/diffusers/src/diffusers/pipelines/qwenimage21/pipeline_qwenimage21.py"
+    },
+    "/workspace/healthmon-evolution/configs/runtime.json": {
+      "qwen_python": "/workspace/healthmon-evolution/.venvs/qwen/bin/python",
+      "qwen_model": "Qwen/Qwen-Image-2.1",
+      "qwen_width": 768,
+      "qwen_height": 768,
+      "qwen_steps": 40,
+      "qwen_identity_views": [
+        "three_quarter"
+      ],
+      "trellis_python": "/workspace/healthmon-evolution/.venvs/trellis/bin/python",
+      "trellis_model": "microsoft/TRELLIS.2-4B",
+      "trellis_repo": "/workspace/healthmon-evolution/vendor/TRELLIS.2",
+      "trellis_low_vram": true,
+      "trellis_skip_rembg": true,
+      "blender": "/workspace/healthmon-evolution/scripts/blender",
+      "rigging_backend": "riganything",
+      "rigging_python": "/workspace/healthmon-evolution/.venvs/riganything/bin/python",
+      "rigging_repo": "/workspace/healthmon-evolution/vendor/RigAnything",
+      "rigging_checkpoint": "/workspace/healthmon-evolution/models/RigAnything/riganything_ckpt.pt"
+    }
+  },
+  "source_repositories": [
+    {
+      "name": "Qwen-Image-2.1",
+      "path": "/workspace/healthmon-evolution/vendor/Qwen-Image-2.1",
+      "commit": "1993c3a4821f977df0b6dd2661ff5b40239aa55a",
+      "url": "https://github.com/QwenLM/Qwen-Image-2.1",
+      "git_status": "",
+      "submodules": "",
+      "tracked_file_count": 21,
+      "tracked_file_bytes": 13229786,
+      "unavailable_tracked_entries": []
+    },
+    {
+      "name": "diffusers",
+      "path": "/workspace/healthmon-evolution/vendor/diffusers",
+      "commit": "1d5d056ecff3a8c1d887a7dd1aa66ca4a0323458",
+      "url": "https://github.com/huggingface/diffusers",
+      "git_status": "",
+      "submodules": "",
+      "tracked_file_count": 2895,
+      "tracked_file_bytes": 52702737,
+      "unavailable_tracked_entries": []
+    },
+    {
+      "name": "TRELLIS.2",
+      "path": "/workspace/healthmon-evolution/vendor/TRELLIS.2",
+      "commit": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+      "url": "https://github.com/microsoft/TRELLIS.2.git",
+      "git_status": "",
+      "submodules": "-21e4582d1739107337a03460c81412981130373e o-voxel/third_party/eigen",
+      "tracked_file_count": 271,
+      "tracked_file_bytes": 21228411,
+      "unavailable_tracked_entries": []
+    },
+    {
+      "name": "RigAnything",
+      "path": "/workspace/healthmon-evolution/vendor/RigAnything",
+      "commit": "d03cdb21dd134fa81df6b0947522469db3f78bd2",
+      "url": "https://github.com/Isabella98Liu/RigAnything.git",
+      "git_status": "",
+      "submodules": "",
+      "tracked_file_count": 21,
+      "tracked_file_bytes": 6688482,
+      "unavailable_tracked_entries": []
+    }
+  ],
+  "training_references": [
+    {
+      "path": "/workspace/scripts/run_stage_image_test.py",
+      "line": 149,
+      "text": "    draw.text((18, 57), \"Same seed 1234 / last.pt / stage-specific RGBA image / textured GLB\","
+    },
+    {
+      "path": "/workspace/scripts/run_stage_image_test.py",
+      "line": 201,
+      "text": "        \"- Inference settings: seed 1234, 50 steps, guidance 1.0, octree 384, `last.pt`, texture enabled\","
+    },
+    {
+      "path": "/workspace/scripts/run_evolution_smoke.py",
+      "line": 158,
+      "text": "    draw.text((20, 16), \"Numeric evolution smoke: base vs last.pt\","
+    },
+    {
+      "path": "/workspace/scripts/run_evolution_smoke.py",
+      "line": 171,
+      "text": "        \"Input 2 / last.pt / lower 50, other body scores 20\","
+    },
+    {
+      "path": "/workspace/scripts/run_evolution_smoke.py",
+      "line": 204,
+      "text": "        \"- Model comparison: local base Hunyuan3D vs native LoRA last.pt\","
+    },
+    {
+      "path": "/workspace/scripts/run_evolution_smoke.py",
+      "line": 319,
+      "text": "            raise AssertionError(\"Input 2 did not apply last.pt\")"
+    },
+    {
+      "path": "/workspace/scripts/build_evolution_v1_dataset.py",
+      "line": 191,
+      "text": "        \"| 2. Separate LoRA per stage | Partly | Enough examples for each stage; current one-lineage set is too small | Medium: train/store adapters separately and route checkpoint by stage | Possible with the native-LoRA loader, but current `last.pt` is a single fixed adapter and present data does not support reliable per-stage training |\","
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 77,
+      "text": "        if state.get(\"format\") != \"hy3d_native_lora_v1\" or state.get(\"step\", 0) < 1:"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 78,
+      "text": "            raise ValueError(\"Expected trained hy3d_native_lora_v1 checkpoint\")"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 80,
+      "text": "            \"quality_native_lora\", project_path(settings[\"lora_script\"]))"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 83,
+      "text": "        names = lora.inject_lora(pipe.model, state[\"config\"][\"rank\"])"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 85,
+      "text": "            (checkpoint.parent / \"adapter_targets.json\").read_text(encoding=\"utf-8\"))[\"modules\"]"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 88,
+      "text": "        lora.load_adapter(pipe.model, state[\"adapter\"])"
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 651,
+      "text": "        f\"- `last.pt` worse than best base under the declared metric: **{str(lora_worse).lower()}**\","
+    },
+    {
+      "path": "/workspace/scripts/run_quality_selection.py",
+      "line": 652,
+      "text": "        f\"- Mark `last.pt` for additional-training review: **{str(lora_worse).lower()}**\","
+    },
+    {
+      "path": "/workspace/scripts/evaluate_existing_base_shapes.py",
+      "line": 55,
+      "text": "    paths += list((ROOT / 'hy3d_experiments/penguin_shape_dataset/outputs').rglob('last.pt'))"
+    },
+    {
+      "path": "/workspace/scripts/evaluate_existing_base_shapes.py",
+      "line": 330,
+      "text": "        f'- 기존 quality_selection 산출물·last.pt·설정 파일의 크기/수정 시각 보존: **{unchanged}**.',"
+    },
+    {
+      "path": "/workspace/scripts/test_numeric_conditioning.py",
+      "line": 195,
+      "text": "    draw.text((pad, 54), \"Same image, seed 1234, last.pt, fixed LoRA scale 1.0\","
+    },
+    {
+      "path": "/workspace/scripts/test_numeric_conditioning.py",
+      "line": 232,
+      "text": "        \"| LoRA applied | **yes** | `last.pt` is loaded and injected into 168 modules in every run |\","
+    },
+    {
+      "path": "/workspace/scripts/test_numeric_conditioning.py",
+      "line": 327,
+      "text": "        raise AssertionError(\"last.pt was not applied\")"
+    }
+  ],
+  "weight_candidates": [
+    {
+      "path": "/workspace/3d_model_comparison/20261005/cache/u2net/models/bria-rmbg/bria-rmbg.onnx",
+      "bytes": 1024331469,
+      "resolved": "/workspace/3d_model_comparison/20261005/cache/u2net/models/bria-rmbg/bria-rmbg.onnx",
+      "symlink": false
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors",
+      "bytes": 2584574424,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/07cd0596f634c5adc1890023d16023afc5eed02fb84b22bb23aff5bf0030fbbd",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/tex_dec_next_dc_f16c32_fp16.safetensors",
+      "bytes": 948458812,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/97ea69addea2ecd9312910f5f548234665eef51c088386180b7cd5b258645e3c",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors",
+      "bytes": 2584426920,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/ca01377c485bec418076d38ee80166d32dc776d744f2553b835cba1e97a7abf6",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_imgshape2tex_dit_1_3B_512_bf16.safetensors",
+      "bytes": 2584672728,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/8371aa1c5d13be79dcd5ddfd2cf3835e902e204dc34427169a1c702828e1a94d",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors",
+      "bytes": 2584672728,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/580401269059a339b8318ab9ced459a13ba63391721c83a6c383198c29e77686",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors",
+      "bytes": 948490494,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/e3b718d3e43e4f8780e9a24ac6fff231811a67e3b058e336e10fe654c911d581",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/shape_enc_next_dc_f16c32_fp16.safetensors",
+      "bytes": 708797208,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/f37c5ff5b983b68e9946060000f09bc131f3e84318a2c8b7430a81e4b4636c41",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/tex_enc_next_dc_f16c32_fp16.safetensors",
+      "bytes": 708797208,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/dd109f75f84b90fa411554ed6b0e4a87f430841163156fc0ebda2ebdc4752493",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors",
+      "bytes": 2584574424,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS.2-4B/blobs/ec5e0917ef9b7e25ad51dffc7d19687a42019871f94239f2fa7f86264c55b70f",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--facebook--dinov3-vitl16-pretrain-lvd1689m/snapshots/ea8dc2863c51be0a264bab82070e3e8836b02d51/model.safetensors",
+      "bytes": 1212559808,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--facebook--dinov3-vitl16-pretrain-lvd1689m/blobs/dcb2e45127cccbf1601e5f42fef165eea275c8e5213197e8dcf3f48822718179",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS-image-large/snapshots/25e0d31ffbebe4b5a97464dd851910efc3002d96/ckpts/ss_dec_conv3d_16l8_fp16.safetensors",
+      "bytes": 147591972,
+      "resolved": "/workspace/healthmon-evolution/cache/trellis/huggingface/hub/models--microsoft--TRELLIS-image-large/blobs/1c76d4a40519aa2d711cc263a8404105231ac26db31d946bed48b84fee79009a",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/text_encoder/model-00002-of-00004.safetensors",
+      "bytes": 4915962464,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/9047faccc0a6d98496a52d55f27be1c94a9c259d1e283fbea0128d054a948d42",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/text_encoder/model-00004-of-00004.safetensors",
+      "bytes": 2704357976,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/5311532aaaeae3259eb6a7b2c600636be1159adf7ded35f53579f7d0e7d43cdd",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/text_encoder/model-00001-of-00004.safetensors",
+      "bytes": 4998056552,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/dde00291b5f7fb92013895310a3da0ddba78674df9f10d505d375243dc01fc6f",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/text_encoder/model-00003-of-00004.safetensors",
+      "bytes": 4915962496,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/8c54187654c0176b73ae73785bf791dc9a14c9df7fb4310083a09d42048cb57e",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "bytes": 4261951904,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/3aaf234dcbe128530479735854a346b5e3e66283b7c11db56f836bbd1c13ebaa",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "bytes": 9968332504,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/9e6bc2d641e67bf277895ea8777141044a38f3edb7101bc469b2961dd7c36b4b",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/snapshots/d26bb61231c349cf6b7896fa83353113880e1ba3/vae/diffusion_pytorch_model.safetensors",
+      "bytes": 1350989512,
+      "resolved": "/workspace/healthmon-evolution/models/huggingface/models--Qwen--Qwen-Image-2.1/blobs/a07a1b7c4ee2966a1b3bdc37de9b4f983d56937e46619f709a80b6e490675417",
+      "symlink": true
+    },
+    {
+      "path": "/workspace/healthmon-evolution/models/RigAnything/riganything_ckpt.pt",
+      "bytes": 2344595770,
+      "resolved": "/workspace/healthmon-evolution/models/RigAnything/riganything_ckpt.pt",
+      "symlink": false
+    },
+    {
+      "path": "/root/.cache/huggingface/hub/models--facebook--dinov2-giant/snapshots/611a9d42f2335e0f921f1e313ad3c1b7178d206d/model.safetensors",
+      "bytes": 4546005432,
+      "resolved": "/root/.cache/huggingface/hub/models--facebook--dinov2-giant/blobs/917d3c470db999d32a312f8542149be91c7cbac61ee8fb4b67ae3d82b79ce21f",
+      "symlink": true
+    },
+    {
+      "path": "/root/.u2net/u2net.onnx",
+      "bytes": 175997641,
+      "resolved": "/root/.u2net/u2net.onnx",
+      "symlink": false
+    }
+  ],
+  "broken_links": [],
+  "incomplete_downloads": [],
+  "scan_errors": [],
+  "scan_scope": {
+    "roots": [
+      "/workspace",
+      "/root/.cache/huggingface/hub",
+      "/root/.cache/torch/hub/checkpoints",
+      "/root/.u2net"
+    ],
+    "excluded_directory_names": [
+      ".git",
+      ".venvs",
+      "__pycache__",
+      "blender_arm",
+      "browser-libs",
+      "browsers",
+      "node_modules",
+      "site-packages",
+      "torch_extensions",
+      "triton",
+      "ui-test"
+    ],
+    "text_search": "custom text files only; exclude vendor, caches, models, web, static; no credential/config-home access"
+  },
+  "historical_cleanup": {
+    "source": "/workspace/generation/records/cleanup.json",
+    "status": "COMPLETED",
+    "completed_utc": "2026-10-11T06:00:20Z",
+    "targets": [
+      {
+        "path": "/workspace/evolution_outputs",
+        "kind": "directory",
+        "files": 546,
+        "bytes": 3429434193,
+        "currently_exists": false
+      },
+      {
+        "path": "/workspace/evolution",
+        "kind": "directory",
+        "files": 19,
+        "bytes": 110422,
+        "currently_exists": false
+      },
+      {
+        "path": "/workspace/checkpoints",
+        "kind": "directory",
+        "files": 7,
+        "bytes": 395105151,
+        "currently_exists": false
+      },
+      {
+        "path": "/workspace/logs",
+        "kind": "directory",
+        "files": 3,
+        "bytes": 475571,
+        "currently_exists": false
+      },
+      {
+        "path": "/workspace/3d_pipeline_lab/runtime/checkpoints",
+        "kind": "directory",
+        "files": 5,
+        "bytes": 7273628768,
+        "currently_exists": false
+      }
+    ]
+  },
+  "missing_original_build_sources": [
+    {
+      "path": "/workspace/3d_model_comparison/20261005/sources/CuMesh",
+      "exists": false
+    },
+    {
+      "path": "/workspace/3d_model_comparison/20261005/sources/FlexGEMM",
+      "exists": false
+    },
+    {
+      "path": "/workspace/3d_model_comparison/20261005/sources/nvdiffrast",
+      "exists": false
+    }
+  ],
+  "legacy_required_references": [
+    {
+      "path": "/workspace/evolution/evolution_config.yaml",
+      "exists": false
+    },
+    {
+      "path": "/workspace/evolution/evolution_rules.py",
+      "exists": false
+    },
+    {
+      "path": "/workspace/evolution/hunyuan_backend.py",
+      "exists": false
+    }
+  ],
+  "legacy_custom_checkpoint_status": {
+    "found_weight_files": 0,
+    "reference_basename": "last.pt",
+    "reference_format": "hy3d_native_lora_v1",
+    "reference_step_requirement": ">=1",
+    "possible_original_parent_from_source": "/workspace/hy3d_experiments/penguin_shape_dataset/outputs",
+    "possible_original_parent_exists": false,
+    "exact_original_file_path_size_sha256": "UNKNOWN - config and checkpoint absent",
+    "required_companion_reference": "adapter_targets.json",
+    "lora_implementation_reference": "settings[\"lora_script\"] - actual path unknown; original config absent",
+    "not_a_dependency_of_active_qwen_trellis_riganything": true,
+    "evidence_limitation": "Source code references trained LoRA. No current checkpoint bytes or training log verifies its contents or completed training."
+  },
+  "archive_directory_checks": [
+    {
+      "path": "/workspace/generation/.local/downloads/HEALTHMON_generation_GitHub.zip",
+      "bytes": 416978265,
+      "entries": 378,
+      "weight_entries": 0
+    },
+    {
+      "path": "/workspace/healthmon-evolution/web/fixed/downloads/HEALTHMON_PPT_images.zip",
+      "bytes": 40526974,
+      "entries": 98,
+      "weight_entries": 0
+    }
+  ],
+  "qwen_index_validation": {
+    "text_encoder_shards": 4,
+    "transformer_shards": 2,
+    "all_index_referenced_shards_present": true
+  },
+  "conditional_missing_model": {
+    "repo": "briaai/RMBG-2.0",
+    "present": false,
+    "required_when": "TRELLIS input has no usable transparency; current prepare_3d_input uses existing local BRIA ONNX first",
+    "not_same_file_as_existing_onnx": true
+  }
+}
