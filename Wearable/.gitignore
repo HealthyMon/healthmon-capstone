@@ -1,0 +1,34 @@
+# =========================================================
+# Wearable - Git Ignore
+# Android / iOS
+# =========================================================
+
+
+# =========================================================
+# Android
+# =========================================================
+
+# Local Android SDK path
+local.properties
+
+# Kotlin
+.kotlin/
+
+# Native build
+.externalNativeBuild/
+.cxx/
+
+# Android Studio captures
+captures/
+
+
+# =========================================================
+# iOS / Xcode
+# =========================================================
+
+# Xcode user-specific settings
+xcuserdata/
+*.xcuserstate
+
+# Xcode build output
+DerivedData/
