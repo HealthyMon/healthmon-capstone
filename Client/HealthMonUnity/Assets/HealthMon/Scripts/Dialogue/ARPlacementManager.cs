@@ -16,6 +16,7 @@ public class ARPlacementManager : MonoBehaviour
 
     private GameObject spawnedHealthMon;
     public GameObject SpawnedHealthMon => spawnedHealthMon;
+    private bool arMode, arPlaced;
 
     private static readonly List<ARRaycastHit> hits =
         new List<ARRaycastHit>();
@@ -32,6 +33,8 @@ public class ARPlacementManager : MonoBehaviour
 
     private void Update()
     {
+        UpdatePetPresentation();
+        if (!arMode) return;
         if (Touch.activeTouches.Count == 0)
             return;
 
@@ -41,6 +44,15 @@ public class ARPlacementManager : MonoBehaviour
             return;
 
         Vector2 touchPosition = touch.screenPosition;
+
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            var pointer = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current)
+                { position = touchPosition };
+            var uiHits = new List<UnityEngine.EventSystems.RaycastResult>();
+            UnityEngine.EventSystems.EventSystem.current.RaycastAll(pointer, uiHits);
+            if (uiHits.Exists(hit => hit.module is UnityEngine.UI.GraphicRaycaster)) return;
+        }
 
         Debug.Log("[AR] 화면 터치 감지: " + touchPosition);
 
@@ -61,9 +73,48 @@ public class ARPlacementManager : MonoBehaviour
         PlaceAt(hits[0].pose);
     }
 
+    public void SetARMode(bool enabled)
+    {
+        arMode = enabled;
+        arPlaced = false;
+    }
+
+    // The home view follows the camera without requiring a detected AR plane.
+    // Mobile AR still uses a real plane hit; desktop AR shows a labelled preview.
+    private void UpdatePetPresentation()
+    {
+        if (!Healthmon.Common.CommonServerConnection.UsesServerAuthority) return;
+        var connection = Healthmon.Common.CommonServerConnection.Instance;
+        var model = Healthmon.Evolution.EvolutionClient.Instance?.Current;
+        if (healthMonPrefab == null || connection == null ||
+            !connection.IsConnected || connection.LatestState == null ||
+            string.IsNullOrEmpty(connection.LatestState.model_reference) ||
+            model == null || model.pet_id != connection.LatestState.pet_id)
+        {
+            if (spawnedHealthMon != null) spawnedHealthMon.SetActive(false);
+            return;
+        }
+        if (arMode && Application.isMobilePlatform && !Application.isEditor)
+        {
+            if (spawnedHealthMon != null) spawnedHealthMon.SetActive(arPlaced);
+            return;
+        }
+        var camera = Camera.main;
+        if (camera == null || !camera.isActiveAndEnabled) return;
+        var pose = new Pose(camera.transform.position + camera.transform.forward * 1.2f - camera.transform.up * .15f,
+            Quaternion.LookRotation(camera.transform.forward, camera.transform.up));
+        if (spawnedHealthMon == null) PlaceAt(pose);
+        else
+        {
+            spawnedHealthMon.SetActive(true);
+            spawnedHealthMon.transform.SetPositionAndRotation(pose.position, pose.rotation);
+        }
+    }
+
     // Shared by real AR raycasts and editor integration verification.
     public void PlaceAt(Pose hitPose)
     {
+        arPlaced = true;
 
         if (spawnedHealthMon == null)
         {
@@ -78,6 +129,7 @@ public class ARPlacementManager : MonoBehaviour
         }
         else
         {
+            spawnedHealthMon.SetActive(true);
             spawnedHealthMon.transform.SetPositionAndRotation(
                 hitPose.position,
                 hitPose.rotation

@@ -109,7 +109,12 @@ namespace Healthmon.Common
                     if (!string.IsNullOrWhiteSpace(petId)) SelectPet(petId);
                     else Api.ListPets(list =>
                     {
-                        if (list.pets != null && list.pets.Length > 0) SelectPet(list.pets[0].pet_id);
+                        if (list.pets != null && list.pets.Length > 0)
+                        {
+                            string saved = PlayerPrefs.GetString(SelectedPetKey, "");
+                            var previous = Array.Find(list.pets, candidate => candidate.pet_id == saved);
+                            SelectPet(previous != null ? previous.pet_id : list.pets[0].pet_id);
+                        }
                         else { connecting = false; Status = "Verified account. Create a pet to continue."; }
                     }, Failed);
                 }, Failed);
@@ -124,15 +129,34 @@ namespace Healthmon.Common
                 connecting = false; IsConnected = true;
                 urlInput = BaseUrl;
                 Status = "Connected — " + EnvironmentName + " / " + CommonServerContract.RuleVersion;
+                PlayerPrefs.SetString(SelectedPetKey, Api.PetId); PlayerPrefs.Save();
                 ConfigurePhone(configGeneration);
                 RefreshQuests();
             }, Failed);
+        }
+        private string SelectedPetKey
+        {
+            get
+            {
+                using (var hash = System.Security.Cryptography.SHA256.Create())
+                    return "HealthMon.Common.SelectedPet." + BitConverter.ToString(hash.ComputeHash(
+                        System.Text.Encoding.UTF8.GetBytes(ServerInstanceId + "\n" + OwnerId))).Replace("-", "");
+            }
         }
         private void CreatePet()
         {
             if (Api.IsBusy || string.IsNullOrEmpty(OwnerId)) return;
             connecting = true;
-            Api.CreatePet(new PetSettings { name = "HealthMon", profanity = "none" }, result => SelectPet(result.pet_id), Failed);
+            IsConnected = false; LatestState = null;
+            Status = "Creating a new pet; previous pets are retained…";
+            foreach (var state in FindObjectsByType<PetStateManager>(FindObjectsInactive.Include)) state.ClearServerState();
+            Api.CreatePet(new PetSettings { name = "헬스몬", profanity = "none" }, result => SelectPet(result.pet_id), Failed);
+        }
+        public void CreateFreshTestPet()
+        {
+            if (EnvironmentName != "test" || !IsConnected || connecting || Api.IsBusy || Api.HasPendingChat)
+            { Status = "A connected idle test account is required to start a fresh test pet."; return; }
+            CreatePet();
         }
         public void RefreshState()
         { if (IsConnected && !Api.IsStateBusy && !Api.IsReauthenticating) Api.GetState(null, Failed); }

@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private TMPro.TMP_Text evolutionStatusText;
     private bool showingEvolution;
+    private PetExperienceUI petExperience;
 
     private void Start()
     {
@@ -29,6 +30,8 @@ public class UIManager : MonoBehaviour
                 break;
             }
         }
+        petExperience = gameObject.AddComponent<PetExperienceUI>();
+        petExperience.Configure(this, homePanel, statusPanel, adminPanel);
         ShowHome();
     }
 
@@ -60,6 +63,7 @@ public class UIManager : MonoBehaviour
 
     private void HideAllPanels()
     {
+        if (petExperience != null) petExperience.HideAR();
         if (dialoguePanel.activeSelf)
         {
             FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include)?.LeaveConversation();
@@ -87,6 +91,12 @@ public class UIManager : MonoBehaviour
     {
         HideAllPanels();
         statusPanel.SetActive(true);
+    }
+
+    public void ShowAR()
+    {
+        HideAllPanels();
+        if (petExperience != null) petExperience.ShowAR();
     }
 
     public void ShowDialogue()
