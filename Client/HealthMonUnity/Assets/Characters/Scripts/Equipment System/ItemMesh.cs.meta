@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ad6c58ce3a4040c8ad40cb01d6747a3b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304019
+  packageName: Accessories - Spheres
+  packageVersion: 1.0
+  assetPath: Assets/Characters/Scripts/Equipment System/ItemMesh.cs
+  uploadId: 806838
