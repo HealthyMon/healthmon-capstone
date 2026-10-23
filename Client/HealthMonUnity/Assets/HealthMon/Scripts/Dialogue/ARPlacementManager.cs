@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -10,9 +11,14 @@ public class ARPlacementManager : MonoBehaviour
 {
     [Header("AR")]
     [SerializeField] private ARRaycastManager raycastManager;
+    [SerializeField] private Camera arCamera;
 
     [Header("Character")]
     [SerializeField] private GameObject healthMonPrefab;
+
+    [Header("Managers")]
+    [SerializeField] private PetStateManager petStateManager;
+    [SerializeField] private QuestPrototype questPrototype;
 
     private GameObject spawnedHealthMon;
     public GameObject SpawnedHealthMon => spawnedHealthMon;
@@ -20,6 +26,7 @@ public class ARPlacementManager : MonoBehaviour
 
     private static readonly List<ARRaycastHit> hits =
         new List<ARRaycastHit>();
+    private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
 
     private void OnEnable()
     {
@@ -45,14 +52,29 @@ public class ARPlacementManager : MonoBehaviour
 
         Vector2 touchPosition = touch.screenPosition;
 
-        if (UnityEngine.EventSystems.EventSystem.current != null)
+        if (EventSystem.current != null)
         {
-            var pointer = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current)
-                { position = touchPosition };
-            var uiHits = new List<UnityEngine.EventSystems.RaycastResult>();
-            UnityEngine.EventSystems.EventSystem.current.RaycastAll(pointer, uiHits);
+            var pointer = new PointerEventData(EventSystem.current) { position = touchPosition };
+            uiHits.Clear();
+            EventSystem.current.RaycastAll(pointer, uiHits);
             if (uiHits.Exists(hit => hit.module is UnityEngine.UI.GraphicRaycaster)) return;
         }
+
+        var camera = arCamera != null ? arCamera : Camera.main;
+        if (camera == null) return;
+        if (spawnedHealthMon != null && spawnedHealthMon.activeInHierarchy &&
+            Physics.Raycast(camera.ScreenPointToRay(touchPosition), out RaycastHit creatureHit,
+                100f, ~0, QueryTriggerInteraction.Collide))
+        {
+            var reaction = creatureHit.collider.GetComponentInParent<HealthMonTouchReaction>();
+            if (reaction != null && reaction.gameObject == spawnedHealthMon)
+            {
+                spawnedHealthMon.GetComponent<HealthMonMovement>()?.StopMoving();
+                reaction.OnCharacterTapped();
+                return;
+            }
+        }
+        if (raycastManager == null || healthMonPrefab == null) return;
 
         Debug.Log("[AR] 화면 터치 감지: " + touchPosition);
 
@@ -70,13 +92,16 @@ public class ARPlacementManager : MonoBehaviour
 
         Debug.Log("[AR] AR 평면 Raycast 성공!");
 
-        PlaceAt(hits[0].pose);
+        if (spawnedHealthMon != null && arPlaced && spawnedHealthMon.GetComponent<HealthMonMovement>() != null)
+            spawnedHealthMon.GetComponent<HealthMonMovement>().MoveTo(hits[0].pose.position);
+        else PlaceAt(hits[0].pose);
     }
 
     public void SetARMode(bool enabled)
     {
         arMode = enabled;
         arPlaced = false;
+        if (!enabled && spawnedHealthMon != null) spawnedHealthMon.GetComponent<HealthMonMovement>()?.StopMoving();
     }
 
     // The home view follows the camera without requiring a detected AR plane.
@@ -99,7 +124,7 @@ public class ARPlacementManager : MonoBehaviour
             if (spawnedHealthMon != null) spawnedHealthMon.SetActive(arPlaced);
             return;
         }
-        var camera = Camera.main;
+        var camera = arCamera != null ? arCamera : Camera.main;
         if (camera == null || !camera.isActiveAndEnabled) return;
         var pose = new Pose(camera.transform.position + camera.transform.forward * 1.2f - camera.transform.up * .15f,
             Quaternion.LookRotation(camera.transform.forward, camera.transform.up));
@@ -125,6 +150,10 @@ public class ARPlacementManager : MonoBehaviour
             );
 
             Healthmon.Evolution.ArEvolutionModel.Attach(spawnedHealthMon);
+            var reaction = spawnedHealthMon.GetComponent<HealthMonTouchReaction>();
+            if (reaction != null)
+                reaction.Initialize(petStateManager != null ? petStateManager : FindAnyObjectByType<PetStateManager>(),
+                    questPrototype != null ? questPrototype : FindAnyObjectByType<QuestPrototype>(FindObjectsInactive.Include));
             Debug.Log("[AR] TestHealthMon 생성 완료!");
         }
         else

@@ -6,27 +6,23 @@ heart-rate upload is added.
 
 ## Package and signing compatibility
 
-The existing watch application ID and phone Java namespace remain `com.healthmon.app`
-and `com.healthmon.app.mobile`. The bridge is
-`com.healthmon.app.mobile.unity.HealthMonUnityBridge`. Data Layer requires the watch
+The merged watch and phone test application IDs default to `com.healthmon.capstone`.
+The phone Java namespace is `com.healthmon.capstone.mobile`. The bridge is
+`com.healthmon.capstone.mobile.unity.HealthMonUnityBridge`. Data Layer requires the watch
 and phone **application IDs and signing certificate** to match.
 
-The develop Unity project currently defaults to `com.healthmon.capstone`, while the
-develop watch defaults to `com.healthmon.app`. These defaults cannot pair as installed.
-Choose a coordinated test build configuration before installing either app. An existing
+The Unity Android application ID also defaults to `com.healthmon.capstone`. Match
+signing certificates before testing Data Layer on a phone and watch. An existing
 `com.healthmon.app` watch needs a phone test build with that application ID and matching
 signing certificate. Moving the watch to `com.healthmon.capstone` is a separate package
 and requires an explicit migration/install decision. This implementation does not
 reinstall apps, change their IDs, or migrate their private data automatically.
 
-PR #10 source audit: `team/feature/unity` at `e1ccf94`, compared with
-`team/develop` at `8ac8555`. The histories have two merge bases (`0765093`, `3d2fb1a`).
-All 94 comparable Wearable text files were compared after normalizing only the
-`com.healthmon.app` / `com.healthmon.capstone` rename. Remaining differences were an
-unused `Color` import and documentation whitespace. The unused import cleanup was
-applied; package/action/Manifest renames were deliberately not applied because they
-change installed-app identity. Existing measurement, ACK and live-message behavior
-was already present in develop.
+The 2026-10-23 integration uses Unity branch `866defe` for the scene/assets and package
+names, while retaining the dev implementation of server sync, explicit record ownership,
+Keystore credentials and Room version 2. JNI references, receivers, keep rules and
+Room schema directories use the same new Java namespace. The Unity AAR must be built
+from this merged plugin; an older AAR will not contain the matching JNI class and sync API.
 
 ## Runtime settings and explicit ownership
 
@@ -135,7 +131,8 @@ From `Wearable/Android/HealthMonWatch` (Windows `gradlew.bat`, Linux `./gradlew`
 gradlew.bat :healthmon-mobile-plugin:testDebugUnitTest :healthmon-mobile-plugin:assembleRelease :healthmon-mobile-plugin:assembleDebugAndroidTest
 ```
 
-The checked-in wrapper is Gradle 9.6.0 and requests JDK 25. Android SDK 36 is required.
+The checked-in wrapper is Gradle 9.6.0 and requests JDK 25. Android SDK 36 is required
+for the plugin; the watch and phone test apps require SDK Platform 37.0.
 Do not commit `local.properties`, machine SDK paths, signing keys or Gradle caches.
 Copy the built release AAR into `Wearable/Android/Artifacts` and Unity
 `Assets/Plugins/Android`, preserving the existing Unity `.meta`. The artifact provenance
@@ -151,10 +148,10 @@ Verification fails if either the plugin sources or either AAR copy changes.
 
 Host JVM tests use actual loopback HTTP for the bearer/redirect/ack contract and pure
 metric/retry policy tests. Android instrumentation uses disposable test databases and
-the separate test package `com.healthmon.app.mobile.test`. Run it on a selected test
+the separate test package `com.healthmon.capstone.mobile.test`. Run it on a selected test
 emulator/device, not an existing user's production app:
 
 ```text
 adb -s TEST_EMULATOR install -r healthmon-mobile-plugin/build/outputs/apk/androidTest/debug/healthmon-mobile-plugin-debug-androidTest.apk
-adb -s TEST_EMULATOR shell am instrument -w -r com.healthmon.app.mobile.test/androidx.test.runner.AndroidJUnitRunner
+adb -s TEST_EMULATOR shell am instrument -w -r com.healthmon.capstone.mobile.test/androidx.test.runner.AndroidJUnitRunner
 ```

@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.healthmon.mobile_test_app", appContext.packageName)
+        assertEquals("com.healthmon.capstone", appContext.packageName)
     }
 }

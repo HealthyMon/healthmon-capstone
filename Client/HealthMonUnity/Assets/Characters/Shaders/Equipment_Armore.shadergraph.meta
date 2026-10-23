@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: fa44377d50db4b00aeb77bba670ce95b
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 304019
+  packageName: Accessories - Spheres
+  packageVersion: 1.0
+  assetPath: Assets/Characters/Shaders/Equipment_Armore.shadergraph
+  uploadId: 806838

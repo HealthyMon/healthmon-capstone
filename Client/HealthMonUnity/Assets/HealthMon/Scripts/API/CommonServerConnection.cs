@@ -34,6 +34,7 @@ namespace Healthmon.Common
         private int configGeneration;
         private Vector2 scroll;
         private QuestList quests;
+        public QuestList LatestQuests => quests;
         private readonly ProposalDisplayGate proposalDisplays = new ProposalDisplayGate();
         private readonly PhoneSyncConfigurationQueue phoneConfigurations = new PhoneSyncConfigurationQueue();
 
@@ -200,6 +201,34 @@ namespace Healthmon.Common
             if (!IsConnected || Api.IsBusy) return;
             int generation = configGeneration; string pet = Api.PetId;
             Api.GetQuests(result => { if (generation == configGeneration && pet == Api.PetId) quests = result; }, Failed);
+        }
+        public bool QuestDisplayAcknowledged(QuestOffer offer)
+        {
+            return offer != null && offer.pet_id == Api.PetId &&
+                (!string.IsNullOrEmpty(offer.shown_at) || proposalDisplays.Acknowledged(offer.id));
+        }
+        // Called only by a visible, rendered quest row, never merely by fetching the list.
+        public void ObserveDisplayedQuest(QuestOffer offer)
+        {
+            if (IsConnected && offer != null && offer.pet_id == Api.PetId && offer.IsPendingProposal)
+                proposalDisplays.Observe(offer.id, !string.IsNullOrEmpty(offer.shown_at));
+        }
+        public void RetryQuestDisplay(QuestOffer offer)
+        {
+            if (offer != null && offer.pet_id == Api.PetId) proposalDisplays.Retry(offer.id);
+        }
+        public bool QuestDisplayFailed(QuestOffer offer)
+        { return offer != null && offer.pet_id == Api.PetId && proposalDisplays.Failed(offer.id); }
+        public void DecideDisplayedQuest(QuestOffer offer, bool accept, Action<ApiFailure> failure)
+        {
+            if (!IsConnected || offer == null || offer.pet_id != Api.PetId || Api.IsBusy || Api.HasPendingChat ||
+                (offer.IsPendingProposal && !QuestDisplayAcknowledged(offer))) return;
+            int generation = configGeneration;
+            Api.DecideQuest(offer.id, accept, _ =>
+            {
+                if (generation != configGeneration) return;
+                RefreshState(); RefreshQuests();
+            }, failure);
         }
         private void SendObservedProposalAcknowledgement()
         {

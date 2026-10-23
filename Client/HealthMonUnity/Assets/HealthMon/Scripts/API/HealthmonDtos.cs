@@ -159,7 +159,7 @@ namespace Healthmon.Beta
     }
     [Serializable] public class QuestOffer
     {
-        public string id, pet_id, status, created_at, expires_at, accepted_at, rejected_at, shown_at, cancelled_at;
+        public string id, pet_id, status, created_at, expires_at, accepted_at, rejected_at, shown_at, cancelled_at, slot, period_start;
         public bool is_proposal, excluded;
         public long state_version;
         public QuestTemplate template;

@@ -6,13 +6,13 @@ plugins {
 
 
 android {
-    namespace = "com.healthmon.app"
+    namespace = "com.healthmon.capstone"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.healthmon.app"
+        applicationId = "com.healthmon.capstone"
         minSdk = 30
         targetSdk = 37
         versionCode = 1

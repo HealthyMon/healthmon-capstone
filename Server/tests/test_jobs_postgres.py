@@ -83,7 +83,10 @@ def job_row(db, ident):
 
 def expire_lease(db, ident):
     with db.connect() as c:
-        c.execute("UPDATE ai_jobs SET lease_until=now()-interval '1 day' WHERE id=%s", (ident,))
+        # Worker tests freeze the application clock. PostgreSQL's wall clock can
+        # advance past that fixture date, so derive expiry from the same clock.
+        c.execute("UPDATE ai_jobs SET lease_until=%s WHERE id=%s",
+                  (service.utcnow() - timedelta(days=1), ident))
 
 
 def test_repeated_and_different_requests_share_one_frozen_stage_job(db, client, pet):

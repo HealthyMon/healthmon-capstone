@@ -162,6 +162,30 @@ namespace Healthmon.Evolution
                         PrepareCommonScope(common);
                         string capturedScope = commonScope;
                         string root = "/pets/" + Uri.EscapeDataString(common.Api.PetId) + "/evolutions";
+                        // A pending generation survives an app restart. Restore the already
+                        // published visual independently so polling that job cannot hide the pet.
+                        if (commonPending != null && common.LatestState != null &&
+                            !string.IsNullOrEmpty(common.LatestState.model_reference) &&
+                            (Current == null || Current.model_url != common.LatestState.model_reference))
+                        {
+                            string reference = common.LatestState.model_reference;
+                            string publishedId = reference.Substring(reference.LastIndexOf('/') + 1);
+                            var published = JsonUtility.FromJson<CommonEvolutionJob>(await Json("GET", root + "/" + Uri.EscapeDataString(publishedId)));
+                            if (capturedScope != CurrentCommonScope()) continue;
+                            if (published == null || published.status != "succeeded" || published.job_id != publishedId ||
+                                !System.Text.RegularExpressions.Regex.IsMatch(published.model_sha256 ?? "", "^[a-f0-9]{64}$"))
+                                throw new IOException("Published model recovery has no verified asset.");
+                            string model = published.model_reference ?? published.model_url;
+                            ResolveUrl(model);
+                            if (model == reference && common.LatestState.model_reference == reference &&
+                                common.LatestState.published_model_stage == published.stage &&
+                                common.LatestState.state_version >= published.state_version)
+                            {
+                                Current = new ModelManifest { pet_id = common.Api.PetId, revision = published.job_id,
+                                    stage = published.stage, model_url = model, model_sha256 = published.model_sha256 };
+                                ModelChanged?.Invoke(Current);
+                            }
+                        }
                         CommonEvolutionJob job = null;
                         if (commonPending != null && !commonTerminal)
                         {

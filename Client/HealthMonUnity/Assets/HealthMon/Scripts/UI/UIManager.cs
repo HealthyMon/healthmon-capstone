@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject rewardPanel;
     [SerializeField] private GameObject customizationPanel;
     [SerializeField] private GameObject collectionPanel;
+    [SerializeField] private GameObject wearablePanel;
 
     // 관리자 패널 추가
     [Header("Admin Panel")]
@@ -32,6 +33,8 @@ public class UIManager : MonoBehaviour
         }
         petExperience = gameObject.AddComponent<PetExperienceUI>();
         petExperience.Configure(this, homePanel, statusPanel, adminPanel);
+        if (Healthmon.Common.CommonServerConnection.UsesServerAuthority && questPanel != null)
+            questPanel.AddComponent<CommonServerQuestUI>().Configure();
         ShowHome();
     }
 
@@ -76,6 +79,7 @@ public class UIManager : MonoBehaviour
         rewardPanel.SetActive(false);
         customizationPanel.SetActive(false);
         collectionPanel.SetActive(false);
+        if (wearablePanel != null) wearablePanel.SetActive(false);
 
         if (adminPanel != null)
             adminPanel.SetActive(false);
@@ -119,6 +123,7 @@ public class UIManager : MonoBehaviour
     {
         HideAllPanels();
         questPanel.SetActive(true);
+        Healthmon.Common.CommonServerConnection.Instance?.RefreshQuests();
     }
 
     public void ShowReward()
@@ -138,6 +143,14 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         collectionPanel.SetActive(true);
     }
+
+    
+    public void ShowWearable()
+    {
+        HideAllPanels();
+        if (wearablePanel != null) wearablePanel.SetActive(true);
+    }
+
 
     // 관리자 모드 열기
     public void ShowAdmin()

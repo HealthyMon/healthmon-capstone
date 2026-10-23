@@ -23,7 +23,9 @@ namespace Healthmon.Evolution
 
         private void Start()
         {
-            placeholderRenderers = GetComponents<Renderer>();
+            var accessories = GetComponent<HealthMonAccessoryView>();
+            placeholderRenderers = System.Array.FindAll(GetComponentsInChildren<Renderer>(true),
+                renderer => accessories == null || !accessories.ContainsAccessory(renderer.transform));
             if (EvolutionClient.Instance != null)
             {
                 EvolutionClient.Instance.ModelChanged += Changed;
@@ -75,6 +77,8 @@ namespace Healthmon.Evolution
                     displayed = candidate;
                     displayedImport = importer;
                     foreach (var renderer in placeholderRenderers) renderer.enabled = false;
+                    GetComponent<HealthMonTouchReaction>()?.UseVisual(candidate.transform);
+                    GetComponent<HealthMonMovement>()?.UseAnimator(candidate.GetComponentInChildren<Animator>());
                     candidate.SetActive(true);
                     DisplayedRevision = manifest.revision;
                     LastError = null;

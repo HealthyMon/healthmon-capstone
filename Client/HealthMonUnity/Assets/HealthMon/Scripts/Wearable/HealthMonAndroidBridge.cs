@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class HealthMonAndroidBridge
 {
-    private const string BridgeClassName = "com.healthmon.app.mobile.unity.HealthMonUnityBridge";
+    private const string BridgeClassName = "com.healthmon.capstone.mobile.unity.HealthMonUnityBridge";
 
     public static bool IsAndroidDevice
     {

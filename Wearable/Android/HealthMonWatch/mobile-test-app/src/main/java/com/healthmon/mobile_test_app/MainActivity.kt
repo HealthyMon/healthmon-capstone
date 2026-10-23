@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.healthmon.mobile_test_app.ui.theme.HealthMonWatchTheme
-import com.healthmon.app.mobile.unity.HealthMonUnityBridge
+import com.healthmon.capstone.mobile.unity.HealthMonUnityBridge
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
