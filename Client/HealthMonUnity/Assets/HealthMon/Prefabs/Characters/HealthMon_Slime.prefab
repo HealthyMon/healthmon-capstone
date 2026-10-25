@@ -423,6 +423,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5460890760460284466, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4637926861188155564}
+    - targetCorrespondingSourceObject: {fileID: 5460890760460284466, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1866474622927986799}
   m_SourcePrefab: {fileID: 100100000, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
 --- !u!95 &1642533504263283081 stripped
 Animator:
@@ -497,6 +500,25 @@ MonoBehaviour:
   moveStateName: Base Layer.Move
   idleStateName: Base Layer.Idle
   crossFadeSeconds: 0.08
+--- !u!114 &1866474622927986799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2720198714157961979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdaaab6c936225244b87e49d46a47856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthMon3DJewelryRig
+  jewelry:
+  - {fileID: 1005613206986706262}
+  - {fileID: 3373385588267368599}
+  - {fileID: 3703724623261159057}
+  - {fileID: 4256007940690705133}
+  bodyCollider: {fileID: 3333102906740525399}
+  surfaceGap: 0.012
 --- !u!4 &3353993141218461761 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4648607181686630536, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
