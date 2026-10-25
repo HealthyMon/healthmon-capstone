@@ -16,6 +16,8 @@ public sealed class MobileAdminMenu : MonoBehaviour
     private TMP_FontAsset font;
     private TMP_Text connectionStatus, notice, stateSummary;
     private TMP_InputField level, coin, address, token, pet, amount;
+    private Transform workoutUploadList;
+    private TMP_Text workoutSyncStatus;
     private readonly Dictionary<string, Slider> axes = new Dictionary<string, Slider>();
     private readonly List<GameObject> pages = new List<GameObject>();
     private readonly List<Button> testButtons = new List<Button>();
@@ -161,12 +163,10 @@ public sealed class MobileAdminMenu : MonoBehaviour
         address = Input(page, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:8020");
         token = Input(page, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
         pet = Input(page, "펫 ID · 비워두면 기존 선택 유지", "");
-        Button("Connect", page, "서버 연결 / 연결 변경", () => {
-            Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 연결을 확인하고 있어요.";
-        });
-        Button("Refresh", page, "서버 상태 새로고침", () => { Connection.RefreshState(); Connection.RefreshQuests(); });
-        Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => Healthmon.Evolution.EvolutionClient.Instance?.RequestCommonEvolution());
-        Button("PhoneSync", page, "휴대폰 운동 동기화", () => { HealthMonAndroidBridge.RequestServerSync(); Connection.RefreshPhoneStatus(); });
+        Button("Connect", page, "서버 연결 / 연결 변경", () => {Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 연결을 확인하고 있어요.";});
+        Button("Refresh", page, "서버 상태 새로고침", () =>{Connection.RefreshState(); Connection.RefreshQuests();});
+        Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => {Healthmon.Evolution.EvolutionClient.Instance ?.RequestCommonEvolution();});
+        Label(page, "웨어러블 운동 기록 동기화", 70);
     }
 
     private void SelectPage(int index)

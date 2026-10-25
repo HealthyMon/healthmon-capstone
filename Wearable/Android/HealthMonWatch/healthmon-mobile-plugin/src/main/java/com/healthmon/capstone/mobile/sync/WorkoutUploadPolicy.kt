@@ -54,6 +54,14 @@ object WorkoutUploadPolicy {
             put("target", JSONObject.NULL)
             put("source", "watch")
             put("synthetic", false)
+            // Preserve raw watch metrics independently of goal scoring.
+            // JSONObject.NULL distinguishes unavailable values from measured zero.
+            put("duration_seconds", workout.durationSeconds)
+            put("average_heart_rate_bpm", workout.averageHeartRate ?: JSONObject.NULL)
+            put("max_heart_rate_bpm", workout.maxHeartRate ?: JSONObject.NULL)
+            put("calories_kcal", workout.calories ?: JSONObject.NULL)
+            put("steps", workout.steps ?: JSONObject.NULL)
+            put("distance_km", workout.distanceKm ?: JSONObject.NULL)
         }
     }
 

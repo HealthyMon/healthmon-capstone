@@ -198,4 +198,48 @@ namespace Healthmon.Beta
         public ApiFailure(long statusCode, string message, bool cancelled = false)
         { StatusCode = statusCode; Message = message; Cancelled = cancelled; }
     }
+
+
+    [Serializable]
+    public class ServerWorkoutList
+    {
+        public ServerWorkoutEntry[] records;
+    }
+
+    [Serializable]
+    public class ServerWorkoutEntry
+    {
+        public string event_id;
+        public int revision;
+        public string occurred_at;
+        public string received_at;
+        public string evaluation_status;
+        public bool synthetic;
+        public ServerWorkoutDetail record;
+    }
+
+
+    [Serializable]
+    public class ServerWorkoutDetail
+    {
+        public string workout_type;
+        public string exercise_type;
+        public string unit;
+        public float actual;
+        public float target;
+        public string source;
+        public string started_at;
+        public string occurred_at;
+        public string body_part;
+
+        // 서버에 새로 추가한 상세 운동 데이터
+        public int duration_seconds;
+        public float average_heart_rate_bpm;
+        public float max_heart_rate_bpm;
+        public float calories_kcal;
+        public int steps;
+        public float distance_km;
+    }
+
+
 }

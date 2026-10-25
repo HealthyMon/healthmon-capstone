@@ -290,6 +290,18 @@ namespace Healthmon.Beta
             if (RequirePet(failure)) Begin("GET", PetPath("/quests"), null, success, failure);
         }
 
+        public void GetWorkouts(Action<ServerWorkoutList> success, Action<ApiFailure> failure = null)
+        {
+            if (!RequirePet(failure)) return;
+            Begin<ServerWorkoutList>(
+                "GET",
+                PetPath("/workouts"),
+                null,
+                success,
+                failure
+            );
+        }
+
         public void ApplyTestState(TestPetStateRequest value, Action<PetState> success, Action<ApiFailure> failure = null)
         { TestControl("PUT", "/state", JsonUtility.ToJson(value), success, failure); }
         public void ClearTestState(Action<PetState> success, Action<ApiFailure> failure = null)
