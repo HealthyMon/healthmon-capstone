@@ -9397,7 +9397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ARPlacementManager
   raycastManager: {fileID: 1018823011}
   arCamera: {fileID: 247205497}
-  healthMonPrefab: {fileID: 2720198714157961979, guid: 023382a568294ce4988fba16b8cf1486, type: 3}
+  healthMonPrefab: {fileID: 2720198714157961979, guid: 006fb4dba1f95db42b7b87b4f404a2a8, type: 3}
   petStateManager: {fileID: 1388197050}
   questPrototype: {fileID: 2033468854}
 --- !u!4 &500366193
