@@ -309,17 +309,69 @@ namespace Healthmon.Common
             _ = phoneConfigurations.Enqueue(() => generation == configGeneration && IsConnected,
                 () => ConfigurePhoneInOrder(generation, url, token, pet));
         }
+
         private async Task ConfigurePhoneInOrder(int generation, string url, string token, string pet)
-        {
-            try
+        {try
             {
-                string result = await Task.Run(() => HealthMonAndroidBridge.ConfigureServerSync(url, token, pet));
-                if (generation != configGeneration || !IsConnected) return;
-                PhoneStatus = JsonUtility.FromJson<PhoneSyncStatus>(result);
+                Debug.Log(
+                    "[WorkoutSync] ConfigurePhoneInOrder started"
+                );
+
+                string result = await Task.Run(() =>
+                    HealthMonAndroidBridge.ConfigureServerSync(
+                        url,
+                        token,
+                        pet
+                    )
+                );
+
+                // 토큰이나 요청 인수는 출력하지 않음
+                Debug.Log(
+                    "[WorkoutSync] ConfigureServerSync result: " +
+                    result
+                );
+
+                if (generation != configGeneration || !IsConnected)
+                {
+                    Debug.LogWarning(
+                        "[WorkoutSync] Configuration result ignored: " +
+                        "connection changed or disconnected."
+                    );
+                    return;
+                }
+
+                PhoneStatus =
+                    JsonUtility.FromJson<PhoneSyncStatus>(result);
+
+                if (PhoneStatus == null)
+                {
+                    Debug.LogError(
+                        "[WorkoutSync] Failed to parse PhoneSyncStatus."
+                    );
+                    return;
+                }
+
+                Debug.Log(
+                    "[WorkoutSync] Parsed status=" +
+                    PhoneStatus.status
+                );
             }
-            catch (Exception)
-            { if (generation == configGeneration && IsConnected) Status = "Connected; Android sync setup failed. Retry sync after checking the plugin."; }
+            catch (Exception e)
+            {
+                Debug.LogError(
+                    "[WorkoutSync] ConfigurePhoneInOrder failed: " +
+                    e
+                );
+
+                if (generation == configGeneration && IsConnected)
+                {
+                    Status =
+                        "Connected; Android sync setup failed. " +
+                        "Retry sync after checking the plugin.";
+                }
+            }
         }
+
         public async void RefreshPhoneStatus()
         {
             if (phoneBusy || !HealthMonAndroidBridge.IsAndroidDevice || !IsConnected) return;
@@ -329,6 +381,7 @@ namespace Healthmon.Common
                 string result = await Task.Run(HealthMonAndroidBridge.GetServerSyncStatus);
                 if (generation != configGeneration) return;
                 var status = JsonUtility.FromJson<PhoneSyncStatus>(result);
+                Debug.Log("[AutoSyncDebug] " + result);
                 if (status != null && status.server_instance_id == ServerInstanceId && status.owner_id == OwnerId && status.pet_id == Api.PetId)
                     PhoneStatus = status;
                 RefreshState();
@@ -449,14 +502,10 @@ namespace Healthmon.Common
                 }
                 if (HealthMonAndroidBridge.IsAndroidDevice)
                 {
-                    if (GUILayout.Button("Sync phone records and refresh")) { HealthMonAndroidBridge.RequestServerSync(); RefreshPhoneStatus(); }
                     if (PhoneStatus != null)
                     {
                         GUILayout.Label("Phone sync " + PhoneStatus.status + "; unbound " + PhoneStatus.unbound_count);
-                        GUILayout.Label("Confirm only your own workouts for this server/account/pet:");
-                        foreach (var workout in PhoneStatus.unbound ?? new UnboundWorkout[0])
-                            if (GUILayout.Button("Confirm my workout: " + workout.exercise + " " + DateTimeOffset.FromUnixTimeMilliseconds(workout.start_time).ToString("u")))
-                            { HealthMonAndroidBridge.ConfirmWorkoutUpload(workout.id); RefreshPhoneStatus(); }
+                        if (PhoneStatus.unbound_count > 0) GUILayout.Label("Older unbound workouts are not automatically assigned to an account.");
                     }
                 }
                 GUI.enabled = true;

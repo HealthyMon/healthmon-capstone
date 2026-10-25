@@ -37,6 +37,13 @@ class Workout(Event):
     body_part: Literal['upper', 'lower', 'full'] | None = None
     goal_id: str | None = None
     confirmed_nonperformance: bool = False
+    # Optional watch measurements. None means not measured/unsupported (not zero).
+    duration_seconds: int | None = Field(default=None, ge=0)
+    average_heart_rate_bpm: float | None = Field(default=None, ge=0, le=300)
+    max_heart_rate_bpm: float | None = Field(default=None, ge=0, le=300)
+    calories_kcal: float | None = Field(default=None, ge=0)
+    steps: int | None = Field(default=None, ge=0)
+    distance_km: float | None = Field(default=None, ge=0)
 
     @model_validator(mode='after')
     def start_time(self):

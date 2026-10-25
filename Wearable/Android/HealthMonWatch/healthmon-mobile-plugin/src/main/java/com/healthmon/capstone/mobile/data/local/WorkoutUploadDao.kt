@@ -21,6 +21,13 @@ abstract class WorkoutUploadDao {
     @Query("SELECT * FROM workout WHERE NOT EXISTS (SELECT 1 FROM workout_upload u WHERE u.workoutId=workout.id AND (u.serverInstanceId=:server OR u.ownerId!=:owner)) ORDER BY startTime,id")
     abstract suspend fun unbound(server: String, owner: String): List<WorkoutEntity>
 
+    // Only never-bound records received after the currently verified destination was selected.
+    // Do not adopt historical records or recordings already associated with any account/pet.
+    @Query("""SELECT * FROM workout WHERE receivedAt >= :since
+        AND NOT EXISTS (SELECT 1 FROM workout_upload u WHERE u.workoutId = workout.id)
+        ORDER BY receivedAt, id""")
+    abstract suspend fun autoCandidates(since: Long): List<WorkoutEntity>
+
     @Transaction
     open suspend fun confirm(binding: WorkoutUploadEntity): Boolean {
         val old = forWorkout(binding.workoutId)
