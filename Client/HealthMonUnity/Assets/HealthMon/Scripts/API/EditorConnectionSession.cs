@@ -33,7 +33,9 @@ namespace Healthmon.Common
                 {
                     string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.."));
                     string runtime = Path.Combine(root, ".runtime") + Path.DirectorySeparatorChar;
-                    string profilePath = Path.Combine(runtime, "native-server.json");
+                    // A UI worktree can reuse an existing server without declaring a second server installation.
+                    string profilePath = Path.Combine(runtime, "editor-connection.json");
+                    if (!File.Exists(profilePath)) profilePath = Path.Combine(runtime, "native-server.json");
                     if (!File.Exists(profilePath)) return false;
                     var profile = JsonUtility.FromJson<NativeProfile>(File.ReadAllText(profilePath));
                     var origin = new Uri(profile.base_url);
