@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sky_PureNature
+  m_Shader: {fileID: 4800000, guid: 8e836c39d9d284b479dba1cc49823e74, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _SUNDISK_HIGH_QUALITY
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AtmosphereThickness: 1
+    - _Exposure: 1.3
+    - _NightTransition: 0.5
+    - _StarColorVariation: 1
+    - _StarDensity: 512
+    - _StarHorizonFade: 0.1
+    - _StarIntensity: 10
+    - _StarRotationOffset: 0
+    - _StarSize: 0
+    - _SunDisk: 2
+    - _SunOrbitYaw: 0
+    - _SunSize: 0.04
+    - _SunSizeConvergence: 5
+    - _UseStarRotationMatrix: 0
+    m_Colors:
+    - _GroundColor: {r: 0.5030705, g: 0.7152734, b: 0.8018868, a: 1}
+    - _NightGroundColor: {r: 0.18431395, g: 0.35686296, b: 0.52941185, a: 1}
+    - _NightSkyColor: {r: 0, g: 0.38823497, b: 0.643137, a: 1}
+    - _SkyTint: {r: 0.29236382, g: 0.6539272, b: 0.8490566, a: 1}
+  m_BuildTextureStacks: []
