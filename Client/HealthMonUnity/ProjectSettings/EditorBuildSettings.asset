@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/HealthMon/Scenes/BootScene.unity
+    guid: 5b88dfa18230c2547bd0860b870b4747
+  - enabled: 1
     path: Assets/HealthMon/Scenes/MainARScene.unity
     guid: e4a8dca573165a746af26aa76b1ea7dc
   - enabled: 1
