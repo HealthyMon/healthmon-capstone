@@ -1,0 +1,610 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e18b3e7fc45f548bb65fcaa59b863a, type: 3}
+  m_Name: HealthMonShopCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::HealthMonShopCatalog
+  items:
+  - itemId: prefab_jewelry_chain_type1_color2
+    displayName: "\uBAA9\uAC78\uC774 \xB7 Chain Type1 Color2"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Chain_Type1_Color2\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBAA9\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 90
+    icon: {fileID: 21300000, guid: 62ce1b4d8e0e4dc49a476d64a3ff297f, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBAA9\uAC78\uC774"
+    productPrefab: {fileID: 8987755037947235313, guid: 2337cf9fece08334b93ca5ef25d378e9, type: 3}
+  - itemId: prefab_jewelry_chain_type2_color2
+    displayName: "\uBAA9\uAC78\uC774 \xB7 Chain Type2 Color2"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Chain_Type2_Color2\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBAA9\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 90
+    icon: {fileID: 21300000, guid: 61581456a7aec584bbf83aa4c4f83643, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBAA9\uAC78\uC774"
+    productPrefab: {fileID: 6504476177588324687, guid: 703b0a46820a03a44a03a73148f8f6b1, type: 3}
+  - itemId: prefab_jewelry_chain_type3_color2
+    displayName: "\uBAA9\uAC78\uC774 \xB7 Chain Type3 Color2"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Chain_Type3_Color2\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBAA9\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 90
+    icon: {fileID: 21300000, guid: 63b706339a022c8419e29a1f108174c7, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBAA9\uAC78\uC774"
+    productPrefab: {fileID: 2030258534299051252, guid: a1bc3683a1a8a4d45ad49d731094d461, type: 3}
+  - itemId: prefab_jewelry_earring_type1_color2
+    displayName: "\uADC0\uAC78\uC774 \xB7 Earring Type1 Color2"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Earring_Type1_Color2\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uADC0\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 120
+    icon: {fileID: 21300000, guid: 5f74933114c3d0b4aa2a261d944652cd, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uADC0\uAC78\uC774"
+    productPrefab: {fileID: 4607751990705880682, guid: 181e994687e7f0d4bbd6c58b9cd87500, type: 3}
+  - itemId: prefab_jewelry_earring_type3_color2
+    displayName: "\uADC0\uAC78\uC774 \xB7 Earring Type3 Color2"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Earring_Type3_Color2\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uADC0\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 120
+    icon: {fileID: 21300000, guid: 1f0c2eb035f63c9408a361c031e66c42, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uADC0\uAC78\uC774"
+    productPrefab: {fileID: 2783693638790879710, guid: f94b0d2c23d014d4c9190df0bd93b8ae, type: 3}
+  - itemId: prefab_jewelry_earring_type4_color3
+    displayName: "\uADC0\uAC78\uC774 \xB7 Earring Type4 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Earring_Type4_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uADC0\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 120
+    icon: {fileID: 21300000, guid: fb141e1ddeff0a64db7db4222e9e2c76, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uADC0\uAC78\uC774"
+    productPrefab: {fileID: 4320685146290690181, guid: a3669959f1dbc0844adb493f14f738f5, type: 3}
+  - itemId: prefab_jewelry_earring_type7_color1
+    displayName: "\uADC0\uAC78\uC774 \xB7 Earring Type7 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Earring_Type7_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uADC0\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 120
+    icon: {fileID: 21300000, guid: 96435cc2609db57438aa59ce1e8f1a28, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: "\uADC0\uAC78\uC774"
+    productPrefab: {fileID: 8271085511289995242, guid: 2b7d996efd2372a478a8bdf60721abcf, type: 3}
+  - itemId: prefab_jewelry_earring_type9_color1
+    displayName: "\uADC0\uAC78\uC774 \xB7 Earring Type9 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Earring_Type9_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uADC0\uAC78\uC774 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 120
+    icon: {fileID: 21300000, guid: 4018ce2cf485c1248bd4b78a422eb815, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: "\uADC0\uAC78\uC774"
+    productPrefab: {fileID: 1396304390166525017, guid: 48f4bf804c7d9fa4f831cc78c38e9d6f, type: 3}
+  - itemId: prefab_jewelry_pendant_type5_color1
+    displayName: "\uD39C\uB358\uD2B8 \xB7 Pendant Type5 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Pendant_Type5_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uD39C\uB358\uD2B8 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 180
+    icon: {fileID: 21300000, guid: c5d16da792f5b8644908348b9acbc700, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uD39C\uB358\uD2B8"
+    productPrefab: {fileID: 6656861857778124685, guid: d041a38773ab2d3468d587b210e9f588, type: 3}
+  - itemId: prefab_jewelry_pendant_type7_color1
+    displayName: "\uD39C\uB358\uD2B8 \xB7 Pendant Type7 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Pendant_Type7_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uD39C\uB358\uD2B8 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 180
+    icon: {fileID: 21300000, guid: 7a9a84784894f17419c2e334419f76cf, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: "\uD39C\uB358\uD2B8"
+    productPrefab: {fileID: 4152064424870511971, guid: 1f14267b457cc2044b04ba8330cf169c, type: 3}
+  - itemId: prefab_jewelry_pendant_type8_color1
+    displayName: "\uD39C\uB358\uD2B8 \xB7 Pendant Type8 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Pendant_Type8_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uD39C\uB358\uD2B8 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 180
+    icon: {fileID: 21300000, guid: 84aa9a17a23c83a41b5d2a2506231da8, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uD39C\uB358\uD2B8"
+    productPrefab: {fileID: 6937615284551086356, guid: 1259096999e65c849a8c72de9d7fb6a4, type: 3}
+  - itemId: prefab_jewelry_ring_type10_shape1_color3
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type10 Shape1 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type10_Shape1_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: b76d95fa7a2a96f478b534f17bc79f53, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 7358191906375655371, guid: 222b70a43692d9a4e8b873498690aad7, type: 3}
+  - itemId: prefab_jewelry_ring_type1_shape1_color3_variant
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type1 Shape1 Color3 Variant"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type1_Shape1_Color3
+      Variant\n\uAD6C\uB9E4\uD558\uBA74 \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0
+      \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: 9f9ad693250d9a74d9ee4899f61bfd1d, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 4171897350536610183, guid: daeba9c23481a2040bdc61fd586ae02a, type: 3}
+  - itemId: prefab_jewelry_ring_type1_shape1_color3
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type1 Shape1 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type1_Shape1_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: 8248a529b52acbb41a72ce09d4ef1b05, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 1912449682582269839, guid: a0ce5bbd71aa25b48abba2a90e7b3595, type: 3}
+  - itemId: prefab_jewelry_ring_type2_shape1_color3
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type2 Shape1 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type2_Shape1_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: 03db123c672ef8c4a862e862aa4a4152, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 4081121935307870280, guid: 204d3cee97c6f4440b119da1abd06001, type: 3}
+  - itemId: prefab_jewelry_ring_type3_shape2_color1
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type3 Shape2 Color1"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type3_Shape2_Color1\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: 4054ce30f0e3fc047b1adf62b7e65467, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 1976692332964620700, guid: 3250e8d4aa526c74cbc7523a6cc91f9a, type: 3}
+  - itemId: prefab_jewelry_ring_type4_shape2_color3
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type4 Shape2 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type4_Shape2_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: 5907b52e4a8e233458d18dbda24ff0ae, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 6755985897557938881, guid: bada981001e7e2943a056a4fc8cd3baa, type: 3}
+  - itemId: prefab_jewelry_ring_type8_shape1_color3
+    displayName: "\uBC18\uC9C0 \xB7 Ring Type8 Shape1 Color3"
+    description: "\uC6D0\uBCF8 3D \uD504\uB9AC\uD339: Jewelry_Ring_Type8_Shape1_Color3\n\uAD6C\uB9E4\uD558\uBA74
+      \uAFB8\uBBF8\uAE30\uC5D0\uC11C \uBC18\uC9C0 \uC2AC\uB86F\uC774 \uD574\uAE08\uB429\uB2C8\uB2E4."
+    category: 0
+    displayCoinPrice: 160
+    icon: {fileID: 21300000, guid: b6a3a6ed536862849bf58752c05d9af2, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: "\uBC18\uC9C0"
+    productPrefab: {fileID: 6370018311427000610, guid: 1f78607910fcad844b5b6cf23ec764eb, type: 3}
+  - itemId: prefab_cute_slime_n1
+    displayName: "\uD5EC\uC2A4\uBAAC N1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: d7202c741451857469eeaefd72ee08cf, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 5460890760460284466, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
+  - itemId: prefab_cute_slime_n2
+    displayName: "\uD5EC\uC2A4\uBAAC N2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: e40790e55ada22048a684ef1dbf3e338, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 87599583523850620, guid: 918e54bb07b73804695e86ac5560d2c9, type: 3}
+  - itemId: prefab_cute_slime_n3
+    displayName: "\uD5EC\uC2A4\uBAAC N3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: 66a3ac30d1f2cd842bb0bd14208f4640, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 3619189708364678694, guid: 4f9ee4096405e914781518e930a568d5, type: 3}
+  - itemId: prefab_cute_slime_n4
+    displayName: "\uD5EC\uC2A4\uBAAC N4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: 86129e28ed26c4f48b66748b1a0c55d0, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 5110632077186792878, guid: 2810a79513f45994fb15b0297588c0bd, type: 3}
+  - itemId: prefab_cute_slime_n5
+    displayName: "\uD5EC\uC2A4\uBAAC N5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: 15df06c4c86915549842b50053e143fe, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 3195814432950775701, guid: 39bb80cbea9d57246ace8a3c08179c9d, type: 3}
+  - itemId: prefab_cute_slime_n6
+    displayName: "\uD5EC\uC2A4\uBAAC N6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: 2d1e6282d683eb94ba8ac0c37681741e, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 8542916978386821590, guid: 54767aff721f8c94fa7a19378a4c5d96, type: 3}
+  - itemId: prefab_cute_slime_o1
+    displayName: "\uD5EC\uC2A4\uBAAC O1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: db1c1396e8558f44996429ba3207f0a3, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 7025101253018355646, guid: 6a4b3a9fc0f77814794226892a7124f9, type: 3}
+  - itemId: prefab_cute_slime_o2
+    displayName: "\uD5EC\uC2A4\uBAAC O2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: 9049d2d6871ffe44cafa8205b2ac540c, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 8733149760967096409, guid: a052f4854a277ea4e913fddd50809b17, type: 3}
+  - itemId: prefab_cute_slime_o3
+    displayName: "\uD5EC\uC2A4\uBAAC O3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: 57f175a06949d5a488544f8374813081, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 2692079620278252834, guid: 0604f2822b6bb2d488ba0931d32c4a19, type: 3}
+  - itemId: prefab_cute_slime_o4
+    displayName: "\uD5EC\uC2A4\uBAAC O4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: 18ad4b077084d244c9a2a6c34fd11729, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 4708212724674247156, guid: 5ddb4c79ea92b9a4cb56582777fd28f7, type: 3}
+  - itemId: prefab_cute_slime_o5
+    displayName: "\uD5EC\uC2A4\uBAAC O5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: 1fece2257a93cdb4ebdcc26af4299b9f, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 1659342316751497432, guid: abb94ea6cb54b3147bcc109c2677f6d6, type: 3}
+  - itemId: prefab_cute_slime_o6
+    displayName: "\uD5EC\uC2A4\uBAAC O6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: 0dcc456cf760ed9448117df25aacab0e, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 1988706783790165968, guid: 31677319d934e954bbbca9df3477e44a, type: 3}
+  - itemId: prefab_cute_slime_p1
+    displayName: "\uD5EC\uC2A4\uBAAC P1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: 54522fc8c940a6e47abc1040fbfcfca7, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 5370347622246870987, guid: 919172429a87c93499bfa61b14f7dccc, type: 3}
+  - itemId: prefab_cute_slime_p2
+    displayName: "\uD5EC\uC2A4\uBAAC P2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: dd7a0967a3f64034897c21be6affbb2b, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 2197273697587286249, guid: 152719e1093da84419f7c693da2e8b23, type: 3}
+  - itemId: prefab_cute_slime_p3
+    displayName: "\uD5EC\uC2A4\uBAAC P3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: b67f19de3b0c4894097c2778d426adf9, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 770857007229581238, guid: ccefa2e2210bf244a876eda718576eeb, type: 3}
+  - itemId: prefab_cute_slime_p4
+    displayName: "\uD5EC\uC2A4\uBAAC P4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: d1846843fda191c46b42987aaf822e29, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 4272685394540896026, guid: 8736c215ff0cecf408cc6d180d4270c7, type: 3}
+  - itemId: prefab_cute_slime_p5
+    displayName: "\uD5EC\uC2A4\uBAAC P5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: be589831b2f26af4cb9d81b78465c9f9, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 2701771880590511394, guid: 40bfeaa51065a0247b2c939c8a37f053, type: 3}
+  - itemId: prefab_cute_slime_p6
+    displayName: "\uD5EC\uC2A4\uBAAC P6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: f6673577a63b248478c2a5b297613ee5, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 5828435591020639486, guid: 17b6a739c6294e945bb4bbf3ec8d90c2, type: 3}
+  - itemId: prefab_cute_slime_q1
+    displayName: "\uD5EC\uC2A4\uBAAC Q1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: 03971e1a87400bd4ea2ae04824001228, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 8618050269376479966, guid: 8d68aacf8fec191488f27845cd318703, type: 3}
+  - itemId: prefab_cute_slime_q2
+    displayName: "\uD5EC\uC2A4\uBAAC Q2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: 9a5d0d5c7ee5cca4faa8a940dc2aa392, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 7947695035248125529, guid: 4ba097189aae5904ca6334a2704a36a8, type: 3}
+  - itemId: prefab_cute_slime_q3
+    displayName: "\uD5EC\uC2A4\uBAAC Q3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: b6e88716521701244b70db1090916220, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 52023622334037692, guid: 739059157220ce64ea3c6a9c1381ebc6, type: 3}
+  - itemId: prefab_cute_slime_q4
+    displayName: "\uD5EC\uC2A4\uBAAC Q4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: 2bd94be2f6fe4f84ca2b9488b08bd90a, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 2486658553185924554, guid: e8f1eb72d9392e34091d0357806687ff, type: 3}
+  - itemId: prefab_cute_slime_q5
+    displayName: "\uD5EC\uC2A4\uBAAC Q5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: 507f6a94fa7e2584e9485767aa5d6069, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 7874871380640918444, guid: 1534b73feb04eec4e8aefb1a0aeed019, type: 3}
+  - itemId: prefab_cute_slime_q6
+    displayName: "\uD5EC\uC2A4\uBAAC Q6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: 6feab229ace8a204b93fc31aa32b6e44, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 4218355811889028468, guid: 406d065c607c4b640836393a41ad7e52, type: 3}
+  - itemId: prefab_cute_slime_r1
+    displayName: "\uD5EC\uC2A4\uBAAC R1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: f285cd6e6e5db814695706d16d72c636, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 8280527817229469116, guid: d8288d979c28e30409f7b42972bcaaf5, type: 3}
+  - itemId: prefab_cute_slime_r2
+    displayName: "\uD5EC\uC2A4\uBAAC R2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: 80291b558e585dc468bec65439c1f9a5, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 3409483657941717391, guid: 273c1376c6b131b4c85e47dae73d34e3, type: 3}
+  - itemId: prefab_cute_slime_r3
+    displayName: "\uD5EC\uC2A4\uBAAC R3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: a0ad919c2cff6ee42a0f7097b7350fcf, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 6216136776217503461, guid: e571ae470047c9c4d9f8478b8a85ea69, type: 3}
+  - itemId: prefab_cute_slime_r4
+    displayName: "\uD5EC\uC2A4\uBAAC R4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: 147f34803b4ad4540ae4d58e896bfca7, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 99351911310341631, guid: 3ac40f2e598e48e42a1d0bfbce4a517a, type: 3}
+  - itemId: prefab_cute_slime_r5
+    displayName: "\uD5EC\uC2A4\uBAAC R5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: dcf4a37167184bd46ad8467d7ae7530d, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 4923089209032406283, guid: 6a298ca009bcfed4ca92a6abf0d80299, type: 3}
+  - itemId: prefab_cute_slime_r6
+    displayName: "\uD5EC\uC2A4\uBAAC R6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: 7574c2e9128c8dd4296ae685ea2d2cf0, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 1694636010498075299, guid: 8a22bbf3299dae844984dc2e42f6e103, type: 3}
+  - itemId: prefab_cute_slime_s1
+    displayName: "\uD5EC\uC2A4\uBAAC S1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: 3087009de4657cb4b820212593776f0f, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 3764219385785374699, guid: ef2a1402a56a60e4dbaf0746774d46a6, type: 3}
+  - itemId: prefab_cute_slime_s2
+    displayName: "\uD5EC\uC2A4\uBAAC S2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 700
+    icon: {fileID: 21300000, guid: 3770217cc032e964e8d2447c732d36db, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 8694749452322348332, guid: 2986eeadb5f233d4a9ff48fc0dd7adfa, type: 3}
+  - itemId: prefab_cute_slime_s3
+    displayName: "\uD5EC\uC2A4\uBAAC S3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 300
+    icon: {fileID: 21300000, guid: ef665275f6cabc14489a6d8f8c36e0f6, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 5024351210635674710, guid: 67961bc8015eb7745ba2f36de8c622a8, type: 3}
+  - itemId: prefab_cute_slime_s4
+    displayName: "\uD5EC\uC2A4\uBAAC S4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 400
+    icon: {fileID: 21300000, guid: 374fc25361d070648a63db13b5f65190, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 7882792468685122561, guid: bd9a126b71f1ac94f8222fde8ba37fc3, type: 3}
+  - itemId: prefab_cute_slime_s5
+    displayName: "\uD5EC\uC2A4\uBAAC S5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 500
+    icon: {fileID: 21300000, guid: 6135de4bc70f7c34b9490cfd73df2b1f, type: 3}
+    includedByDefault: 0
+    featured: 0
+    jewelryName: 
+    productPrefab: {fileID: 6462187024931118587, guid: aa2ccefb134434742abdc2cc5679f3b1, type: 3}
+  - itemId: prefab_cute_slime_s6
+    displayName: "\uD5EC\uC2A4\uBAAC S6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    category: 1
+    displayCoinPrice: 600
+    icon: {fileID: 21300000, guid: ad7ef7617f7d35245abd15b1acb705e6, type: 3}
+    includedByDefault: 0
+    featured: 1
+    jewelryName: 
+    productPrefab: {fileID: 4587713277238409523, guid: 6f652f78344ca8545b0559411c8801e5, type: 3}

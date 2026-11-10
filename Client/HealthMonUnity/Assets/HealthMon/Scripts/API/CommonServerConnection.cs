@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Healthmon.Beta;
@@ -43,7 +43,7 @@ namespace Healthmon.Common
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
         {
-            LocalDemoEnabled = System.Environment.GetEnvironmentVariable("HEALTHMON_LOCAL_DEMO") == "1";
+            LocalDemoEnabled = System.Environment.GetEnvironmentVariable("HEALTHMON_LOCAL_DEMO") == "1" || PlayerPrefs.GetInt("HealthMon_Offline_Mode_v1", 1) == 1;
             if (Instance == null) new GameObject("HealthMon Common Server").AddComponent<CommonServerConnection>();
         }
         private void Awake()

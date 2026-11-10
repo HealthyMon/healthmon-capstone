@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,7 +53,7 @@ public class QuestPrototype : MonoBehaviour
     private const int ArGoal = 3;
 
     // 기존 임시 걸음 수(1,200보)를 유지. 웨어러블 연동 시 0으로 변경할 것.
-    private const int MockStartingSteps = 1200;
+    private const int MockStartingSteps = 0;
 
     private int walkProgress = MockStartingSteps;
     private int foodProgress;
