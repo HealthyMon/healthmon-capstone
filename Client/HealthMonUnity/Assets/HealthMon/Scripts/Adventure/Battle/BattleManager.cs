@@ -31,6 +31,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("전투 상태")]
     public BattleState currentState = BattleState.Ready;
+    [SerializeField] private AdventurePlayerStats adventurePlayerStats;
 
     [Header("전투 연출")]
     [SerializeField]
@@ -40,8 +41,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject playerVisual;
 
     [Header("피해량 UI")]
-    [SerializeField]
-    private DamagePopupController damagePopup;
+    [SerializeField] private DamagePopupController damagePopup;
 
     [Header("Elite Battle")]
     [SerializeField] private EliteMoveController eliteMove;
@@ -56,8 +56,9 @@ public class BattleManager : MonoBehaviour
     [Header("Elite Attack Settings")]
     [SerializeField] private float eliteSpecialMultiplier = 1.5f;
 
-    [SerializeField]
-    private EliteCameraController eliteCameraController;
+    [Header("Controller")]
+    [SerializeField] private EliteCameraController eliteCameraController;
+    [SerializeField] private BattleController battleController;
 
     private BattleMode battleMode = BattleMode.Normal;
 
@@ -66,11 +67,7 @@ public class BattleManager : MonoBehaviour
 
     public bool IsEliteBattle => battleMode == BattleMode.Elite;
 
-    private void Start()
-    {
-        // 시작 화면에서 버튼을 누르면 전투 시작
-        battleUI.ShowSelectionPanel();
-    }
+    // 탐험에서 전투가 시작될 때만 UI를 열도록 Start() 자동 선택 화면 제거.
 
     private void Update()
     {
@@ -101,21 +98,34 @@ public class BattleManager : MonoBehaviour
         battleUI.RefreshUI();
     }
 
+    private void InitializePlayerForBattle()
+    {
+        if (adventurePlayerStats != null &&
+            adventurePlayerStats.IsInitialized)
+        {
+            adventurePlayerStats.ApplyToBattleUnit(player);
+        }
+        else
+        {
+            // 기존 단독 전투 테스트 호환
+            player.Initialize();
+        }
+    }
     public void StartNormalBattle()
     {
+        LastBattleVictory = null;
+
         battleMode = BattleMode.Normal;
 
         eliteArena.SetActive(false);
         normalBattleCamera.SetActive(true);
         eliteBattleCamera.SetActive(false);
 
-        player.Initialize();
+        InitializePlayerForBattle();
         enemy.Initialize();
         enemyAI.Initialize();
 
         SetPlayerVisualVisible(false);
-
-        // 이전 전투의 시각 상태 초기화
         if (battleVisual != null)
             battleVisual.ResetVisuals();
 
@@ -128,15 +138,20 @@ public class BattleManager : MonoBehaviour
     }
     public void StartEliteBattle()
     {
+        LastBattleVictory = null;
+
         battleMode = BattleMode.Elite;
 
-        player.Initialize();
+        InitializePlayerForBattle();
         enemy.Initialize();
         enemyAI.Initialize();
         eliteEnemyAI.Initialize();
         eliteGrid.ClearWarnings();
 
         SetPlayerVisualVisible(true);
+        // 이전 전투의 시각 상태 초기화
+        if (battleVisual != null)
+            battleVisual.ResetVisuals();
 
         eliteArena.SetActive(true);
         normalBattleCamera.SetActive(false);
@@ -167,7 +182,6 @@ public class BattleManager : MonoBehaviour
         battleUI.AddLog("헬스몬의 행동 차례입니다.");
         battleUI.RefreshUI();
     }
-
     public void ExecutePlayerAction(BattleActionType action)
     {
         if (currentState != BattleState.PlayerSelecting)
@@ -210,7 +224,6 @@ public class BattleManager : MonoBehaviour
         battleUI.SetActionButtons(false);
         battleUI.RefreshUI();
     }
-
     private bool PlayerAttack()
     {
         if (!player.SpendST(attackCost))
@@ -235,7 +248,6 @@ public class BattleManager : MonoBehaviour
 
         return true;
     }
-
     private bool PlayerSkill()
     {
         if (!player.SpendST(skillCost))
@@ -264,7 +276,6 @@ public class BattleManager : MonoBehaviour
 
         return true;
     }
-
     private bool PlayerItem()
     {
         if (!player.SpendST(itemCost))
@@ -278,7 +289,6 @@ public class BattleManager : MonoBehaviour
 
         return true;
     }
-
     private bool PlayerWait()
     {
         player.RecoverST(player.waitRecoveryBonus);
@@ -289,6 +299,7 @@ public class BattleManager : MonoBehaviour
 
         return true;
     }
+
 
     private void ExecuteCurrentEnemyTurn()
     {
@@ -301,7 +312,6 @@ public class BattleManager : MonoBehaviour
             ExecuteEnemyAction();
         }
     }
-
     private void ExecuteEnemyAction()
     {
         currentState = BattleState.ResolvingAction;
@@ -354,7 +364,6 @@ public class BattleManager : MonoBehaviour
         currentState = BattleState.Running;
         battleUI.RefreshUI();
     }
-
     private void ExecuteEliteEnemyTurn()
     {
         currentState = BattleState.ResolvingAction;
@@ -436,7 +445,6 @@ public class BattleManager : MonoBehaviour
                 break;
         }
     }
-
     private void ExecutePreparedEliteAttack()
     {
         Vector2Int playerCell = eliteGrid.PlayerCell;
@@ -481,7 +489,6 @@ public class BattleManager : MonoBehaviour
     {
         return Mathf.Max(1, attack - defense);
     }
-
     private int CalculateMagicDamage(int attack, int resistance)
     {
         return Mathf.Max(1, attack - resistance);
@@ -506,36 +513,29 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle(bool playerWon)
     {
+        LastBattleVictory = playerWon;
         currentState = BattleState.Finished;
 
         StartCoroutine(EndBattleRoutine(playerWon));
     }
-
     private IEnumerator EndBattleRoutine(bool playerWon)
     {
         // 마지막 공격 연출을 보여줄 시간
         yield return new WaitForSeconds(0.6f);
 
+        battleUI.RefreshUI();
         if (playerWon && battleVisual != null)
             battleVisual.HideEnemy();
 
         yield return new WaitForSeconds(0.4f);
 
-        battleUI.ShowResultPanel(playerWon);
+        ReturnToMenu();
     }
 
     public void ReturnToMenu()
     {
-        currentState = BattleState.Ready;
-        battleUI.ShowSelectionPanel();
-    }
-
-    public void RetryBattle()
-    {
-        if (battleMode == BattleMode.Elite)
-            StartEliteBattle();
-        else
-            StartNormalBattle();
+        currentState = BattleState.Finished;
+        battleController.ConfirmBattleResult();
     }
 
     private void SetPlayerVisualVisible(bool visible)

@@ -1,12 +1,12 @@
-
+ï»¿
 using UnityEngine;
 
 public class BattleUnit : MonoBehaviour
 {
-    [Header("±âº» Á¤º¸")]
+    [Header("ê¸°ë³¸ ì •ë³´")]
     public string unitName = "Unit";
 
-    [Header("ÀüÅõ ½ºÅÈ")]
+    [Header("ì „íˆ¬ ìŠ¤íƒ¯")]
     public int maxHP = 100;
     public float maxST = 20f;
 
@@ -16,15 +16,15 @@ public class BattleUnit : MonoBehaviour
     public int SPD = 5;
     public int LUK = 5;
 
-    [Header("½ºÅÂ¹Ì³ª")]
+    [Header("ìŠ¤íƒœë¯¸ë‚˜")]
     public float staminaRecoveryRate = .025f;
     public float waitRecoveryBonus = .05f;
 
-    [Header("Çàµ¿ °ÔÀÌÁö")]
+    [Header("í–‰ë™ ê²Œì´ì§€")]
     public float actionGauge = 0f;
     public float actionGaugeMax = 100f;
 
-    [Header("ÇöÀç »óÅÂ")]
+    [Header("í˜„ì¬ ìƒíƒœ")]
     public int currentHP;
     public float currentST;
 
@@ -43,12 +43,12 @@ public class BattleUnit : MonoBehaviour
     {
         if (!IsAlive) return;
 
-        // SPD¿¡ µû¸¥ Çàµ¿ °ÔÀÌÁö ÃæÀü
+        // SPDì— ë”°ë¥¸ í–‰ë™ ê²Œì´ì§€ ì¶©ì „
         float gaugeSpeed = 20f + SPD * 3f;
 
         actionGauge = Mathf.Min(actionGaugeMax, actionGauge + gaugeSpeed * deltaTime);
 
-        // ½Ã°£¿¡ µû¸¥ ½ºÅÂ¹Ì³ª È¸º¹
+        // ì‹œê°„ì— ë”°ë¥¸ ìŠ¤íƒœë¯¸ë‚˜ íšŒë³µ
         RecoverST(staminaRecoveryRate * deltaTime);
     }
 
