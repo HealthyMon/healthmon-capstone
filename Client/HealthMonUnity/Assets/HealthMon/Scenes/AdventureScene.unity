@@ -2006,7 +2006,7 @@ MonoBehaviour:
   RES: 5
   SPD: 5
   LUK: 5
-  staminaRecoveryRate: 1
+  staminaRecoveryRate: 2
   waitRecoveryBonus: 5
   actionGauge: 0
   actionGaugeMax: 100
@@ -3240,10 +3240,10 @@ MonoBehaviour:
   currentHP: 100
   maxST: 20
   currentST: 15
-  ATK: 10
-  DEF: 5
+  ATK: 3
+  DEF: 4
   RES: 5
-  SPD: 5
+  SPD: 6
   LUK: 5
 --- !u!1 &614346895
 GameObject:

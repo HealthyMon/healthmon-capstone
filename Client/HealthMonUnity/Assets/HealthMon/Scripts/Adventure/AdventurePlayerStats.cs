@@ -40,6 +40,7 @@ public class AdventurePlayerStats : MonoBehaviour
     }
 
     // 새로운 탐험 시작 시 한 번만 실행
+
     public void InitializeExploration()
     {
         if (initialPlayer == null)
@@ -50,14 +51,12 @@ public class AdventurePlayerStats : MonoBehaviour
             return;
         }
 
+        // 기본 최대 체력과 스태미나
         maxHP = initialPlayer.maxHP;
         maxST = initialPlayer.maxST;
 
-        ATK = initialPlayer.ATK;
-        DEF = initialPlayer.DEF;
-        RES = initialPlayer.RES;
-        SPD = initialPlayer.SPD;
-        LUK = initialPlayer.LUK;
+        // ATK, DEF, RES, SPD, LUK는
+        // AdventurePlayerStats Inspector 값을 그대로 사용
 
         currentHP = maxHP;
         currentST = maxST * 0.5f;
@@ -66,8 +65,13 @@ public class AdventurePlayerStats : MonoBehaviour
 
         OnStatsChanged?.Invoke();
 
-        Debug.Log("[AdventureStats] 탐험 스탯 초기화");
+        Debug.Log(
+            $"[AdventureStats] 탐험 초기화: " +
+            $"ATK={ATK}, DEF={DEF}, RES={RES}, " +
+            $"SPD={SPD}, LUK={LUK}"
+        );
     }
+
 
     // 탐험 스탯을 전투에 전달
     public void ApplyToBattleUnit(BattleUnit unit)
