@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mac-exercise-counter"
+version = "0.1.0"
+requires-python = ">=3.12"
+description = "Offline RTMPose-L exercise counter for Apple Silicon"
+dependencies = ["rtmlib==0.0.16", "onnxruntime==1.31.1", "PySide6==6.12.0", "numpy==2.5.4", "opencv-contrib-python==5.0.0.93"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
