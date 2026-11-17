@@ -179,14 +179,14 @@ namespace HealthMon.Evolution
             bool hasTexture = texture != null;
             if (petPreview3D != null)
             {
-                petPreview3D.texture = hasTexture ? texture : Texture2D.whiteTexture;
+                petPreview3D.texture = hasTexture ? (Texture)texture : Texture2D.whiteTexture;
                 petPreview3D.enabled = hasTexture;
             }
             if (petPreview2D != null) petPreview2D.enabled = !hasTexture;
             if (petPreviewFallback != null) petPreviewFallback.enabled = !hasTexture;
             if (resultPreview3D != null)
             {
-                resultPreview3D.texture = hasTexture ? texture : Texture2D.whiteTexture;
+                resultPreview3D.texture = hasTexture ? (Texture)texture : Texture2D.whiteTexture;
                 resultPreview3D.enabled = hasTexture;
             }
             if (resultPreview2D != null) resultPreview2D.enabled = !hasTexture;

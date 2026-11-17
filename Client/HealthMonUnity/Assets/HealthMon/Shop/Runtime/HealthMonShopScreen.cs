@@ -64,9 +64,21 @@ public sealed class HealthMonShopScreen : MonoBehaviour
     private float nextRefresh;
     private int previousCoin = int.MinValue;
     private bool previousConnected;
+    private string confirmedItemId;
+    private int confirmedPrice;
 
     private void Awake()
     {
+        if (CommonServerConnection.UsesServerAuthority)
+        {
+            // Runtime copy: server prices must never overwrite the saved asset
+            // or the explicit offline demo catalog in the Editor.
+            if (catalog != null) catalog = Instantiate(catalog);
+            var server = GetComponent<HealthMonServerShopBackend>();
+            if (server == null) server = gameObject.AddComponent<HealthMonServerShopBackend>();
+            server.catalog = catalog; backend = server;
+            server.Changed += OnServerShopChanged;
+        }
         if (closeButton != null) closeButton.onClick.AddListener(CloseShop);
         if (accessoriesTab != null) accessoriesTab.onClick.AddListener(() => ChangeCategory(HealthMonShopCategory.Accessory));
         if (charactersTab != null) charactersTab.onClick.AddListener(() => ChangeCategory(HealthMonShopCategory.Character));
@@ -108,6 +120,20 @@ public sealed class HealthMonShopScreen : MonoBehaviour
         if (successPanel != null) successPanel.SetActive(false);
         if (confirmPanel != null) confirmPanel.SetActive(false);
         RefreshAll();
+        if (backend is HealthMonServerShopBackend server) server.Refresh();
+    }
+
+    private void OnServerShopChanged()
+    {
+        if (overlay == null || !overlay.activeSelf) return;
+        float position = scrollRect != null ? scrollRect.verticalNormalizedPosition : 1f;
+        RefreshAll();
+        if (scrollRect != null) scrollRect.verticalNormalizedPosition = position;
+    }
+    private void OnDestroy()
+    {
+        if (backend is HealthMonServerShopBackend server)
+        { server.Changed -= OnServerShopChanged; if (catalog != null) Destroy(catalog); }
     }
 
     public void CloseShop()
@@ -149,8 +175,10 @@ public sealed class HealthMonShopScreen : MonoBehaviour
                 "오프라인 상점 · 저장된 전용 코인 사용 (서버와 별도)");
         else if (CurrentCoin() < 0)
             ShowHint("서버에 연결하면 실제 코인 잔액을 불러옵니다.");
+        else if (backend is HealthMonServerShopBackend server)
+            ShowHint(server.Status);
         else if (backend == null || !backend.IsReady)
-            ShowHint("상점 UI 준비 완료 · 실제 구매는 서버 구매 API 연결 후 가능합니다.");
+            ShowHint("상점 정보를 불러오는 중이에요.");
         else
             ShowHint("보유 코인으로 장신구와 새로운 헬스몬을 만나보세요.");
         RefreshActionButton();
@@ -164,10 +192,10 @@ public sealed class HealthMonShopScreen : MonoBehaviour
     private bool IsOwned(HealthMonShopItem item)
     {
         if (item == null) return false;
-        if (item.includedByDefault) return true;
+        if (item.includedByDefault && !CommonServerConnection.UsesServerAuthority) return true;
         if (backend != null && backend.IsReady) return backend.IsOwned(item.itemId);
-        // Existing locally unlocked jewelry may still be shown as owned in the UI.
-        if (!string.IsNullOrEmpty(item.jewelryName))
+        // Local unlocks belong to the demo save, even when the backend is offline.
+        if (!CommonServerConnection.UsesServerAuthority && !string.IsNullOrEmpty(item.jewelryName))
         {
             var c = FindFirstObjectByType<CustomizationPrototype>(FindObjectsInactive.Include);
             return c != null && c.IsUnlocked(item.jewelryName);
@@ -191,6 +219,7 @@ public sealed class HealthMonShopScreen : MonoBehaviour
     private bool InCurrentFilter(HealthMonShopItem item)
     {
         return item != null && item.category == currentCategory &&
+            (!(backend is HealthMonServerShopBackend server) || !server.IsReady || server.IsAvailable(item.itemId)) &&
             (currentCategory != HealthMonShopCategory.Accessory || string.IsNullOrEmpty(activeFilter) ||
              item.jewelryName == activeFilter);
     }
@@ -307,11 +336,12 @@ public sealed class HealthMonShopScreen : MonoBehaviour
         bool hasAdapter = backend != null && backend.IsReady;
         bool enough = selected != null && CurrentCoin() >= selected.displayCoinPrice;
         bool selectingCharacter = owned && selected != null && selected.category == HealthMonShopCategory.Character;
+        bool alreadySelected = selected != null && backend is HealthMonServerShopBackend server && server.IsSelected(selected.itemId);
         if (actionText != null)
             actionText.text = selected == null ? "상품을 선택하세요" :
-                selectingCharacter ? "캐릭터 선택" : owned ? "이미 보유 중" :
+                alreadySelected ? "선택됨" : selectingCharacter ? "캐릭터 선택" : owned ? "이미 보유 중" :
                 !hasAdapter ? "구매 서버 연결 필요" : !enough ? "코인이 부족해요" : "구매하기";
-        actionButton.interactable = !busy && selected != null && hasAdapter &&
+        actionButton.interactable = !busy && !alreadySelected && selected != null && hasAdapter &&
             (selectingCharacter || (!owned && enough));
     }
 
@@ -334,6 +364,7 @@ public sealed class HealthMonShopScreen : MonoBehaviour
             return;
         }
         if (CurrentCoin() < selected.displayCoinPrice) { ShowHint("코인이 부족해요."); return; }
+        confirmedItemId = selected.itemId; confirmedPrice = selected.displayCoinPrice;
         if (confirmText != null) confirmText.text = selected.displayName + "\n" +
             selected.displayCoinPrice.ToString("N0") + " 코인으로 구매할까요?\n구매가 완료되면 되돌릴 수 없습니다.";
         if (confirmPanel != null) confirmPanel.SetActive(true);
@@ -370,6 +401,8 @@ public sealed class HealthMonShopScreen : MonoBehaviour
     {
         if (busy || selected == null || backend == null || !backend.IsReady) return;
         if (confirmPanel != null) confirmPanel.SetActive(false);
+        if (selected.itemId != confirmedItemId || selected.displayCoinPrice != confirmedPrice)
+        { ShowHint("상품 정보가 변경됐어요. 가격을 확인하고 다시 구매해 주세요."); return; }
         busy = true; RefreshActionButton();
         string requestedId = selected.itemId;
         backend.Purchase(requestedId, result =>
@@ -382,7 +415,7 @@ public sealed class HealthMonShopScreen : MonoBehaviour
                 if (!(backend is HealthMonOfflineShopBackend))
                     CommonServerConnection.Instance?.RefreshState();
                 // Server-confirmed acquisition may be projected into the existing local jewelry view.
-                if (selected != null && selected.itemId == requestedId && !string.IsNullOrEmpty(selected.jewelryName))
+                if (backend is HealthMonOfflineShopBackend && selected != null && selected.itemId == requestedId && !string.IsNullOrEmpty(selected.jewelryName))
                 {
                     var customization = FindFirstObjectByType<CustomizationPrototype>(FindObjectsInactive.Include);
                     if (customization != null)
@@ -396,8 +429,8 @@ public sealed class HealthMonShopScreen : MonoBehaviour
                     }
                 }
             }
-            else ShowHint(result != null ? result.message : "구매에 실패했어요.");
             RefreshAll();
+            if (result == null || !result.success) ShowHint(result != null ? result.message : "구매에 실패했어요.");
             if (result != null && result.success)
             {
                 ShowHint(backend is HealthMonOfflineShopBackend ?

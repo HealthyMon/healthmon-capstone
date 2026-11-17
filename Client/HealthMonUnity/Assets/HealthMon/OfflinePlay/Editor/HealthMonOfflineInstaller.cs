@@ -13,40 +13,16 @@ using UnityEngine.UI;
 public static class HealthMonOfflineInstaller
 {
     private const string Root = "Assets/HealthMon/OfflinePlay";
-    private const string ServerCode = "Assets/HealthMon/Scripts/API/CommonServerConnection.cs";
-    private const string QuestCode = "Assets/HealthMon/Scripts/Quest/QuestPrototype.cs";
     private const string ModeKey = HealthMonOfflineGame.ModeKey;
     private static TMP_FontAsset font;
     private static readonly Color Ink = Hex("#FFFFFF"), Muted = Hex("#B5D7ED"), Navy = Hex("#0C2349");
 
-    [MenuItem("Tools/HealthMon/Offline Play/1. 오프라인 모드 활성화 (코드 백업 및 컴파일)")]
+    [MenuItem("Tools/HealthMon/Offline Play/1. 오프라인 데모 선택 (다음 Play부터)")]
     public static void EnableOffline()
     {
         if (EditorApplication.isPlaying) { EditorUtility.DisplayDialog("Offline Play", "Play 모드를 종료해 주세요.", "확인"); return; }
-        if (!File.Exists(ServerCode)) { EditorUtility.DisplayDialog("Offline Play", "CommonServerConnection.cs를 찾지 못했습니다. 프로젝트 경로를 확인해 주세요.", "확인"); return; }
-        string text = File.ReadAllText(ServerCode);
-        string old = "LocalDemoEnabled = System.Environment.GetEnvironmentVariable(\"HEALTHMON_LOCAL_DEMO\") == \"1\";";
-        string replacement = "LocalDemoEnabled = System.Environment.GetEnvironmentVariable(\"HEALTHMON_LOCAL_DEMO\") == \"1\" || PlayerPrefs.GetInt(\"HealthMon_Offline_Mode_v1\", 1) == 1;";
-        if (!text.Contains(replacement))
-        {
-            if (!text.Contains(old))
-            { EditorUtility.DisplayDialog("Offline Play", "서버 연결 스크립트가 이전 프로젝트 버전과 달라 자동 변경을 중단했습니다. 원본 스크립트를 보내주세요.", "확인"); return; }
-            EnsureFolder(Root + "/Backups");
-            BackupFile(ServerCode);
-            File.WriteAllText(ServerCode, text.Replace(old, replacement), System.Text.Encoding.UTF8);
-        }
-        if (File.Exists(QuestCode))
-        {
-            string q = File.ReadAllText(QuestCode);
-            if (q.Contains("private const int MockStartingSteps = 1200;"))
-            {
-                BackupFile(QuestCode);
-                File.WriteAllText(QuestCode, q.Replace("private const int MockStartingSteps = 1200;", "private const int MockStartingSteps = 0;"), System.Text.Encoding.UTF8);
-            }
-        }
         PlayerPrefs.SetInt(ModeKey, 1); PlayerPrefs.Save();
-        AssetDatabase.Refresh();
-        EditorUtility.DisplayDialog("Offline Play", "오프라인 모드를 기본값으로 활성화했습니다. 컴파일이 끝나면 2번 UI 설치 메뉴를 실행하세요. 기존 코드 백업은 OfflinePlay/Backups에 저장됐습니다.", "확인");
+        EditorUtility.DisplayDialog("Offline Play", "오프라인 데모를 선택했습니다. 2번 UI 설치 메뉴를 실행한 뒤 Play를 시작하세요. 데모 보상은 서버에 동기화되지 않습니다.", "확인");
     }
 
     [MenuItem("Tools/HealthMon/Offline Play/2. 메인 씬 백업 + 오프라인 육성 UI 설치")]
@@ -55,8 +31,6 @@ public static class HealthMonOfflineInstaller
         if (EditorApplication.isPlaying) { EditorUtility.DisplayDialog("Offline Play", "Play 모드를 종료해 주세요.", "확인"); return; }
         Canvas canvas = FindMainCanvas();
         if (canvas == null) { EditorUtility.DisplayDialog("Offline Play", "MainARScene의 UI → Canvas → HomePanel을 찾지 못했어요.", "확인"); return; }
-        if (!File.Exists(ServerCode) || !File.ReadAllText(ServerCode).Contains("HealthMon_Offline_Mode_v1"))
-        { EditorUtility.DisplayDialog("Offline Play", "먼저 1번 오프라인 모드 활성화 메뉴를 실행하세요.", "확인"); return; }
         if (!BackupScene()) return;
         ImportSprites();
         font = EnsureKoreanFont();
@@ -230,12 +204,6 @@ public static class HealthMonOfflineInstaller
         string destination=Root+"/Backups/"+Path.GetFileNameWithoutExtension(s.path)+"_BeforeOffline_"+DateTime.Now.ToString("yyyyMMdd_HHmmss")+".unity";
         if (!AssetDatabase.CopyAsset(s.path,destination)) {EditorUtility.DisplayDialog("Offline Play", "씬 백업 실패. 설치를 중단했어요.", "확인");return false;}
         return true;
-    }
-    private static void BackupFile(string path)
-    {
-        EnsureFolder(Root+"/Backups");
-        string dst=Root+"/Backups/"+Path.GetFileName(path)+"_BeforeOffline_"+DateTime.Now.ToString("yyyyMMdd_HHmmss")+".txt";
-        File.Copy(path,dst,true);
     }
     private static Canvas FindMainCanvas()
     {

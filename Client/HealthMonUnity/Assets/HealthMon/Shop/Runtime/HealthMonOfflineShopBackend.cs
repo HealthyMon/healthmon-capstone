@@ -13,7 +13,7 @@ public sealed class HealthMonOfflineShopBackend : HealthMonShopBackend
 {
     [Header("Catalog")]
     public HealthMonShopCatalog catalog;
-    [Header("Standalone fallback wallet, used only when game coin is server-owned")]
+    [Header("Demo wallet, used only in explicit offline demo without a local pet")]
     [Min(0)] public int initialOfflineCoins = 1200;
     public bool useWritablePetStateCoins = true;
 
@@ -43,10 +43,9 @@ public sealed class HealthMonOfflineShopBackend : HealthMonShopBackend
         }
     }
 
-    // A connected server means local purchases must be disabled. The server
-    // purchase adapter should be installed separately when APIs become ready.
-    public override bool IsReady => CommonServerConnection.Instance == null ||
-                                      !CommonServerConnection.Instance.IsConnected;
+    // A disconnected backend still owns its inventory. Never grant demo money
+    // just because the server is unavailable.
+    public override bool IsReady => CommonServerConnection.LocalDemoEnabled;
 
     private PetStateManager WritableGameState
     {
@@ -58,11 +57,12 @@ public sealed class HealthMonOfflineShopBackend : HealthMonShopBackend
     }
 
     public bool UsesGameCoin => WritableGameState != null;
-    public int Balance => UsesGameCoin ? Mathf.Max(0, WritableGameState.CurrentCoin) :
+    public int Balance => !IsReady ? 0 : UsesGameCoin ? Mathf.Max(0, WritableGameState.CurrentCoin) :
         Mathf.Max(0, PlayerPrefs.GetInt(WalletKey, Mathf.Max(0, initialOfflineCoins)));
 
     public override bool IsOwned(string itemId)
     {
+        if (!IsReady) return false;
         Load();
         if (string.IsNullOrEmpty(itemId)) return false;
         foreach (var item in catalog != null ? catalog.items : new List<HealthMonShopItem>())
@@ -72,7 +72,7 @@ public sealed class HealthMonOfflineShopBackend : HealthMonShopBackend
 
     public override void Purchase(string itemId, Action<HealthMonShopPurchaseResult> callback)
     {
-        if (!IsReady) { Fail(callback, "서버 연결 중에는 오프라인 구매를 사용할 수 없습니다."); return; }
+        if (!IsReady) { Fail(callback, "서버 상점은 아직 연결되지 않았습니다. 오프라인 구매는 데모 모드에서만 사용할 수 있어요."); return; }
         Load();
         HealthMonShopItem item = FindItem(itemId);
         if (item == null) { Fail(callback, "상품 목록에서 찾을 수 없습니다."); return; }

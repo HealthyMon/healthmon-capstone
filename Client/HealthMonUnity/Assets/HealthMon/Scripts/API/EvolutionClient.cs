@@ -27,6 +27,7 @@ namespace Healthmon.Evolution
         [NonSerialized] private string bearerToken;
         private EvolutionRequest pending;
         private bool submitting;
+        private bool legacyGatewayEnabled;
         [NonSerialized] private bool commonLoopStarted;
         [Serializable] private sealed class CommonPending { public string request_id, job_id; }
         private CommonPending commonPending;
@@ -52,12 +53,15 @@ namespace Healthmon.Evolution
             Settings.pet_id = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_PET") ?? Settings.pet_id;
             Settings.certificate_sha256 = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_CERT_SHA256") ?? Settings.certificate_sha256;
             bearerToken = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_TOKEN");
+            // Offline demo never silently starts legacy network polling.
+            legacyGatewayEnabled = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_URL")) &&
+                !string.IsNullOrWhiteSpace(bearerToken);
             if (PlayerPrefs.HasKey(PendingKey)) pending = JsonUtility.FromJson<EvolutionRequest>(PlayerPrefs.GetString(PendingKey));
         }
 
         private async void Start()
         {
-            if (CommonServerConnection.UsesServerAuthority) return;
+            if (CommonServerConnection.UsesServerAuthority || !legacyGatewayEnabled) return;
             while (!lifetime.IsCancellationRequested)
             {
                 BindGrowth();
@@ -123,6 +127,7 @@ namespace Healthmon.Evolution
         public void RequestEvolution(int level, GrowthStats stats, string source)
         {
             if (CommonServerConnection.UsesServerAuthority) { RequestCommonEvolution(); return; }
+            if (!legacyGatewayEnabled) { LastError = "오프라인 데모에서는 AI 진화를 생성하지 않습니다."; return; }
             if (pending != null || submitting) throw new InvalidOperationException("Resolve the pending evolution first.");
             if (level < 15 || level > 100) throw new ArgumentOutOfRangeException(nameof(level));
             SetGrowthStats(stats, source);

@@ -79,6 +79,14 @@ public class DialoguePrototype : MonoBehaviour
     {
         var layout = GetComponent<DialogueRuntimeLayout>() ?? gameObject.AddComponent<DialogueRuntimeLayout>();
         layout.Configure(messageInput, userMessageText, characterResponseText, sendButton);
+        // One readable response surface: the fixed panel supports long replies
+        // even before AR tracking/placement. Avoid a duplicate over the model.
+        if (layout.HasValidLayout && floatingBubbleText != null && floatingBubbleText != characterResponseText)
+        {
+            var floating = floatingBubbleText.GetComponentInParent<SpeechBubbleFollowTarget>();
+            if (floating != null && floating.gameObject != layout.ResponseBubble.gameObject)
+                floating.gameObject.SetActive(false);
+        }
     }
     private void BindApiEvents()
     {

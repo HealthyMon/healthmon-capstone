@@ -75,6 +75,13 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     }
     private static ScrollRect EnsureScroll(RectTransform bubble, TMP_Text text, Vector2 padding)
     {
+        // This is the readable conversation panel. A disabled AR follower and
+        // its serialized transparent CanvasGroup must not hide or block it.
+        var follower = bubble.GetComponent<SpeechBubbleFollowTarget>();
+        if (follower != null) follower.enabled = false;
+        var group = bubble.GetComponent<CanvasGroup>();
+        if (group != null) { group.alpha = 1; group.interactable = true; group.blocksRaycasts = true; }
+        text.raycastTarget = true;
         var viewport = bubble.Find("RuntimeDialogueViewport") as RectTransform;
         if (viewport == null)
         {

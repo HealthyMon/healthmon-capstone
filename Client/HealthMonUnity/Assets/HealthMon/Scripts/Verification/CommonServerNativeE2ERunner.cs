@@ -39,6 +39,7 @@ using UnityEngine.InputSystem.UI;
     public bool run_workout_smoke, run_chat = true, require_model_display;
     public bool run_auth_recovery_smoke;
     public bool run_dialogue_layout_smoke;
+    public bool run_shop_smoke;
     public bool run_food_smoke, food_require_real_vision = true;
     public string food_image_path, food_fixture_meal_type = "breakfast";
     public int food_candidate_index;
@@ -75,6 +76,8 @@ using UnityEngine.InputSystem.UI;
     public int native_skinned_renderer_count, native_bone_count, native_mesh_vertices, native_renderable_renderer_count;
     public float simulated_placement_distance_m;
     public Vector3 model_bounds_center, model_bounds_size;
+    public float model_expected_height_m;
+    public bool model_display_height_verified;
     public int model_camera_frames_observed, model_stable_camera_frames, model_shader_pending_observations;
     public int model_shader_pending_camera_frames, model_render_wait_timeout_seconds;
     public float model_render_wait_seconds;
@@ -105,6 +108,9 @@ using UnityEngine.InputSystem.UI;
     public float food_confidence, food_confirmed_grams, food_confirmed_vegetable_fruit_g;
     public string food_meal_type;
     public bool food_analysis_synthetic, food_analysis_produce_available, food_kcal_reconfirmed;
+    public bool shop_smoke_verified, shop_duplicate_click_verified, shop_reconnect_verified, shop_model_unchanged;
+    public int shop_initial_coin, shop_final_coin;
+    public string shop_owned_character, shop_purchase_screenshot, shop_selection_screenshot;
 }
 
 [Serializable] public sealed class NativeInputActionEvidence
@@ -260,6 +266,8 @@ public static class CommonServerNativeVerification
             if (!identities.Add(item.case_id)) throw new InvalidOperationException("Native case IDs must be unique.");
             if (item.run_dialogue_layout_smoke && item.run_chat)
                 throw new InvalidOperationException("Synthetic UI layout smoke must be separate from actual LLM dialogue cases.");
+            if (item.run_shop_smoke && (item.run_chat || item.run_food_smoke || item.expected_state.coin < 810))
+                throw new InvalidOperationException("Shop smoke requires a separate isolated funded pet (at least 810 coins).");
             if (item.run_food_smoke && (item.run_chat || item.run_auth_recovery_smoke || item.run_dialogue_layout_smoke ||
                 item.run_workout_smoke || item.require_model_display || string.IsNullOrWhiteSpace(item.food_image_path)))
                 throw new InvalidOperationException("Food verification requires a separate isolated non-chat case and explicit fixture image.");
@@ -350,6 +358,10 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
             report.server_instance_id = info.server_instance_id; report.owner_id = identity.owner_id;
             await WaitFor(() => CommonServerConnection.Instance != null, 20, "common_connection_not_bootstrapped");
             connection = CommonServerConnection.Instance;
+            // Editor session restoration can still be fetching its initial state.
+            // Do not let that bootstrap connection silently reject the fixture switch.
+            await WaitFor(() => !connection.IsConnecting && !connection.Api.IsBusy && !connection.Api.IsStateBusy,
+                config.timeout_seconds, "bootstrap_connection_not_idle");
             Check(!connection.Api.IsBusy && !connection.Api.HasPendingChat, "existing_pending_work_must_be_resolved_by_operator");
             connection.Api.Failed += ProductionApiFailed;
             foreach (var item in config.cases) await RunCase(item);
@@ -450,10 +462,15 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
         if (config.capture_screenshots) current.home_screenshot = await Capture(item.case_id + "-home.png");
         if (item.require_model_display)
         {
+            // Home and AR are separate worlds in the saved scene. Exercise the
+            // real navigation entrypoint before inspecting the AR model.
+            ui.ShowAR();
+            await Task.Delay(150, lifetime.Token);
             await VerifyNativeModelDisplay(item);
         }
         if (item.run_dialogue_layout_smoke) await VerifyDialogueLayoutSmoke(item, ui, dialogue);
         if (item.run_food_smoke) await VerifyFoodSmoke(item, ui, dialogue, manager);
+        if (item.run_shop_smoke) await VerifyShopSmoke(item, manager);
         if (item.run_chat)
         {
             ui.ShowDialogue(); dialogue.EnterConversation();
@@ -991,7 +1008,7 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
             Check(placement != null && placement.isActiveAndEnabled, "production_ar_placement_manager_missing");
             const float distance = 1.2f;
             var pose = new Pose(camera.transform.position + camera.transform.forward * distance - camera.transform.up * .2f,
-                Quaternion.LookRotation(camera.transform.forward, camera.transform.up));
+                Quaternion.LookRotation(-camera.transform.forward, camera.transform.up));
             placement.PlaceAt(pose);
             Check(placement.SpawnedHealthMon != null, "production_ar_prefab_not_instantiated");
             view = placement.SpawnedHealthMon.GetComponent<ArEvolutionModel>();
@@ -1044,6 +1061,10 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
             "native_skin_world_bounds_invalid");
         current.native_skin_verified = true; current.bones_verified = true;
         current.model_bounds_center = bounds.center; current.model_bounds_size = bounds.size;
+        current.model_expected_height_m = Mathf.Clamp(evolution.Settings.display_height_m, .05f, 2f);
+        Check(Mathf.Abs(bounds.size.y - current.model_expected_height_m) <= .01f,
+            "native_model_display_height_differs_from_settings");
+        current.model_display_height_verified = true;
         current.model_camera = camera.name;
 
         var stability = new NativeRenderStabilityGate();
@@ -1102,6 +1123,62 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
             if (model.DisplayedRevision == revision && string.IsNullOrEmpty(model.LastError)) return model;
         return null;
     }
+    private async Task VerifyShopSmoke(NativeE2ECase item, PetStateManager manager)
+    {
+        var screen = UnityEngine.Object.FindAnyObjectByType<HealthMonShopScreen>(FindObjectsInactive.Include);
+        Check(screen != null && screen.backend is HealthMonServerShopBackend, "server_shop_adapter_missing");
+        var backend = (HealthMonServerShopBackend)screen.backend;
+        string originalModel = connection.LatestState.model_reference;
+        current.shop_initial_coin = connection.LatestState.coin;
+        screen.OpenShop();
+        await WaitFor(() => backend.IsReady && !connection.Api.IsShopBusy, 30, "shop_catalog_timeout");
+        Check(!backend.IsOwned("prefab_jewelry_chain_type1_color2"), "shop_fixture_already_purchased");
+        Check(screen.actionButton.interactable, "shop_buy_button_disabled");
+        screen.actionButton.onClick.Invoke();
+        Check(screen.confirmPanel.activeSelf && screen.confirmText.text.Contains("90"), "shop_confirmation_price_mismatch");
+        screen.confirmButton.onClick.Invoke(); screen.confirmButton.onClick.Invoke();
+        await WaitFor(() => backend.IsOwned("prefab_jewelry_chain_type1_color2") && screen.successPanel.activeSelf, 30, "shop_purchase_timeout");
+        Check(connection.LatestState.coin == current.shop_initial_coin - 90, "shop_duplicate_click_charged_twice");
+        Check(screen.currencyLabel.text.Contains((current.shop_initial_coin - 90).ToString("N0")), "shop_balance_label_mismatch");
+        CheckUi(manager, connection.LatestState);
+        current.shop_duplicate_click_verified = true;
+        current.shop_purchase_screenshot = await Capture(item.case_id + "-shop-purchase.png");
+        screen.successCloseButton.onClick.Invoke();
+        var customization = UnityEngine.Object.FindAnyObjectByType<CustomizationPrototype>(FindObjectsInactive.Include);
+        Check(customization != null && !customization.IsUnlocked("귀걸이"), "shop_offline_unlock_leaked_to_server");
+        screen.filterEarring.onClick.Invoke();
+        Check(screen.actionButton.interactable && screen.selectedPrice.text.Contains("120"), "shop_earring_price_mismatch");
+        screen.actionButton.onClick.Invoke(); screen.confirmButton.onClick.Invoke();
+        await WaitFor(() => backend.IsOwned("prefab_jewelry_earring_type1_color2") && screen.successPanel.activeSelf, 30, "shop_earring_purchase_timeout");
+        Check(customization.IsUnlocked("귀걸이"), "shop_purchase_did_not_unlock_slot");
+        screen.successCloseButton.onClick.Invoke();
+        screen.charactersTab.onClick.Invoke();
+        Check(screen.actionButton.interactable && screen.selectedPrice.text.Contains("600"), "shop_character_price_mismatch");
+        screen.actionButton.onClick.Invoke(); screen.confirmButton.onClick.Invoke();
+        await WaitFor(() => backend.IsOwned("prefab_cute_slime_n1") && screen.successPanel.activeSelf, 30, "shop_character_purchase_timeout");
+        screen.successCloseButton.onClick.Invoke();
+        screen.actionButton.onClick.Invoke();
+        await WaitFor(() => backend.SelectedCharacterId == "prefab_cute_slime_n1" && !connection.Api.IsShopBusy, 30, "shop_selection_timeout");
+        Check(screen.actionText.text == "선택됨" && !screen.actionButton.interactable, "shop_selected_button_mismatch");
+        current.shop_final_coin = current.shop_initial_coin - 810;
+        Check(connection.LatestState.coin == current.shop_final_coin, "shop_final_wallet_mismatch");
+        current.shop_selection_screenshot = await Capture(item.case_id + "-shop-selection.png");
+        screen.CloseShop();
+        await WaitFor(() => !connection.Api.IsBusy && !connection.Api.IsShopBusy, 30, "shop_reconnect_busy");
+        connection.Connect(config.api_base_url, token, item.pet_id);
+        await WaitFor(() => connection.IsConnected && !connection.Api.IsBusy && !connection.Api.IsShopBusy, 30, "shop_reconnect_timeout");
+        screen.OpenShop();
+        await WaitFor(() => backend.IsReady && !connection.Api.IsShopBusy, 30, "shop_inventory_restore_timeout");
+        Check(backend.IsOwned("prefab_jewelry_chain_type1_color2") && backend.IsOwned("prefab_cute_slime_n1") &&
+            backend.SelectedCharacterId == "prefab_cute_slime_n1", "shop_inventory_not_restored");
+        Check(customization.IsUnlocked("귀걸이"), "shop_slot_unlock_not_restored");
+        Check(connection.LatestState.coin == current.shop_final_coin, "shop_reconnect_wallet_mismatch");
+        Check(connection.LatestState.model_reference == originalModel, "shop_changed_starter_model");
+        current.shop_owned_character = backend.SelectedCharacterId;
+        current.shop_model_unchanged = current.shop_reconnect_verified = current.shop_smoke_verified = true;
+        CheckUi(manager, connection.LatestState);
+    }
+
     private static bool RenderableByCamera(SkinnedMeshRenderer skin, Camera camera, Plane[] planes)
     {
         if (skin == null || !skin.enabled || skin.forceRenderingOff || !skin.gameObject.activeInHierarchy ||
