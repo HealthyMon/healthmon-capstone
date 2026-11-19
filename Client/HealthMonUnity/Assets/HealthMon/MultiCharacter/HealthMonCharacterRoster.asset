@@ -1,0 +1,310 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c5b66c924fb57469895a7a20bfb209, type: 3}
+  m_Name: HealthMonCharacterRoster
+  m_EditorClassIdentifier: Assembly-CSharp::HealthMonCharacterRosterAsset
+  entries:
+  - id: pet_starter
+    title: "\uD5EC\uC2A4\uBAAC"
+    description: "\uCC98\uC74C\uBD80\uD130 \uD568\uAED8\uD55C \uD5EC\uC2A4\uBAAC"
+    shopItemId: pet_starter
+    visualPrefab: {fileID: 2720198714157961979, guid: 023382a568294ce4988fba16b8cf1486, type: 3}
+    portrait: {fileID: 21300000, guid: 8c7379cdcfe3cce47b93e9eca0caa956, type: 3}
+    includedByDefault: 1
+  - id: slot_n1
+    title: "\uD5EC\uC2A4\uBAAC N1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n1
+    visualPrefab: {fileID: 5460890760460284466, guid: f8ed18d951c94884cb3ab880374e946d, type: 3}
+    portrait: {fileID: 21300000, guid: d7202c741451857469eeaefd72ee08cf, type: 3}
+    includedByDefault: 0
+  - id: slot_n2
+    title: "\uD5EC\uC2A4\uBAAC N2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n2
+    visualPrefab: {fileID: 87599583523850620, guid: 918e54bb07b73804695e86ac5560d2c9, type: 3}
+    portrait: {fileID: 21300000, guid: e40790e55ada22048a684ef1dbf3e338, type: 3}
+    includedByDefault: 0
+  - id: slot_n3
+    title: "\uD5EC\uC2A4\uBAAC N3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n3
+    visualPrefab: {fileID: 3619189708364678694, guid: 4f9ee4096405e914781518e930a568d5, type: 3}
+    portrait: {fileID: 21300000, guid: 66a3ac30d1f2cd842bb0bd14208f4640, type: 3}
+    includedByDefault: 0
+  - id: slot_n4
+    title: "\uD5EC\uC2A4\uBAAC N4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n4
+    visualPrefab: {fileID: 5110632077186792878, guid: 2810a79513f45994fb15b0297588c0bd, type: 3}
+    portrait: {fileID: 21300000, guid: 86129e28ed26c4f48b66748b1a0c55d0, type: 3}
+    includedByDefault: 0
+  - id: slot_n5
+    title: "\uD5EC\uC2A4\uBAAC N5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n5
+    visualPrefab: {fileID: 3195814432950775701, guid: 39bb80cbea9d57246ace8a3c08179c9d, type: 3}
+    portrait: {fileID: 21300000, guid: 15df06c4c86915549842b50053e143fe, type: 3}
+    includedByDefault: 0
+  - id: slot_n6
+    title: "\uD5EC\uC2A4\uBAAC N6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_N6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_n6
+    visualPrefab: {fileID: 8542916978386821590, guid: 54767aff721f8c94fa7a19378a4c5d96, type: 3}
+    portrait: {fileID: 21300000, guid: 2d1e6282d683eb94ba8ac0c37681741e, type: 3}
+    includedByDefault: 0
+  - id: slot_o1
+    title: "\uD5EC\uC2A4\uBAAC O1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o1
+    visualPrefab: {fileID: 7025101253018355646, guid: 6a4b3a9fc0f77814794226892a7124f9, type: 3}
+    portrait: {fileID: 21300000, guid: db1c1396e8558f44996429ba3207f0a3, type: 3}
+    includedByDefault: 0
+  - id: slot_o2
+    title: "\uD5EC\uC2A4\uBAAC O2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o2
+    visualPrefab: {fileID: 8733149760967096409, guid: a052f4854a277ea4e913fddd50809b17, type: 3}
+    portrait: {fileID: 21300000, guid: 9049d2d6871ffe44cafa8205b2ac540c, type: 3}
+    includedByDefault: 0
+  - id: slot_o3
+    title: "\uD5EC\uC2A4\uBAAC O3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o3
+    visualPrefab: {fileID: 2692079620278252834, guid: 0604f2822b6bb2d488ba0931d32c4a19, type: 3}
+    portrait: {fileID: 21300000, guid: 57f175a06949d5a488544f8374813081, type: 3}
+    includedByDefault: 0
+  - id: slot_o4
+    title: "\uD5EC\uC2A4\uBAAC O4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o4
+    visualPrefab: {fileID: 4708212724674247156, guid: 5ddb4c79ea92b9a4cb56582777fd28f7, type: 3}
+    portrait: {fileID: 21300000, guid: 18ad4b077084d244c9a2a6c34fd11729, type: 3}
+    includedByDefault: 0
+  - id: slot_o5
+    title: "\uD5EC\uC2A4\uBAAC O5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o5
+    visualPrefab: {fileID: 1659342316751497432, guid: abb94ea6cb54b3147bcc109c2677f6d6, type: 3}
+    portrait: {fileID: 21300000, guid: 1fece2257a93cdb4ebdcc26af4299b9f, type: 3}
+    includedByDefault: 0
+  - id: slot_o6
+    title: "\uD5EC\uC2A4\uBAAC O6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_O6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_o6
+    visualPrefab: {fileID: 1988706783790165968, guid: 31677319d934e954bbbca9df3477e44a, type: 3}
+    portrait: {fileID: 21300000, guid: 0dcc456cf760ed9448117df25aacab0e, type: 3}
+    includedByDefault: 0
+  - id: slot_p1
+    title: "\uD5EC\uC2A4\uBAAC P1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p1
+    visualPrefab: {fileID: 5370347622246870987, guid: 919172429a87c93499bfa61b14f7dccc, type: 3}
+    portrait: {fileID: 21300000, guid: 54522fc8c940a6e47abc1040fbfcfca7, type: 3}
+    includedByDefault: 0
+  - id: slot_p2
+    title: "\uD5EC\uC2A4\uBAAC P2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p2
+    visualPrefab: {fileID: 2197273697587286249, guid: 152719e1093da84419f7c693da2e8b23, type: 3}
+    portrait: {fileID: 21300000, guid: dd7a0967a3f64034897c21be6affbb2b, type: 3}
+    includedByDefault: 0
+  - id: slot_p3
+    title: "\uD5EC\uC2A4\uBAAC P3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p3
+    visualPrefab: {fileID: 770857007229581238, guid: ccefa2e2210bf244a876eda718576eeb, type: 3}
+    portrait: {fileID: 21300000, guid: b67f19de3b0c4894097c2778d426adf9, type: 3}
+    includedByDefault: 0
+  - id: slot_p4
+    title: "\uD5EC\uC2A4\uBAAC P4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p4
+    visualPrefab: {fileID: 4272685394540896026, guid: 8736c215ff0cecf408cc6d180d4270c7, type: 3}
+    portrait: {fileID: 21300000, guid: d1846843fda191c46b42987aaf822e29, type: 3}
+    includedByDefault: 0
+  - id: slot_p5
+    title: "\uD5EC\uC2A4\uBAAC P5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p5
+    visualPrefab: {fileID: 2701771880590511394, guid: 40bfeaa51065a0247b2c939c8a37f053, type: 3}
+    portrait: {fileID: 21300000, guid: be589831b2f26af4cb9d81b78465c9f9, type: 3}
+    includedByDefault: 0
+  - id: slot_p6
+    title: "\uD5EC\uC2A4\uBAAC P6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_P6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_p6
+    visualPrefab: {fileID: 5828435591020639486, guid: 17b6a739c6294e945bb4bbf3ec8d90c2, type: 3}
+    portrait: {fileID: 21300000, guid: f6673577a63b248478c2a5b297613ee5, type: 3}
+    includedByDefault: 0
+  - id: slot_q1
+    title: "\uD5EC\uC2A4\uBAAC Q1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q1
+    visualPrefab: {fileID: 8618050269376479966, guid: 8d68aacf8fec191488f27845cd318703, type: 3}
+    portrait: {fileID: 21300000, guid: 03971e1a87400bd4ea2ae04824001228, type: 3}
+    includedByDefault: 0
+  - id: slot_q2
+    title: "\uD5EC\uC2A4\uBAAC Q2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q2
+    visualPrefab: {fileID: 7947695035248125529, guid: 4ba097189aae5904ca6334a2704a36a8, type: 3}
+    portrait: {fileID: 21300000, guid: 9a5d0d5c7ee5cca4faa8a940dc2aa392, type: 3}
+    includedByDefault: 0
+  - id: slot_q3
+    title: "\uD5EC\uC2A4\uBAAC Q3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q3
+    visualPrefab: {fileID: 52023622334037692, guid: 739059157220ce64ea3c6a9c1381ebc6, type: 3}
+    portrait: {fileID: 21300000, guid: b6e88716521701244b70db1090916220, type: 3}
+    includedByDefault: 0
+  - id: slot_q4
+    title: "\uD5EC\uC2A4\uBAAC Q4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q4
+    visualPrefab: {fileID: 2486658553185924554, guid: e8f1eb72d9392e34091d0357806687ff, type: 3}
+    portrait: {fileID: 21300000, guid: 2bd94be2f6fe4f84ca2b9488b08bd90a, type: 3}
+    includedByDefault: 0
+  - id: slot_q5
+    title: "\uD5EC\uC2A4\uBAAC Q5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q5
+    visualPrefab: {fileID: 7874871380640918444, guid: 1534b73feb04eec4e8aefb1a0aeed019, type: 3}
+    portrait: {fileID: 21300000, guid: 507f6a94fa7e2584e9485767aa5d6069, type: 3}
+    includedByDefault: 0
+  - id: slot_q6
+    title: "\uD5EC\uC2A4\uBAAC Q6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_Q6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_q6
+    visualPrefab: {fileID: 4218355811889028468, guid: 406d065c607c4b640836393a41ad7e52, type: 3}
+    portrait: {fileID: 21300000, guid: 6feab229ace8a204b93fc31aa32b6e44, type: 3}
+    includedByDefault: 0
+  - id: slot_r1
+    title: "\uD5EC\uC2A4\uBAAC R1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r1
+    visualPrefab: {fileID: 8280527817229469116, guid: d8288d979c28e30409f7b42972bcaaf5, type: 3}
+    portrait: {fileID: 21300000, guid: f285cd6e6e5db814695706d16d72c636, type: 3}
+    includedByDefault: 0
+  - id: slot_r2
+    title: "\uD5EC\uC2A4\uBAAC R2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r2
+    visualPrefab: {fileID: 3409483657941717391, guid: 273c1376c6b131b4c85e47dae73d34e3, type: 3}
+    portrait: {fileID: 21300000, guid: 80291b558e585dc468bec65439c1f9a5, type: 3}
+    includedByDefault: 0
+  - id: slot_r3
+    title: "\uD5EC\uC2A4\uBAAC R3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r3
+    visualPrefab: {fileID: 6216136776217503461, guid: e571ae470047c9c4d9f8478b8a85ea69, type: 3}
+    portrait: {fileID: 21300000, guid: a0ad919c2cff6ee42a0f7097b7350fcf, type: 3}
+    includedByDefault: 0
+  - id: slot_r4
+    title: "\uD5EC\uC2A4\uBAAC R4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r4
+    visualPrefab: {fileID: 99351911310341631, guid: 3ac40f2e598e48e42a1d0bfbce4a517a, type: 3}
+    portrait: {fileID: 21300000, guid: 147f34803b4ad4540ae4d58e896bfca7, type: 3}
+    includedByDefault: 0
+  - id: slot_r5
+    title: "\uD5EC\uC2A4\uBAAC R5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r5
+    visualPrefab: {fileID: 4923089209032406283, guid: 6a298ca009bcfed4ca92a6abf0d80299, type: 3}
+    portrait: {fileID: 21300000, guid: dcf4a37167184bd46ad8467d7ae7530d, type: 3}
+    includedByDefault: 0
+  - id: slot_r6
+    title: "\uD5EC\uC2A4\uBAAC R6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_R6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_r6
+    visualPrefab: {fileID: 1694636010498075299, guid: 8a22bbf3299dae844984dc2e42f6e103, type: 3}
+    portrait: {fileID: 21300000, guid: 7574c2e9128c8dd4296ae685ea2d2cf0, type: 3}
+    includedByDefault: 0
+  - id: slot_s1
+    title: "\uD5EC\uC2A4\uBAAC S1"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S1\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s1
+    visualPrefab: {fileID: 3764219385785374699, guid: ef2a1402a56a60e4dbaf0746774d46a6, type: 3}
+    portrait: {fileID: 21300000, guid: 3087009de4657cb4b820212593776f0f, type: 3}
+    includedByDefault: 0
+  - id: slot_s2
+    title: "\uD5EC\uC2A4\uBAAC S2"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S2\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s2
+    visualPrefab: {fileID: 8694749452322348332, guid: 2986eeadb5f233d4a9ff48fc0dd7adfa, type: 3}
+    portrait: {fileID: 21300000, guid: 3770217cc032e964e8d2447c732d36db, type: 3}
+    includedByDefault: 0
+  - id: slot_s3
+    title: "\uD5EC\uC2A4\uBAAC S3"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S3\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s3
+    visualPrefab: {fileID: 5024351210635674710, guid: 67961bc8015eb7745ba2f36de8c622a8, type: 3}
+    portrait: {fileID: 21300000, guid: ef665275f6cabc14489a6d8f8c36e0f6, type: 3}
+    includedByDefault: 0
+  - id: slot_s4
+    title: "\uD5EC\uC2A4\uBAAC S4"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S4\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s4
+    visualPrefab: {fileID: 7882792468685122561, guid: bd9a126b71f1ac94f8222fde8ba37fc3, type: 3}
+    portrait: {fileID: 21300000, guid: 374fc25361d070648a63db13b5f65190, type: 3}
+    includedByDefault: 0
+  - id: slot_s5
+    title: "\uD5EC\uC2A4\uBAAC S5"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S5\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s5
+    visualPrefab: {fileID: 6462187024931118587, guid: aa2ccefb134434742abdc2cc5679f3b1, type: 3}
+    portrait: {fileID: 21300000, guid: 6135de4bc70f7c34b9490cfd73df2b1f, type: 3}
+    includedByDefault: 0
+  - id: slot_s6
+    title: "\uD5EC\uC2A4\uBAAC S6"
+    description: "\uC0C8\uB85C\uC6B4 3D \uC2AC\uB77C\uC784 \uD504\uB9AC\uD339: Cute_Slime_S6\n\uAD6C\uB9E4
+      \uD6C4 \uBCF4\uC720/\uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    shopItemId: prefab_cute_slime_s6
+    visualPrefab: {fileID: 4587713277238409523, guid: 6f652f78344ca8545b0559411c8801e5, type: 3}
+    portrait: {fileID: 21300000, guid: ad7ef7617f7d35245abd15b1acb705e6, type: 3}
+    includedByDefault: 0
