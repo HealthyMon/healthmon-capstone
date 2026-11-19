@@ -26,7 +26,8 @@ public class WorkoutRecordItemUI : MonoBehaviour
             DateTimeStyles.AssumeUniversal, out var date))
             displayedDate = date.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
         dateText.text = $"{index}. {displayedDate}";
-        exerciseText.text = $"운동 종목: {GetExerciseName(data.exercise_type)}";
+        string exercise = string.IsNullOrEmpty(data.exercise_type) ? data.workout_type : data.exercise_type;
+        exerciseText.text = $"운동 종목: {GetExerciseName(exercise)}";
 
         // Legacy server events predate detail-metric storage. JsonUtility reads
         // missing/null numeric fields as zero. Do not label all-empty legacy records

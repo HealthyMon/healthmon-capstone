@@ -39,24 +39,24 @@ public class AdventurePlayerStats : MonoBehaviour
             InitializeExploration();
     }
 
-    // »õ·Î¿î Å½Çè ½ÃÀÛ ½Ã ÇÑ ¹ø¸¸ ½ÇÇà
+    // ìƒˆë¡œìš´ íƒí—˜ ì‹œì‘ ì‹œ í•œ ë²ˆë§Œ ì‹¤í–‰
 
     public void InitializeExploration()
     {
         if (initialPlayer == null)
         {
             Debug.LogError(
-                "[AdventureStats] Initial Player ¹Ì¿¬°á"
+                "[AdventureStats] Initial Player ë¯¸ì—°ê²°"
             );
             return;
         }
 
-        // ±âº» ÃÖ´ë Ã¼·Â°ú ½ºÅÂ¹Ì³ª
+        // ê¸°ë³¸ ìµœëŒ€ ì²´ë ¥ê³¼ ìŠ¤íƒœë¯¸ë‚˜
         maxHP = initialPlayer.maxHP;
         maxST = initialPlayer.maxST;
 
-        // ATK, DEF, RES, SPD, LUK´Â
-        // AdventurePlayerStats Inspector °ªÀ» ±×´ë·Î »ç¿ë
+        // ATK, DEF, RES, SPD, LUKëŠ”
+        // AdventurePlayerStats Inspector ê°’ì„ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 
         currentHP = maxHP;
         currentST = maxST * 0.5f;
@@ -66,14 +66,14 @@ public class AdventurePlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke();
 
         Debug.Log(
-            $"[AdventureStats] Å½Çè ÃÊ±âÈ­: " +
+            $"[AdventureStats] íƒí—˜ ì´ˆê¸°í™”: " +
             $"ATK={ATK}, DEF={DEF}, RES={RES}, " +
             $"SPD={SPD}, LUK={LUK}"
         );
     }
 
 
-    // Å½Çè ½ºÅÈÀ» ÀüÅõ¿¡ Àü´Ş
+    // íƒí—˜ ìŠ¤íƒ¯ì„ ì „íˆ¬ì— ì „ë‹¬
     public void ApplyToBattleUnit(BattleUnit unit)
     {
         if (!initialized || unit == null)
@@ -96,11 +96,11 @@ public class AdventurePlayerStats : MonoBehaviour
             currentST, 0f, maxST
         );
 
-        // Çàµ¿ °ÔÀÌÁö´Â ÀüÅõ¸¶´Ù »õ·Î ½ÃÀÛ
+        // í–‰ë™ ê²Œì´ì§€ëŠ” ì „íˆ¬ë§ˆë‹¤ ìƒˆë¡œ ì‹œì‘
         unit.actionGauge = 0f;
     }
 
-    // ÀüÅõ °á°ú¸¦ Å½Çè¿¡ ÀúÀå
+    // ì „íˆ¬ ê²°ê³¼ë¥¼ íƒí—˜ì— ì €ì¥
     public void CaptureFromBattleUnit(BattleUnit unit)
     {
         if (!initialized || unit == null)
@@ -131,7 +131,7 @@ public class AdventurePlayerStats : MonoBehaviour
         );
     }
 
-    // Å½Çè ÀÌº¥Æ®¿¡¼­ Ã¼·Â È¸º¹
+    // íƒí—˜ ì´ë²¤íŠ¸ì—ì„œ ì²´ë ¥ íšŒë³µ
     public void Heal(int amount)
     {
         if (!initialized) return;
@@ -145,7 +145,7 @@ public class AdventurePlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
-    // Å½Çè ÀÌº¥Æ®¿¡¼­ ½ºÅÂ¹Ì³ª È¸º¹
+    // íƒí—˜ ì´ë²¤íŠ¸ì—ì„œ ìŠ¤íƒœë¯¸ë‚˜ íšŒë³µ
     public void RecoverST(float amount)
     {
         if (!initialized) return;

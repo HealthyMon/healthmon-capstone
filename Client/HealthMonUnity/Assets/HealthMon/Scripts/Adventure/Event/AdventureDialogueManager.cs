@@ -42,7 +42,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Entrance,
             lines = new List<string>
             {
-                "µ¿±¼ÀÇ ÀÔ±¸¿¡ µµÂøÇß´Ù. Å½ÇèÀ» ½ÃÀÛÇÏÀÚ!"
+                "ë™êµ´ì˜ ì…êµ¬ì— ë„ì°©í–ˆë‹¤. íƒí—˜ì„ ì‹œì‘í•˜ì!"
             }
         },
         new AdventureDialogueData
@@ -50,8 +50,8 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Descending,
             lines = new List<string>
             {
-                "´ÙÀ½ ÃşÀ¸·Î ÀÌµ¿ Áß...",
-                "°è´ÜÀ» µû¶ó ¾Æ·¡ÃşÀ¸·Î ³»·Á°¡°í ÀÖ´Ù."
+                "ë‹¤ìŒ ì¸µìœ¼ë¡œ ì´ë™ ì¤‘...",
+                "ê³„ë‹¨ì„ ë”°ë¼ ì•„ë˜ì¸µìœ¼ë¡œ ë‚´ë ¤ê°€ê³  ìˆë‹¤."
             }
         },
         new AdventureDialogueData
@@ -59,8 +59,8 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Battle,
             lines = new List<string>
             {
-                "ÀûÀÌ ³ªÅ¸³µ´Ù! ÀüÅõ°¡ ½ÃÀÛµÈ´Ù!",
-                "¾îµÒ ¼Ó¿¡¼­ ¸ó½ºÅÍ°¡ ¸ğ½ÀÀ» µå·¯³Â´Ù!"
+                "ì ì´ ë‚˜íƒ€ë‚¬ë‹¤! ì „íˆ¬ê°€ ì‹œì‘ëœë‹¤!",
+                "ì–´ë‘  ì†ì—ì„œ ëª¬ìŠ¤í„°ê°€ ëª¨ìŠµì„ ë“œëŸ¬ëƒˆë‹¤!"
             }
         },
         new AdventureDialogueData
@@ -68,7 +68,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.EliteBattle,
             lines = new List<string>
             {
-                "°­·ÂÇÑ ÀûÀÇ ±â¿îÀÌ ´À²¸Áø´Ù. Á¤¿¹ ÀüÅõ°¡ ½ÃÀÛµÈ´Ù!"
+                "ê°•ë ¥í•œ ì ì˜ ê¸°ìš´ì´ ëŠê»´ì§„ë‹¤. ì •ì˜ˆ ì „íˆ¬ê°€ ì‹œì‘ëœë‹¤!"
             }
         },
         new AdventureDialogueData
@@ -76,8 +76,8 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Reward,
             lines = new List<string>
             {
-                "º¸¹°»óÀÚ¸¦ ¹ß°ßÇß´Ù. ¿­¾îº¸ÀÚ!",
-                "¹İÂ¦ÀÌ´Â º¸¹°ÀÌ ´«¾Õ¿¡ ³ªÅ¸³µ´Ù!"
+                "ë³´ë¬¼ìƒìë¥¼ ë°œê²¬í–ˆë‹¤. ì—´ì–´ë³´ì!",
+                "ë°˜ì§ì´ëŠ” ë³´ë¬¼ì´ ëˆˆì•ì— ë‚˜íƒ€ë‚¬ë‹¤!"
             }
         },
         new AdventureDialogueData
@@ -85,7 +85,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Rest,
             lines = new List<string>
             {
-                "¾ÈÀüÇÑ Àå¼Ò¸¦ ¹ß°ßÇß´Ù. Àá½Ã ½¬¾î°¡ÀÚ."
+                "ì•ˆì „í•œ ì¥ì†Œë¥¼ ë°œê²¬í–ˆë‹¤. ì ì‹œ ì‰¬ì–´ê°€ì."
             }
         },
         new AdventureDialogueData
@@ -93,7 +93,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Quiz,
             lines = new List<string>
             {
-                "¼ö¼ö²²³¢°¡ ÀûÈù ºñ¼®À» ¹ß°ßÇß´Ù."
+                "ìˆ˜ìˆ˜ê»˜ë¼ê°€ ì íŒ ë¹„ì„ì„ ë°œê²¬í–ˆë‹¤."
             }
         },
         new AdventureDialogueData
@@ -101,7 +101,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Special,
             lines = new List<string>
             {
-                "ÀÌ»óÇÑ ±â¿îÀÌ ´À²¸Áø´Ù. ¹«½¼ ÀÏÀÌ ÀÏ¾î³¯±î?"
+                "ì´ìƒí•œ ê¸°ìš´ì´ ëŠê»´ì§„ë‹¤. ë¬´ìŠ¨ ì¼ì´ ì¼ì–´ë‚ ê¹Œ?"
             }
         },
         new AdventureDialogueData
@@ -109,7 +109,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Victory,
             lines = new List<string>
             {
-                "ÀüÅõ¿¡¼­ ½Â¸®Çß´Ù! ´ÙÀ½ ÃşÀ¸·Î ÁøÇàÇÒ ¼ö ÀÖ´Ù."
+                "ì „íˆ¬ì—ì„œ ìŠ¹ë¦¬í–ˆë‹¤! ë‹¤ìŒ ì¸µìœ¼ë¡œ ì§„í–‰í•  ìˆ˜ ìˆë‹¤."
             }
         },
         new AdventureDialogueData
@@ -117,7 +117,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.Defeat,
             lines = new List<string>
             {
-                "ÀüÅõ¿¡¼­ ÆĞ¹èÇß´Ù. Å½ÇèÀÌ Á¾·áµÇ¾ú´Ù."
+                "ì „íˆ¬ì—ì„œ íŒ¨ë°°í–ˆë‹¤. íƒí—˜ì´ ì¢…ë£Œë˜ì—ˆë‹¤."
             }
         },
         new AdventureDialogueData
@@ -125,7 +125,7 @@ public class AdventureDialogueManager : MonoBehaviour
             type = AdventureDialogueType.NoEvent,
             lines = new List<string>
             {
-                "ÁÖº¯Àº Á¶¿ëÇÏ´Ù. ´ÙÀ½ ÃşÀ¸·Î ÀÌµ¿ÇÒ ¼ö ÀÖ´Ù."
+                "ì£¼ë³€ì€ ì¡°ìš©í•˜ë‹¤. ë‹¤ìŒ ì¸µìœ¼ë¡œ ì´ë™í•  ìˆ˜ ìˆë‹¤."
             }
         }
     };

@@ -252,8 +252,8 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
             if (show) visible.Add(e);
         }
         if (bannerText != null) bannerText.text = Offline ?
-            $"보유 {ownedCount} / {catalog.entries.Count}  ·  각 캐릭터를 따로 성장시켜 보세요" :
-            "서버 계정의 캐릭터 전환은 아직 지원하지 않아요";
+            $"보유 {ownedCount} / {catalog.entries.Count}  ·  캐릭터별 성장 기록" :
+            "서버 모드 · 캐릭터 슬롯 조회";
         const float cardWidth=455, cardHeight=510, gap=25;
         int rows=(visible.Count+1)/2;
         cardContent.sizeDelta = new Vector2(0, Math.Max(1,rows)*(cardHeight+gap)+30);
@@ -361,7 +361,7 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
         bool ok=SwitchTo(inspected);
         switching=false;
         if(ok) {Close();UpdateQuickBar();}
-        else {if(confirmationText!=null)confirmationText.text="프리팹 전환에 실패했어요. 기존 캐릭터를 유지합니다.";}
+        else {if(confirmationText!=null)confirmationText.text="캐릭터 전환 실패 · 현재 캐릭터 유지";}
     }
     private bool SwitchTo(HealthMonCharacterRosterAsset.Entry target)
     {

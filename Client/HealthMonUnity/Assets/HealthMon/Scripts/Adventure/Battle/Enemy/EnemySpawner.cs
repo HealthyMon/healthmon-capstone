@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject CurrentEnemy => currentEnemy;
 
-    // ÀÏ¹İ ¸ó½ºÅÍ »ı¼º
+    // ì¼ë°˜ ëª¬ìŠ¤í„° ìƒì„±
     public bool SpawnNormalEnemy()
     {
         return SpawnEnemy(
@@ -59,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
         );
     }
 
-    // Á¤¿¹ ¸ó½ºÅÍ »ı¼º
+    // ì •ì˜ˆ ëª¬ìŠ¤í„° ìƒì„±
     public bool SpawnEliteEnemy()
     {
         return SpawnEnemy(
@@ -70,7 +70,7 @@ public class EnemySpawner : MonoBehaviour
         );
     }
 
-    // °øÅë ¸ó½ºÅÍ »ı¼º
+    // ê³µí†µ ëª¬ìŠ¤í„° ìƒì„±
     private bool SpawnEnemy(
         List<GameObject> prefabs,
         Vector3 position,
@@ -85,7 +85,7 @@ public class EnemySpawner : MonoBehaviour
         if (enemyVisualRoot == null)
         {
             Debug.LogError(
-                "[EnemySpawner] EnemyVisualRoot ¹Ì¿¬°á"
+                "[EnemySpawner] EnemyVisualRoot ë¯¸ì—°ê²°"
             );
             return false;
         }
@@ -93,7 +93,7 @@ public class EnemySpawner : MonoBehaviour
         if (battleVisual == null)
         {
             Debug.LogError(
-                "[EnemySpawner] BattleVisualController ¹Ì¿¬°á"
+                "[EnemySpawner] BattleVisualController ë¯¸ì—°ê²°"
             );
             return false;
         }
@@ -112,7 +112,7 @@ public class EnemySpawner : MonoBehaviour
         if (candidates.Count == 0)
         {
             Debug.LogError(
-                "[EnemySpawner] ¸ó½ºÅÍ PrefabÀÌ ¾ø½À´Ï´Ù."
+                "[EnemySpawner] ëª¬ìŠ¤í„° Prefabì´ ì—†ìŠµë‹ˆë‹¤."
             );
             return false;
         }
@@ -136,14 +136,14 @@ public class EnemySpawner : MonoBehaviour
         battleVisual.SetEnemyVisual(currentEnemy);
 
         Debug.Log(
-            $"[EnemySpawner] ¸ó½ºÅÍ »ı¼º: " +
+            $"[EnemySpawner] ëª¬ìŠ¤í„° ìƒì„±: " +
             $"{selectedPrefab.name}"
         );
 
         return true;
     }
 
-    // ÇöÀç ¸ó½ºÅÍ Á¦°Å
+    // í˜„ì¬ ëª¬ìŠ¤í„° ì œê±°
     public void ClearEnemy()
     {
         if (battleVisual != null)

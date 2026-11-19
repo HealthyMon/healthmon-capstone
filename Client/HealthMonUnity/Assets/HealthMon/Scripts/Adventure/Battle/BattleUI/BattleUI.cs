@@ -37,6 +37,7 @@ public class BattleUI : MonoBehaviour
     public TMP_Text playerSTText;
     public TMP_Text playerATBText;
     public TMP_Text enemyHPText;
+    public TMP_Text enemyNameText;
 
     [Header("Enemy HP Bar Position")]
     [SerializeField] private RectTransform enemyStatusPanel;
@@ -109,7 +110,8 @@ public class BattleUI : MonoBehaviour
         enemyGaugeBar.maxValue = enemy.actionGaugeMax;
         enemyGaugeBar.value = enemy.actionGauge;
 
-        enemyNextActionText.text = "Next Action: " + battleManager.GetEnemyNextActionName();
+        enemyNextActionText.text = "다음 행동: " + battleManager.GetEnemyNextActionName();
+        if (enemyNameText != null) enemyNameText.text = enemy.unitName;
 
         if (battleManager.currentState == BattleState.PlayerSelecting)
         {

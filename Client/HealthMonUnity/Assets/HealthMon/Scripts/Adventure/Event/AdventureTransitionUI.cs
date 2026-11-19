@@ -59,7 +59,7 @@ public class AdventureTransitionUI : MonoBehaviour
         if (IsPlaying)
         {
             Debug.LogWarning(
-                "[Adventure] ´Ù¸¥ ¿¬ÃâÀÌ Àç»ı ÁßÀÔ´Ï´Ù."
+                "[Adventure] ë‹¤ë¥¸ ì—°ì¶œì´ ì¬ìƒ ì¤‘ì…ë‹ˆë‹¤."
             );
             return;
         }

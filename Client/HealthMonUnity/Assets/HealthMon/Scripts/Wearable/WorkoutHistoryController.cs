@@ -13,6 +13,18 @@ public class WorkoutHistoryController : MonoBehaviour
 
     private Coroutine pendingRefresh;
     private int requestVersion;
+    private string displayedScope;
+
+    private static string CurrentScope
+    {
+        get
+        {
+            if (!CommonServerConnection.UsesServerAuthority) return "offline";
+            var connection = CommonServerConnection.Instance;
+            return connection == null || !connection.IsConnected ? "disconnected" :
+                connection.ServerInstanceId + ":" + connection.OwnerId + ":" + connection.Api?.PetId;
+        }
+    }
 
     private void OnEnable()
     {
@@ -29,13 +41,48 @@ public class WorkoutHistoryController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (displayedScope != CurrentScope) RefreshWorkoutList();
+    }
+
     // Keep this method name: WearablePageController calls it after a workout ends.
     public void RefreshWorkoutList()
     {
         requestVersion++;
         if (pendingRefresh != null) StopCoroutine(pendingRefresh);
+        pendingRefresh = null;
         if (!isActiveAndEnabled) return;
+        displayedScope = CurrentScope;
+        ClearList();
+        if (countText == null || content == null || itemPrefab == null) return;
+        if (!CommonServerConnection.UsesServerAuthority)
+        {
+            LoadLocalRecords();
+            return;
+        }
         pendingRefresh = StartCoroutine(LoadFromServer(requestVersion));
+    }
+
+    private void LoadLocalRecords()
+    {
+        // Phone records are shown only in explicitly selected offline mode.
+        // A server failure must never reveal another account's local history.
+        try
+        {
+            var history = JsonUtility.FromJson<WorkoutRecordDataList>(HealthMonAndroidBridge.GetPendingWorkoutResults());
+            int displayed = 0;
+            foreach (var record in history?.items ?? new WorkoutRecordData[0])
+            {
+                if (record == null) continue;
+                Instantiate(itemPrefab, content).SetData(record, ++displayed);
+            }
+            countText.text = $"기기 운동 기록 · {displayed}";
+        }
+        catch (System.Exception)
+        {
+            countText.text = "기기 운동 기록 조회 실패";
+        }
     }
 
     private IEnumerator LoadFromServer(int version)
@@ -70,11 +117,13 @@ public class WorkoutHistoryController : MonoBehaviour
 
         var api = connection.Api;
         string requestedPet = api.PetId;
+        string requestedScope = CurrentScope;
         api.GetWorkouts(
             result =>
             {
                 if (this == null || !isActiveAndEnabled || version != requestVersion ||
-                    !connection.IsConnected || connection.Api != api || api.PetId != requestedPet)
+                    !connection.IsConnected || connection.Api != api || api.PetId != requestedPet ||
+                    CurrentScope != requestedScope)
                     return;
                 ClearList();
                 var records = result != null ? result.records : null;
@@ -93,7 +142,7 @@ public class WorkoutHistoryController : MonoBehaviour
             },
             error =>
             {
-                if (this == null || !isActiveAndEnabled || version != requestVersion) return;
+                if (this == null || !isActiveAndEnabled || version != requestVersion || CurrentScope != requestedScope) return;
                 countText.text = "서버 운동 기록을 가져오지 못했습니다.";
                 Debug.LogWarning($"[ServerWorkouts] History request failed: HTTP {error.StatusCode}");
             });
@@ -101,7 +150,12 @@ public class WorkoutHistoryController : MonoBehaviour
 
     private void ClearList()
     {
+        if (content == null) return;
         for (int i = content.childCount - 1; i >= 0; i--)
-            Destroy(content.GetChild(i).gameObject);
+        {
+            var item = content.GetChild(i).gameObject;
+            item.SetActive(false);
+            Destroy(item);
+        }
     }
 }

@@ -318,7 +318,8 @@ namespace Healthmon.Common
         }
 
         private async Task ConfigurePhoneInOrder(int generation, string url, string token, string pet)
-        {try
+        {
+            try
             {
                 Debug.Log(
                     "[WorkoutSync] ConfigurePhoneInOrder started"
@@ -330,12 +331,6 @@ namespace Healthmon.Common
                         token,
                         pet
                     )
-                );
-
-                // 토큰이나 요청 인수는 출력하지 않음
-                Debug.Log(
-                    "[WorkoutSync] ConfigureServerSync result: " +
-                    result
                 );
 
                 if (generation != configGeneration || !IsConnected)
@@ -363,11 +358,10 @@ namespace Healthmon.Common
                     PhoneStatus.status
                 );
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.LogError(
-                    "[WorkoutSync] ConfigurePhoneInOrder failed: " +
-                    e
+                    "[WorkoutSync] Phone sync configuration failed."
                 );
 
                 if (generation == configGeneration && IsConnected)
@@ -388,7 +382,6 @@ namespace Healthmon.Common
                 string result = await Task.Run(HealthMonAndroidBridge.GetServerSyncStatus);
                 if (generation != configGeneration) return;
                 var status = JsonUtility.FromJson<PhoneSyncStatus>(result);
-                Debug.Log("[AutoSyncDebug] " + result);
                 if (status != null && status.server_instance_id == ServerInstanceId && status.owner_id == OwnerId && status.pet_id == Api.PetId)
                     PhoneStatus = status;
                 RefreshState();
