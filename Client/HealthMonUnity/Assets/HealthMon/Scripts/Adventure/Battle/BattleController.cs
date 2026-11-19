@@ -10,6 +10,7 @@ public class BattleController : MonoBehaviour
 
     [Header("Exploration Screen")]
     [SerializeField] private GameObject floorPanel;
+    [SerializeField] private GameObject adventurePlayerStatusPanel;
     [SerializeField] private Camera explorationCamera;
 
     [Header("Enemy Spawner")]
@@ -24,6 +25,14 @@ public class BattleController : MonoBehaviour
 
     public event Action<bool> BattleFinished;
     public bool IsBattling { get; private set; }
+
+    // BattleRoot는 종료 시 꺼지지만, 배경은 독립된 루트에 남아 있다.
+    public void HideBattleEnvironment()
+    {
+        if (battleRoot == null) return;
+        var environment = battleRoot.GetComponent<BattleEnvironmentSwitcher>();
+        if (environment != null) environment.Hide();
+    }
 
 
 
@@ -54,11 +63,18 @@ public class BattleController : MonoBehaviour
 
     private void BeginBattle(bool isElite)
     {
+        if (adventurePlayerStatusPanel != null)
+            adventurePlayerStatusPanel.SetActive(false);
+
         if (floorPanel != null)
             floorPanel.SetActive(false);
 
         if (explorationCamera != null)
             explorationCamera.enabled = false;
+
+        // 배경만 전투 종류에 따라 변경한다 (미설치 시 기존 동작 유지).
+        var environment = battleRoot.GetComponent<BattleEnvironmentSwitcher>();
+        if (environment != null) environment.SetMode(isElite);
 
         battleRoot.SetActive(true);
 
@@ -81,6 +97,9 @@ public class BattleController : MonoBehaviour
 
             if (floorPanel != null)
                 floorPanel.SetActive(true);
+
+            if (adventurePlayerStatusPanel != null)
+                adventurePlayerStatusPanel.SetActive(true);
 
             IsBattling = false;
             return;
@@ -125,6 +144,18 @@ public class BattleController : MonoBehaviour
         // 2. 전투 종료
         IsBattling = false;
 
+        adventurePlayerStats.CaptureFromBattleUnit(
+            battleManager.player
+        );
+
+        if (victory && adventurePlayerStats.IsInitialized &&
+            battleManager.player != null)
+        {
+            adventurePlayerStats.RecoverST(
+                adventurePlayerStats.MaxST * 0.2f
+            );
+        }
+
         // 3. 전투 화면 종료
         if (battleRoot != null)
             battleRoot.SetActive(false);
@@ -136,6 +167,9 @@ public class BattleController : MonoBehaviour
         // 5. 탐험 UI 복구
         if (floorPanel != null)
             floorPanel.SetActive(true);
+
+        if (adventurePlayerStatusPanel != null)
+            adventurePlayerStatusPanel.SetActive(true);
 
         // 6. 탐험 매니저에 결과 전달
         Debug.Log(

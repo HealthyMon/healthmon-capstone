@@ -28,6 +28,9 @@ public class BattleUI : MonoBehaviour
     public Button waitButton;
     public Button moveButton;
 
+    [Header("아이템 선택 창")]
+    [SerializeField] private AdventureInventoryUI inventoryUI;
+
     [Header("텍스트")]
     public TMP_Text battleLogText;
     public TMP_Text resultText;
@@ -58,11 +61,11 @@ public class BattleUI : MonoBehaviour
             )
         );
 
-        itemButton.onClick.AddListener(
-            () => battleManager.ExecutePlayerAction(
-                BattleActionType.Item
-            )
-        );
+        itemButton.onClick.AddListener(() =>
+        {
+            if (inventoryUI != null) inventoryUI.OpenBattle();
+            else Debug.LogWarning("[BattleUI] AdventureInventoryUI 연결 필요");
+        });
 
         waitButton.onClick.AddListener(
             () => battleManager.ExecutePlayerAction(
@@ -142,7 +145,7 @@ public class BattleUI : MonoBehaviour
     public void SetBattleModeUI(bool isElite)
     {
         moveButton.gameObject.SetActive(isElite);
-        itemButton.gameObject.SetActive(!isElite);
+        itemButton.gameObject.SetActive(true);
 
         if (enemyStatusPanel != null)
         {

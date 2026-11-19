@@ -9,6 +9,9 @@ public class AdventureTransitionUI : MonoBehaviour
     [SerializeField] private GameObject descendContent;
     [SerializeField] private GameObject battleIntroContent;
 
+    [Header("Status UI - Hide During Transitions")]
+    [SerializeField] private GameObject adventurePlayerStatusPanel;
+
     [Header("Dialogue")]
     [SerializeField] private AdventureDialogueManager dialogueManager;
 
@@ -59,7 +62,7 @@ public class AdventureTransitionUI : MonoBehaviour
         if (IsPlaying)
         {
             Debug.LogWarning(
-                "[Adventure] ´Ù¸¥ ¿¬ÃâÀÌ Àç»ý ÁßÀÔ´Ï´Ù."
+                "[Adventure] ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô´Ï´ï¿½."
             );
             return;
         }
@@ -77,6 +80,12 @@ public class AdventureTransitionUI : MonoBehaviour
     {
         IsPlaying = true;
 
+        // Hide exploration status while a floor / battle introduction plays.
+        bool wasStatusVisible = adventurePlayerStatusPanel != null
+            && adventurePlayerStatusPanel.activeSelf;
+        if (adventurePlayerStatusPanel != null)
+            adventurePlayerStatusPanel.SetActive(false);
+
         HideAll();
 
         if (dialogueManager != null)
@@ -90,6 +99,12 @@ public class AdventureTransitionUI : MonoBehaviour
         HideAll();
 
         IsPlaying = false;
+
+        // Floor descent resumes exploration. A battle introduction hands
+        // visibility over to BattleController.BeginBattle() instead.
+        if (content == descendContent && wasStatusVisible
+            && adventurePlayerStatusPanel != null)
+            adventurePlayerStatusPanel.SetActive(true);
 
         onComplete?.Invoke();
     }

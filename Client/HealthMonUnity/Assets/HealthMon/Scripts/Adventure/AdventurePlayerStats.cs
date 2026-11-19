@@ -1,6 +1,12 @@
-
+ï»¿
 using System;
 using UnityEngine;
+
+// ì´ë²¤íŠ¸/ì•„ì´í…œì—ì„œ ë³€ê²½í•  ìˆ˜ ìžˆëŠ” íƒí—˜ ëŠ¥ë ¥ì¹˜
+public enum AdventureStatType
+{
+    HP, MaxHP, ST, MaxST, ATK, DEF, RES, SPD, LUK
+}
 
 public class AdventurePlayerStats : MonoBehaviour
 {
@@ -39,24 +45,24 @@ public class AdventurePlayerStats : MonoBehaviour
             InitializeExploration();
     }
 
-    // »õ·Î¿î Å½Çè ½ÃÀÛ ½Ã ÇÑ ¹ø¸¸ ½ÇÇà
+    // ìƒˆë¡œìš´ íƒí—˜ ì‹œìž‘ ì‹œ í•œ ë²ˆë§Œ ì‹¤í–‰
 
     public void InitializeExploration()
     {
         if (initialPlayer == null)
         {
             Debug.LogError(
-                "[AdventureStats] Initial Player ¹Ì¿¬°á"
+                "[AdventureStats] Initial Player ë¯¸ì—°ê²°"
             );
             return;
         }
 
-        // ±âº» ÃÖ´ë Ã¼·Â°ú ½ºÅÂ¹Ì³ª
+        // ê¸°ë³¸ ìµœëŒ€ ì²´ë ¥ê³¼ ìŠ¤íƒœë¯¸ë‚˜
         maxHP = initialPlayer.maxHP;
         maxST = initialPlayer.maxST;
 
-        // ATK, DEF, RES, SPD, LUK´Â
-        // AdventurePlayerStats Inspector °ªÀ» ±×´ë·Î »ç¿ë
+        // ATK, DEF, RES, SPD, LUKëŠ”
+        // AdventurePlayerStats Inspector ê°’ì„ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 
         currentHP = maxHP;
         currentST = maxST * 0.5f;
@@ -66,14 +72,14 @@ public class AdventurePlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke();
 
         Debug.Log(
-            $"[AdventureStats] Å½Çè ÃÊ±âÈ­: " +
+            $"[AdventureStats] íƒí—˜ ì´ˆê¸°í™”: " +
             $"ATK={ATK}, DEF={DEF}, RES={RES}, " +
             $"SPD={SPD}, LUK={LUK}"
         );
     }
 
 
-    // Å½Çè ½ºÅÈÀ» ÀüÅõ¿¡ Àü´Þ
+    // íƒí—˜ ìŠ¤íƒ¯ì„ ì „íˆ¬ì— ì „ë‹¬
     public void ApplyToBattleUnit(BattleUnit unit)
     {
         if (!initialized || unit == null)
@@ -96,11 +102,11 @@ public class AdventurePlayerStats : MonoBehaviour
             currentST, 0f, maxST
         );
 
-        // Çàµ¿ °ÔÀÌÁö´Â ÀüÅõ¸¶´Ù »õ·Î ½ÃÀÛ
+        // í–‰ë™ ê²Œì´ì§€ëŠ” ì „íˆ¬ë§ˆë‹¤ ìƒˆë¡œ ì‹œìž‘
         unit.actionGauge = 0f;
     }
 
-    // ÀüÅõ °á°ú¸¦ Å½Çè¿¡ ÀúÀå
+    // ì „íˆ¬ ê²°ê³¼ë¥¼ íƒí—˜ì— ì €ìž¥
     public void CaptureFromBattleUnit(BattleUnit unit)
     {
         if (!initialized || unit == null)
@@ -131,7 +137,7 @@ public class AdventurePlayerStats : MonoBehaviour
         );
     }
 
-    // Å½Çè ÀÌº¥Æ®¿¡¼­ Ã¼·Â È¸º¹
+    // íƒí—˜ ì´ë²¤íŠ¸ì—ì„œ ì²´ë ¥ íšŒë³µ
     public void Heal(int amount)
     {
         if (!initialized) return;
@@ -145,7 +151,7 @@ public class AdventurePlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
-    // Å½Çè ÀÌº¥Æ®¿¡¼­ ½ºÅÂ¹Ì³ª È¸º¹
+    // íƒí—˜ ì´ë²¤íŠ¸ì—ì„œ ìŠ¤íƒœë¯¸ë‚˜ íšŒë³µ
     public void RecoverST(float amount)
     {
         if (!initialized) return;
@@ -157,5 +163,104 @@ public class AdventurePlayerStats : MonoBehaviour
         );
 
         OnStatsChanged?.Invoke();
+    }
+
+    // í˜„ìž¬ íƒí—˜ì—ë§Œ ì ìš©ë˜ëŠ” ëŠ¥ë ¥ì¹˜ ë³€ê²½. ì‹¤ì œ ë°˜ì˜ëŸ‰ì„ ë°˜í™˜í•œë‹¤.
+    // ì •ìˆ˜ ëŠ¥ë ¥ì¹˜(HP, MaxHP, ATK ë“±)ì˜ amountëŠ” ë°˜ì˜¬ë¦¼í•œë‹¤.
+    public float ModifyStat(AdventureStatType stat, float amount)
+    {
+        if (!initialized || float.IsNaN(amount) || float.IsInfinity(amount))
+            return 0f;
+
+        float before = GetStatValue(stat);
+        int delta = Mathf.RoundToInt(amount);
+
+        switch (stat)
+        {
+            case AdventureStatType.HP:
+                currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP);
+                break;
+            case AdventureStatType.MaxHP:
+                maxHP = Mathf.Max(1, maxHP + delta);
+                currentHP = Mathf.Min(currentHP, maxHP);
+                break;
+            case AdventureStatType.ST:
+                currentST = Mathf.Clamp(currentST + amount, 0f, maxST);
+                break;
+            case AdventureStatType.MaxST:
+                maxST = Mathf.Max(0.1f, maxST + amount);
+                currentST = Mathf.Min(currentST, maxST);
+                break;
+            case AdventureStatType.ATK:
+                ATK = Mathf.Max(0, ATK + delta);
+                break;
+            case AdventureStatType.DEF:
+                DEF = Mathf.Max(0, DEF + delta);
+                break;
+            case AdventureStatType.RES:
+                RES = Mathf.Max(0, RES + delta);
+                break;
+            case AdventureStatType.SPD:
+                SPD = Mathf.Max(1, SPD + delta);
+                break;
+            case AdventureStatType.LUK:
+                LUK = Mathf.Max(0, LUK + delta);
+                break;
+            default:
+                return 0f;
+        }
+
+        float applied = GetStatValue(stat) - before;
+        if (!Mathf.Approximately(applied, 0f))
+        {
+            OnStatsChanged?.Invoke();
+            Debug.Log($"[AdventureStats] {stat}: {before:0.##} -> {GetStatValue(stat):0.##}");
+        }
+        return applied;
+    }
+
+    public float GetStatValue(AdventureStatType stat)
+    {
+        switch (stat)
+        {
+            case AdventureStatType.HP: return currentHP;
+            case AdventureStatType.MaxHP: return maxHP;
+            case AdventureStatType.ST: return currentST;
+            case AdventureStatType.MaxST: return maxST;
+            case AdventureStatType.ATK: return ATK;
+            case AdventureStatType.DEF: return DEF;
+            case AdventureStatType.RES: return RES;
+            case AdventureStatType.SPD: return SPD;
+            case AdventureStatType.LUK: return LUK;
+            default: return 0f;
+        }
+    }
+
+    public AdventureStatsData CreateSnapshot()
+    {
+        return new AdventureStatsData
+        {
+            maxHP = maxHP, currentHP = currentHP,
+            maxST = maxST, currentST = currentST,
+            ATK = ATK, DEF = DEF, RES = RES, SPD = SPD, LUK = LUK
+        };
+    }
+
+    public bool RestoreSnapshot(AdventureStatsData data)
+    {
+        if (data == null || !data.IsValid()) return false;
+
+        maxHP = data.maxHP;
+        currentHP = data.currentHP;
+        maxST = data.maxST;
+        currentST = data.currentST;
+        ATK = data.ATK;
+        DEF = data.DEF;
+        RES = data.RES;
+        SPD = data.SPD;
+        LUK = data.LUK;
+        initialized = true;
+        OnStatsChanged?.Invoke();
+        return true;
     }
 }

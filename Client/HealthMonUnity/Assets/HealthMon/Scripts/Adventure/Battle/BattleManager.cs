@@ -29,6 +29,13 @@ public class BattleManager : MonoBehaviour
     public float skillDamageMultiplier = 2f;
     public int itemHealAmount = 10;
 
+    [Header("Adventure Inventory")]
+    [SerializeField] private AdventureInventory adventureInventory;
+    [SerializeField] private string selectedItemId;
+
+    // Called by item-selection UI before the existing Item action button.
+    public void SelectBattleItem(string itemId) => selectedItemId = itemId;
+
     [Header("전투 상태")]
     public BattleState currentState = BattleState.Ready;
     [SerializeField] private AdventurePlayerStats adventurePlayerStats;
@@ -100,8 +107,7 @@ public class BattleManager : MonoBehaviour
 
     private void InitializePlayerForBattle()
     {
-        if (adventurePlayerStats != null &&
-            adventurePlayerStats.IsInitialized)
+        if (adventurePlayerStats != null && adventurePlayerStats.IsInitialized)
         {
             adventurePlayerStats.ApplyToBattleUnit(player);
         }
@@ -278,15 +284,16 @@ public class BattleManager : MonoBehaviour
     }
     private bool PlayerItem()
     {
-        if (!player.SpendST(itemCost))
-            return false;
+        if (adventureInventory == null || string.IsNullOrWhiteSpace(selectedItemId) ||
+            player == null || !player.CanSpendST(itemCost)) return false;
 
-        player.Heal(itemHealAmount);
+        var definition = adventureInventory.Database != null
+            ? adventureInventory.Database.Find(selectedItemId) : null;
+        if (!adventureInventory.TryUseInBattle(selectedItemId, player)) return false;
 
-        battleUI.AddLog(
-            $"회복 아이템 사용! HP {itemHealAmount} 회복"
-        );
-
+        player.SpendST(itemCost);
+        battleUI.AddLog($"{(definition != null ? definition.itemName : selectedItemId)} 사용!");
+        selectedItemId = null;
         return true;
     }
     private bool PlayerWait()

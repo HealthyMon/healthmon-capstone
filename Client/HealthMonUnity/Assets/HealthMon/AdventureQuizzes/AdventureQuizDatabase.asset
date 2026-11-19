@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5adfba31e2d53e94a83e99b282120951, type: 3}
+  m_Name: AdventureQuizDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::AdventureQuizDatabase
+  questions:
+  - question: "\uADFC\uC721\uC774 \uC218\uCD95\uD560 \uB54C \uC9C1\uC811\uC801\uC73C\uB85C
+      \uC0AC\uC6A9\uB418\uB294 \uC5D0\uB108\uC9C0 \uBD84\uC790\uB294?"
+    choices:
+    - ATP
+    - DNA
+    - "\uCF5C\uB77C\uAC90"
+    - "\uBE44\uD0C0\uBBFC C"
+    correctIndex: 0
+    explanation: "ATP\uB294 \uADFC\uC721 \uC218\uCD95\uC5D0 \uC9C1\uC811 \uC774\uC6A9\uB418\uB294
+      \uC5D0\uB108\uC9C0 \uC804\uB2EC \uBD84\uC790\uC785\uB2C8\uB2E4."
+  - question: "\uC77C\uBC18\uC801\uC73C\uB85C 1g\uB2F9 \uC57D 9kcal\uC758 \uC5D0\uB108\uC9C0\uB97C
+      \uC81C\uACF5\uD558\uB294 \uC601\uC591\uC18C\uB294?"
+    choices:
+    - "\uD0C4\uC218\uD654\uBB3C"
+    - "\uB2E8\uBC31\uC9C8"
+    - "\uC9C0\uBC29"
+    - "\uC218\uBD84"
+    correctIndex: 2
+    explanation: "\uC9C0\uBC29\uC740 \uBCF4\uD1B5 1g\uB2F9 \uC57D 9kcal\uC785\uB2C8\uB2E4."
+  - question: "\uC131\uC778\uC5D0\uAC8C \uC218\uBD84 \uACF5\uAE09\uC5D0 \uAC00\uC7A5
+      \uAE30\uBCF8\uC801\uC778 \uC74C\uB8CC\uB294?"
+    choices:
+    - "\uBB3C"
+    - "\uC5D0\uB108\uC9C0\uC74C\uB8CC"
+    - "\uC220"
+    - "\uC2DC\uB7FD"
+    correctIndex: 0
+    explanation: "\uBB3C\uC740 \uC77C\uC0C1\uC801\uC778 \uC218\uBD84 \uACF5\uAE09\uC758
+      \uAE30\uBCF8\uC785\uB2C8\uB2E4."
+  - question: "\uC6B4\uB3D9 \uC804 \uC900\uBE44\uC6B4\uB3D9\uC758 \uC8FC\uC694 \uBAA9\uC801\uC5D0
+      \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uAC83\uC740?"
+    choices:
+    - "\uC6C0\uC9C1\uC784\uC744 \uC900\uBE44\uD55C\uB2E4"
+    - "\uC989\uC2DC \uCD5C\uB300 \uC911\uB7C9\uC744 \uB4E0\uB2E4"
+    - "\uC218\uBA74\uC744 \uB300\uCCB4\uD55C\uB2E4"
+    - "\uC218\uBD84\uC744 \uC81C\uD55C\uD55C\uB2E4"
+    correctIndex: 0
+    explanation: "\uC900\uBE44\uC6B4\uB3D9\uC740 \uBCF8 \uC6B4\uB3D9\uC5D0 \uB300\uBE44\uD574
+      \uBAB8\uC744 \uC810\uC9C4\uC801\uC73C\uB85C \uC6C0\uC9C1\uC774\uAC8C \uD569\uB2C8\uB2E4."
+  - question: "\uADFC\uC721 \uD68C\uBCF5\uC5D0 \uC911\uC694\uD55C \uC601\uC591\uC18C\uB85C
+      \uAC00\uC7A5 \uC801\uC808\uD55C \uAC83\uC740?"
+    choices:
+    - "\uB2E8\uBC31\uC9C8"
+    - "\uC54C\uCF54\uC62C"
+    - "\uC2DD\uC774\uC12C\uC720\uB9CC"
+    - "\uCE74\uD398\uC778\uB9CC"
+    correctIndex: 0
+    explanation: "\uB2E8\uBC31\uC9C8\uC740 \uADFC\uC721 \uC870\uC9C1\uC758 \uC720\uC9C0
+      \uBC0F \uD68C\uBCF5\uC5D0 \uAE30\uC5EC\uD569\uB2C8\uB2E4."
+  - question: "\uC720\uC0B0\uC18C \uC6B4\uB3D9\uC758 \uC608\uB85C \uAC00\uC7A5 \uC801\uC808\uD55C
+      \uAC83\uC740?"
+    choices:
+    - "\uBE60\uB974\uAC8C \uAC77\uAE30"
+    - "\uAC00\uB9CC\uD788 \uC549\uAE30"
+    - "\uC7A0\uC790\uAE30"
+    - "\uB3C5\uC11C\uD558\uAE30"
+    correctIndex: 0
+    explanation: "\uBE60\uB974\uAC8C \uAC77\uAE30\uB294 \uB300\uD45C\uC801\uC778
+      \uC720\uC0B0\uC18C \uD65C\uB3D9\uC785\uB2C8\uB2E4."
