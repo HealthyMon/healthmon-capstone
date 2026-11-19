@@ -2,6 +2,7 @@ package com.healthmon.capstone.mobile.sync
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.util.Log
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -69,9 +70,18 @@ object ServerWorkoutSync {
             schedule(context)
             JSONObject().put("status", "ready").put("server_instance_id", serverId)
                 .put("owner_id", owner).put("pet_id", petId).put("environment", environment).toString()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(
+                "HealthMonServerSync",
+                "Server sync configuration failed: ${e.javaClass.simpleName}: ${e.message}"
+            )
+
             ServerSyncSettings.setAttemptStatus(context, attempt, "error")
-            JSONObject().put("status", "error").put("message", "connection_or_configuration_invalid").toString()
+
+            JSONObject()
+                .put("status", "error")
+                .put("message", "connection_or_configuration_invalid")
+                .toString()
         }
     }
 

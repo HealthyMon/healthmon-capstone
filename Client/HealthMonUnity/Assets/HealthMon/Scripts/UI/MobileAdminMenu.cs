@@ -166,7 +166,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
         });
         Button("Refresh", page, "서버 상태 새로고침", () => { Connection.RefreshState(); Connection.RefreshQuests(); });
         Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => Healthmon.Evolution.EvolutionClient.Instance?.RequestCommonEvolution());
-        Button("PhoneSync", page, "휴대폰 운동 동기화", () => { HealthMonAndroidBridge.RequestServerSync(); Connection.RefreshPhoneStatus(); });
+        Label(page, "웨어러블 운동 기록 자동 동기화", 70);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Label(page, "관절 AI · 개발 설정", 86, 36);
         Label(page, "다음 운동부터 적용됩니다. 일반 운동 화면에서는 연결 설정을 자동으로 사용합니다.", 110);
