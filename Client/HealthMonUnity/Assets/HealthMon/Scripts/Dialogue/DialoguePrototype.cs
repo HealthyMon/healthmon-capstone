@@ -10,6 +10,9 @@ public class DialoguePrototype : MonoBehaviour
     [SerializeField] private TMP_InputField messageInput;
     [SerializeField] private TMP_Text userMessageText;
     [SerializeField] private TMP_Text characterResponseText;
+
+    [Header("AR speech bubble (optional)")]
+    [SerializeField] private TMP_Text floatingBubbleText;
     [SerializeField] private TMP_Text personalityText;
     [SerializeField]
     private QuestPrototype questPrototype;
@@ -49,7 +52,7 @@ public class DialoguePrototype : MonoBehaviour
             for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
                 if (button.onClick.GetPersistentTarget(i) == this && button.onClick.GetPersistentMethodName(i) == nameof(SendMessage))
                     sendButton = button;
-        characterResponseText.text = "실제 LLM 서버에 Connect한 뒤 대화해 주세요.";
+        SetCharacterSpeech("실제 LLM 서버에 Connect한 뒤 대화해 주세요.");
         if (sendButton != null) sendLabel = sendButton.GetComponentInChildren<TMP_Text>(true);
         ConfigureRuntimeLayout();
     }
@@ -61,6 +64,17 @@ public class DialoguePrototype : MonoBehaviour
         if (sendButton != null) ConfigureRuntimeLayout();
         if (conversationRequested && api != null && !api.ConversationReady) sessionStartPending = true;
     }
+    // Keep the original response field (used by DialogueRuntimeLayout) alive,
+    // while mirroring all server states and LLM replies to the AR head bubble.
+    private void SetCharacterSpeech(string message)
+    {
+        message = message ?? string.Empty;
+        if (characterResponseText != null && characterResponseText.text != message)
+            characterResponseText.text = message;
+        if (floatingBubbleText != null && floatingBubbleText.text != message)
+            floatingBubbleText.text = message;
+    }
+
     private void ConfigureRuntimeLayout()
     {
         var layout = GetComponent<DialogueRuntimeLayout>() ?? gameObject.AddComponent<DialogueRuntimeLayout>();
@@ -93,11 +107,11 @@ public class DialoguePrototype : MonoBehaviour
         if (sendLabel != null) sendLabel.text = api.HasPendingChat && !api.IsBusy ? "다시 시도"
             : api.ConversationLoading ? "준비 중" : waitingForReply && api.IsBusy ? "답변 중" : "보내기";
         if (conversationRequested && api.ConversationLoading && !waitingForReply && string.IsNullOrEmpty(LastSpeech))
-            characterResponseText.text = $"대화 모델을 준비하고 있어… ({Mathf.FloorToInt(Time.realtimeSinceStartup - preparationStarted)}초)";
+            SetCharacterSpeech($"대화 모델을 준비하고 있어… ({Mathf.FloorToInt(Time.realtimeSinceStartup - preparationStarted)}초)");
         if (waitingForReply && api.IsBusy)
         {
             int seconds = Mathf.FloorToInt(Time.realtimeSinceStartup - replyStarted);
-            if (seconds >= 10) characterResponseText.text = $"답변을 기다리고 있어… ({seconds}초)";
+            if (seconds >= 10) SetCharacterSpeech($"답변을 기다리고 있어… ({seconds}초)");
         }
     }
 
@@ -128,13 +142,13 @@ public class DialoguePrototype : MonoBehaviour
         if (conversationRequested && ready && sendWhenReady)
         { sendWhenReady = false; SendMessage(); return; }
         if (conversationRequested && ready && !waitingForReply && string.IsNullOrEmpty(LastSpeech))
-            characterResponseText.text = "대화 준비됐어. 편하게 말해 줘.";
+            SetCharacterSpeech("대화 준비됐어. 편하게 말해 줘.");
     }
 
     private void ConversationFailed()
     {
         if (conversationRequested && !waitingForReply)
-            characterResponseText.text = "대화 모델을 준비하지 못했어. ‘대화 준비’를 눌러 다시 시도해 줘.";
+            SetCharacterSpeech("대화 모델을 준비하지 못했어. ‘대화 준비’를 눌러 다시 시도해 줘.");
     }
 
     private void OnDisable() { LeaveConversation(); }
@@ -153,11 +167,11 @@ public class DialoguePrototype : MonoBehaviour
             return;
         }
         if (!Application.isPlaying || connected || api.IsBusy) return;
-        if (string.IsNullOrWhiteSpace(bearerToken)) { characterResponseText.text = "사용자 토큰을 입력해 주세요."; return; }
+        if (string.IsNullOrWhiteSpace(bearerToken)) { SetCharacterSpeech("사용자 토큰을 입력해 주세요."); return; }
         try
         {
             api.Configure(serverUrl, bearerToken);
-            characterResponseText.text = "서버 연결을 확인하고 있어요…";
+            SetCharacterSpeech("서버 연결을 확인하고 있어요…");
             if (!string.IsNullOrWhiteSpace(existingPetId))
             {
                 api.SelectPet(existingPetId);
@@ -173,13 +187,13 @@ public class DialoguePrototype : MonoBehaviour
                 else api.CreatePet(new PetSettings { name = "몽글이", profanity = "none" }, _ => Connected());
             });
         }
-        catch (ArgumentException error) { characterResponseText.text = error.Message; }
+        catch (ArgumentException error) { SetCharacterSpeech(error.Message); }
     }
 
     private void Connected()
     {
         connected = true;
-        characterResponseText.text = "연결 완료. 대화와 음식 기록을 함께 기억할게.";
+        SetCharacterSpeech("연결 완료. 대화와 음식 기록을 함께 기억할게.");
         Debug.Log($"[HealthMon LLM] Connected server={serverUrl} pet={api.PetId}");
     }
 
@@ -220,7 +234,7 @@ public class DialoguePrototype : MonoBehaviour
     {
         waitingForReply = true;
         replyStarted = Time.realtimeSinceStartup;
-        characterResponseText.text = "생각하고 있어…";
+        SetCharacterSpeech("생각하고 있어…");
     }
 
     private void Receive(ChatResult result)
@@ -230,7 +244,7 @@ public class DialoguePrototype : MonoBehaviour
         LastRequestId = result.request_id;
         LastFallback = result.metrics != null && result.metrics.fallback;
         LastSpeech = result.response.speech;
-        characterResponseText.text = result.response.speech;
+        SetCharacterSpeech(result.response.speech);
         bool synthetic = result.provenance == "synthetic" || (result.metrics != null && result.metrics.synthetic) ||
             (result.metrics != null && result.metrics.backend == "mock") ||
             (result.metrics != null && result.metrics.handler != null &&
@@ -245,7 +259,7 @@ public class DialoguePrototype : MonoBehaviour
         if (connected && api.ConversationReady && !api.IsBusy && !api.HasPendingChat)
         {
             BeginWaiting();
-            characterResponseText.text = "음식 기록을 보고 있어…";
+            SetCharacterSpeech("음식 기록을 보고 있어…");
             api.SendChat("방금 확정한 음식 기록을 보고 짧게 한마디 해줘.", failure: Failure);
         }
     }
@@ -255,9 +269,9 @@ public class DialoguePrototype : MonoBehaviour
         waitingForReply = false;
         retryNeedsState = error.StatusCode == 409 && error.Message != null &&
             (error.Message.Contains("State version conflict") || error.Message.Contains("State changed"));
-        characterResponseText.text = api.HasPendingChat
+        SetCharacterSpeech(api.HasPendingChat
             ? "답변을 받지 못했어. ‘다시 시도’를 누르면 같은 요청을 확인할게."
-            : $"서버 연결 오류 ({error.StatusCode}). 서버와 토큰을 확인해 주세요.";
+            : $"서버 연결 오류 ({error.StatusCode}). 서버와 토큰을 확인해 주세요.");
         Debug.LogWarning($"[HealthMon LLM] request failed status={error.StatusCode}");
     }
 

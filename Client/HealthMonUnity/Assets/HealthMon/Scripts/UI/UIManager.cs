@@ -20,9 +20,13 @@ public class UIManager : MonoBehaviour
     private TMPro.TMP_Text evolutionStatusText;
     private bool showingEvolution;
     private PetExperienceUI petExperience;
+    private HealthMonViewModeController viewMode;
 
     private void Start()
     {
+        viewMode = GetComponent<HealthMonViewModeController>();
+        if (viewMode == null)
+            Debug.LogWarning("[UIManager] HealthMonViewModeController missing: only panel switching will run.");
         foreach (var label in homePanel.GetComponentsInChildren<TMPro.TMP_Text>(true))
         {
             if (label.text.Contains("오늘도 같이"))
@@ -88,18 +92,21 @@ public class UIManager : MonoBehaviour
     public void ShowHome()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         homePanel.SetActive(true);
     }
 
     public void ShowStatus()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         statusPanel.SetActive(true);
     }
 
     public void ShowAR()
     {
         HideAllPanels();
+        viewMode?.ShowARWorld(true);
         if (petExperience != null) petExperience.ShowAR();
     }
 
@@ -109,6 +116,7 @@ public class UIManager : MonoBehaviour
             return;
 
         HideAllPanels();
+        viewMode?.ShowARWorld(true);
         dialoguePanel.SetActive(true);
         FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include)?.EnterConversation();
     }
@@ -116,12 +124,14 @@ public class UIManager : MonoBehaviour
     public void ShowFoodScan()
     {
         HideAllPanels();
+        viewMode?.ShowARWorld(false);
         foodScanPanel.SetActive(true);
     }
 
     public void ShowQuest()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         questPanel.SetActive(true);
         Healthmon.Common.CommonServerConnection.Instance?.RefreshQuests();
     }
@@ -129,18 +139,21 @@ public class UIManager : MonoBehaviour
     public void ShowReward()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         rewardPanel.SetActive(true);
     }
 
     public void ShowCustomization()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         customizationPanel.SetActive(true);
     }
 
     public void ShowCollection()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         collectionPanel.SetActive(true);
     }
 
@@ -148,6 +161,7 @@ public class UIManager : MonoBehaviour
     public void ShowWearable()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         if (wearablePanel != null) wearablePanel.SetActive(true);
     }
 
@@ -162,6 +176,7 @@ public class UIManager : MonoBehaviour
         }
 
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         adminPanel.SetActive(true);
 
         Debug.Log("[UIManager] 관리자 모드 열기");

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1bc5bad13b791ee43ab71ffca23989fa
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188246
+  packageName: Pure Nature
+  packageVersion: 1.5
+  assetPath: Assets/BK/Pure_Common/Shaders/BK_Clouds.shader
+  uploadId: 962340

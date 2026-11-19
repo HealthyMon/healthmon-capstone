@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8e836c39d9d284b479dba1cc49823e74
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188246
+  packageName: Pure Nature
+  packageVersion: 1.5
+  assetPath: Assets/BK/Pure_Common/Shaders/BK_Sky.shader
+  uploadId: 962340

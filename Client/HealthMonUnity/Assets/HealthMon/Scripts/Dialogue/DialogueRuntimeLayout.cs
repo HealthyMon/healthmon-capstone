@@ -24,6 +24,21 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     private bool configured;
     private float userMaximumWidth = 650, responseMaximumWidth = 760;
 
+    [Header("New bottom navigation spacing")]
+    [SerializeField, Min(0f)] private float additionalNavGap = 20f;
+    private float lastNavTop = float.NaN;
+
+    // Always prefer the active six-button navigation over the old disabled one.
+    private RectTransform FindActiveNavigation()
+    {
+        if (Panel == null || Panel.parent == null) return null;
+        var newNav = Panel.parent.Find("BottomNavV2") as RectTransform;
+        if (newNav != null && newNav.gameObject.activeInHierarchy) return newNav;
+        var oldNav = Panel.parent.Find("BottomNav") as RectTransform;
+        if (oldNav != null && oldNav.gameObject.activeInHierarchy) return oldNav;
+        return null;
+    }
+
     public void Configure(TMP_InputField field, TMP_Text userText, TMP_Text responseText, Button sendButton)
     {
         if (field == null || userText == null || responseText == null || sendButton == null) return;
@@ -32,7 +47,7 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         if (Panel == null || FindPanel(userText.transform) != Panel || FindPanel(responseText.transform) != Panel) return;
         InputArea = field.transform.parent as RectTransform;
         header = Panel.Find("Header") as RectTransform;
-        BottomNavigation = Panel.parent?.Find("BottomNav") as RectTransform;
+        BottomNavigation = FindActiveNavigation();
         if (InputArea == null || BottomNavigation == null) return;
         UserBubble = BubbleOf(userText); ResponseBubble = BubbleOf(responseText);
         if (!configured)
@@ -85,23 +100,38 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     private void LateUpdate()
     {
         if (!configured || Panel == null || !Panel.gameObject.activeInHierarchy) return;
-        if (lastUser != user.text || lastResponse != response.text || lastPanelSize != Panel.rect.size ||
+        var currentNav = FindActiveNavigation();
+        if (currentNav == null) return;
+        // A navigation swap or a layout-driven nav height change must reflow the input too.
+        bool navChanged = currentNav != BottomNavigation;
+        BottomNavigation = currentNav;
+        float navTop = BoundsInPanel(currentNav).yMax - Panel.rect.yMin;
+        if (navChanged || !Mathf.Approximately(navTop, lastNavTop) ||
+            lastUser != user.text || lastResponse != response.text || lastPanelSize != Panel.rect.size ||
             lastScreenWidth != Screen.width || lastScreenHeight != Screen.height) ApplyNow();
     }
 
     public void ApplyNow()
     {
         if (!configured || Panel == null || !Panel.gameObject.activeInHierarchy) return;
+        BottomNavigation = FindActiveNavigation();
+        if (BottomNavigation == null)
+        {
+            HasValidLayout = false;
+            return;
+        }
         Canvas.ForceUpdateCanvases();
         Rect panel = Panel.rect;
         Rect nav = BoundsInPanel(BottomNavigation);
+        float navTop = nav.yMax - panel.yMin;
         float top = header == null ? panel.height - 100 : BoundsInPanel(header).yMin - panel.yMin;
         float margin = (float)Math.Min(30, panel.width * .04f);
         float userWidth = (float)Math.Min(userMaximumWidth, panel.width - 2 * margin);
         float responseWidth = (float)Math.Min(responseMaximumWidth, panel.width - 2 * margin);
         float preferredUser = user.GetPreferredValues(user.text, Math.Max(1, userWidth - 50), float.PositiveInfinity).y + 42;
         float preferredResponse = response.GetPreferredValues(response.text, Math.Max(1, responseWidth - 60), float.PositiveInfinity).y + 62;
-        var plan = DialogueLayoutPlan.Calculate(panel.width, panel.height, nav.yMax - panel.yMin, top,
+        // Leave extra room between the new two-row menu and the input field.
+        var plan = DialogueLayoutPlan.Calculate(panel.width, panel.height, navTop + additionalNavGap, top,
             userWidth, responseWidth, preferredUser, preferredResponse);
         HasValidLayout = plan.Valid;
         if (!plan.Valid) return;
@@ -117,6 +147,7 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         SizeContent(UserScroll, user, userChanged); SizeContent(ResponseScroll, response, responseChanged);
         lastUser = user.text; lastResponse = response.text; lastPanelSize = panel.size;
         lastScreenWidth = Screen.width; lastScreenHeight = Screen.height;
+        lastNavTop = navTop;
     }
 
     private static void SizeContent(ScrollRect scroll, TMP_Text text, bool changed)
