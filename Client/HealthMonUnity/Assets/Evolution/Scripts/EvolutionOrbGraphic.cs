@@ -14,11 +14,13 @@ namespace HealthMon.Evolution
         [Header("SphereFrontGlass: Front Mist")]
         [SerializeField, Range(0f, 0.5f)] private float frontMistOpacity = 0.08f;
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
             SetVerticesDirty();
         }
+#endif
         public bool FrontGlass { get { return frontGlass; } set { frontGlass=value; SetVerticesDirty(); } }
         private void Update() { if(Application.isPlaying && isActiveAndEnabled && Time.frameCount%3==0) SetVerticesDirty(); }
         protected override void OnPopulateMesh(VertexHelper vh)

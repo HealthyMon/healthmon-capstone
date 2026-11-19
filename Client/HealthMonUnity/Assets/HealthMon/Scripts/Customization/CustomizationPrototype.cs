@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Healthmon.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -47,6 +49,17 @@ public class CustomizationPrototype : MonoBehaviour
     private bool earringUnlocked;
     private bool pendantUnlocked;
     private bool ringUnlocked;
+    private readonly HashSet<string> serverJewelry = new HashSet<string>();
+
+    // Server entitlements are an in-memory projection, scoped by the shop
+    // connection. Never merge them into the device's offline demo save.
+    public void ApplyServerShopInventory(IEnumerable<string> slots)
+    {
+        serverJewelry.Clear();
+        if (slots != null) foreach (string slot in slots) serverJewelry.Add(slot);
+        RefreshUI();
+        OnEquippedItemChanged?.Invoke(selectedItem);
+    }
 
     // Each accessory can be equipped at the same time.
     private bool necklaceEquipped;
@@ -62,10 +75,10 @@ public class CustomizationPrototype : MonoBehaviour
     {
         get
         {
-            if (necklaceEquipped) return "목걸이";
-            if (earringEquipped) return "귀걸이";
-            if (pendantEquipped) return "펜던트";
-            if (ringEquipped) return "반지";
+            if (IsEquipped("목걸이")) return "목걸이";
+            if (IsEquipped("귀걸이")) return "귀걸이";
+            if (IsEquipped("펜던트")) return "펜던트";
+            if (IsEquipped("반지")) return "반지";
             return "없음";
         }
     }
@@ -117,10 +130,10 @@ public class CustomizationPrototype : MonoBehaviour
         RefreshUI();
     }
 
-    public void SelectNecklace() => SelectItem("목걸이", "헬스몬에게 처음부터 제공되는 목걸이입니다.", necklaceUnlocked);
-    public void SelectEarring() => SelectItem("귀걸이", "음식 기록 퀘스트로 얻는 귀걸이입니다.", earringUnlocked);
-    public void SelectPendant() => SelectItem("펜던트", "대화 퀘스트로 얻는 펜던트입니다.", pendantUnlocked);
-    public void SelectRing() => SelectItem("반지", "걷기 퀘스트로 얻는 반지입니다.", ringUnlocked);
+    public void SelectNecklace() => SelectItem("목걸이", "헬스몬에게 처음부터 제공되는 목걸이입니다.", IsUnlocked("목걸이"));
+    public void SelectEarring() => SelectItem("귀걸이", "상점에서 획득한 귀걸이를 사용할 수 있어요.", IsUnlocked("귀걸이"));
+    public void SelectPendant() => SelectItem("펜던트", "상점에서 획득한 펜던트를 사용할 수 있어요.", IsUnlocked("펜던트"));
+    public void SelectRing() => SelectItem("반지", "상점에서 획득한 반지를 사용할 수 있어요.", IsUnlocked("반지"));
 
     // Old button OnClick aliases retained temporarily.
     public void SelectBadge() => SelectNecklace();
@@ -163,6 +176,7 @@ public class CustomizationPrototype : MonoBehaviour
 
     public bool IsEquipped(string itemName)
     {
+        if (!IsItemUnlocked(itemName)) return false;
         switch (itemName)
         {
             case "목걸이": return necklaceEquipped;
@@ -192,6 +206,8 @@ public class CustomizationPrototype : MonoBehaviour
 
     private bool IsItemUnlocked(string itemName)
     {
+        if (CommonServerConnection.UsesServerAuthority)
+            return itemName == "목걸이" || serverJewelry.Contains(itemName);
         switch (itemName)
         {
             case "목걸이": return necklaceUnlocked;
@@ -233,20 +249,21 @@ public class CustomizationPrototype : MonoBehaviour
 
     private void RefreshUI()
     {
-        if (necklaceLockText != null) necklaceLockText.text = necklaceUnlocked ? "해금됨" : "잠김";
-        if (earringLockText != null) earringLockText.text = earringUnlocked ? "해금됨" : "잠김";
-        if (pendantLockText != null) pendantLockText.text = pendantUnlocked ? "해금됨" : "잠김";
-        if (ringLockText != null) ringLockText.text = ringUnlocked ? "해금됨" : "잠김";
+        if (customizeButton != null) customizeButton.interactable = IsUnlocked(selectedItem);
+        if (necklaceLockText != null) necklaceLockText.text = IsUnlocked("목걸이") ? "해금됨" : "잠김";
+        if (earringLockText != null) earringLockText.text = IsUnlocked("귀걸이") ? "해금됨" : "잠김";
+        if (pendantLockText != null) pendantLockText.text = IsUnlocked("펜던트") ? "해금됨" : "잠김";
+        if (ringLockText != null) ringLockText.text = IsUnlocked("반지") ? "해금됨" : "잠김";
 
-        int unlocked = (necklaceUnlocked ? 1 : 0) + (earringUnlocked ? 1 : 0)
-            + (pendantUnlocked ? 1 : 0) + (ringUnlocked ? 1 : 0);
+        int unlocked = (IsUnlocked("목걸이") ? 1 : 0) + (IsUnlocked("귀걸이") ? 1 : 0)
+            + (IsUnlocked("펜던트") ? 1 : 0) + (IsUnlocked("반지") ? 1 : 0);
         if (collectionCountText != null) collectionCountText.text = $"{unlocked} / 4 해금";
 
         string names = "";
-        if (necklaceEquipped) names += "목걸이, ";
-        if (earringEquipped) names += "귀걸이, ";
-        if (pendantEquipped) names += "펜던트, ";
-        if (ringEquipped) names += "반지, ";
+        if (IsEquipped("목걸이")) names += "목걸이, ";
+        if (IsEquipped("귀걸이")) names += "귀걸이, ";
+        if (IsEquipped("펜던트")) names += "펜던트, ";
+        if (IsEquipped("반지")) names += "반지, ";
         if (names.Length > 0) names = names.Substring(0, names.Length - 2);
         else names = "없음";
 
@@ -256,6 +273,7 @@ public class CustomizationPrototype : MonoBehaviour
 
     private void SaveCustomizationData()
     {
+        if (CommonServerConnection.UsesServerAuthority) return;
         var data = new JewelrySaveDataV3
         {
             necklaceUnlocked = necklaceUnlocked,

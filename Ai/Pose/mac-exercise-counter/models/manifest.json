@@ -1,0 +1,20 @@
+{
+  "rtmpose-l": {
+    "file": "rtmpose-l.onnx",
+    "input_wh": [
+      288,
+      384
+    ],
+    "source": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-l_simcc-body7_pt-body7_420e-384x288-3f5a1437_20230504.zip",
+    "sha256": "62425affc6b9edba8f8a65f55f5e278fec5d905d0c90578e0f8503bdf3954587"
+  },
+  "yolox-tiny": {
+    "file": "yolox-tiny.onnx",
+    "input_wh": [
+      416,
+      416
+    ],
+    "source": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/yolox_tiny_8xb8-300e_humanart-6f3252f9.zip",
+    "sha256": "ceb11c07298f95c50d7c5abeb906d03340c85f23aa79e3e66966e7fb6c307250"
+  }
+}

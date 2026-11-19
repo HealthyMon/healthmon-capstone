@@ -36,9 +36,14 @@ public sealed class SpeechBubbleFollowTarget : MonoBehaviour
         group = GetComponent<CanvasGroup>();
         rootCanvas = GetComponentInParent<Canvas>();
         parentRect = bubbleRect != null ? bubbleRect.parent as RectTransform : null;
-        group.interactable = false;
-        group.blocksRaycasts = false; // Never intercept AR plane taps.
-        group.alpha = 0f;
+        // Disabled legacy followers coexist with the fixed scrollable response.
+        // Awake still runs on disabled components; do not hide that response.
+        if (enabled)
+        {
+            group.interactable = false;
+            group.blocksRaycasts = false; // Never intercept AR plane taps.
+            group.alpha = 0f;
+        }
     }
 
     private void LateUpdate()

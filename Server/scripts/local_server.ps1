@@ -2,6 +2,7 @@
 [CmdletBinding()]
 param(
     [ValidateSet('Start', 'Stop')][string]$Action = 'Start',
+    [ValidateSet('Backend', 'AI', 'All')][string]$Target = 'All',
     [ValidateRange(1024, 65535)][int]$Port = 18092,
     [switch]$NoOpen
 )
@@ -92,8 +93,9 @@ function Start-LocalAI {
             throw 'AI is not configured. Prepare .runtime/local-services.json using Server/local_probe/local-services.example.json, or set a shared AI Gateway in .env. See Server/local_probe/README.md. No AI-ready result was reported.'
         }
         $probeUrl = ([string]$environment.AI_BASE_URL).Replace('host.docker.internal', '127.0.0.1').TrimEnd('/') + '/health'
-        $null = Invoke-RestMethod -Uri $probeUrl -TimeoutSec 10
-        Write-Host 'Configured remote AI Gateway is reachable.'
+        $health = Invoke-RestMethod -Uri $probeUrl -TimeoutSec 10
+        if ($health.status -ne 'ok' -and $health.ready -ne $true) { throw 'The shared AI Gateway did not report healthy.' }
+        Write-Host 'Shared AI Gateway is reachable. Its lifecycle is managed on its host; capability readiness is shown in /health/dependencies.'
         return
     }
     $local = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
@@ -101,27 +103,40 @@ function Start-LocalAI {
     Write-Host 'Checking local dialogue, food analysis and 3D prerequisites...'
     $savedPreference = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
-    & $python -B -m Server.local_probe.local_services configure --config '.runtime/local-services.json'
+    & $python -B -m Server.local_probe.local_services check --config '.runtime/local-services.json'
     $code = $LASTEXITCODE
     $ErrorActionPreference = $savedPreference
     if ($code -ne 0) { throw 'Local AI prerequisites failed. See the message above; model files and their environments must be installed on this PC.' }
     $directory = Join-Path $ProjectRoot '.runtime'
+    if (Test-Path -LiteralPath (Join-Path $directory 'local-services.stop')) {
+        $previous = Get-Content -LiteralPath (Join-Path $directory 'local-services-status.json') -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+        if ($previous -and $previous.phase -notin @('stopped','failed') -and
+            ([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$previous.updated_at) -lt 15) {
+            throw 'AI shutdown is still in progress. Wait for phase stopped before starting again.'
+        }
+    }
     $statusPath = Join-Path $directory 'local-services-status.json'
     $running = $false
+    $launchedAt = 0
+    $process = $null
     if (Test-Path -LiteralPath $statusPath) {
         $previous = Get-Content -LiteralPath $statusPath -Raw | ConvertFrom-Json
         $running = (([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$previous.updated_at) -lt 15) -and
             $previous.phase -notin @('stopped','failed') -and (Get-Process -Id $previous.pid -ErrorAction SilentlyContinue)
     }
     if (-not $running) {
-        $null = Start-Process -FilePath $python -ArgumentList @('-B','-m','Server.local_probe.local_services','run','--config','.runtime/local-services.json') -WorkingDirectory $ProjectRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $directory 'local-services.stdout.log') -RedirectStandardError (Join-Path $directory 'local-services.stderr.log') -PassThru
+        $launchedAt = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() / 1000.0
+        $process = Start-Process -FilePath $python -ArgumentList @('-B','-m','Server.local_probe.local_services','run','--config','.runtime/local-services.json') -WorkingDirectory $ProjectRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $directory 'local-services.stdout.log') -RedirectStandardError (Join-Path $directory 'local-services.stderr.log') -PassThru
     }
     Write-Host 'Starting dialogue, food analysis, 3D Gateway and automatic generation worker. Model loading can take a few minutes...'
     $deadline = [DateTime]::UtcNow.AddMinutes(6)
     while ([DateTime]::UtcNow -lt $deadline) {
+        if ($process -and $process.HasExited -and $process.ExitCode -ne 0) {
+            throw 'Local AI process failed; inspect .runtime/local-services.stderr.log.'
+        }
         if (Test-Path -LiteralPath $statusPath) {
             $status = Get-Content -LiteralPath $statusPath -Raw | ConvertFrom-Json
-            $fresh = ([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$status.updated_at) -lt 15
+            $fresh = (([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$status.updated_at) -lt 15) -and [double]$status.updated_at -ge $launchedAt
             if ($fresh -and $status.phase -eq 'ready') { Write-Host 'All local AI services are ready.'; return }
             if ($fresh -and $status.phase -eq 'generating_3d') { Write-Host 'Local AI is running; a requested 3D generation currently owns the GPU.'; return }
             if ($fresh -and $status.phase -eq 'failed') { throw ('Local AI failed: ' + $status.message) }
@@ -132,10 +147,34 @@ function Start-LocalAI {
 }
 
 function Stop-LocalAI {
-    $path = Join-Path $ProjectRoot '.runtime/local-services.json'
-    if (-not (Test-Path -LiteralPath $path)) { return }
+    $directory = Join-Path $ProjectRoot '.runtime'
+    if (-not (Test-Path -LiteralPath $directory)) { Write-Host 'No local AI runtime to stop.'; return }
     [IO.File]::WriteAllText((Join-Path $ProjectRoot '.runtime/local-services.stop'), '', $Utf8)
     Write-Host 'Local AI shutdown requested. An active 3D generation finishes before shutdown.'
+}
+
+function Set-LocalAIConnection {
+    # Only prepare the API connection before API startup. No model/GPU/Docker
+    # prerequisite is required, and Start-AI never changes a running API's env.
+    $path = Get-LocalAIConfiguration
+    if (-not $path) { return }
+    $local = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+    $python = if ([IO.Path]::IsPathRooted($local.python)) { $local.python } else { Join-Path $ProjectRoot $local.python }
+    & $python -B -m Server.local_probe.local_services configure --config $path
+    if ($LASTEXITCODE -ne 0) { throw 'AI connection configuration failed. Check its private configuration; no model startup is required.' }
+}
+
+function Get-SharedAIConfiguration {
+    $environment = @{}
+    $path = Join-Path $ProjectRoot '.env'
+    if (Test-Path -LiteralPath $path) {
+        foreach ($line in [IO.File]::ReadAllLines($path)) {
+            if ($line -match '^\s*(AI_MODE|AI_BASE_URL)\s*=(.*)$') {
+                $environment[$Matches[1]] = $Matches[2].Trim().Trim('"').Trim("'")
+            }
+        }
+    }
+    return [pscustomobject]@{ services = [pscustomobject]@{ api = [pscustomobject]@{ environment = [pscustomobject]$environment } } }
 }
 
 function Get-DockerEngine {
@@ -211,7 +250,7 @@ button{padding:8px 16px;margin-top:7px;cursor:pointer}small{display:block}code{b
 $($cards -join "`n")
 <p>입력칸을 누르면 전체 선택됩니다. 복사 버튼 또는 Ctrl+C로 복사하세요.</p>
 <p>이 PC의 서버 연결 정보입니다. 인증 토큰이 있으니 이 페이지 파일을 다른 사람에게 보내지 마세요.</p>
-<p>다음에도 <code>Start-HealthMon.cmd</code>를 더블클릭하면 됩니다. 서버를 끄려면 <code>Stop-HealthMon.cmd</code>를 실행하세요. 펫과 기록은 유지됩니다.</p>
+<p>API·DB는 <code>Start-Backend.cmd</code> / <code>Stop-Backend.cmd</code>, AI는 <code>Start-AI.cmd</code> / <code>Stop-AI.cmd</code>로 각각 켜고 끕니다. 펫과 기록은 유지됩니다.</p>
 <small>AI 모드: $aiMode. disabled이면 기본 서버·DB·펫·규칙만 실행합니다. AI 대화·음식 분석·진화 생성은 별도 AI 서버 설정이 필요합니다.</small>
 <script>document.querySelectorAll('input').forEach(input=>{input.onclick=()=>input.select();const b=document.createElement('button');b.textContent='복사';b.onclick=()=>{input.select();document.execCommand('copy');b.textContent='복사됨';};input.after(b);});</script></html>
 "@
@@ -224,17 +263,25 @@ $($cards -join "`n")
     if (-not $NoOpen) { Start-Process -FilePath $path | Out-Null }
 }
 
-try {
+function Invoke-ConfiguredRuntime {
     Set-Location -LiteralPath $ProjectRoot
     $nativeProfile = Join-Path $ProjectRoot '.runtime/native-server.json'
     if (Test-Path -LiteralPath $nativeProfile) {
         $native = Get-Content -LiteralPath $nativeProfile -Raw | ConvertFrom-Json
         $nativePython = if ([IO.Path]::IsPathRooted($native.python)) { $native.python } else { Join-Path $ProjectRoot $native.python }
-        $nativeArguments = @('-B', '-m', 'Server.local_probe.native_runtime', $Action.ToLowerInvariant(), '--profile', $nativeProfile)
+        $nativeArguments = @('-B', '-m', 'Server.local_probe.native_runtime', $Action.ToLowerInvariant(), '--target', $Target.ToLowerInvariant(), '--profile', $nativeProfile)
         if ($NoOpen) { $nativeArguments += '--no-open' }
         & $nativePython @nativeArguments
-        exit $LASTEXITCODE
+        if ($LASTEXITCODE -ne 0) { throw 'Native runtime failed. Inspect the local runtime logs.' }
+        return
     }
+    # AI lifecycle is independent of the API's Docker Compose stack and .env.
+    if ($Target -eq 'AI') {
+        if ($Action -eq 'Stop') { Stop-LocalAI }
+        else { Start-LocalAI -Configuration (Get-SharedAIConfiguration) }
+        return
+    }
+    if ($Action -eq 'Stop' -and $Target -eq 'All') { Stop-LocalAI }
     if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot 'compose.yaml'))) { throw 'Run this launcher from the complete HealthMon project.' }
     $command = Get-Command docker.exe -ErrorAction SilentlyContinue
     $script:Docker = if ($command) { $command.Source } else {
@@ -247,18 +294,17 @@ try {
         throw 'Install Docker Desktop once (Windows x86_64 for Intel/AMD), finish its WSL setup, then double-click Start-HealthMon.cmd again. Python is not required.'
     }
     if ($Action -eq 'Stop') {
-        if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot '.env'))) { Write-Host 'This project has no local server to stop.'; exit 0 }
+        if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot '.env'))) { Write-Host 'This project has no local server to stop.'; return }
         Invoke-Compose -Arguments @('stop')
-        Stop-LocalAI
         Write-Host 'Server stopped. Saved pets, records and credentials are kept.'
-        exit 0
+        return
     }
     Wait-LocalDocker
     Initialize-LocalEnvironment
     $configuration = Invoke-Compose -Arguments @('config', '--format', 'json') -Capture | ConvertFrom-Json
     if ($configuration.services.api.environment.APP_ENV -eq 'production') { throw 'This launcher is for a local development/test server. Existing production settings were kept.' }
-    Start-LocalAI -Configuration $configuration
-    # Local AI setup supplies the shared server credential and Docker-to-host URL.
+    try { Set-LocalAIConnection }
+    catch { Write-Warning ('AI configuration was left unchanged; backend startup continues. ' + $_.Exception.Message) }
     $configuration = Invoke-Compose -Arguments @('config', '--format', 'json') -Capture | ConvertFrom-Json
     $apiPort = $configuration.services.api.ports | Where-Object { $_.target -eq 8000 } | Select-Object -First 1
     if (-not $apiPort -or -not $apiPort.published) { throw 'The API port is missing from compose.yaml/.env.' }
@@ -273,9 +319,43 @@ try {
     $seed = Invoke-Compose -Arguments @('exec', '-T', 'api', 'python', 'Server/scripts/manage.py', 'seed-in-container') -Capture
     $pets = @($seed -split "`r?`n" | Where-Object { $_.Trim().StartsWith('{') } | ForEach-Object { $_ | ConvertFrom-Json })
     Write-ConnectionGuide -Configuration $configuration -BaseUrl $baseUrl -Pets $pets
+    if ($Target -eq 'All') {
+        try { Start-LocalAI -Configuration $configuration }
+        catch { throw ('Backend is ready and remains running. AI could not start: ' + $_.Exception.Message) }
+    }
+}
+
+function Invoke-PoseRuntime {
+    param([string]$Operation)
+    $launcher = Join-Path $ProjectRoot 'Ai/Pose/pose-runtime.ps1'
+    if (-not (Test-Path -LiteralPath $launcher)) { throw 'Pose AI launcher is missing from this checkout.' }
+    # Use a child PowerShell because the standalone Pose launcher exits its host.
+    & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $launcher -Action $Operation.ToLowerInvariant()
+    if ($LASTEXITCODE -ne 0) { throw ('Pose AI ' + $Operation + ' failed; inspect .runtime/pose.stderr.log.') }
+}
+
+function Invoke-SelectedServices {
+    if ($Target -eq 'Backend') { Invoke-ConfiguredRuntime; return }
+    if ($Action -eq 'Stop') {
+        # Attempt both groups even when one has stale state or missing configuration.
+        $failures = New-Object System.Collections.Generic.List[string]
+        try { Invoke-PoseRuntime -Operation Stop } catch { $failures.Add($_.Exception.Message) }
+        try { Invoke-ConfiguredRuntime } catch { $failures.Add($_.Exception.Message) }
+        if ($failures.Count) { throw ($failures -join ' | ') }
+        Write-Host 'All AI shutdown requested, including Pose. An active 3D job finishes before shutdown.'
+        return
+    }
+    Invoke-ConfiguredRuntime
+    try { Invoke-PoseRuntime -Operation Start }
+    catch { throw ('Dialogue/food/3D startup completed, but the AI group is incomplete: ' + $_.Exception.Message + ' Use Stop-AI.cmd to stop all AI services.') }
+    Write-Host 'AI group ready: dialogue, food analysis, evolution and Pose. Backend lifecycle remains separate.'
+}
+
+try {
+    Invoke-SelectedServices
     exit 0
 } catch {
     Write-Host ''
-    Write-Host ('HealthMon could not start: ' + $_.Exception.Message) -ForegroundColor Red
+    Write-Host ('HealthMon ' + $Target + ' ' + $Action + ' failed: ' + $_.Exception.Message) -ForegroundColor Red
     exit 1
 }

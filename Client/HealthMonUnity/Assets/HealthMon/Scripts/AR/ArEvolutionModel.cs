@@ -125,7 +125,10 @@ namespace Healthmon.Evolution
                 {
                     // Imported skin culling bounds can be loose; fit the actual rest geometry.
                     baked = new Mesh();
-                    skin.BakeMesh(baked);
+                    // Compensate for the skin transform's scale before converting
+                    // local vertices to world space below. The AR prefab is scaled
+                    // to 0.3; applying that scale twice made a 0.35 m pet 1.17 m tall.
+                    skin.BakeMesh(baked, true);
                     local = baked.bounds;
                     skin.localBounds = local;
                 }

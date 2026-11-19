@@ -1,0 +1,18 @@
+.venv/
+.python/
+.tools/
+.cache/
+__pycache__/
+.pytest_cache/
+*.pyc
+models/*.onnx
+models/*.zip
+models/coreml-cache*/
+assets/*.mp4
+Local Motion.app/
+reports/*_20*.json
+
+.DS_Store
+reports/
+models/*.download
+models/*.tmp
