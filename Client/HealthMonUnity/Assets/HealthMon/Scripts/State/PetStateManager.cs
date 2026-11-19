@@ -102,10 +102,12 @@ public class PetStateManager : MonoBehaviour
         if (ServerAuthority) return;
         currentExp += amount;
 
-        while (currentExp >= expToNextLevel)
+        while (level < 50 && currentExp >= expToNextLevel)
         {
             currentExp -= expToNextLevel;
             level++;
+            // HM-GAMEFLOW-EXP-v1
+            expToNextLevel = 100 + 10 * (level - 1);
             LevelChanged?.Invoke(level);
 
             Debug.Log(
@@ -113,6 +115,7 @@ public class PetStateManager : MonoBehaviour
             );
         }
 
+        if (level >= 50) { currentExp = 0; expToNextLevel = 580; }
         RefreshAllUI();
         SavePetData();
     }
@@ -311,7 +314,7 @@ public class PetStateManager : MonoBehaviour
             petName = data.petName;
             level = Mathf.Max(1, data.level);
             currentExp = Mathf.Max(0, data.currentExp);
-            expToNextLevel = Mathf.Max(1, data.expToNextLevel);
+            expToNextLevel = 100 + 10 * (level - 1);
             coin = Mathf.Max(0, data.coin);
 
             intimacy = Mathf.Clamp(data.intimacy, 0, 100);
@@ -357,7 +360,8 @@ public class PetStateManager : MonoBehaviour
         int newCuriosity)
     {
         if (ServerAuthority) return;
-        level = Mathf.Max(1, newLevel);
+        level = Mathf.Clamp(newLevel, 1, 50);
+        expToNextLevel = 100 + 10 * (level - 1);
         coin = Mathf.Max(0, newCoin);
 
         intimacy = Mathf.Clamp(newIntimacy, 0, 100);

@@ -155,8 +155,9 @@ public sealed class HealthMonOfflineGame : MonoBehaviour
         if (today.interactions >= 15) { Notice("오늘 교감은 충분히 했어요. 내일 또 만나요!"); return; }
         today.interactions++;
         pet.AddIntimacy(2);
-        pet.AddKindness(1);
         pet.AddExp(3);
+        // HM-GAMEFLOW-ACTIONS-v1
+        HealthMonGameRules.Instance?.RecordCare();
         quests?.AddARInteraction();
         SaveDaily();
         Notice("헬스몬이 기뻐해요! 친밀도 +2 / 다정함 +1 / EXP +3");
@@ -177,7 +178,7 @@ public sealed class HealthMonOfflineGame : MonoBehaviour
         else today.dinner = true;
         quests?.AddFoodRecord();
         pet.AddReward(12, 4);
-        pet.AddKindness(1);
+        HealthMonGameRules.Instance?.RecordMeal(type);
         SaveDaily();
         SetFoodNotice(type + " 식사 수동 기록 완료! EXP +12 · 코인 +4\n실제 영양 분석이나 AI 판정은 포함하지 않아요.");
         Refresh();
@@ -192,7 +193,8 @@ public sealed class HealthMonOfflineGame : MonoBehaviour
         if (today.chats >= 20) { if (dialogueReply != null) dialogueReply.text = "오늘은 충분히 이야기했어. 내일 또 얘기하자!"; return; }
         today.chats++;
         quests?.AddDialogue();
-        pet.AddIntimacy(2); pet.AddCuriosity(1); pet.AddExp(5);
+        pet.AddIntimacy(2); pet.AddExp(5);
+        HealthMonGameRules.Instance?.RecordChat(message);
         string reply = MakeOfflineReply(message);
         if (dialogueLog != null) dialogueLog.text = "나: " + message;
         if (dialogueReply != null) dialogueReply.text = reply;
@@ -222,7 +224,7 @@ public sealed class HealthMonOfflineGame : MonoBehaviour
         int exp = Mathf.Min(Mathf.Max(0, 60 - today.walkExp), Mathf.Max(1, steps / 100));
         today.walkExp += exp;
         if (exp > 0) pet.AddExp(exp);
-        pet.AddActivity(Mathf.Clamp(steps / 500, 1, 8));
+        HealthMonGameRules.Instance?.RecordSteps(steps);
         SaveDaily(); SaveWalkHistory();
         stepInput.text = "";
         SetWorkoutNotice("걸음 " + steps.ToString("N0") + "보를 수동으로 기록했어요. EXP +" + exp + " (일일 한도 60)");
@@ -260,14 +262,7 @@ public sealed class HealthMonOfflineGame : MonoBehaviour
     private void Refresh()
     {
         if (pet == null || today == null) return;
-        // Growing up offline advances the saved growth stage, but does not invent an AI-made 3D model.
-        int targetStage = pet.CurrentLevel >= 50 ? 3 : pet.CurrentLevel >= 30 ? 2 : pet.CurrentLevel >= 15 ? 1 : 0;
-        if (targetStage > PlayerPrefs.GetInt(GrowthMilestoneKey, 0))
-        {
-            pet.ApplyEvolutionStage(targetStage);
-            PlayerPrefs.SetInt(GrowthMilestoneKey, targetStage); PlayerPrefs.Save();
-            Notice("성장 단계가 올랐어요! 3D 진화 외형은 서버 모델이 준비되면 적용해요.");
-        }
+        // Evolution eligibility is now evaluated by the unified GameRules, not automatically applied.
         var q = ReadQuest();
         int[] values = { q.walkProgress, q.foodProgress, q.dialogueProgress, q.arProgress };
         int[] goals = { 3000, 1, 1, 3 };
