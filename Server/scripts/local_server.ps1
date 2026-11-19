@@ -250,7 +250,7 @@ button{padding:8px 16px;margin-top:7px;cursor:pointer}small{display:block}code{b
 $($cards -join "`n")
 <p>입력칸을 누르면 전체 선택됩니다. 복사 버튼 또는 Ctrl+C로 복사하세요.</p>
 <p>이 PC의 서버 연결 정보입니다. 인증 토큰이 있으니 이 페이지 파일을 다른 사람에게 보내지 마세요.</p>
-<p>API·DB는 <code>Start-Backend.cmd</code> / <code>Stop-Backend.cmd</code>, AI는 <code>Start-AI.cmd</code> / <code>Stop-AI.cmd</code>로 각각 켜고 끕니다. 펫과 기록은 유지됩니다.</p>
+<p>API·DB는 <code>Start-HealthMon.cmd -Target Backend</code> / <code>Stop-HealthMon.cmd -Target Backend</code>, AI는 <code>Start-HealthMon.cmd -Target AI</code> / <code>Stop-HealthMon.cmd -Target AI</code>로 각각 켜고 끕니다. 펫과 기록은 유지됩니다.</p>
 <small>AI 모드: $aiMode. disabled이면 기본 서버·DB·펫·규칙만 실행합니다. AI 대화·음식 분석·진화 생성은 별도 AI 서버 설정이 필요합니다.</small>
 <script>document.querySelectorAll('input').forEach(input=>{input.onclick=()=>input.select();const b=document.createElement('button');b.textContent='복사';b.onclick=()=>{input.select();document.execCommand('copy');b.textContent='복사됨';};input.after(b);});</script></html>
 "@
@@ -347,7 +347,7 @@ function Invoke-SelectedServices {
     }
     Invoke-ConfiguredRuntime
     try { Invoke-PoseRuntime -Operation Start }
-    catch { throw ('Dialogue/food/3D startup completed, but the AI group is incomplete: ' + $_.Exception.Message + ' Use Stop-AI.cmd to stop all AI services.') }
+    catch { throw ('Dialogue/food/3D startup completed, but the AI group is incomplete: ' + $_.Exception.Message + ' Use Stop-HealthMon.cmd -Target AI to stop all AI services.') }
     Write-Host 'AI group ready: dialogue, food analysis, evolution and Pose. Backend lifecycle remains separate.'
 }
 

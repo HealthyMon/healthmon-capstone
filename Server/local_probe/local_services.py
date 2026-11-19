@@ -75,7 +75,7 @@ def check_backend_connection(config):
     current = dotenv_values(path)
     if (current.get('AI_MODE') != 'remote' or current.get('AI_SERVER_TOKEN') != config['token']
             or current.get('AI_BASE_URL', '').rstrip('/') != 'http://host.docker.internal:18090'):
-        raise ValueError('Initial AI connection setup is required. Run Start-Backend.cmd once after preparing the AI config, then toggle AI independently.')
+        raise ValueError('Initial AI connection setup is required. Run Start-HealthMon.cmd -Target Backend once after preparing the AI config, then toggle AI independently.')
 
 
 def configure_environment(config):

@@ -53,18 +53,19 @@ public class UIManager : MonoBehaviour
             showingEvolution = true;
             switch (evolution.Phase)
             {
-                case "waiting_for_gpu": evolutionStatusText.text = "이전 작업이 끝나면 진화를 시작해요."; break;
-                case "plan": evolutionStatusText.text = "성장 기록으로 다음 모습을 구상하고 있어요."; break;
-                case "image": evolutionStatusText.text = "새로운 진화 이미지를 만들고 있어요."; break;
-                case "reconstruction": evolutionStatusText.text = "진화 모델과 움직일 뼈대를 만들고 있어요."; break;
-                default: evolutionStatusText.text = "진화를 준비하고 있어요."; break;
+                case "waiting_for_gpu": evolutionStatusText.text = "진화 에너지 충전 대기"; break;
+                case "plan": evolutionStatusText.text = "성장 기록 동기화 중"; break;
+                case "image": evolutionStatusText.text = "새로운 형태 각성 중"; break;
+                case "reconstruction": evolutionStatusText.text = "진화 외형 구성 중"; break;
+                default: evolutionStatusText.text = "진화 준비 중"; break;
             }
         }
         else if (showingEvolution)
         {
-            evolutionStatusText.text = evolution.Phase == "complete"
-                ? "새로운 모습으로 진화했어요!"
-                : "진화를 완료하지 못했어요. 기존 모습은 유지돼요.";
+            var flow = GetComponent<EvolutionFlowController>();
+            evolutionStatusText.text = flow != null && flow.IsApplied
+                ? "진화 완료! 새로운 힘으로 출전!"
+                : "진화 외형 불러오는 중";
         }
     }
 

@@ -5,16 +5,20 @@
 
 ## 처리 순서
 
-1. Unity가 `POST /pets/{pet}/evolutions`에 고유 `request_id`를 전달합니다.
+1. 홈의 **진화하기** 버튼이 기존 진화 연출 화면을 열고, Unity가 `POST /pets/{pet}/evolutions`에 고유 `request_id`를 전달합니다.
 2. 공용 서버가 상태·진화 프로필·부모 정보를 동결하고 작업을 저장합니다.
 3. 3D Gateway가 인증한 작업을 저널에 기록합니다.
 4. GPU worker가 부모 이미지·종 계약과 스탯을 반영해 이미지를 생성합니다.
 5. TRELLIS.2로 재구성하고 RigAnything으로 리깅한 뒤 GLB와 해시를 게시합니다.
 6. 공용 서버가 결과를 검증하고 최신 모델 참조를 갱신합니다.
-7. Unity가 자산을 다운로드해 기존 AR 배치 루트의 시각 모델을 교체합니다.
+7. Unity가 해시를 확인한 자산을 다운로드해 홈·진화 미리보기·AR의 시각 모델을 교체합니다.
+8. 홈과 결과 미리보기에 같은 revision이 실제 적용된 뒤 **진화 성공** 화면을 표시합니다. 확인 버튼으로 홈에 돌아갑니다.
 
 같은 요청 ID는 같은 작업을 조회합니다. 서버·펫·단계와 부모 revision이 일치해야 다음 단계로 진행합니다.
 모델을 교체할 때 배치 루트의 위치·회전·콜라이더를 유지합니다.
+일시적인 연결 오류·503 응답은 동일 요청 ID로 자동 재확인합니다. 서버의 실패 상태는 성공으로 표시하지 않습니다.
+다운로드·적용 실패 시 기존 모델을 보존하고, 홈의 **진화 외형 다시 받기**로 생성 요청 없이 다시 불러옵니다.
+앱을 재실행하면 저장된 진화 요청을 재개합니다. 홈과 진화 화면의 초기 슬라임은 유지하고 생성된 1단계 이상부터 교체합니다.
 
 ## 스탯과 외형
 
@@ -37,6 +41,7 @@ EnergyBalance는 공용 계약의 -100~100 값을 3D 경계에서 정규화합�
 - `Scripts/API/CommonServerConnection.cs`: 공용 연결과 상태
 - `Scripts/API/EvolutionClient.cs`: 요청·재개·다운로드
 - `Scripts/AR/ArEvolutionModel.cs`: glTFast 모델 로딩
+- `Scripts/UI/EvolutionFlowController.cs`: 실제 요청·홈 모델·진화 연출의 상태 연결
 - `Server/healthmon/worker.py`: 작업 전달과 자산 등록
 - `Ai/Generation3D/runtime/common_gateway`: GPU 계약과 저널
 - `Ai/Generation3D/runtime/unity/evolution_worker.py`: 기존 생성 파이프라인

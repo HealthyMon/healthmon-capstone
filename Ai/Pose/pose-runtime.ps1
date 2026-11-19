@@ -66,7 +66,7 @@ if ($Action -eq 'status') {
     exit 0
 }
 if ($null -ne $owned) { Write-Output 'HealthMon Pose is already running.'; exit 0 }
-if (-not (Test-Path -LiteralPath $pythonPath)) { throw 'Run Setup-PoseAI.cmd first.' }
+if (-not (Test-Path -LiteralPath $pythonPath)) { throw 'Run Start-HealthMon.cmd -Target Setup first.' }
 $listener = Get-NetTCPConnection -LocalPort 18095 -State Listen -ErrorAction SilentlyContinue
 if ($null -ne $listener) { throw 'Port 18095 is already occupied. No existing process was stopped.' }
 $process = Start-Process -FilePath $pythonPath -ArgumentList '-m Ai.Pose.unity_service' -WorkingDirectory $repoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runtimeRoot 'pose.stdout.log') -RedirectStandardError (Join-Path $runtimeRoot 'pose.stderr.log')

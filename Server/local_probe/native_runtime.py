@@ -79,7 +79,7 @@ def ensure_postgres(profile):
 
 def ensure_ai(profile):
     if any(not profile.get(key) or not profile[key].is_file() for key in ('ai_config', 'evolution_config')):
-        raise RuntimeError('Prepare the native AI configuration first. The backend can run independently with Start-Backend.cmd.')
+        raise RuntimeError('Prepare the native AI configuration first. The backend can run independently with Start-HealthMon.cmd -Target Backend.')
     config_path = profile['ai_config']
     values = json.loads(config_path.read_text(encoding='utf-8-sig'))
     changed = resolve(values['evolution_config']) != profile['evolution_config']
@@ -147,7 +147,7 @@ def write_guide(profile, open_browser):
 <style>body{max-width:780px;margin:40px auto;font:18px/1.7 system-ui;padding:20px;background:#edf5fa;color:#193147}input{display:block;width:100%;padding:12px;box-sizing:border-box;font:16px monospace;margin-bottom:20px}h1{color:#087851}</style>
 <h1>기존 18092 서버 준비 완료</h1><p>기존 계정·펫·진화 모델·기록을 그대로 사용합니다. Unity 설정에서 아래 값을 사용하세요. 입력칸을 누르면 전체 선택됩니다.</p>'''
     document += field('API 주소', base) + field('사용자 토큰', token) + field('기존 펫 ID', selected)
-    document += '<p>이 페이지에는 인증 정보가 있습니다. 파일을 공유하지 마세요.</p><p>API·DB: Start-Backend.cmd / Stop-Backend.cmd. AI: Start-AI.cmd / Stop-AI.cmd.</p></html>'
+    document += '<p>이 페이지에는 인증 정보가 있습니다. 파일을 공유하지 마세요.</p><p>API·DB: Start-HealthMon.cmd -Target Backend / Stop-HealthMon.cmd -Target Backend. AI: Start-HealthMon.cmd -Target AI / Stop-HealthMon.cmd -Target AI.</p></html>'
     path = RUNTIME / 'local-server-connection.html'
     path.write_text(document, encoding='utf-8')
     # A local-only handoff for editor verification; no credential is printed.

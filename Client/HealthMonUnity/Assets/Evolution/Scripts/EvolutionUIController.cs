@@ -46,10 +46,10 @@ namespace HealthMon.Evolution
         private Coroutine _transitionRoutine;
 
         private static readonly string[] Tips = {
-            "생성형 AI가 새로운 외형을 준비하고 있습니다.",
-            "헬스몬이 에너지를 모으고 있어요!",
-            "새로운 모습을 만들고 있어요. 잠시만 기다려 주세요.",
-            "모델 생성 시간은 상황에 따라 달라질 수 있어요."
+            "성장 기록을 새로운 힘으로!",
+            "진화 에너지 집중!",
+            "다음 형태, 각성 준비!",
+            "변신 완료까지 진화 기록 유지"
         };
 
         private void Awake()
@@ -62,6 +62,11 @@ namespace HealthMon.Evolution
                 flashCanvasGroup.interactable = false;
             }
             if (petRenderTexture != null) SetPetRenderTexture(petRenderTexture);
+            SetLabel(evolvingContent, "Brand", "H E A L T H M O N");
+            SetLabel(evolvingContent, "SubtitleText", "한계를 넘어, 다음 형태로!");
+            SetLabel(completedContent, "SuccessSubtitle", "새로운 힘, 각성 완료!");
+            SetLabel(completedContent, "SuccessMessage", "새로운 모습으로 다음 모험에 출전!");
+            SetLabel(errorContent, "ErrorTitle", "진화 일시 중단");
         }
 
         private void Update()
@@ -99,7 +104,12 @@ namespace HealthMon.Evolution
 
         public void MarkModelGenerating()
         {
-            if (_isEvolving && statusText != null) statusText.text = "AI가 새로운 모습을 만드는 중";
+            SetProgress("새로운 형태 각성 중");
+        }
+
+        public void SetProgress(string message)
+        {
+            if (_isEvolving && statusText != null) statusText.text = message;
         }
 
         public void MarkModelDownloading()
@@ -164,12 +174,12 @@ namespace HealthMon.Evolution
             ShowPart(errorContent, true);
             if (flashCanvasGroup != null) flashCanvasGroup.alpha = 0f;
             if (errorText != null)
-                errorText.text = string.IsNullOrWhiteSpace(message) ? "진화 중 문제가 발생했어요. 다시 시도해 주세요." : message;
+                errorText.text = string.IsNullOrWhiteSpace(message) ? "진화 중단 · 홈에서 다시 도전" : message;
         }
 
         public void ShowTestError()
         {
-            ShowEvolutionError("AI 모델 생성에 실패했어요. 다시 시도해 주세요.");
+            ShowEvolutionError("진화 중단 · 홈에서 다시 도전");
         }
 
         /// <summary>Optional: preview current pet from a dedicated camera / RenderTexture.</summary>
@@ -213,6 +223,13 @@ namespace HealthMon.Evolution
         private static void ShowPart(GameObject go, bool visible)
         {
             if (go != null) go.SetActive(visible);
+        }
+
+        private static void SetLabel(GameObject root, string name, string text)
+        {
+            if (root == null) return;
+            foreach (var label in root.GetComponentsInChildren<TMP_Text>(true))
+                if (label.name == name) label.text = text;
         }
     }
 }

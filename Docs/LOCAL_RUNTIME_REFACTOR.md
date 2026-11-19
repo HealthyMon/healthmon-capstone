@@ -2,13 +2,13 @@
 
 기준: `origin/develop`의 `958a8b52` (2026-11-11, 상점 구현).
 1차 작업 브랜치: `refactor/local-runtime`. 이후 `feature/poseai`에 이 변경과 서버 상점·Unity 운동 화면·Android 지원을 함께 반영했다.
-현재 실행은 `Start/Stop-Backend.cmd`(API·DB)와 `Start/Stop-AI.cmd`(대화·음식·3D·관절) 두 그룹이다.
+현재 실행은 `Start/Stop-HealthMon.cmd -Target Backend`(API·DB)와 `Start/Stop-HealthMon.cmd -Target AI`(대화·음식·3D·관절) 두 그룹이다.
 아래 1차 기록 이후의 운동 구현·검증 범위는 `Ai/Pose/README-WINDOWS.md`, Android 실기기 미검증 항목은 `Ai/Pose/README-ANDROID.md`를 따른다.
 
 ## 변경한 동작
 
-- `Start/Stop-Backend.cmd`: API·DB만 관리한다. AI 모델이 없어도 백엔드를 실행한다.
-- `Start/Stop-AI.cmd`: 대화·음식·3D 그룹만 관리한다. 일반적인 온·오프에서 API 설정을 바꾸지 않는다.
+- `Start/Stop-HealthMon.cmd -Target Backend`: API·DB만 관리한다. AI 모델이 없어도 백엔드를 실행한다.
+- `Start/Stop-HealthMon.cmd -Target AI`: 대화·음식·3D 그룹만 관리한다. 일반적인 온·오프에서 API 설정을 바꾸지 않는다.
 - `Start/Stop-HealthMon.cmd`: 전체 편의 실행을 유지한다. AI 실패 후에도 준비된 백엔드를 유지한다.
 - AI 최초 연결 설정 후 백엔드를 한 번 시작해야 한다. 이후 AI 재시작은 백엔드 재시작을 요구하지 않는다.
 - 같은 체크아웃의 AI supervisor는 파일 잠금으로 하나만 실행한다. 생성 중 종료 요청은 현재 작업 완료를 기다리고 대화 모델 재로드를 생략한다.

@@ -125,7 +125,7 @@ def create_app(models=None):
                 try:
                     model_holder[0] = Models(config, provider="cpu")
                 except (FileNotFoundError, RuntimeError) as exc:
-                    raise HTTPException(503, "pose models are unavailable; run Setup-PoseAI.cmd") from exc
+                    raise HTTPException(503, "pose models are unavailable; run Start-HealthMon.cmd -Target Setup") from exc
             cfg = copy.deepcopy(config)
             cfg["squat"]["view"] = body.squat_view
             pipeline = Pipeline(cfg, body.exercise, models=model_holder[0])

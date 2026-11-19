@@ -14,6 +14,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
     private GameObject panel;
     private RectTransform safeRoot, launcher, content;
     private TMP_FontAsset font;
+    private HealthMon.Evolution.EvolutionUIController evolutionScreen;
     private TMP_Text connectionStatus, notice, stateSummary;
     private TMP_InputField level, coin, address, token, pet, amount;
     private readonly Dictionary<string, Slider> axes = new Dictionary<string, Slider>();
@@ -40,6 +41,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     public void Configure(UIManager owner, GameObject admin, Canvas canvas, TMP_FontAsset textFont)
     {
+        evolutionScreen = FindAnyObjectByType<HealthMon.Evolution.EvolutionUIController>(FindObjectsInactive.Include);
         Instance = this; manager = owner; panel = admin; font = textFont;
         if (canvas == null) return;
         // Runtime UnityEvent listeners do not survive script reloads.
@@ -194,7 +196,8 @@ public sealed class MobileAdminMenu : MonoBehaviour
     {
         if (panel == null || launcher == null || safeRoot == null) return;
         bool open = panel.activeInHierarchy;
-        launcher.gameObject.SetActive(!open);
+        bool evolving = evolutionScreen != null && evolutionScreen.evolutionOverlay != null && evolutionScreen.evolutionOverlay.activeInHierarchy;
+        launcher.gameObject.SetActive(!open && !evolving);
         Rect safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);

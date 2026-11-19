@@ -24,6 +24,7 @@ using UnityEngine.InputSystem.UI;
 [Serializable] public sealed class NativeE2EConfig
 {
     public bool isolated_fixture;
+    public bool preserve_connection;
     public string api_base_url, bearer_token, bearer_token_env = "HEALTHMON_NATIVE_E2E_TOKEN";
     public string expected_server_instance_id, expected_owner_id;
     public int timeout_seconds = 240;
@@ -407,7 +408,11 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
         if (item.require_model_display) report.manual_visual_review_required = true;
         productionFailure = null;
         Check(!connection.Api.IsBusy && !connection.Api.HasPendingChat, "pending_work_before_case");
-        connection.Connect(config.api_base_url, token, item.pet_id);
+        if (!config.preserve_connection)
+            connection.Connect(config.api_base_url, token, item.pet_id);
+        else
+            Check(connection.IsConnected && connection.Api.PetId == item.pet_id && connection.BaseUrl.TrimEnd('/') == config.api_base_url.TrimEnd('/'),
+                "continuous_flow_connection_changed");
         await WaitFor(() => connection.IsConnected && connection.Api.PetId == item.pet_id && connection.LatestState != null &&
             connection.LatestState.pet_id == item.pet_id && !connection.Api.IsBusy, config.timeout_seconds, "connection_or_state_timeout");
         Check(connection.ServerInstanceId == config.expected_server_instance_id && connection.OwnerId == config.expected_owner_id, "production_connection_identity_changed");
@@ -1165,7 +1170,7 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
         current.shop_selection_screenshot = await Capture(item.case_id + "-shop-selection.png");
         screen.CloseShop();
         await WaitFor(() => !connection.Api.IsBusy && !connection.Api.IsShopBusy, 30, "shop_reconnect_busy");
-        connection.Connect(config.api_base_url, token, item.pet_id);
+        if (!config.preserve_connection) connection.Connect(config.api_base_url, token, item.pet_id);
         await WaitFor(() => connection.IsConnected && !connection.Api.IsBusy && !connection.Api.IsShopBusy, 30, "shop_reconnect_timeout");
         screen.OpenShop();
         await WaitFor(() => backend.IsReady && !connection.Api.IsShopBusy, 30, "shop_inventory_restore_timeout");
@@ -1175,7 +1180,8 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
         Check(connection.LatestState.coin == current.shop_final_coin, "shop_reconnect_wallet_mismatch");
         Check(connection.LatestState.model_reference == originalModel, "shop_changed_starter_model");
         current.shop_owned_character = backend.SelectedCharacterId;
-        current.shop_model_unchanged = current.shop_reconnect_verified = current.shop_smoke_verified = true;
+        current.shop_model_unchanged = current.shop_smoke_verified = true;
+        current.shop_reconnect_verified = !config.preserve_connection;
         CheckUi(manager, connection.LatestState);
     }
 

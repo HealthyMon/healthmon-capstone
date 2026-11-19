@@ -37,7 +37,7 @@ if ($Action -eq 'disconnect') {
         & $AdbPath -s $Serial reverse --remove tcp:18095
         if ($LASTEXITCODE -ne 0) { throw 'Could not remove pose reverse connection.' }
     }
-    Write-Output 'Pose USB connection removed. Use Stop-AI.cmd to stop all AI services.'
+    Write-Output 'Pose USB connection removed. Use Stop-HealthMon.cmd -Target AI to stop all AI services.'
     exit 0
 }
 if ($poseMapping.Count -eq 0) {
@@ -46,5 +46,5 @@ if ($poseMapping.Count -eq 0) {
 }
 $verified=@(& $AdbPath -s $Serial reverse --list)
 if ($LASTEXITCODE -ne 0 -or -not ($verified -match '\s+tcp:18095\s+tcp:18095\s*$')) { throw 'USB connection verification failed.' }
-Write-Output 'Android USB mapping ready. Start all AI with Start-AI.cmd, then use Exercise -> Prepare -> Start in HealthMon.'
-Write-Output 'Reconnect after unplugging/rebooting. Use Stop-AI.cmd for all AI; game backend remains separate.'
+Write-Output 'Android USB mapping ready. Start all AI with Start-HealthMon.cmd -Target AI, then use Exercise -> Prepare -> Start in HealthMon.'
+Write-Output 'Reconnect after unplugging/rebooting. Use Stop-HealthMon.cmd -Target AI for all AI; game backend remains separate.'

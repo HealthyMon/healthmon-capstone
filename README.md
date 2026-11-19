@@ -5,22 +5,27 @@
 
 ## 실행
 
-**Unity 관절 AI 운동 화면:** Windows에서 `Setup-PoseAI.cmd`(최초 1회) →
-`Start-AI.cmd` → Unity 홈의 **운동** 버튼 순서로 실행합니다. 기존 AI 최초 설정도 필요합니다.
-Android 휴대폰 촬영은 `Connect-PoseAndroid.cmd`로 USB 연결 후 앱의 **운동** 화면을 사용합니다. [Android 실행·APK 안내](Ai/Pose/README-ANDROID.md)
-스쿼트·팔굽혀펴기·컬을 카메라로 세며 AI 전체 종료는 `Stop-AI.cmd`입니다.
+루트 실행 파일은 **`Start-HealthMon.cmd`와 `Stop-HealthMon.cmd` 두 개**입니다.
+더블클릭 후 **1번 전체 / 2번 백엔드 / 3번 AI / 4번 Android USB**를 선택합니다.
+시작 메뉴의 **5번**은 관절 AI 최초 설치, **0번**은 실행 없이 닫기입니다.
+명령줄에서는 아래의 `-Target` 옵션으로 메뉴를 건너뛸 수 있습니다.
+
+**Unity 관절 AI 운동 화면:** Windows에서 `Start-HealthMon.cmd -Target Setup`(최초 1회) →
+`Start-HealthMon.cmd -Target AI` → Unity 홈의 **운동** 버튼 순서로 실행합니다. 기존 AI 최초 설정도 필요합니다.
+Android 휴대폰 촬영은 `Start-HealthMon.cmd -Target Android`로 USB 연결 후 앱의 **운동** 화면을 사용합니다. [Android 실행·APK 안내](Ai/Pose/README-ANDROID.md)
+스쿼트·팔굽혀펴기·컬을 카메라로 세며 AI 전체 종료는 `Stop-HealthMon.cmd -Target AI`입니다.
 게임 백엔드와 독립적으로 대화·음식·진화·관절 AI를 함께 관리합니다. [실행 및 검증 안내](Ai/Pose/README-WINDOWS.md)
 
-**로컬 기본 실행은 `Start-Backend.cmd`입니다.** API·PostgreSQL만 켜며 AI 모델이 없어도
-계정·펫·운동·식사 기록과 서버 규칙을 사용할 수 있습니다. 종료는 `Stop-Backend.cmd`입니다.
+**로컬 기본 실행은 `Start-HealthMon.cmd -Target Backend`입니다.** API·PostgreSQL만 켜며 AI 모델이 없어도
+계정·펫·운동·식사 기록과 서버 규칙을 사용할 수 있습니다. 종료는 `Stop-HealthMon.cmd -Target Backend`입니다.
 상점의 상품 54개 조회·구매·코인 차감·보유 목록·캐릭터 선택 저장도 AI 없이 동작합니다.
 지갑과 보유 목록은 펫별로 저장되며, 중복 요청은 추가 차감하지 않습니다. 캐릭터 선택은
 서버에 저장하고 현재 슬라임 외형은 유지합니다. 재학습 모델의 실제 교체는 후속 작업입니다.
 Unity는 `Client/HealthMonUnity`를 열고 실행 후 표시되는 연결 정보로 접속합니다.
 새 설치의 기본 모드는 서버 모드이며, 로컬 서버 기본 주소는 `http://127.0.0.1:18092`입니다.
 
-AI 최초 설정을 마친 뒤에는 `Start-AI.cmd` / `Stop-AI.cmd`로 대화·음식 분석·3D 생성·관절 인식을
-별도로 켜고 끕니다. 초기 연결 설정을 적용할 때만 `Start-Backend.cmd`를 한 번 다시 실행하며,
+AI 최초 설정을 마친 뒤에는 `Start-HealthMon.cmd -Target AI` / `Stop-HealthMon.cmd -Target AI`로 대화·음식 분석·3D 생성·관절 인식을
+별도로 켜고 끕니다. 초기 연결 설정을 적용할 때만 `Start-HealthMon.cmd -Target Backend`를 한 번 다시 실행하며,
 이후 AI를 껐다 켜는 동안 API·DB를 재시작할 필요가 없습니다.
 Unity 개발 설정에는 AI 전체·대화·음식·진화의 관측 상태가 표시됩니다.
 관절 AI의 준비 상태는 통합 실행기에서도 확인합니다. 종료 시 한 그룹에 문제가 있어도 다른 그룹 종료를 시도합니다.
@@ -33,11 +38,11 @@ GPU 대화 모델은 현재 상주 방식이며 매 응답 후 해제하지 않�
 연결 정보는 실행 후 브라우저에 표시합니다. 종료는 `Stop-HealthMon.cmd`입니다.
 
 Windows에서는 Docker Desktop을 준비합니다. AI까지 함께 실행하려면 AI 환경을 설정한 뒤
-**`Start-HealthMon.cmd`를 더블클릭**합니다. 로컬 AI를 설정한 PC에서는 대화 모델,
+**`Start-HealthMon.cmd`를 더블클릭하고 1번 전체를 선택**합니다. 로컬 AI를 설정한 PC에서는 대화 모델,
 음식 분석, 3D Gateway·자동 생성 worker, 관절 AI, 서버·DB를 함께 실행하고 준비 상태를 확인합니다.
 테스트 펫 준비가 끝나면 Unity에 넣을 주소·토큰·펫 ID를 브라우저에 표시합니다.
 공유 AI 서버를 사용하는 경우 대화·음식·진화용 로컬 GPU는 필요 없습니다.
-통합 실행에 포함된 관절 AI는 이 PC의 Python CPU 환경을 사용하며 `Setup-PoseAI.cmd`로 준비합니다.
+통합 실행에 포함된 관절 AI는 이 PC의 Python CPU 환경을 사용하며 `Start-HealthMon.cmd -Target Setup`로 준비합니다.
 끌 때는 **`Stop-HealthMon.cmd`**를 실행합니다.
 기존 설정·펫·기록은 유지하며 첫 설정의 기본 포트는 `18092`입니다.
 AI 모델·Python/CUDA 환경은 코드에 포함되지 않으며 PC별로 준비하거나 공유 AI 서버를 지정합니다.

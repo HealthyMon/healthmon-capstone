@@ -4,14 +4,14 @@ Android 휴대폰의 HealthMon Unity 앱에서 촬영하고, USB로 연결된 Wi
 
 ## 실행
 
-1. PC에서 최초 한 번 `Setup-PoseAI.cmd`를 실행합니다.
+1. PC에서 최초 한 번 `Start-HealthMon.cmd -Target Setup`를 실행합니다.
 2. Android 휴대폰의 개발자 옵션에서 USB 디버깅을 켜고 PC에 연결합니다. 휴대폰에 나타나는 이 PC의 연결 허용은 사용자가 직접 승인합니다.
-3. 기존 AI 최초 설정 후 프로젝트 루트의 `Start-AI.cmd`로 AI 전체를 시작하고, `Connect-PoseAndroid.cmd`로 `adb reverse tcp:18095 tcp:18095`를 설정합니다. USB 연결 도구는 모델을 시작하지 않습니다. 게임 백엔드는 별도로 제어합니다.
+3. 기존 AI 최초 설정 후 프로젝트 루트의 `Start-HealthMon.cmd -Target AI`로 AI 전체를 시작하고, `Start-HealthMon.cmd -Target Android`로 `adb reverse tcp:18095 tcp:18095`를 설정합니다. USB 연결 도구는 모델을 시작하지 않습니다. 게임 백엔드는 별도로 제어합니다.
 4. 휴대폰에 개발용 APK를 설치하고 **운동 → 훈련 준비**에서 카메라 권한을 허용합니다. 연결 설정은 앱 내부에서 자동 적용됩니다.
 5. 필요한 관절이 모두 보이게 휴대폰을 고정하고 **훈련 시작**을 누릅니다. 전면 카메라가 기본이며 시작 전에 카메라를 전환할 수 있습니다.
-6. 종료 후 `Disconnect-PoseAndroid.cmd`, `Stop-AI.cmd`를 실행합니다. USB를 뽑거나 휴대폰을 재부팅하면 연결 명령을 다시 실행합니다.
+6. 종료 후 `Stop-HealthMon.cmd -Target Android`, `Stop-HealthMon.cmd -Target AI`를 실행합니다. USB를 뽑거나 휴대폰을 재부팅하면 연결 명령을 다시 실행합니다.
 
-여러 장치가 연결되면 `Connect-PoseAndroid.cmd -Serial 장치ID`로 선택합니다. adb가 자동 검색되지 않으면 `-AdbPath "Android SDK의 platform-tools\adb.exe"`를 지정합니다. 연결 스크립트는 다른 포트 매핑을 지우거나 덮어쓰지 않습니다. AI 서비스는 계속 PC의 loopback에서만 동작합니다.
+여러 장치가 연결되면 `Start-HealthMon.cmd -Target Android -Serial 장치ID`로 선택합니다. adb가 자동 검색되지 않으면 `-AdbPath "Android SDK의 platform-tools\adb.exe"`를 지정합니다. 연결 스크립트는 다른 포트 매핑을 지우거나 덮어쓰지 않습니다. AI 서비스는 계속 PC의 loopback에서만 동작합니다.
 
 운동 화면에는 서버 주소 입력이나 USB 연결 표시가 없습니다. 기본 주소는 내부 설정 `http://127.0.0.1:18095`입니다. 개발 중 주소 변경이 필요하면 **설정 · 관리 → 연결·설정 → 관절 AI · 개발 설정**을 사용합니다. 이 항목과 저장된 주소 재정의는 Unity Editor 또는 Development Build에서만 사용되며, 다음 운동부터 적용됩니다. 잘못 저장된 주소는 기본 설정으로 대체됩니다.
 
