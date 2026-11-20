@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 [InitializeOnLoad]
@@ -19,8 +20,22 @@ public static class HealthMonAspectVerification
         EditorApplication.playModeStateChanged += state => {
             if (state != PlayModeStateChange.EnteredPlayMode || !SessionState.GetBool("HealthMonAspectChecks", false)) return;
             SessionState.SetBool("HealthMonAspectChecks", false);
-            new GameObject("Aspect verification").AddComponent<HealthMonAspectRunner>();
+            var runner = new GameObject("Aspect verification").AddComponent<HealthMonAspectRunner>();
+            runner.onboarding = SessionState.GetBool("HealthMonOnboardingChecks", false);
+            SessionState.SetBool("HealthMonOnboardingChecks", false);
+            Object.DontDestroyOnLoad(runner.gameObject);
         };
+    }
+    public static void RunOnboarding()
+    {
+        if (Environment.GetEnvironmentVariable("HEALTHMON_TEAM_PREFS_BACKUP") != "1") throw new InvalidOperationException("Preferences backup required");
+        // The external verifier restores every preference, including existing progress.
+        foreach (string key in new[]{"HM_PLAYER_NICKNAME", "HM_PLAYER_CHARACTER_INDEX", "HM_PLAYER_SETUP_DONE"}) PlayerPrefs.DeleteKey(key);
+        PlayerPrefs.Save();
+        EditorSceneManager.OpenScene("Assets/HealthMon/Scenes/BootScene.unity");
+        SessionState.SetBool("HealthMonOnboardingChecks", true);
+        SessionState.SetBool("HealthMonAspectChecks", true);
+        EditorApplication.isPlaying = true;
     }
     public static void Run()
     {
@@ -34,7 +49,8 @@ public static class HealthMonAspectVerification
 public class HealthMonAspectRunner : MonoBehaviour
 {
     [Serializable] class Frame { public string name; public int width, height; public List<string> clipped = new List<string>(); }
-    [Serializable] class Report { public bool passed; public int runtimeErrors; public string error; public List<Frame> frames = new List<Frame>(); }
+    [Serializable] class Report { public bool passed; public int runtimeErrors; public string error; public List<string> checks = new List<string>(); public List<Frame> frames = new List<Frame>(); }
+    public bool onboarding;
     Report report = new Report(); string output; object group; EditorWindow game; int originalIndex, customIndex = -1;
     BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     void Start()
@@ -42,7 +58,7 @@ public class HealthMonAspectRunner : MonoBehaviour
         output = Environment.GetEnvironmentVariable("HEALTHMON_TEAM_OUTPUT");
         Application.runInBackground = true;
         Application.logMessageReceived += Observe;
-        StartCoroutine(Guard(Exercise()));
+        StartCoroutine(Guard(onboarding ? ExerciseOnboarding() : Exercise()));
     }
     void Observe(string message,string trace,LogType type) { if (type == LogType.Error || type == LogType.Exception) report.runtimeErrors++; }
     IEnumerator Guard(IEnumerator routine)
@@ -92,6 +108,60 @@ public class HealthMonAspectRunner : MonoBehaviour
         game.Repaint();
     }
     T Find<T>() where T:Object => Object.FindAnyObjectByType<T>(FindObjectsInactive.Include);
+    void Check(bool condition, string message)
+    {
+        if (!condition) throw new InvalidOperationException(message);
+        report.checks.Add(message);
+    }
+    IEnumerator ExerciseOnboarding()
+    {
+        yield return new WaitForSecondsRealtime(2);
+        var flow=Find<HealthMonFirstRunFlow>();
+        Check(flow!=null && flow.setupPanel.activeInHierarchy && !flow.startPanel.activeSelf, "First launch opens nickname / starter setup");
+        Check(flow.cardButtons.Length==3 && flow.cardButtons.All(b=>b!=null), "All three starter buttons are connected");
+        var previews=Find<BootCharacterPreviewRuntime>();
+        Check(previews!=null && previews.previewImages.All(i=>i!=null && i.texture!=null), "All three live character previews have textures");
+        foreach(int height in new[]{1280,1440,1600})
+        {
+            SetSize(720,height);yield return new WaitForSecondsRealtime(.6f);
+            Check(Screen.width==720 && Screen.height==height, "Resolution 720x"+height);
+            string prefix="9x"+(height==1280?16:height==1440?18:20)+"-";
+            flow.OpenSetup();yield return Capture(prefix+"first-setup");
+            flow.backButton.onClick.Invoke();yield return Capture(prefix+"start");
+            flow.continueButton.onClick.Invoke();
+            Check(flow.setupPanel.activeInHierarchy, "Continue without a profile returns to setup at "+height);
+        }
+        SetSize(720,1280);yield return new WaitForSecondsRealtime(.6f);
+        foreach(string invalid in new[]{"", " ", "A", "1234567890123"})
+        {
+            flow.nicknameInput.text=invalid;
+            flow.confirmButton.onClick.Invoke();yield return null;
+            Check(SceneManager.GetActiveScene().name=="BootScene" && !HealthMonStarterProfile.Instance.IsSetupDone, "Reject invalid nickname length "+invalid.Length);
+        }
+        for(int i=0;i<3;i++)
+        {
+            flow.cardButtons[i].onClick.Invoke();yield return null;
+            Check(flow.cardFrames[i].color==flow.selectedFrameColor && flow.cardFrames.Where((_,n)=>n!=i).All(f=>f.color==flow.normalFrameColor), "Starter card selection "+i);
+            yield return Capture("9x16-starter-"+i);
+        }
+        flow.nicknameInput.text="  캡처테스터  ";flow.cardButtons[1].onClick.Invoke();
+        flow.confirmButton.onClick.Invoke();
+        float deadline=Time.realtimeSinceStartup+30;
+        while(SceneManager.GetActiveScene().name!="MainARScene" && Time.realtimeSinceStartup<deadline)yield return null;
+        yield return new WaitForSecondsRealtime(3);
+        Check(SceneManager.GetActiveScene().name=="MainARScene", "Confirm opens the actual home scene");
+        var profile=HealthMonStarterProfile.Instance;
+        Check(profile!=null && profile.IsSetupDone && profile.Nickname=="캡처테스터" && profile.SelectedCharacterIndex==1, "Trimmed nickname and chosen starter survive the scene change");
+        profile.Load();
+        Check(profile.Nickname=="캡처테스터" && profile.SelectedCharacterIndex==1, "Profile reload reads persisted values");
+        yield return Capture("9x16-after-setup-home");
+        SceneManager.LoadScene("BootScene");yield return new WaitForSecondsRealtime(2);
+        flow=Find<HealthMonFirstRunFlow>();
+        Check(flow.startPanel.activeInHierarchy && !flow.setupPanel.activeSelf, "Returning player sees Continue / New Start");
+        yield return Capture("9x16-returning-player");
+        flow.continueButton.onClick.Invoke();yield return new WaitForSecondsRealtime(3);
+        Check(SceneManager.GetActiveScene().name=="MainARScene", "Continue returns to home");
+    }
     IEnumerator Exercise()
     {
         yield return new WaitForSecondsRealtime(3);
