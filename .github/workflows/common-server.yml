@@ -26,16 +26,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -r Server/requirements.txt pytest==9.0.2 psutil==7.2.2 filelock==3.32.3
-      - run: python -m pytest Server/tests Server/local_probe/test_local_services.py Server/local_probe/test_native_runtime.py Server/local_probe/test_router.py -q
+      - run: python -m pip install -r Server/requirements.txt pytest==9.0.2
+      - run: python -m pytest Server/tests -q
         env:
           TEST_ADMIN_DSN: postgresql://healthmon_test:isolated-ci-only@localhost:5432/postgres
-  windows-launcher:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: false
-      - name: Verify PowerShell 5.1 launcher without real services
-        shell: powershell
-        run: ./Server/tests/test_local_server_launcher.ps1

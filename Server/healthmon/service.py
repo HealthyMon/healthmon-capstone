@@ -88,17 +88,15 @@ def refresh(c, p, timestamp, ai_available=False, force=False, reason='period_rec
         c.execute('INSERT INTO game_ledger(pet_id,reward_key,exp,coin,reason,source_id) VALUES(%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING',
                   (pet, reward['reward_key'], reward['exp'], reward.get('coin', 0), reward['reason'], reward.get('event_id')))
     total = c.execute('SELECT coalesce(sum(exp),0) AS exp,coalesce(sum(coin),0) AS coin FROM game_ledger WHERE pet_id=%s', (pet,)).fetchone()
-    from .shop import spent
-    wallet_coin = total['coin'] - spent(c, pet)
     state = dict(projection['state'], **rules.exp_progress(total['exp']))
-    state.update(pet_id=pet, coin=max(0, wallet_coin), rule_version=rules.RULE_VERSION, settings=p['settings'])
+    state.update(pet_id=pet, coin=total['coin'], rule_version=rules.RULE_VERSION, settings=p['settings'])
     test_controls = stored['state'].get('_test_controls')
     if test_controls and c.execute('SELECT environment FROM common_server_metadata WHERE singleton').fetchone()['environment'] == 'test':
         for axis, offset in test_controls['offsets'].items():
             if axis in ('upper_body', 'lower_body', 'nutrition', 'energy_balance', 'activity', 'affinity', 'initiative'):
                 state[axis] = max(-100 if axis == 'energy_balance' else 0, min(100, state[axis] + offset))
         state.update(rules.exp_progress(max(0, total['exp'] + test_controls['exp_offset'])))
-        state['coin'] = max(0, wallet_coin + test_controls['coin_offset'])
+        state['coin'] = max(0, total['coin'] + test_controls['coin_offset'])
         state['_test_controls'] = test_controls
         state['synthetic_test_state'] = True
     for key, default in [('published_model_stage', 0), ('model_reference', None), ('asset_status', 'unavailable'), ('previous_evolution', None)]:

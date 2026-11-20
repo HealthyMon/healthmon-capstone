@@ -58,6 +58,20 @@ def test_legacy_private_config_still_selects_v1_only(tmp_path):
         selected_model_manifest(config)
 
 
+def test_four_b_requires_explicit_version_and_matching_base(tmp_path):
+    config, manifest = local_bundle(tmp_path, 'qwen4b-v1')
+    config['expected_model_version'] = 'qwen4b-v1'
+    with pytest.raises(ValueError):
+        selected_model_manifest(config)  # The 9B identity cannot be relabeled as 4B.
+    manifest['base_model_id'] = 'Qwen/Qwen3.5-4B'
+    write_json(tmp_path / 'adapter/healthmon-model.json', manifest)
+    assert selected_model_manifest(config)['base_model_id'] == 'Qwen/Qwen3.5-4B'
+    verify_local_model_files(config, manifest)
+    config['expected_model_version'] = 'v1'
+    with pytest.raises(ValueError):
+        selected_model_manifest(config)
+
+
 @pytest.mark.parametrize('mutation', ['wrong_version', 'not_ready', 'wrong_format', 'wrong_base', 'bad_revision', 'bad_sha', 'missing_artifact', 'artifact_path_escape', 'invalid_checksum_object', 'unapproved_request'])
 def test_manifest_mismatch_is_an_error_without_implicit_fallback(tmp_path, mutation):
     config, manifest = local_bundle(tmp_path, 'v2')

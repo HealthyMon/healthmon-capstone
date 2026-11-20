@@ -11,12 +11,14 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--env-file',type=Path,default=ROOT/'.env',help='Local credentials file (never committed)')
     p.add_argument('--model-path',type=Path,help='Existing local base model directory')
+    p.add_argument('--quantization',choices=['none','nf4'],help='Explicit inference precision; nf4 supports the 12GB 4B candidate')
     p.add_argument('--embedding-path',type=Path,help='Existing local BGE-M3 directory')
     choice=p.add_mutually_exclusive_group()
     choice.add_argument('--adapter',help='Override config/serving.json adapter')
     choice.add_argument('--base',action='store_true',help='Explicitly serve the base model without LoRA')
     p.add_argument('--warmup',action='store_true',help='Legacy flag; models remain on demand');args=p.parse_args()
     load_dotenv(args.env_file)
+    if args.quantization is not None:os.environ['MODEL_QUANTIZATION']=args.quantization
     from src.db import connect
     with connect() as connection:
         connection.execute((ROOT/'migrations/003_food_analyses.sql').read_text(encoding='utf-8'))

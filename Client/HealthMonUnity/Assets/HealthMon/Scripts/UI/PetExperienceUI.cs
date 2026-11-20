@@ -14,32 +14,15 @@ public sealed class PetExperienceUI : MonoBehaviour
     private Button evolutionButton, freshPetButton;
     private TMP_Text evolutionLabel, statusText, arHint;
     private ARPlacementManager placement;
-    private EvolutionFlowController evolutionFlow;
 
     public void Configure(UIManager owner, GameObject home, GameObject status, GameObject admin)
     {
         manager = owner;
-        if (CommonServerConnection.UsesServerAuthority)
-        {
-            evolutionFlow = gameObject.AddComponent<EvolutionFlowController>();
-            evolutionFlow.Configure(owner);
-        }
         var reference = home.GetComponentInChildren<TMP_Text>(true);
         font = reference != null ? reference.font : TMP_Settings.defaultFontAsset;
         evolutionButton = MakeButton("HomeEvolutionButton", home.transform, "진화", RequestEvolution,
-            new Vector2(.70f, .38f), new Vector2(.97f, .45f));
+            new Vector2(.82f, .36f), new Vector2(.97f, .45f));
         evolutionLabel = evolutionButton.GetComponentInChildren<TMP_Text>();
-        foreach (var button in home.GetComponentsInChildren<Button>(true))
-        {
-            var label = button.GetComponentInChildren<TMP_Text>(true);
-            if (button == evolutionButton || label == null || label.text.Replace(" ", "") != "상태보기") continue;
-            if (button.targetGraphic is Image style && evolutionButton.targetGraphic is Image target)
-            { target.sprite = style.sprite; target.type = style.type; target.color = style.color; }
-            var colors = button.colors;
-            colors.disabledColor = Color.white;
-            evolutionButton.colors = colors;
-            break;
-        }
 
         if (CommonServerConnection.UsesServerAuthority)
         {
@@ -109,13 +92,11 @@ public sealed class PetExperienceUI : MonoBehaviour
         bool available = state != null && state.evolution_target_stage > state.published_model_stage;
         if (evolutionButton != null)
         {
-            bool retryModel = evolutionFlow != null && evolutionFlow.NeedsModelRetry;
-            evolutionButton.interactable = state != null && evolution != null && (available || pending || retryModel);
+            evolutionButton.interactable = available && evolution != null && (!pending || !string.IsNullOrEmpty(evolution.LastError));
             evolutionLabel.text = state == null ? "진화 · 연결 필요" :
-                retryModel ? "진화 외형 다시 받기" :
-                pending ? (evolution.HasTerminalError ? "진화 다시 시도" : "진화 확인") :
+                pending ? (string.IsNullOrEmpty(evolution.LastError) ? "진화 진행 중" : "진화 다시 시도") :
                 available ? "진화하기" : state.published_model_stage >= 3 ? "3차 진화 완료" :
-                state.published_model_stage > 0 ? $"{state.published_model_stage}차 진화 완료\n다음 Lv.{(state.published_model_stage + 1) * 10}" : "첫 진화 · Lv.10";
+                state.published_model_stage > 0 ? $"{state.published_model_stage}차 진화 완료 · 다음 Lv.{(state.published_model_stage + 1) * 10}" : "첫 진화 · Lv.10";
         }
         if (freshPetButton != null)
             freshPetButton.interactable = state != null && connection.EnvironmentName == "test" &&
@@ -157,7 +138,7 @@ public sealed class PetExperienceUI : MonoBehaviour
         return placement;
     }
 
-    private void RequestEvolution() { evolutionFlow?.Begin(); }
+    private void RequestEvolution() { EvolutionClient.Instance?.RequestCommonEvolution(); }
     private void StartFreshPet()
     {
         CommonServerConnection.Instance?.CreateFreshTestPet();

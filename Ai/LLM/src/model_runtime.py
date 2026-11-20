@@ -202,7 +202,9 @@ class OnDemandQwen:
 
     @property
     def name(self):
-        return 'qwen3.5-9b-bf16' + ('-lora' if os.getenv('ADAPTER_PATH') else '')
+        model = Path(os.getenv('MODEL_PATH', 'models/qwen3.5-9b')).name
+        precision = '-nf4' if os.getenv('MODEL_QUANTIZATION', 'none') == 'nf4' else '-bf16'
+        return model + precision + ('-lora' if os.getenv('ADAPTER_PATH') else '')
 
     @property
     def model(self):

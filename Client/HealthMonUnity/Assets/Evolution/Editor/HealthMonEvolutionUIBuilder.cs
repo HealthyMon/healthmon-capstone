@@ -74,7 +74,6 @@ namespace HealthMon.Evolution.Editor
                 new Vector2(.84f,.95f),new Vector2(200,66));
             Button start=CreateButton(test,"진화 TEST",EvolutionPanelGraphic.Theme.GhostButton,26,White);
             UnityEventTools.AddPersistentListener(start.onClick,ctrl.StartEvolution);
-            test.gameObject.SetActive(false); // Explicit scene-preview control, never a real evolution request.
 
             RectTransform root=Stretch("EvolutionOverlay",canvas.transform);
             Undo.RegisterCreatedObjectUndo(root.gameObject,"Evolution Overlay");
@@ -129,7 +128,6 @@ namespace HealthMon.Evolution.Editor
             Button finishButton=CreateButton(doneTest,"진화 완료 테스트",EvolutionPanelGraphic.Theme.MintButton,37,
                 new Color(.035f,.19f,.24f,1));
             UnityEventTools.AddPersistentListener(finishButton.onClick,ctrl.CompleteEvolution);
-            doneTest.gameObject.SetActive(false); // A preview click cannot prove model application succeeded.
 
             RectTransform completed=Stretch("CompletedContent",root);
             ctrl.completedContent=completed.gameObject;

@@ -21,19 +21,6 @@ public static class AuthorityGuardChecks
         if (state.CurrentLevel != 1 || state.CurrentCoin != 0 || state.CurrentIntimacy != 50 || state.CurrentActivity != 50)
             throw new Exception("Local mutation changed server-authoritative state.");
         Console.WriteLine("HEALTHMON_MANAGED_AUTHORITY_GUARDS_PASS methods=10");
-        var shop = (HealthMonOfflineShopBackend)FormatterServices.GetUninitializedObject(typeof(HealthMonOfflineShopBackend));
-        if (shop.IsReady || shop.Balance != 0 || shop.IsOwned("demo-item"))
-            throw new Exception("Disconnected server mode exposed a synthetic wallet/inventory.");
-        HealthMonShopPurchaseResult purchase = null, selection = null;
-        shop.Purchase("demo-item", result => purchase = result);
-        shop.SelectCharacter("demo-item", result => selection = result);
-        if (purchase == null || purchase.success || selection == null || selection.success)
-            throw new Exception("Server mode accepted a local demo purchase/selection.");
-        var demo = typeof(Healthmon.Common.CommonServerConnection).GetProperty("LocalDemoEnabled");
-        demo.SetValue(null, true);
-        if (!shop.IsReady) throw new Exception("Explicit offline demo was not enabled.");
-        demo.SetValue(null, false);
-        Console.WriteLine("HEALTHMON_OFFLINE_SHOP_AUTHORITY_GUARDS_PASS checks=6");
         foreach (string name in new[] { "CommonServerNativeE2ERunner", "CommonServerNativeVerification", "NativeE2EConfig", "NativeE2ECase", "NativeE2EReport", "NativeRenderStabilityGate", "NativeDialogueViewportEvidence", "NativeDialogueRaycastProbe", "NativeInputActionEvidence" })
             if (typeof(PetStateManager).Assembly.GetType(name, false) != null)
                 throw new Exception("Editor-only native verification leaked into Android assembly: " + name);

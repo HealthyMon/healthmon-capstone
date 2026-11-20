@@ -15,7 +15,6 @@ from .config import Settings
 from .contracts import Chat, ConfirmFood, Decision, Evolution, Goal, LegacyActivity, Meal, Memory, PetSettings, Proposal, ProposalControl, Session, SourceEdit, Workout
 from .db import Database
 from .gateway import AIUnavailable, Gateway
-from .dependencies import AIDependencies
 from . import rules, service
 
 
@@ -23,7 +22,6 @@ def create_app(settings=None, database=None):
     settings = settings or Settings.from_env()
     db = database or Database(settings)
     gateway = Gateway(settings)
-    ai_dependencies = AIDependencies(settings)
 
     @asynccontextmanager
     async def lifespan(application):
@@ -70,9 +68,6 @@ def create_app(settings=None, database=None):
         gateway.assert_available(owner, info['environment'] == 'test')
         return info['environment'] == 'test'
 
-    from . import shop
-    shop.register(app, settings, db, identity, now)
-
     @app.exception_handler(psycopg.Error)
     async def database_error(request, error):
         return JSONResponse(status_code=503, content={'detail': {'code': 'database_unavailable', 'retry_same_id': True}})
@@ -108,15 +103,12 @@ def create_app(settings=None, database=None):
     @app.get('/ecosystem/health')
     @app.get('/health/dependencies')
     def dependencies(owner=Depends(identity)):
-        observed = ai_dependencies.snapshot(owner)
-        def capability(name):
-            return {**observed['services'].get(name, {'available': None, 'status': 'unknown'}), 'backend': settings.ai_mode}
         return {'ai_mode': settings.ai_mode, 'schema_version': 'healthmon.ecosystem.v1',
-                'ai': {'status': observed['status'], 'available': observed['available']},
-                'chat': capability('chat'), 'vision': capability('vision'), 'evolution': capability('evolution'),
+                'vision': {'available': False if settings.ai_mode == 'disabled' else True if settings.ai_mode == 'mock' else None,
+                           'status': 'disabled' if settings.ai_mode == 'disabled' else 'synthetic' if settings.ai_mode == 'mock' else 'configured_unverified', 'backend': settings.ai_mode},
                 'model_runtime': {'location': 'remote_gateway', 'local_gpu_required': False},
                 'food_api': 'healthmon.food.v1', 'consumption_requires_confirmation': True,
-                'note': 'Live probes are cached for two seconds. They do not guarantee inference success.'}
+                'note': 'Configured remote mode does not imply a successful external GPU connection'}
 
     @app.post('/pets')
     def create_pet(body: PetSettings, owner=Depends(identity)):
@@ -420,6 +412,8 @@ def create_app(settings=None, database=None):
                                'has_estimated_grams': item['estimated_grams'] is not None, 'estimated_grams': item['estimated_grams'], 'weight_warning': ''})
         output = {'schema_version': 'healthmon.food.v1', 'analysis_id': ident, 'backend': settings.ai_mode, 'provenance': provenance,
                   'synthetic': provenance == 'synthetic', 'candidates': candidates, 'consumption_confirmed': False, 'image_hash': image_hash}
+        if result.get('vision') is not None:
+            output['vision'] = result['vision']
         with db.connect() as c:
             service.owned(c, owner, pet, True)
             prior = c.execute('SELECT pet_id,result FROM food_analyses WHERE id=%s', (ident,)).fetchone()

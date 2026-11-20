@@ -213,27 +213,6 @@ def test_lfs_declarations_require_exact_existing_model_bytes(tmp_path):
         vision.verify_assets(assets, source)
 
 
-@pytest.mark.parametrize('corrupt', [None, 'source', 'assets', 'manifest'])
-def test_hydrated_lfs_checkpoints_require_pinned_manifest(tmp_path, corrupt):
-    source, assets = tmp_path / 'source', tmp_path / 'assets'
-    source.mkdir(); assets.mkdir()
-    manifest = {}
-    for name in vision.WEIGHTS:
-        raw = b'\x80binary-checkpoint-' + name.encode()
-        (source / name).write_bytes(raw)
-        (assets / name).write_bytes(raw)
-        manifest[name] = {'sha256': hashlib.sha256(raw).hexdigest(), 'size_bytes': len(raw)}
-    if corrupt != 'manifest':
-        (source / 'weights-manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
-    if corrupt in ('source', 'assets'):
-        ((source if corrupt == 'source' else assets) / vision.WEIGHTS[0]).write_bytes(b'wrong-checkpoint')
-    if corrupt:
-        with pytest.raises(ValueError):
-            vision.verify_assets(assets, source)
-    else:
-        assert vision.verify_assets(assets, source) == manifest
-
-
 @pytest.mark.parametrize('change', [{'environment': 'production'}, {'vision_enabled': False}, {'server_token': ''}])
 def test_private_explicit_opt_in_is_required(bridge, change):
     config = bridge[2] / 'private.json'

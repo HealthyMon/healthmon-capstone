@@ -14,7 +14,6 @@ public sealed class MobileAdminMenu : MonoBehaviour
     private GameObject panel;
     private RectTransform safeRoot, launcher, content;
     private TMP_FontAsset font;
-    private HealthMon.Evolution.EvolutionUIController evolutionScreen;
     private TMP_Text connectionStatus, notice, stateSummary;
     private TMP_InputField level, coin, address, token, pet, amount;
     private readonly Dictionary<string, Slider> axes = new Dictionary<string, Slider>();
@@ -41,7 +40,6 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     public void Configure(UIManager owner, GameObject admin, Canvas canvas, TMP_FontAsset textFont)
     {
-        evolutionScreen = FindAnyObjectByType<HealthMon.Evolution.EvolutionUIController>(FindObjectsInactive.Include);
         Instance = this; manager = owner; panel = admin; font = textFont;
         if (canvas == null) return;
         // Runtime UnityEvent listeners do not survive script reloads.
@@ -159,7 +157,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     private void BuildConnection(Transform page)
     {
-        connectionStatus = Label(page, "연결 상태 확인 중", 190);
+        connectionStatus = Label(page, "연결 상태 확인 중", 110);
         address = Input(page, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:8020");
         token = Input(page, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
         pet = Input(page, "펫 ID · 비워두면 기존 선택 유지", "");
@@ -168,22 +166,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
         });
         Button("Refresh", page, "서버 상태 새로고침", () => { Connection.RefreshState(); Connection.RefreshQuests(); });
         Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => Healthmon.Evolution.EvolutionClient.Instance?.RequestCommonEvolution());
-        Label(page, "웨어러블 운동 기록 자동 동기화", 70);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Label(page, "관절 AI · 개발 설정", 86, 36);
-        Label(page, "다음 운동부터 적용됩니다. 일반 운동 화면에서는 연결 설정을 자동으로 사용합니다.", 110);
-        var poseAddress = Input(page, "관절 AI 서버 주소", HealthMonPoseClient.ConfiguredEndpoint);
-        Button("SavePoseEndpoint", page, "관절 AI 연결 설정 저장", () => {
-            notice.text = HealthMonPoseClient.SaveDevelopmentEndpoint(poseAddress.text)
-                ? "저장했습니다. 다음 운동부터 적용됩니다."
-                : "올바른 HTTP 또는 HTTPS 주소를 입력해 주세요.";
-        });
-        Button("ResetPoseEndpoint", page, "관절 AI 기본 연결 복원", () => {
-            HealthMonPoseClient.SaveDevelopmentEndpoint(HealthMonPoseClient.DefaultEndpoint);
-            poseAddress.text = HealthMonPoseClient.ConfiguredEndpoint;
-            notice.text = "기본 연결을 복원했습니다. 다음 운동부터 적용됩니다.";
-        });
-#endif
+        Button("PhoneSync", page, "휴대폰 운동 동기화", () => { HealthMonAndroidBridge.RequestServerSync(); Connection.RefreshPhoneStatus(); });
     }
 
     private void SelectPage(int index)
@@ -196,8 +179,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
     {
         if (panel == null || launcher == null || safeRoot == null) return;
         bool open = panel.activeInHierarchy;
-        bool evolving = evolutionScreen != null && evolutionScreen.evolutionOverlay != null && evolutionScreen.evolutionOverlay.activeInHierarchy;
-        launcher.gameObject.SetActive(!open && !evolving);
+        launcher.gameObject.SetActive(!open);
         Rect safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
@@ -212,7 +194,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
         bool allowed = connection != null && connection.IsConnected && connection.CanUseTestControls && !connection.Api.IsBusy && !connection.Api.HasPendingChat;
         foreach (var button in testButtons) button.interactable = allowed;
         connectionStatus.text = connection == null ? "서버 연결이 필요합니다." : connection.IsConnected
-            ? "연결됨 · " + connection.EnvironmentName + "\n" + connection.BaseUrl + "\n펫 " + connection.Api.PetId + "\n" + connection.AIStatus
+            ? "연결됨 · " + connection.EnvironmentName + "\n" + connection.BaseUrl + "\n펫 " + connection.Api.PetId
             : connection.Status;
         if (!allowed && string.IsNullOrEmpty(notice.text)) notice.text = "연결된 테스트 계정에서 캐릭터·운동·퀘스트를 조작할 수 있어요.";
     }

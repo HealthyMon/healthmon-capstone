@@ -135,32 +135,17 @@ def decode_image(value):
 
 
 def verify_assets(assets, source=SOURCE):
-    """Check pinned LFS identities with either pointers or hydrated checkouts.
-
-    The small tracked manifest preserves the Git LFS identities after checkout
-    replaces pointers with binary checkpoints; Git is not required at runtime.
-    """
+    """Full SHA checks against this checkout's existing LFS declarations."""
     checked = {}
-    manifest_path = source / 'weights-manifest.json'
-    manifest = json.loads(manifest_path.read_text(encoding='utf-8')) if manifest_path.exists() else {}
     for name in WEIGHTS:
-        declaration = source / name
-        # Never decode a full (possibly hundreds of MB) binary checkpoint.
-        with declaration.open('rb') as stream:
-            header = stream.read(512)
-        match = re.fullmatch(rb'version https://git-lfs.github.com/spec/v1\r?\noid sha256:([0-9a-f]{64})\r?\nsize ([0-9]+)(?:\r?\n)?', header)
-        expected = {'sha256': match[1].decode('ascii'), 'size_bytes': int(match[2])} if match else manifest.get(name)
-        if (not isinstance(expected, dict) or not re.fullmatch(r'[0-9a-f]{64}', str(expected.get('sha256', '')))
-                or type(expected.get('size_bytes')) is not int or expected['size_bytes'] <= 0):
-            raise ValueError('Expected pinned Git LFS model identity declaration')
-        if name in manifest and manifest[name] != expected:
-            raise ValueError('Vision manifest and Git LFS pointer disagree')
-        if not match and (declaration.stat().st_size != expected['size_bytes'] or file_digest(declaration) != expected['sha256']):
-            raise ValueError('Hydrated Vision checkpoint differs from its pinned identity')
+        pointer = (source / name).read_text(encoding='utf-8')
+        match = re.fullmatch(r'version https://git-lfs.github.com/spec/v1\noid sha256:([0-9a-f]{64})\nsize ([0-9]+)\n?', pointer)
+        if not match:
+            raise ValueError('Expected existing Git LFS model identity declaration')
         path = assets / name
-        if path.stat().st_size != expected['size_bytes'] or file_digest(path) != expected['sha256']:
+        if path.stat().st_size != int(match[2]) or file_digest(path) != match[1]:
             raise ValueError('Existing Vision model differs from its declared identity')
-        checked[name] = expected
+        checked[name] = {'sha256': match[1], 'size_bytes': int(match[2])}
     return checked
 
 

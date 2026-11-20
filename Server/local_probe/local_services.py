@@ -2,7 +2,6 @@
 import argparse
 from contextlib import ExitStack
 import json
-import logging
 import os
 from pathlib import Path
 import subprocess
@@ -24,13 +23,12 @@ def resolve(value):
     return (ROOT / path).resolve() if not path.is_absolute() else path.resolve()
 
 
-def connection_configuration(path):
-    """Read the stable connection credential without loading/validating models."""
+def configuration(path):
     path = resolve(path)
     if not path.is_relative_to(RUNTIME):
         raise ValueError('Local service configuration must stay in this project .runtime')
     config = json.loads(path.read_text(encoding='utf-8-sig'))
-    for name in ('llm_config', 'vision_config'):
+    for name in ('python', 'llm_python', 'llm_config', 'vision_config', 'evolution_config'):
         config[name] = resolve(config[name])
         if not config[name].is_file():
             raise ValueError('Missing local AI prerequisite: ' + name)
@@ -40,18 +38,6 @@ def connection_configuration(path):
         raise ValueError('Local AI requires the test environment')
     if not llm.get('server_token') or llm['server_token'] != vision.get('server_token'):
         raise ValueError('LLM and Vision must use the same private server token')
-    config.update(token=llm['server_token'])
-    return config
-
-
-def configuration(path):
-    config = connection_configuration(path)
-    for name in ('python', 'llm_python', 'evolution_config'):
-        config[name] = resolve(config[name])
-        if not config[name].is_file():
-            raise ValueError('Missing local AI prerequisite: ' + name)
-    llm = json.loads(config['llm_config'].read_text(encoding='utf-8-sig'))
-    vision = json.loads(config['vision_config'].read_text(encoding='utf-8-sig'))
     for name in ('model_path', 'embedding_path'):
         if not Path(llm[name]).is_dir():
             raise ValueError('Missing existing local model: ' + name)
@@ -62,20 +48,8 @@ def configuration(path):
         evolution[name] = resolve(evolution[name])
         if name != 'work_root' and not evolution[name].is_dir():
             raise ValueError('Missing existing 3D prerequisite: ' + name)
-    config.update(evolution=evolution)
+    config.update(token=llm['server_token'], evolution=evolution)
     return config
-
-
-def check_backend_connection(config):
-    """Lifecycle toggles never rewrite credentials under an already-running API."""
-    from dotenv import dotenv_values
-    path = ROOT / '.env'
-    if not path.exists():
-        return  # AI can start before the first backend launch.
-    current = dotenv_values(path)
-    if (current.get('AI_MODE') != 'remote' or current.get('AI_SERVER_TOKEN') != config['token']
-            or current.get('AI_BASE_URL', '').rstrip('/') != 'http://host.docker.internal:18090'):
-        raise ValueError('Initial AI connection setup is required. Run Start-HealthMon.cmd -Target Backend once after preparing the AI config, then toggle AI independently.')
 
 
 def configure_environment(config):
@@ -112,19 +86,8 @@ def health(port):
 
 def write_status(phase, **extra):
     temporary = STATUS.with_suffix('.tmp')
-    content = json.dumps({'pid': os.getpid(), 'phase': phase, 'updated_at': time.time(), **extra})
-    # Windows readers/antivirus can briefly hold a file without delete sharing.
-    # A failed atomic rename must not kill the generation heartbeat or GPU owner.
-    for attempt in range(5):
-        try:
-            temporary.write_text(content, encoding='utf-8')
-            temporary.replace(STATUS)
-            return True
-        except PermissionError:
-            if attempt < 4:
-                time.sleep(.05)
-    logging.getLogger(__name__).warning('local_status_write_busy; retrying on next heartbeat')
-    return False
+    temporary.write_text(json.dumps({'pid': os.getpid(), 'phase': phase, 'updated_at': time.time(), **extra}), encoding='utf-8')
+    temporary.replace(STATUS)
 
 
 def matching_processes(command):
@@ -136,7 +99,7 @@ def matching_processes(command):
             actual = list((process.info['cmdline'] or [])[1:])
             if len(actual) != len(expected) or actual[:4] != expected[:4]:
                 continue
-            for flag in ('--config', '--key-config', '--profile'):
+            for flag in ('--config', '--key-config'):
                 if flag in actual:
                     index = actual.index(flag) + 1
                     candidate = Path(actual[index])
@@ -173,14 +136,13 @@ def service_commands(config):
     }
 
 
-def generate_queued(generate, start_llm, stop_llm, stopping=lambda: False):
+def generate_queued(generate, start_llm, stop_llm):
     """One GPU: release the dialogue model before 3D and always restore it."""
     stop_llm()
     try:
         return generate()
     finally:
-        if not stopping():
-            start_llm()
+        start_llm()
 
 
 def supervise(config):
@@ -190,7 +152,7 @@ def supervise(config):
     try:
         lock.acquire()
     except Timeout:
-        return  # Exactly one supervisor per checkout owns the GPU queue.
+        return
     STOP.unlink(missing_ok=True)
     owned = set()
     with ExitStack() as files:
@@ -244,14 +206,13 @@ def supervise(config):
                     finished = threading.Event()
                     def heartbeat():
                         while not finished.wait(2):
-                            write_status('stopping' if STOP.exists() else 'generating_3d',
-                                         active_generation=True, services={'router': True, 'vision': True, 'llm': False, 'evolution': True})
+                            write_status('generating_3d', services={'router': True, 'vision': True, 'llm': False, 'evolution': True})
                     pulse = threading.Thread(target=heartbeat, daemon=True)
                     pulse.start()
                     try:
                         generate_queued(
                             lambda: run_once(settings, store, evolution['model_root'], evolution['vendor_root'], allow_gpu=True),
-                            lambda: start('llm'), lambda: stop('llm'), STOP.exists)
+                            lambda: start('llm'), lambda: stop('llm'))
                     finally:
                         finished.set()
                         pulse.join(timeout=3)
@@ -266,8 +227,6 @@ def supervise(config):
             write_status('failed', error=type(error).__name__, message=str(error)[:180])
             raise
         finally:
-            if STOP.exists():
-                write_status('stopping')
             for name in reversed(tuple(commands)):
                 if name in owned:
                     stop(name)
@@ -277,26 +236,19 @@ def supervise(config):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['configure', 'check', 'run', 'evolution', 'stop'])
+    parser.add_argument('action', choices=['configure', 'run', 'evolution', 'stop'])
     parser.add_argument('--config', default='.runtime/local-services.json')
     args = parser.parse_args()
     if args.action == 'stop':
-        RUNTIME.mkdir(exist_ok=True)
         STOP.touch()
         print('Local AI stop requested. An active 3D generation finishes before shutdown.')
         return
-    if args.action == 'configure':
-        RUNTIME.mkdir(exist_ok=True)
-        config = connection_configuration(args.config)
-        configure_environment(config)
-        print('Stable API-to-AI connection prepared. Model readiness has not been assumed.')
-        return
     config = configuration(args.config)
     config['path'] = resolve(args.config)
-    if args.action == 'check':
-        check_backend_connection(config)
+    if args.action == 'configure':
         subprocess.run(['docker', 'image', 'inspect', 'healthmon-3d:3090'], stdout=subprocess.DEVNULL, check=True)
-        print('Local AI prerequisites verified; no API settings were changed.')
+        configure_environment(config)
+        print('Local dialogue, Vision and 3D settings verified.')
     elif args.action == 'evolution':
         import uvicorn
         from Ai.Generation3D.runtime.common_gateway.service import Settings, create_app

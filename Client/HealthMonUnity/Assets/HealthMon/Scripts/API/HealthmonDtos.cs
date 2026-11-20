@@ -2,22 +2,6 @@ using System;
 
 namespace Healthmon.Beta
 {
-    [Serializable] public class ShopItem { public string item_id, category; public int coin_price; public bool included_by_default; }
-    [Serializable] public class ShopSnapshot
-    {
-        public string pet_id, catalog_version, selected_character_id, request_id, item_id, operation;
-        public ShopItem[] items;
-        public string[] owned_item_ids;
-        public PetState state;
-        public bool success, duplicate, already_owned;
-        public int charged_coin;
-    }
-    [Serializable] public class ShopPurchaseRequest { public string request_id, item_id; public int expected_price; }
-    [Serializable] public class ShopSelectionRequest { public string request_id, item_id; }
-    [Serializable] public class ApiErrorDetail { public string code; }
-    [Serializable] public class ApiErrorEnvelope { public ApiErrorDetail detail; }
-    [Serializable] public class AICapabilityStatus { public string status; }
-    [Serializable] public class AIDependencyStatus { public AICapabilityStatus ai, chat, vision, evolution; }
     [Serializable] public class ConversationIntent { public string session_id; public bool active; }
     [Serializable] public class ConversationStatus { public bool active, ready; public string policy; public int heartbeat_timeout_seconds; }
     [Serializable] public class NutrientValue { public bool available; public float value; }
@@ -38,6 +22,7 @@ namespace Healthmon.Beta
         public string schema_version, analysis_id, image_hash, backend, provenance;
         public bool consumption_confirmed, synthetic;
         public FoodCandidate[] candidates;
+        public global::VisionAnalysis vision;
         public bool IsSynthetic { get { return synthetic || provenance == "synthetic" || backend == "mock"; } }
     }
     [Serializable] public class FoodConfirmationWithoutQuantity
@@ -211,52 +196,7 @@ namespace Healthmon.Beta
         public long StatusCode { get; private set; }
         public string Message { get; private set; }
         public bool Cancelled { get; private set; }
-        public string Code { get; private set; }
-        public ApiFailure(long statusCode, string message, bool cancelled = false, string code = null)
-        { StatusCode = statusCode; Message = message; Cancelled = cancelled; Code = code; }
+        public ApiFailure(long statusCode, string message, bool cancelled = false)
+        { StatusCode = statusCode; Message = message; Cancelled = cancelled; }
     }
-
-
-    [Serializable]
-    public class ServerWorkoutList
-    {
-        public ServerWorkoutEntry[] records;
-    }
-
-    [Serializable]
-    public class ServerWorkoutEntry
-    {
-        public string event_id;
-        public int revision;
-        public string occurred_at;
-        public string received_at;
-        public string evaluation_status;
-        public bool synthetic;
-        public ServerWorkoutDetail record;
-    }
-
-
-    [Serializable]
-    public class ServerWorkoutDetail
-    {
-        public string workout_type;
-        public string exercise_type;
-        public string unit;
-        public float actual;
-        public float target;
-        public string source;
-        public string started_at;
-        public string occurred_at;
-        public string body_part;
-
-        // 서버에 새로 추가한 상세 운동 데이터
-        public int duration_seconds;
-        public float average_heart_rate_bpm;
-        public float max_heart_rate_bpm;
-        public float calories_kcal;
-        public int steps;
-        public float distance_km;
-    }
-
-
 }

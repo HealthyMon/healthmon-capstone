@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,8 +16,6 @@ namespace Healthmon.Evolution
         public ModelManifest Current { get; private set; }
         public string LastError { get; private set; }
         public string Phase { get; private set; }
-        public bool HasTerminalError => commonTerminal;
-        public bool IsReconnecting { get; private set; }
         public string ActiveRequestId => CommonServerConnection.UsesServerAuthority ? commonPending?.request_id : pending?.request_id;
         public EvolutionSettings Settings { get; private set; } = new EvolutionSettings();
         public event Action<ModelManifest> ModelChanged;
@@ -30,13 +27,11 @@ namespace Healthmon.Evolution
         [NonSerialized] private string bearerToken;
         private EvolutionRequest pending;
         private bool submitting;
-        private bool legacyGatewayEnabled;
         [NonSerialized] private bool commonLoopStarted;
         [Serializable] private sealed class CommonPending { public string request_id, job_id; }
         private CommonPending commonPending;
         private string commonScope, commonPendingKey;
         private bool commonTerminal, commonRetryRequested;
-        private readonly Dictionary<string, Task<byte[]>> modelDownloads = new Dictionary<string, Task<byte[]>>();
         private string PendingKey => "HealthMon.Evolution.Pending." + Settings.pet_id;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -57,15 +52,12 @@ namespace Healthmon.Evolution
             Settings.pet_id = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_PET") ?? Settings.pet_id;
             Settings.certificate_sha256 = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_CERT_SHA256") ?? Settings.certificate_sha256;
             bearerToken = Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_TOKEN");
-            // Offline demo never silently starts legacy network polling.
-            legacyGatewayEnabled = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("HEALTHMON_EVOLUTION_URL")) &&
-                !string.IsNullOrWhiteSpace(bearerToken);
             if (PlayerPrefs.HasKey(PendingKey)) pending = JsonUtility.FromJson<EvolutionRequest>(PlayerPrefs.GetString(PendingKey));
         }
 
         private async void Start()
         {
-            if (CommonServerConnection.UsesServerAuthority || !legacyGatewayEnabled) return;
+            if (CommonServerConnection.UsesServerAuthority) return;
             while (!lifetime.IsCancellationRequested)
             {
                 BindGrowth();
@@ -131,7 +123,6 @@ namespace Healthmon.Evolution
         public void RequestEvolution(int level, GrowthStats stats, string source)
         {
             if (CommonServerConnection.UsesServerAuthority) { RequestCommonEvolution(); return; }
-            if (!legacyGatewayEnabled) { LastError = "오프라인 데모에서는 AI 진화를 생성하지 않습니다."; return; }
             if (pending != null || submitting) throw new InvalidOperationException("Resolve the pending evolution first.");
             if (level < 15 || level > 100) throw new ArgumentOutOfRangeException(nameof(level));
             SetGrowthStats(stats, source);
@@ -154,7 +145,6 @@ namespace Healthmon.Evolution
                 commonPending = new CommonPending { request_id = Guid.NewGuid().ToString("N") };
             // Explicit retry preserves request_id/job_id. A network failure cannot create a paid job twice.
             commonRetryRequested = true; commonTerminal = false;
-            LastError = null; IsReconnecting = false;
             PlayerPrefs.SetString(commonPendingKey, JsonUtility.ToJson(commonPending)); PlayerPrefs.Save();
             Phase = "queued";
         }
@@ -168,7 +158,6 @@ namespace Healthmon.Evolution
             commonPending = PlayerPrefs.HasKey(commonPendingKey)
                 ? JsonUtility.FromJson<CommonPending>(PlayerPrefs.GetString(commonPendingKey)) : null;
             commonTerminal = false; commonRetryRequested = commonPending != null;
-            LastError = null; IsReconnecting = false; Phase = commonPending != null ? "queued" : null;
             Current = null; ModelChanged?.Invoke(null);
             Settings.base_url = common.BaseUrl; Settings.pet_id = common.Api.PetId;
         }
@@ -178,13 +167,12 @@ namespace Healthmon.Evolution
             while (!lifetime.IsCancellationRequested)
             {
                 var common = CommonServerConnection.Instance;
-                string capturedScope = CurrentCommonScope();
                 try
                 {
                     if (common != null && common.IsConnected)
                     {
                         PrepareCommonScope(common);
-                        capturedScope = commonScope;
+                        string capturedScope = commonScope;
                         string root = "/pets/" + Uri.EscapeDataString(common.Api.PetId) + "/evolutions";
                         // A pending generation survives an app restart. Restore the already
                         // published visual independently so polling that job cannot hide the pet.
@@ -230,11 +218,10 @@ namespace Healthmon.Evolution
                             // Adopt that authenticated same-pet job's original request identity once.
                             if (firstSubmission) commonPending.request_id = job.request_id;
                             commonPending.job_id = job.job_id;
-                            LastError = null; IsReconnecting = false;
                             PlayerPrefs.SetString(commonPendingKey, JsonUtility.ToJson(commonPending)); PlayerPrefs.Save();
                             Phase = job.status; StatusChanged?.Invoke(Phase);
                             if (job.status == "failed" || job.status == "unsupported")
-                            { commonTerminal = true; LastError = "진화 중단 · 기존 모습 유지"; }
+                            { commonTerminal = true; LastError = "Evolution unavailable or failed; previous model retained."; }
                         }
                         else if (common.LatestState != null && common.LatestState.model_reference != null &&
                             (Current == null || Current.model_url != common.LatestState.model_reference))
@@ -275,19 +262,16 @@ namespace Healthmon.Evolution
                             { Current = manifest; ModelChanged?.Invoke(manifest); }
                             commonPending = null; commonTerminal = false;
                             PlayerPrefs.DeleteKey(commonPendingKey); PlayerPrefs.Save();
-                            Phase = "complete"; LastError = null; IsReconnecting = false; common.RefreshState();
+                            Phase = "complete"; LastError = null; common.RefreshState();
                         }
                     }
                 }
                 catch (OperationCanceledException) { break; }
-                catch (Exception error)
+                catch (Exception)
                 {
-                    if (capturedScope != CurrentCommonScope()) continue;
-                    // Transport/temporary server failures retry the SAME durable ID, including
-                    // a lost POST response. A rejected request or invalid contract needs a user retry.
-                    IsReconnecting = error is EvolutionHttpException http && http.Retryable;
-                    LastError = IsReconnecting ? "연결 복구 중 · 진화 기록 유지" : "진화 연결 실패 · 다시 시도";
-                    if (commonPending != null) commonTerminal = !IsReconnecting;
+                    LastError = "Common evolution request failed. Retry retains the same request ID.";
+                    // Do not automatically repeat failed generation submissions.
+                    if (commonPending != null && string.IsNullOrEmpty(commonPending.job_id)) commonTerminal = true;
                 }
                 try { await Task.Delay(3000, lifetime.Token); }
                 catch (OperationCanceledException) { break; }
@@ -360,16 +344,6 @@ namespace Healthmon.Evolution
 
         public async Task<byte[]> DownloadModel(ModelManifest manifest)
         {
-            string key = manifest.model_sha256 ?? "";
-            if (modelDownloads.TryGetValue(key, out var active)) return await active;
-            var download = DownloadModelBytes(manifest);
-            modelDownloads[key] = download;
-            try { return await download; }
-            finally { modelDownloads.Remove(key); }
-        }
-
-        private async Task<byte[]> DownloadModelBytes(ModelManifest manifest)
-        {
             // Content-addressed cache survives reconnects. Never consume a half-written file.
             if (manifest.model_sha256 == null || manifest.model_sha256.Length != 64 ||
                 !System.Text.RegularExpressions.Regex.IsMatch(manifest.model_sha256, "^[a-f0-9]{64}$"))
@@ -408,14 +382,7 @@ namespace Healthmon.Evolution
                 while (!operation.isDone) { lifetime.Token.ThrowIfCancellationRequested(); await Task.Yield(); }
             lifetime.Token.ThrowIfCancellationRequested();
             if (request.result != UnityWebRequest.Result.Success)
-                throw new EvolutionHttpException(request.responseCode, request.error);
-        }
-
-        private sealed class EvolutionHttpException : IOException
-        {
-            public bool Retryable { get; }
-            public EvolutionHttpException(long code, string error) : base("Evolution HTTP " + code + ": " + error)
-            { Retryable = code == 0 || code == 408 || code == 429 || code >= 500; }
+                throw new IOException("Evolution HTTP " + request.responseCode + ": " + request.error);
         }
 
         private static string Hash(byte[] data)

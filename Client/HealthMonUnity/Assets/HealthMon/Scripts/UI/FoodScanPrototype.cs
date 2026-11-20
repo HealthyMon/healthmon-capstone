@@ -35,6 +35,7 @@ public class FoodScanPrototype : MonoBehaviour
     private string analysisScope;
     private readonly Button[] candidateButtons = new Button[3];
     private bool confirming;
+    private MainFoodResultsPanel multiResults;
     public string LastAnalysisId { get; private set; }
     public string LastRecordedSourceId { get; private set; }
     public FoodAnalysis LastAnalysis { get; private set; }
@@ -173,7 +174,16 @@ public class FoodScanPrototype : MonoBehaviour
         {
             analysis = result; analysisScope = CurrentScope; LastAnalysis = result; LastAnalysisId = result.analysis_id; selected = null;
             UpdateAnalysisOrigin();
+            if (multiResults != null) multiResults.Show(result, capturedBytes);
             if (result.candidates == null || result.candidates.Length == 0) { Status("음식을 찾지 못했어요. 다른 사진으로 시도해 주세요."); return; }
+            if (gameObject.scene.name == "MainARScene")
+            {
+                // Initialize the legacy confirmation controls without opening the candidate picker.
+                // The multi-food panel still displays every detected food.
+                SelectCandidate(0);
+            }
+            else
+            {
             for (int i = 0; i < candidateButtons.Length; i++)
             {
                 var button = candidateButtons[i]; if (button == null) continue;
@@ -185,6 +195,7 @@ public class FoodScanPrototype : MonoBehaviour
                 }
             }
             ShowCandidates();
+            }
             if (result.IsSynthetic)
                 Status("MOCK / SYNTHETIC — 개발용 합성 분석입니다. 실제 영양 측정값이 아닙니다.");
             Debug.Log($"[HealthMon Vision] AnalysisDisplayed id={result.analysis_id} candidates={result.candidates.Length}");
@@ -252,6 +263,7 @@ public class FoodScanPrototype : MonoBehaviour
     public void ConfirmFood()
     {
         if (confirming || selected == null || Api == null || Api.IsBusy) return;
+        if (multiResults != null && multiResults.HasEdits) { StatusInConfirmation("카드 수정은 화면 미리보기에 적용됩니다. 기존 기록하기는 수정 전 후보를 저장하므로, 수정 결과는 카드 아래 JSON 저장을 이용하세요."); return; }
         if (string.IsNullOrEmpty(analysisScope) || analysisScope != CurrentScope || (syntheticFixture && syntheticFixtureScope != CurrentScope))
         { StatusInConfirmation("분석 이후 연결이 바뀌었습니다. 현재 연결에서 사진을 다시 분석하세요."); return; }
         if (selectedMealType == null)
@@ -404,8 +416,19 @@ public class FoodScanPrototype : MonoBehaviour
         quantityConfirmed = MakeToggle(content, "ConsumedQuantityConfirmed", "입력한 g은 제가 실제 먹은 양을 확인한 값입니다.");
         quantityConfirmed.onValueChanged.AddListener(_ => RenderSelection());
         confirmationNotice = MakeLabel(content, "ConfirmationNotice", "식사 구분과 실제 먹은 양을 확인하세요.", 200);
-        foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText })
-        { label.transform.SetParent(content, false); LayoutHeight(label.gameObject, label == foodNameText ? 160 : 64); }
+        if (gameObject.scene.name == "MainARScene")
+        {
+            var panel = new GameObject("MainFoodResults", typeof(RectTransform), typeof(MainFoodResultsPanel));
+            panel.transform.SetParent(content, false);
+            multiResults = panel.GetComponent<MainFoodResultsPanel>();
+            multiResults.Initialize(foodNameText.font);
+            foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText }) label.gameObject.SetActive(false);
+        }
+        else
+        {
+            foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText })
+            { label.transform.SetParent(content, false); LayoutHeight(label.gameObject, label == foodNameText ? 160 : 64); }
+        }
         vegetablesInput = MakeInput(template, content, "VegetableFruitGrams", "확인한 채소·과일량(g), 모르면 비움");
         vegetablesConfirmed = MakeToggle(content, "VegetableFruitConfirmed", "채소·과일량을 확인했습니다. 모르면 비우고 체크하지 않습니다.");
         kcalConfirmed = MakeToggle(content, "FoodKcalReconfirmed", "표시 열량을 실제 섭취량 기준으로 재확인했습니다 (게임 점수용).");
@@ -422,7 +445,7 @@ public class FoodScanPrototype : MonoBehaviour
     }
     private TMP_Text MakeLabel(Transform parent, string name, string text, float height)
     {
-        var label = Instantiate(foodNameText, parent); label.name = name; label.fontSize = 24;
+        var label = Instantiate(foodNameText, parent); label.gameObject.SetActive(true); label.name = name; label.fontSize = 24;
         label.text = text; label.alignment = TextAlignmentOptions.Left; label.enableAutoSizing = false; label.enableWordWrapping = true; label.raycastTarget = false;
         LayoutHeight(label.gameObject, height); return label;
     }

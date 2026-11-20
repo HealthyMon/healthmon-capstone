@@ -71,6 +71,17 @@ public class DialoguePrototype : MonoBehaviour
         message = message ?? string.Empty;
         if (characterResponseText != null && characterResponseText.text != message)
             characterResponseText.text = message;
+        if (characterResponseText != null)
+        {
+            // Restore the fixed bubble independently of navigation/layout readiness.
+            // Never override the separate AR follower's tracking visibility.
+            var group = characterResponseText.GetComponentInParent<CanvasGroup>();
+            if (group != null)
+            {
+                var follower = group.GetComponent<SpeechBubbleFollowTarget>();
+                if (follower == null || !follower.enabled) group.alpha = 1f;
+            }
+        }
         if (floatingBubbleText != null && floatingBubbleText.text != message)
             floatingBubbleText.text = message;
     }
@@ -79,14 +90,6 @@ public class DialoguePrototype : MonoBehaviour
     {
         var layout = GetComponent<DialogueRuntimeLayout>() ?? gameObject.AddComponent<DialogueRuntimeLayout>();
         layout.Configure(messageInput, userMessageText, characterResponseText, sendButton);
-        // One readable response surface: the fixed panel supports long replies
-        // even before AR tracking/placement. Avoid a duplicate over the model.
-        if (layout.HasValidLayout && floatingBubbleText != null && floatingBubbleText != characterResponseText)
-        {
-            var floating = floatingBubbleText.GetComponentInParent<SpeechBubbleFollowTarget>();
-            if (floating != null && floating.gameObject != layout.ResponseBubble.gameObject)
-                floating.gameObject.SetActive(false);
-        }
     }
     private void BindApiEvents()
     {
@@ -259,7 +262,7 @@ public class DialoguePrototype : MonoBehaviour
             (result.metrics.handler.IndexOf("mock", StringComparison.OrdinalIgnoreCase) >= 0 || result.metrics.handler.IndexOf("synthetic", StringComparison.OrdinalIgnoreCase) >= 0));
         if (personalityText != null) personalityText.text = synthetic ? "MOCK / SYNTHETIC — 개발용 합성 응답" : LastFallback ? "상태 : 답변 생성 실패" : "상태 : 대화 중";
         if (!LastFallback && questPrototype != null) questPrototype.AddDialogue();
-        Debug.Log($"[HealthMon LLM] ChatDisplayed request_id={LastRequestId} fallback={LastFallback} attempts={result.metrics?.attempts} latency_seconds={result.metrics?.latency_seconds:F2}");
+        Debug.Log($"[HealthMon LLM] ChatReceived request_id={LastRequestId} fallback={LastFallback} attempts={result.metrics?.attempts} latency_seconds={result.metrics?.latency_seconds:F2}");
     }
 
     private void ReactToFood(FoodConfirmationResult result)

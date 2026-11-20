@@ -5,12 +5,10 @@ router preserves one AI origin while forwarding only the declared capabilities.
 It neither creates fallback output nor exposes a user-facing inference service.
 """
 import argparse
-import asyncio
 import hmac
 import json
 from pathlib import Path
 import re
-import time
 
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import Response
@@ -33,42 +31,6 @@ def create_app(key_file):
         return {'status': 'ok', 'local_acceptance_only': True, 'automatic_fallback': False,
                 'configured_capability_origins': dict(CAPABILITY_ORIGINS),
                 'food_json_request_limit_bytes': FOOD_REQUEST_LIMIT}
-
-    @app.get('/health/services')
-    async def services(authorization: str = Header(default='')):
-        if not authorization.startswith('Bearer ') or not hmac.compare_digest(authorization[7:], token):
-            raise HTTPException(401, 'Server authentication required')
-        from .local_services import STATUS, STOP
-        try:
-            state = json.loads(STATUS.read_text(encoding='utf-8'))
-            phase = state.get('phase') if time.time() - state.get('updated_at', 0) < 15 else None
-        except (OSError, ValueError, TypeError):
-            phase = None
-        async with httpx.AsyncClient(timeout=.8, trust_env=False) as client:
-            async def probe(name, capability):
-                try:
-                    response = await client.get(CAPABILITY_ORIGINS[capability] + '/health')
-                    response.raise_for_status()
-                    body = response.json()
-                    available = body.get('ready', body.get('status') == 'ok') is True
-                except (httpx.HTTPError, ValueError, AttributeError):
-                    available = False
-                status = 'ready' if available else 'loading' if phase == 'starting' else 'off'
-                if name == 'chat' and phase == 'generating_3d':
-                    status, available = 'generating_3d', False
-                return name, {'available': available, 'status': status}
-            results = dict(await asyncio.gather(probe('chat', 'chat'), probe('vision', 'food'), probe('evolution', 'evolutions')))
-        if STOP.exists():
-            status = 'stopping'
-        elif phase == 'generating_3d':
-            status = 'generating_3d'
-        elif phase == 'failed':
-            status = 'error'
-        elif all(item['available'] for item in results.values()):
-            status = 'ready'
-        else:
-            status = 'loading' if phase == 'starting' else 'error'
-        return {'status': status, 'services': results}
 
     @app.api_route('/v1/{path:path}', methods=['POST', 'PUT', 'GET'])
     async def route(path: str, request: Request, authorization: str = Header(default='')):

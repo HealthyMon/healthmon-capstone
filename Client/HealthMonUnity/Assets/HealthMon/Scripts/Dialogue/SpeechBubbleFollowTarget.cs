@@ -36,14 +36,12 @@ public sealed class SpeechBubbleFollowTarget : MonoBehaviour
         group = GetComponent<CanvasGroup>();
         rootCanvas = GetComponentInParent<Canvas>();
         parentRect = bubbleRect != null ? bubbleRect.parent as RectTransform : null;
-        // Disabled legacy followers coexist with the fixed scrollable response.
-        // Awake still runs on disabled components; do not hide that response.
-        if (enabled)
-        {
-            group.interactable = false;
-            group.blocksRaycasts = false; // Never intercept AR plane taps.
-            group.alpha = 0f;
-        }
+        // Unity also calls Awake on disabled components on active objects.
+        // The fixed dialogue bubble has this follower disabled: do not hide it.
+        if (!enabled) return;
+        group.interactable = false;
+        group.blocksRaycasts = false; // Never intercept AR plane taps.
+        group.alpha = 0f;
     }
 
     private void LateUpdate()

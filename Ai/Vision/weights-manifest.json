@@ -1,5 +1,0 @@
-{
-  "food_detector.pth": {"sha256": "38282bbf4034c15e16c2ddb9384ba8714072a5bc71ef14f9b30c8eedd657514a", "size_bytes": 562041637},
-  "food_weight_checkpoint.pth": {"sha256": "df1fd971d8cb82fe15e109e700c4305e5effc17aed7d87390385fbf532719af7", "size_bytes": 134293849},
-  "cuboid_model.pth": {"sha256": "f7b30d57422d264b81efb09951a017497bddfd5d810243e10e2b8c116b8d75ad", "size_bytes": 44818550}
-}

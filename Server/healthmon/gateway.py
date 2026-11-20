@@ -1,6 +1,7 @@
 """Versioned remote AI protocol. No model or GPU imports are permitted here."""
 import hashlib
 import math
+import os
 from typing import Literal
 from urllib.parse import urljoin, urlparse
 import httpx
@@ -50,6 +51,7 @@ class FoodCandidate(Strict):
 
 
 class FoodResult(Strict):
+    vision: dict | None = None
     candidates: list[FoodCandidate] = Field(min_length=1, max_length=3)
 
 
@@ -123,13 +125,15 @@ class Gateway:
             path = '/v1/' + capability + ('/' + request_id if capability == 'evolutions' else '')
             body = {'contract_version': self.settings.contract_version, 'request_id': request_id, 'pet_id': pet_id, 'input': payload}
             try:
-                with httpx.Client(timeout=httpx.Timeout(self.settings.ai_timeout, connect=min(5, self.settings.ai_timeout)), trust_env=False, follow_redirects=False) as client:
-                    response = client.request(method, self.settings.ai_base_url + path,
+                target = os.getenv('FOOD_AI_BASE_URL', '').rstrip('/') if capability == 'food' else ''
+                timeout = max(self.settings.ai_timeout, 330) if capability == 'food' and target else self.settings.ai_timeout
+                with httpx.Client(timeout=httpx.Timeout(timeout, connect=min(5, timeout)), trust_env=False, follow_redirects=False) as client:
+                    response = client.request(method, (target or self.settings.ai_base_url) + path,
                                               json=body if method != 'GET' else None,
                                               headers={'Authorization': 'Bearer ' + self.settings.ai_token})
                     if response.status_code >= 400:
                         raise AIUnavailable('ai_authentication_failed' if response.status_code in (401, 403) else 'ai_http_error', response.status_code >= 500 or response.status_code == 429)
-                    if len(response.content) > 2 * 1024 * 1024:
+                    if len(response.content) > (32 if capability == 'food' else 2) * 1024 * 1024:
                         raise AIUnavailable('ai_response_too_large')
                     envelope = Envelope.model_validate(response.json())
             except httpx.TimeoutException as exc:

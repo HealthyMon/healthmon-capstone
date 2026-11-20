@@ -9,7 +9,7 @@ namespace Healthmon.Beta
 {
     public sealed class HealthmonApiClient : MonoBehaviour
     {
-        [SerializeField] private string baseUrl = "http://127.0.0.1:18092";
+        [SerializeField] private string baseUrl = "http://127.0.0.1:8000";
         [SerializeField, Min(1)] private int timeoutSeconds = 240;
         [SerializeField, Min(1)] private int foodTimeoutSeconds = 300;
         [NonSerialized] private string bearerToken; // Exclude Editor hot-reload serialization too.
@@ -24,10 +24,6 @@ namespace Healthmon.Beta
         private Coroutine heartbeatCoroutine;
         private UnityWebRequest stateRequest;
         private Coroutine stateCoroutine;
-        private UnityWebRequest shopRequest;
-        private Coroutine shopCoroutine;
-        private Action<ApiFailure> shopFailure;
-        public bool IsShopBusy => shopCoroutine != null;
         private readonly StateVersionGate stateGate = new StateVersionGate();
         private string serverInstanceId = "unverified", ownerId = "unverified";
         public bool IsStateBusy { get { return stateCoroutine != null; } }
@@ -89,7 +85,7 @@ namespace Healthmon.Beta
                 throw new ArgumentException("Use an HTTP(S) base URL without credentials, query or fragment.");
             string safeToken = CommonServerContract.NormalizeBearerToken(token);
             CloseConversation();
-            CancelStateRequest(); CancelShopRequest();
+            CancelStateRequest();
             baseUrl = url.TrimEnd('/');
             bearerToken = safeToken;
             PetId = null;
@@ -111,7 +107,6 @@ namespace Healthmon.Beta
         }
         private void ResetStateScope()
         {
-            CancelShopRequest();
             CancelStateRequest();
             stateGate.Reset(serverInstanceId, ownerId, PetId ?? "");
             HasStateVersion = false;
@@ -290,85 +285,9 @@ namespace Healthmon.Beta
             }, failure);
         }
 
-        // Basic economy operations have their own short request channel. A slow
-        // chat/image request must not block the shop or share its cancellation.
-        public void GetShop(Action<ShopSnapshot> success, Action<ApiFailure> failure = null)
-        { BeginShop("GET", "/shop", null, success, failure); }
-        public void PurchaseShopItem(ShopPurchaseRequest body, Action<ShopSnapshot> success, Action<ApiFailure> failure = null)
-        { BeginShop("POST", "/shop/purchases", JsonUtility.ToJson(body), success, failure); }
-        public void SelectShopCharacter(ShopSelectionRequest body, Action<ShopSnapshot> success, Action<ApiFailure> failure = null)
-        { BeginShop("PUT", "/shop/character", JsonUtility.ToJson(body), success, failure); }
-
-        private void BeginShop(string method, string suffix, string json, Action<ShopSnapshot> success, Action<ApiFailure> failure)
-        {
-            if (!RequirePet(failure)) return;
-            if (!isActiveAndEnabled || !IsConfigured || IsReauthenticating)
-            { failure?.Invoke(new ApiFailure(401, "Connect before using the shop.")); return; }
-            if (IsShopBusy) { failure?.Invoke(new ApiFailure(0, "Shop request in progress.")); return; }
-            shopFailure = failure;
-            shopCoroutine = StartCoroutine(RequestShop(method, suffix, json, stateGate.Generation, PetId, success, failure));
-        }
-        private IEnumerator RequestShop(string method, string suffix, string json, int generation, string pet,
-            Action<ShopSnapshot> success, Action<ApiFailure> failure)
-        {
-            yield return null;
-            shopRequest = new UnityWebRequest(baseUrl + "/pets/" + Escape(pet) + suffix, method);
-            shopRequest.downloadHandler = new DownloadHandlerBuffer();
-            shopRequest.timeout = 20; shopRequest.redirectLimit = 0;
-            shopRequest.SetRequestHeader("Authorization", "Bearer " + bearerToken);
-            shopRequest.SetRequestHeader("Accept", "application/json");
-            if (json != null)
-            {
-                shopRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-                shopRequest.SetRequestHeader("Content-Type", "application/json");
-            }
-            yield return shopRequest.SendWebRequest();
-            string body = shopRequest.downloadHandler.text;
-            long status = shopRequest.responseCode;
-            bool ok = shopRequest.result == UnityWebRequest.Result.Success;
-            shopRequest.Dispose(); shopRequest = null; shopCoroutine = null; shopFailure = null;
-            if (generation != stateGate.Generation || pet != PetId)
-            { failure?.Invoke(new ApiFailure(0, "Shop connection changed.", true)); yield break; }
-            if (!ok)
-            {
-                string code = null;
-                try { code = JsonUtility.FromJson<ApiErrorEnvelope>(body)?.detail?.code; } catch (Exception) { }
-                failure?.Invoke(new ApiFailure(status, "Shop request failed.", false, code)); yield break;
-            }
-            ShopSnapshot result = null;
-            try { if (CommonServerContract.HasRequiredStateFields(body)) result = JsonUtility.FromJson<ShopSnapshot>(body); }
-            catch (Exception) { }
-            if (result == null || result.pet_id != pet || result.items == null || result.owned_item_ids == null ||
-                result.state == null || !result.state.IsValidCommonState(pet))
-            { failure?.Invoke(new ApiFailure(0, "Invalid shop response; retry the same request.")); yield break; }
-            if (stateGate.Accept(generation, result.state.state_version))
-            { ObserveVersion(result.state.state_version); StateReceived?.Invoke(result.state); }
-            success?.Invoke(result);
-        }
-        private void CancelShopRequest()
-        {
-            var callback = shopFailure;
-            if (shopRequest != null) { shopRequest.Abort(); shopRequest.Dispose(); }
-            if (shopCoroutine != null) StopCoroutine(shopCoroutine);
-            shopRequest = null; shopCoroutine = null; shopFailure = null;
-            callback?.Invoke(new ApiFailure(0, "Shop request cancelled; retry is safe.", true));
-        }
-
         public void GetQuests(Action<QuestList> success, Action<ApiFailure> failure = null)
         {
             if (RequirePet(failure)) Begin("GET", PetPath("/quests"), null, success, failure);
-        }
-
-        public void GetWorkouts(Action<ServerWorkoutList> success, Action<ApiFailure> failure = null)
-        {
-            if (!RequirePet(failure)) return;
-            Begin<ServerWorkoutList>(
-                "GET",
-                PetPath("/workouts"),
-                null,
-                success,
-                failure
-            );
         }
 
         public void ApplyTestState(TestPetStateRequest value, Action<PetState> success, Action<ApiFailure> failure = null)
@@ -652,7 +571,7 @@ namespace Healthmon.Beta
 
         public void RefreshCommonState()
         { if (!IsStateBusy && !string.IsNullOrEmpty(PetId)) GetState(null); }
-        private void OnDisable() { CloseConversation(); CancelCurrent(false); CancelStateRequest(); CancelShopRequest(); }
+        private void OnDisable() { CloseConversation(); CancelCurrent(false); CancelStateRequest(); }
         private void OnApplicationQuit() { CloseConversation(); }
         private string PetPath(string suffix) { return "/pets/" + Escape(PetId) + suffix; }
         private static string Escape(string value) { return Uri.EscapeDataString(value); }

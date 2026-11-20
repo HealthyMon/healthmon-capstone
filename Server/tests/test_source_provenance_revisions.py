@@ -66,8 +66,8 @@ def food_analysis(client, pet, settings, monkeypatch, ident):
     return response.json()['analysis_id']
 
 
-def confirmation(analysis, synthetic, revision=1, event_id=None):
-    return {'analysis_id': analysis, 'candidate_id': 0, 'revision': revision, 'event_id': event_id,
+def confirmation(analysis, synthetic, revision=1):
+    return {'analysis_id': analysis, 'candidate_id': 0, 'revision': revision,
             'grams': 100. * revision, 'vegetable_fruit_g': 80.,
             'meal_type': 'breakfast', 'synthetic': synthetic}
 
@@ -82,7 +82,7 @@ def test_food_reanalysis_revision_cannot_change_provenance_or_commit_confirmatio
     assert_provenance(before, initial, 1)
     second_id = food_analysis(client, pet, settings, monkeypatch, 'second-provenance-analysis')
 
-    response = client.post(f'/pets/{pet}/food/confirm', json=confirmation(second_id, not initial, revision=2, event_id=source_id))
+    response = client.post(f'/pets/{pet}/food/confirm', json=confirmation(second_id, not initial, revision=2))
     assert response.status_code == 409, response.text
     assert 'provenance' in response.json()['detail']
     assert snapshot(db, pet, source_id) == before
@@ -101,7 +101,7 @@ def test_food_same_provenance_reanalysis_revision_and_retry_are_preserved(client
     first = client.post(f'/pets/{pet}/food/confirm', json=confirmation(first_id, synthetic))
     assert first.status_code == 200, first.text
     second_id = food_analysis(client, pet, settings, monkeypatch, 'second-consistent-provenance-analysis')
-    body = confirmation(second_id, synthetic, revision=2, event_id=first.json()['source_id'])
+    body = confirmation(second_id, synthetic, revision=2)
     revised = client.post(f'/pets/{pet}/food/confirm', json=body)
     assert revised.status_code == 200 and revised.json()['revision'] == 2, revised.text
     assert revised.json()['source_id'] == first.json()['source_id']

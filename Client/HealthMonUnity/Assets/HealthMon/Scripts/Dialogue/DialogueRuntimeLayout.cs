@@ -50,6 +50,15 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         BottomNavigation = FindActiveNavigation();
         if (InputArea == null || BottomNavigation == null) return;
         UserBubble = BubbleOf(userText); ResponseBubble = BubbleOf(responseText);
+        // The fixed conversation reply must remain readable even when AR tracking
+        // hides the separate floating head bubble (including in the Editor).
+        var responseGroup = ResponseBubble.GetComponent<CanvasGroup>();
+        if (responseGroup != null)
+        {
+            responseGroup.alpha = 1f;
+            responseGroup.interactable = true;
+            responseGroup.blocksRaycasts = true;
+        }
         if (!configured)
         {
             if (UserBubble.rect.width > 0) userMaximumWidth = UserBubble.rect.width;
@@ -75,13 +84,6 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     }
     private static ScrollRect EnsureScroll(RectTransform bubble, TMP_Text text, Vector2 padding)
     {
-        // This is the readable conversation panel. A disabled AR follower and
-        // its serialized transparent CanvasGroup must not hide or block it.
-        var follower = bubble.GetComponent<SpeechBubbleFollowTarget>();
-        if (follower != null) follower.enabled = false;
-        var group = bubble.GetComponent<CanvasGroup>();
-        if (group != null) { group.alpha = 1; group.interactable = true; group.blocksRaycasts = true; }
-        text.raycastTarget = true;
         var viewport = bubble.Find("RuntimeDialogueViewport") as RectTransform;
         if (viewport == null)
         {

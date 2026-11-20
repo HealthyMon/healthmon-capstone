@@ -34,6 +34,21 @@ public class ARFoodCameraCapture : MonoBehaviour
         LastCapturedJpg = null;
         LastCaptureWasTestImage = false;
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Camera))
+        {
+            bool answered = false;
+            var callbacks = new UnityEngine.Android.PermissionCallbacks();
+            callbacks.PermissionGranted += _ => answered = true;
+            callbacks.PermissionDenied += _ => answered = true;
+            UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Camera, callbacks);
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (!answered && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Camera))
+            { Fail("사진 촬영을 위해 설정에서 카메라 권한을 허용해 주세요."); yield break; }
+        }
+#endif
+
 #if UNITY_EDITOR
     // PC Unity Editor에서는 가상 카메라 대신 Food/food.jpg 사용
     CaptureEditorTestImage();
