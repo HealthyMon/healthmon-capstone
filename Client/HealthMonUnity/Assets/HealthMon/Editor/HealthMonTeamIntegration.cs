@@ -19,6 +19,12 @@ public static class HealthMonTeamIntegration
     private const string Adventure = "Assets/HealthMon/Scenes/AdventureScene.unity";
     private static int checks;
 
+    public static void StartAspectChecks()
+    {
+        Run();
+        HealthMonAspectVerification.Run();
+    }
+
     public static void StartPlayChecks()
     {
         Run();
@@ -61,7 +67,7 @@ public static class HealthMonTeamIntegration
         var scaler = navObject.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1080, 1920);
-        scaler.matchWidthOrHeight = .5f;
+        scaler.matchWidthOrHeight = 0f;
         navigation = adventureCanvas.GetComponent<HealthMonAdventureNavigation>() ?? adventureCanvas.gameObject.AddComponent<HealthMonAdventureNavigation>();
         var previousHome = Object.FindObjectsByType<Button>(FindObjectsInactive.Include).FirstOrDefault(b => b.name == "HomeButton");
         if (previousHome != null) previousHome.transform.SetParent(adventureCanvas.transform, false);
@@ -78,7 +84,7 @@ public static class HealthMonTeamIntegration
             rect.anchoredPosition = new Vector2(24, -24);
             rect.sizeDelta = new Vector2(150, 68);
             var image = go.GetComponent<Image>();
-            image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/HealthMon/UIStyleKitV3/Sprites/Buttons/BTN_Blue.png");
+            image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/HealthMon/UIStyleKit/UIStyleKitV3/Sprites/Buttons/BTN_Blue.png");
             image.type = Image.Type.Sliced;
             home = go.GetComponent<Button>();
             var label = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -132,6 +138,8 @@ public static class HealthMonTeamIntegration
             var adventureEntry = GameObject.Find("UI/Canvas").transform.Find("BottomNavV2/BottomRow/AdventureButton").GetComponent<Button>();
             Require(adventureEntry.onClick.GetPersistentMethodName(0) == "OpenAdventure", "Adventure entry connected");
             Require(EditorBuildSettings.scenes.Any(s => s.enabled && s.path == Adventure), "Adventure in Android build");
+            VerifyEditorProfile();
+            VerifyGrowthRules();
             VerifyWorkoutDisplay();
             VerifyAdventure();
             CommonServerVerification.Run();
@@ -145,6 +153,70 @@ public static class HealthMonTeamIntegration
                 EditorSceneManager.OpenScene(Main);
             else EditorSceneManager.RestoreSceneManagerSetup(setup);
         }
+    }
+
+    private static void VerifyEditorProfile()
+    {
+        string root = Path.Combine(Path.GetTempPath(), "HealthMon-profile-check-" + Guid.NewGuid().ToString("N"));
+        string runtime = Path.Combine(root, ".runtime");
+        Directory.CreateDirectory(runtime);
+        string profile = Path.Combine(runtime, "native-server.json"), session = Path.Combine(runtime, "session.json");
+        bool ReadProfile(out string url, out string token, out string pet)
+        {
+            // The profile reader belongs to Assembly-CSharp, not the Editor assembly.
+            var type = typeof(Healthmon.Common.CommonServerConnection).Assembly.GetType("Healthmon.Common.EditorConnectionSession");
+            var method = type.GetMethod("TryReadProfile", BindingFlags.Static | BindingFlags.NonPublic);
+            object[] args = { root, null, null, null };
+            bool read = (bool)method.Invoke(null, args);
+            url = (string)args[1]; token = (string)args[2]; pet = (string)args[3];
+            return read;
+        }
+        try
+        {
+            File.WriteAllText(profile, "{\"base_url\":\"http://127.0.0.1:18092\",\"session\":\".runtime/session.json\"}");
+            File.WriteAllText(session, "{\"bearer_token\":\"profile-check-token\",\"owner_id\":\"test-owner\"}");
+            Require(ReadProfile(out var url, out var token, out var pet)
+                && url == "http://127.0.0.1:18092" && token == "profile-check-token" && string.IsNullOrEmpty(pet), "Launcher format supports account pet selection");
+            File.WriteAllText(session, "{\"api_base_url\":\"http://127.0.0.1:18092\",\"bearer_token\":\"profile-check-token\"}");
+            Require(ReadProfile(out _, out _, out _), "Matching explicit session origin accepted");
+            File.WriteAllText(session, "{\"api_base_url\":\"http://127.0.0.1:18093\",\"bearer_token\":\"profile-check-token\"}");
+            Require(!ReadProfile(out _, out _, out _), "Mismatched session origin rejected");
+            File.WriteAllText(session, "{\"bearer_token\":\"\"}");
+            Require(!ReadProfile(out _, out _, out _), "Empty credentials rejected");
+            File.WriteAllText(profile, "{\"base_url\":\"https://example.invalid\",\"session\":\".runtime/session.json\"}");
+            Require(!ReadProfile(out _, out _, out _), "Non-loopback profile rejected");
+            File.WriteAllText(profile, "{\"base_url\":\"http://127.0.0.1:18092\",\"session\":\"outside.json\"}");
+            File.WriteAllText(Path.Combine(root, "outside.json"), "{\"bearer_token\":\"profile-check-token\"}");
+            Require(!ReadProfile(out _, out _, out _), "Session outside runtime directory rejected");
+        }
+        finally { if (!Path.GetFullPath(root).StartsWith(Path.GetFullPath(Path.GetTempPath()), StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Unexpected verification directory"); Directory.Delete(root, true); }
+    }
+
+    private static void VerifyGrowthRules()
+    {
+        var rules = Object.FindAnyObjectByType<HealthMonGameRules>(FindObjectsInactive.Include);
+        var dashboard = Object.FindAnyObjectByType<HealthMonRulesDashboard>(FindObjectsInactive.Include);
+        Require(rules != null && rules.pet != null && rules.roster != null, "Daily rules bind to existing pet and roster");
+        Require(dashboard != null && dashboard.rules == rules && dashboard.rulesOverlay != null, "Growth dashboard connected");
+        Require(dashboard.openButton != null && dashboard.closeButton != null && dashboard.summary != null, "Growth dashboard navigation");
+        Require(dashboard.upperInput != null && dashboard.cardioInput != null && dashboard.upperButton != null && dashboard.cardioButton != null, "Manual record controls");
+        int[] values = { -1, 0, 1, 39, 40, 69, 70, 99, 100, 119, 120, 200 };
+        int[] expected = { 0, 0, -2, -2, -1, -1, 1, 1, 2, 2, 3, 3 };
+        for (int i = 0; i < values.Length; i++)
+            Require(HealthMonGameRules.CalculateDailyDelta(values[i], 100) == expected[i], "Daily settlement boundary " + values[i]);
+        Require(HealthMonGameRules.CalculateDailyDelta(100, 0) == 0, "Invalid daily target is ignored");
+        var main = SceneManager.GetActiveScene();
+        var boot = EditorSceneManager.OpenScene("Assets/HealthMon/Scenes/BootScene.unity", OpenSceneMode.Additive);
+        try
+        {
+            CheckScripts(boot);
+            foreach (var name in new[] { "Panel", "SetupCard", "ConfirmSetupButton" })
+            {
+                var image = boot.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Image>(true)).First(i => i.name == name);
+                Require(image.sprite != null, "Boot image restored: " + name);
+            }
+        }
+        finally { EditorSceneManager.CloseScene(boot, true); SceneManager.SetActiveScene(main); }
     }
 
     private static void VerifyWorkoutDisplay()

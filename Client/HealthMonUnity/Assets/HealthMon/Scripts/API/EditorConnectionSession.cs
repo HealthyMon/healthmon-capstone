@@ -32,21 +32,11 @@ namespace Healthmon.Common
                 else
                 {
                     string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.."));
-                    string runtime = Path.Combine(root, ".runtime") + Path.DirectorySeparatorChar;
-                    string profilePath = Path.Combine(runtime, "native-server.json");
-                    if (!File.Exists(profilePath)) return false;
-                    var profile = JsonUtility.FromJson<NativeProfile>(File.ReadAllText(profilePath));
-                    var origin = new Uri(profile.base_url);
-                    if (!origin.IsLoopback || (origin.Scheme != "http" && origin.Scheme != "https")) return false;
-                    string sessionPath = Path.GetFullPath(Path.Combine(root, profile.session));
-                    if (!sessionPath.StartsWith(runtime, StringComparison.OrdinalIgnoreCase) || !File.Exists(sessionPath)) return false;
-                    var session = JsonUtility.FromJson<NativeSession>(File.ReadAllText(sessionPath));
-                    if (CommonServerContract.NormalizeBaseUrl(session.api_base_url) != CommonServerContract.NormalizeBaseUrl(profile.base_url)) return false;
-                    url = profile.base_url; token = session.bearer_token; pet = profile.pet_id;
+                    return TryReadProfile(root, out url, out token, out pet);
                 }
                 url = CommonServerContract.NormalizeBaseUrl(url);
                 token = CommonServerContract.NormalizeBearerToken(token);
-                return !string.IsNullOrWhiteSpace(pet);
+                return !string.IsNullOrWhiteSpace(token);
             }
             catch (Exception)
             {
@@ -54,6 +44,39 @@ namespace Healthmon.Common
                 return false;
             }
         }
+
+        internal static bool TryReadProfile(string root, out string url, out string token, out string pet)
+        {
+            url = token = pet = null;
+            try
+            {
+                root = Path.GetFullPath(root);
+                string runtime = Path.Combine(root, ".runtime") + Path.DirectorySeparatorChar;
+                string profilePath = Path.Combine(runtime, "native-server.json");
+                if (!File.Exists(profilePath)) return false;
+                var profile = JsonUtility.FromJson<NativeProfile>(File.ReadAllText(profilePath));
+                var origin = new Uri(profile.base_url);
+                if (!origin.IsLoopback || (origin.Scheme != "http" && origin.Scheme != "https")) return false;
+                string sessionPath = Path.GetFullPath(Path.Combine(root, profile.session));
+                if (!sessionPath.StartsWith(runtime, StringComparison.OrdinalIgnoreCase) || !File.Exists(sessionPath)) return false;
+                var session = JsonUtility.FromJson<NativeSession>(File.ReadAllText(sessionPath));
+                // Native launcher sessions may contain only bearer_token and owner_id.
+                // If an origin is supplied, it must still match the loopback profile.
+                if (!string.IsNullOrWhiteSpace(session.api_base_url) &&
+                    CommonServerContract.NormalizeBaseUrl(session.api_base_url) != CommonServerContract.NormalizeBaseUrl(profile.base_url)) return false;
+                url = profile.base_url; token = session.bearer_token; pet = profile.pet_id;
+                url = CommonServerContract.NormalizeBaseUrl(url);
+                token = CommonServerContract.NormalizeBearerToken(token);
+                // Pet selection is account-scoped and resolved by Connect after login.
+                return !string.IsNullOrWhiteSpace(token);
+            }
+            catch (Exception)
+            {
+                url = token = pet = null;
+                return false;
+            }
+        }
+
     }
 }
 #endif

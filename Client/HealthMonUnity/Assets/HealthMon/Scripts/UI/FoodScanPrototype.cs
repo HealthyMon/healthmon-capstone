@@ -121,9 +121,10 @@ public class FoodScanPrototype : MonoBehaviour
             desktop.onClick = new Button.ButtonClickedEvent();
             desktop.onClick.AddListener(ChooseDesktopPhoto);
             var desktopRect = desktop.GetComponent<RectTransform>();
-            desktopRect.anchorMin = new Vector2(.74f, .12f);
-            desktopRect.anchorMax = new Vector2(.96f, .22f);
-            desktopRect.offsetMin = desktopRect.offsetMax = Vector2.zero;
+            desktopRect.anchorMin = desktopRect.anchorMax = new Vector2(.5f, 0);
+            desktopRect.pivot = new Vector2(.5f, 0);
+            desktopRect.anchoredPosition = new Vector2(0, 120);
+            desktopRect.sizeDelta = new Vector2(300, 80);
             var label = desktop.GetComponentInChildren<TMP_Text>(true);
             if (label != null) label.text = "PC 사진 선택";
             desktop.interactable = true;

@@ -41,6 +41,6 @@ public static class HealthMonPoseUIBuilder
         Debug.Log("HEALTHMON_POSE_UI_INSTALLED");
     }
     private static Sprite Sprite(string path)
-    {var sprite=AssetDatabase.LoadAssetAtPath<Sprite>(Root+"UIStyleKitV3/Sprites/"+path+".png");if(sprite==null)throw new Exception("Missing style: "+path);return sprite;}
+    {var sprite=AssetDatabase.LoadAssetAtPath<Sprite>(Root+"UIStyleKit/UIStyleKitV3/Sprites/"+path+".png");if(sprite==null)throw new Exception("Missing style: "+path);return sprite;}
 }
 #endif
