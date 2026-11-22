@@ -45,6 +45,9 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private float normalEnemyStatusY = -542f;
     [SerializeField] private float eliteEnemyStatusY = -400f;
 
+    [Header("Adventure Inventory")]
+    [SerializeField] private AdventureInventoryUI adventureInventoryUI;
+
     private void Awake()
     {
         attackButton.onClick.AddListener(
@@ -59,11 +62,19 @@ public class BattleUI : MonoBehaviour
             )
         );
 
-        itemButton.onClick.AddListener(
-            () => battleManager.ExecutePlayerAction(
-                BattleActionType.Item
-            )
-        );
+        itemButton.onClick.AddListener(() =>
+        {
+            if (adventureInventoryUI != null)
+            {
+                adventureInventoryUI.OpenBattle();
+            }
+            else
+            {
+                Debug.LogError(
+                    "[BattleUI] AdventureInventoryUI 미연결"
+                );
+            }
+        });
 
         waitButton.onClick.AddListener(
             () => battleManager.ExecutePlayerAction(
@@ -144,9 +155,12 @@ public class BattleUI : MonoBehaviour
     public void SetBattleModeUI(bool isElite)
     {
         moveButton.gameObject.SetActive(isElite);
-        itemButton.gameObject.SetActive(!isElite);
 
-        // Both modes share the same reserved HUD region on every portrait ratio.
-        HealthMonUILayout.Place(enemyStatusPanel, .09f, .77f, .91f, .86f);
+        // 일반전과 정예전 모두 아이템 사용 가능
+        itemButton.gameObject.SetActive(true);
+
+        HealthMonUILayout.Place(
+            enemyStatusPanel, .09f, .77f, .91f, .86f
+        );
     }
 }
