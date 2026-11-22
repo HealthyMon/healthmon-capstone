@@ -9,6 +9,11 @@ services:
       - "127.0.0.1:18090:18090"
       - "127.0.0.1:18095:18095"
     volumes:
+      # Reuse installed GPU environments with the current optional-model launcher.
+      - ./Server/local_probe/local_services.py:/app/Server/local_probe/local_services.py:ro
+      - ./Server/local_probe/router.py:/app/Server/local_probe/router.py:ro
+      - ./Server/portable/bootstrap.py:/app/Server/portable/bootstrap.py:ro
+      - ./Server/team:/app/Server/team:ro
       - ./.runtime/portable:/app/.runtime/portable
       - ${HEALTHMON_3D_MODELS:-./.runtime/models/generation3d/models}:/models/generation3d:ro
       - ${HEALTHMON_2511_MODELS:-./.runtime/models/evolution-2511}:/models/evolution2511:ro

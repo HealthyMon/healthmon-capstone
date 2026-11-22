@@ -121,6 +121,11 @@ def download_public(name):
 
 
 def install_assets(bundle):
+    from Server.portable.downloads import lfs_assets
+    if bundle is None:
+        raise ValueError('Full AI setup requires an existing private adapter bundle. Menu 5 installs the team test environment without it.')
+    lfs_assets(ROOT, "food")
+    lfs_assets(ROOT, "client")
     from Ai.Generation3D.runtime.evolution_2511.assets import download_base, verify
     import_bundle(bundle)
     for name in ('dialogue', 'embedding'):
@@ -196,7 +201,7 @@ def configure_container():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['assets', 'connection', 'serve', 'stop', 'health', 'export'])
+    parser.add_argument('action', choices=['assets', 'client-assets', 'connection', 'serve', 'stop', 'health', 'export'])
     parser.add_argument('--bundle', type=Path)
     parser.add_argument('--evolution-adapter', type=Path)
     parser.add_argument('--dialogue-adapter', type=Path)
@@ -206,9 +211,10 @@ def main():
             parser.error('export requires --bundle, --evolution-adapter, --dialogue-adapter')
         export_bundle(args.bundle, args.evolution_adapter, args.dialogue_adapter)
     elif args.action == 'assets':
-        if not args.bundle:
-            parser.error('assets requires the privately shared --bundle')
         install_assets(args.bundle)
+    elif args.action == 'client-assets':
+        from Server.portable.downloads import lfs_assets
+        lfs_assets(ROOT, 'client')
     elif args.action == 'connection':
         prepare_connection()
     elif args.action == 'stop':
@@ -221,7 +227,7 @@ def main():
         path = configure_container()
         os.environ['HEALTHMON_SERVICE_STATE'] = str(STATE)
         from Server.local_probe.local_services import configuration, supervise
-        config = configuration(path)
+        config = configuration(path, available_only=True)
         config['path'] = path
         supervise(config)
 

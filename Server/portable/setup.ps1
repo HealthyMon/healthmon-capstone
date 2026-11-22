@@ -2,36 +2,42 @@
 param([string]$BundlePath, [switch]$SkipDownloads, [switch]$SkipGenerationBuild, [switch]$NoActivate)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
-$dockerCommand = Get-Command docker.exe -ErrorAction SilentlyContinue
-$docker = if ($dockerCommand) { $dockerCommand.Source } else { Join-Path $env:ProgramFiles 'Docker/Docker/resources/bin/docker.exe' }
-if (-not (Test-Path -LiteralPath $docker)) { throw 'Install Docker Desktop with WSL2 and the NVIDIA Windows driver first.' }
+. (Join-Path $PSScriptRoot 'docker-prerequisites.ps1')
+$docker = Get-HealthMonDocker
 function Invoke-Docker([string[]]$Arguments) {
     & $docker @Arguments
     if ($LASTEXITCODE -ne 0) { throw ('Installation stopped: docker ' + ($Arguments -join ' ')) }
 }
 Push-Location $root
 try {
-    Invoke-Docker @('info','--format','{{.OSType}}')
+    Wait-HealthMonDocker $docker
     # Existing native installs have live journals/assets. Preserve their launcher
     # until migration is explicitly validated; fresh clones enable Docker AI.
     $existingNative = (Test-Path -LiteralPath (Join-Path $root '.runtime/native-server.json')) -or
         (Test-Path -LiteralPath (Join-Path $root '.runtime/local-services.json'))
     $activate = (-not $NoActivate) -and (-not $existingNative)
-    if (-not $SkipDownloads) {
-        if (-not $BundlePath) { $BundlePath = Join-Path $root '.runtime/team-install/healthmon-adapters.zip' }
-        if (-not (Test-Path -LiteralPath $BundlePath -PathType Leaf)) {
-            throw 'Place the shared healthmon-adapters.zip in .runtime/team-install, or pass -BundlePath. It contains both trained LoRAs; do not substitute a base-only model.'
-        }
+    # Advanced full AI installation only; the root menu uses Server/team/setup.ps1.
+    $bundle = $null
+    if (-not $SkipDownloads -and -not $BundlePath) { throw 'Full AI installation requires -BundlePath. For team testing, use Start-HealthMon.cmd menu 5.' }
+    if ($BundlePath -and -not $SkipDownloads) {
+        if (-not (Test-Path -LiteralPath $BundlePath -PathType Leaf)) { throw 'The selected offline bundle does not exist.' }
         $bundle = Get-Item -LiteralPath $BundlePath
-        & git lfs pull
-        if ($LASTEXITCODE -ne 0) { throw 'Git LFS download failed. Install Git LFS and check repository access.' }
+    }
+    $backendWasRunning = $false
+    if ($activate -and (Test-Path -LiteralPath (Join-Path $root '.env'))) {
+        $running = & $docker compose --project-directory $root --env-file (Join-Path $root '.env') ps --status running -q api
+        if ($LASTEXITCODE -ne 0) { throw 'Could not inspect the existing backend before first-time AI setup.' }
+        $backendWasRunning = [bool]$running
     }
     Invoke-Docker @('build','-f','Server/portable/Dockerfile.setup','-t','healthmon-setup:local','Server/portable')
     $mount = 'type=bind,src=' + $root + ',dst=/app'
     if (-not $SkipDownloads) {
-        $arguments = @('run','--rm','--mount',$mount,'--mount',('type=bind,src=' + $bundle.DirectoryName + ',dst=/input,readonly'))
+        $arguments = @('run','--rm','--mount',$mount)
+        if ($bundle) { $arguments += @('--mount',('type=bind,src=' + $bundle.DirectoryName + ',dst=/input,readonly')) }
         if ($env:HF_TOKEN) { $arguments += @('--env','HF_TOKEN') }
-        Invoke-Docker ($arguments + @('healthmon-setup:local','assets','--bundle',('/input/' + $bundle.Name)))
+        $arguments += @('healthmon-setup:local','assets')
+        if ($bundle) { $arguments += @('--bundle',('/input/' + $bundle.Name)) }
+        Invoke-Docker $arguments
     }
     if (-not $SkipGenerationBuild) {
         Invoke-Docker @('run','--rm','--mount',$mount,'--entrypoint','python','healthmon-setup:local','Ai/Generation3D/migration/tools/fetch_sources.py')
@@ -56,6 +62,11 @@ try {
     $status = @{environment_prepared=$true; inference_verified=$false; activated=$activate} | ConvertTo-Json
     [IO.File]::WriteAllText((Join-Path $state 'installation.json'),$status)
     if ($activate) { [IO.File]::WriteAllText((Join-Path $state 'enabled'),'portable-v1') }
+    if ($backendWasRunning) {
+        Write-Host 'Applying the new AI connection to the already running backend. Saved game data is retained.'
+        & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File (Join-Path $root 'Server/scripts/local_server.ps1') -Action Start -Target Backend -NoOpen
+        if ($LASTEXITCODE -ne 0) { throw 'AI setup finished, but backend connection refresh failed. Retry Start option 2.' }
+    }
     if ($existingNative) { Write-Host 'Existing native settings and game records preserved. Docker AI is prepared but not activated; validate migration before switching.' }
     Write-Host 'Environment prepared. No AI inference or game test was run. Start-HealthMon: 1 All / 2 Backend / 3 AI.'
 } finally { Pop-Location }

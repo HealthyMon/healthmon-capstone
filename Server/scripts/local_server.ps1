@@ -154,6 +154,7 @@ function Stop-LocalAI {
 }
 
 function Set-LocalAIConnection {
+    if (Test-Path -LiteralPath (Join-Path $ProjectRoot '.runtime/team/enabled')) { return }
     # Only prepare the API connection before API startup. No model/GPU/Docker
     # prerequisite is required, and Start-AI never changes a running API's env.
     $path = Get-LocalAIConfiguration
@@ -320,6 +321,8 @@ function Invoke-ConfiguredRuntime {
         return
     }
     Wait-LocalDocker
+    & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ProjectRoot 'Server/portable/client-assets.ps1') -DockerPath $script:Docker
+    if ($LASTEXITCODE -ne 0) { throw 'Unity assets could not be prepared. Retry Start after checking the download error.' }
     Initialize-LocalEnvironment
     $configuration = Invoke-Compose -Arguments @('config', '--format', 'json') -Capture | ConvertFrom-Json
     if ($configuration.services.api.environment.APP_ENV -eq 'production') { throw 'This launcher is for a local development/test server. Existing production settings were kept.' }

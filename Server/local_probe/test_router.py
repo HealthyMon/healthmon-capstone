@@ -169,3 +169,23 @@ def test_live_services_require_auth_and_distinguish_loading_generation_and_stopp
     assert client.get('/health/services', headers=HEADERS).json()['status'] == 'stopping'
     # The router's own readiness must not depend on downstream model warmup.
     assert client.get('/health').json()['status'] == 'ok'
+
+
+@pytest.mark.parametrize('failed,code,status', [(False,501,'not_installed'),(True,503,'error')])
+def test_uninstalled_or_failed_capability_is_isolated(upstreams,tmp_path,monkeypatch,failed,code,status):
+    import time
+    from Server.local_probe import local_services
+    state=tmp_path/'status.json';stop=tmp_path/'stop'
+    monkeypatch.setattr(local_services,'STATUS',state)
+    monkeypatch.setattr(local_services,'STOP',stop)
+    state.write_text(json.dumps({'phase':'ready','updated_at':time.time(),
+        'failed' if failed else 'skipped':{'llm':'controlled fixture'}}))
+    client,seen,_=upstreams
+    assert client.post('/v1/chat',json={},headers=HEADERS).status_code==code
+    assert seen==[]
+    response=client.post('/v1/food',json=wrapper(),headers=HEADERS)
+    assert response.status_code==200 and [x['capability'] for x in seen]==['food']
+    response=client.get('/health/services',headers=HEADERS).json()
+    assert response['services']['chat']['status']==status
+    assert response['services']['vision']['available'] is True
+    assert response['status']==('error' if failed else 'ready')

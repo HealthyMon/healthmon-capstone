@@ -7,14 +7,15 @@
 
 루트 실행 파일은 **`Start-HealthMon.cmd`와 `Stop-HealthMon.cmd` 두 개**입니다.
 더블클릭 후 **1번 전체 / 2번 백엔드 / 3번 AI / 4번 Android USB**를 선택합니다.
-시작 메뉴의 **5번**은 AI 전체 최초 설치, **0번**은 실행 없이 닫기입니다.
+시작 메뉴의 **5번**은 최초 환경 설치, **0번**은 실행 없이 닫기입니다.
+**처음에는 5번 → 이후 2번 백엔드 / 3번 AI**입니다. 3번은 설치된 AI를 모두 켜되 모델이 없는 기능만 건너뜁니다.
 명령줄에서는 아래의 `-Target` 옵션으로 메뉴를 건너뛸 수 있습니다.
 
 **Unity 관절 AI 운동 화면:** Windows에서 `Start-HealthMon.cmd -Target Setup`(최초 1회) →
 `Start-HealthMon.cmd -Target AI` → Unity 홈의 **운동** 버튼 순서로 실행합니다.
 Android 휴대폰 촬영은 `Start-HealthMon.cmd -Target Android`로 USB 연결 후 앱의 **운동** 화면을 사용합니다. [Android 실행·APK 안내](Ai/Pose/README-ANDROID.md)
 스쿼트·팔굽혀펴기·컬을 카메라로 세며 AI 전체 종료는 `Stop-HealthMon.cmd -Target AI`입니다.
-게임 백엔드와 독립적으로 대화·음식·진화·관절 AI를 함께 관리합니다. [실행 및 검증 안내](Ai/Pose/README-WINDOWS.md)
+게임 백엔드와 독립적으로 대화·음식·진화·관절 AI를 관리하며, 설치되지 않은 모델은 건너뜁니다. [실행 및 검증 안내](Ai/Pose/README-WINDOWS.md)
 
 **로컬 기본 실행은 `Start-HealthMon.cmd -Target Backend`입니다.** API·PostgreSQL만 켜며 AI 모델이 없어도
 계정·펫·운동·식사 기록과 서버 규칙을 사용할 수 있습니다. 종료는 `Stop-HealthMon.cmd -Target Backend`입니다.
@@ -67,45 +68,30 @@ Android에서는 ADB `run-as`로 앱 내부 저장소에만 전달합니다. 일
 실행기는 브라우저 입력 안내를 자동으로 열지 않습니다. 필요하면 `.runtime/local-server-connection.html`에서
 접힌 수동 연결 정보를 확인할 수 있습니다.
 
-## 팀원 PC 최초 통합 설치
+## 팀원 PC 최초 설치
 
-대상은 NVIDIA GPU를 사용하는 Windows x64 PC입니다. Git·Git LFS, WSL2 기반 Docker Desktop,
-NVIDIA 드라이버를 먼저 준비합니다. 호스트 Python 설치는 필요 없습니다. Unity는 별도로 설치합니다.
+Windows x64에서 Docker Desktop의 Linux 컨테이너와 WSL2를 준비하고 Unity는 별도로 설치합니다.
+호스트에 Python을 따로 설치하거나 주소·토큰을 입력할 필요는 없습니다.
 
-1. 저장소를 클론하고 팀에서 전달받은 `healthmon-adapters.zip`을
-   `.runtime/team-install/healthmon-adapters.zip`에 둡니다. 이 ZIP에는 새 진화 epoch-10 LoRA와
-   기존 대화 LoRA만 들어 있습니다. 비공개 가중치이므로 팀 내부에서 전달하며 로그인 토큰은 공유하지 않습니다.
-2. `Start-HealthMon.cmd`의 **5번**을 실행합니다. Git LFS 음식 가중치, 고정 버전의 기본 모델·관절 모델을 받고
-   파일 해시를 확인한 다음 Docker 실행 환경과 연결 설정을 만듭니다. 이 단계에서는 서버나 GPU 모델을 실행하지 않습니다.
-3. 설치가 끝난 뒤 **1번 전체 / 2번 백엔드 / 3번 AI**로 실행합니다. 종료도 `Stop-HealthMon.cmd`의 같은 번호를 사용합니다.
+1. 저장소를 받은 뒤 `Start-HealthMon.cmd`의 **5번**: 백엔드·DB와 음식 분석·관절 인식 실행 환경을 준비합니다.
+2. **2번**: 백엔드 실행. 워치 데이터·게임 기록·성장·상점·전투를 테스트합니다.
+3. **3번**: 설치된 AI를 모두 실행합니다. 대화·음식·진화·관절 중 모델이 없는 기능은 `SKIP`으로 표시하고 나머지를 계속 실행합니다.
+   **1번**은 2번과 3번을 함께 실행합니다. 종료는 `Stop-HealthMon.cmd`의 같은 번호입니다.
 
-ZIP을 다른 폴더에 둔 경우에는 다음처럼 지정할 수 있습니다.
+5번은 음식 모델 약 741MB(GitHub LFS)와 관절 모델 약 131MB(OpenMMLab)를 준비하며,
+Docker 이미지와 실행 패키지는 별도로 내려받습니다. 파일은 해시를 검사하고 정상 파일을 재사용합니다.
+GitHub ZIP에 실제 Unity 에셋 대신 LFS 포인터가 들어 있으면 필요한 에셋도 복원합니다.
+Hugging Face 접속·로그인, 비공개 LoRA, 100GB급 대화·진화 기본 모델 다운로드는 이 설치에 포함하지 않습니다.
+설치는 서버를 켜지 않으며, 3번에서 빠진 모델을 자동 다운로드하지도 않습니다.
 
-```powershell
-.\Start-HealthMon.cmd -Target Setup -BundlePath 'D:\Downloads\healthmon-adapters.zip'
-```
+대화·진화가 이미 설치된 기존 PC는 설정과 모델을 그대로 사용합니다. 진화 요청을 처리할 때만
+대화 GPU 프로세스를 내려 메모리를 확보하고, 진화가 끝나면 대화를 복구합니다. 음식·관절은 CPU로 동작합니다.
+새 팀원 PC에서 대화·진화가 빠져 있어도 음식 분석·관절·백엔드 게임 테스트는 독립적으로 동작합니다.
+실행 중 오류는 누락과 구분해서 표시하고, 준비된 다른 기능은 유지합니다.
 
-기본 모델은 최초에 수십 GB 이상을 다운로드합니다. 일부 gated 모델은 해당 Hugging Face 계정의 접근 승인이
-필요할 수 있습니다. 다운로드가 인증 오류로 중단되면 읽기 권한이 있는 `HF_TOKEN`을 현재 PowerShell 환경변수로
-설정하고 같은 설치 명령을 다시 실행합니다. 토큰은 저장소나 ZIP에 넣지 않습니다. 정상 다운로드 파일은 재사용합니다.
-
-AI 환경은 `Server/portable/Dockerfile`, 최초 설치는 `Server/portable/setup.ps1`, AI 실행 구성은
-`compose.ai.yaml`에 있습니다. 대화·음식·관절·진화는 서로 다른 Python 환경을 사용합니다.
-진화 요청을 처리할 때 대화 GPU 프로세스를 종료하고, 진화 단계들을 순서대로 실행한 뒤 대화를 복구합니다.
-음식·관절 인식은 CPU에서 계속 사용할 수 있습니다.
-
-새 진화 이미지 단계는 **Qwen-Image-Edit-2511 + HealthMon epoch-10 LoRA**를 사용합니다.
-DiffSynth와 Transformers 버전을 고정하고 새 가중치의 해시·적용 대상이 일치해야 실행합니다.
-기존 이미지 모델은 진화 계획·검증 용도로 남아 있으며 3D 재구성·리깅 단계도 별도로 유지합니다.
-
-기존 `.runtime/native-server.json` 또는 `.runtime/local-services.json`이 있는 PC에서는 설치를 실행해도
-기존 실행기·DB·진화 기록을 자동으로 Docker 환경으로 전환하지 않습니다. 새 PC에서만 통합 실행을 자동 활성화합니다.
-기존 PC의 전환은 저장 데이터와 생성 파일 경로를 확인한 뒤 진행합니다.
-
-설치 완료 기록의 `inference_verified: false`는 **파일 준비 완료와 실제 추론 검증을 구분**하기 위한 값입니다.
-설치만으로 추론 성공을 표시하지 않습니다. 진화는 실제 모델 생성·다운로드·홈 외형 교체·앱 재실행 후 유지까지
-검증하고, 완료 화면의 슬라임 외형·정면·화면 잘림을 별도로 확인합니다. 화면 연출만 호출한 캡처는 실제 진화 결과가 아닙니다.
-현재 초기종은 게임의 슬라임이며, 2511 생성기는 슬라임 부모 계약이 없는 이전 동물 입력을 거부합니다.
+최초 설치 코드는 `Server/team/setup.ps1`, CPU AI 환경은 `compose.team.yaml`입니다.
+기존 전체 AI 환경의 수동 설치 코드는 `Server/portable`에 보존되어 있으며 기본 5번에서는 호출하지 않습니다.
+기존 DB·계정·펫·인증 정보와 모델 파일은 삭제하거나 새로 만들지 않습니다.
 
 명령줄로 직접 실행하려면:
 

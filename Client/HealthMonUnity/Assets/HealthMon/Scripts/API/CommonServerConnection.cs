@@ -486,6 +486,7 @@ namespace Healthmon.Common
                 case "disabled": return "미설정";
                 case "loading": return "로딩 중";
                 case "generating_3d": return "3D 생성 중";
+                case "not_installed": return "미설치";
                 case "stopping": return "종료 대기";
                 case "error": return "오류";
                 case "synthetic": return "테스트 데이터";

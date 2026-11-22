@@ -51,7 +51,10 @@ def connection_configuration(path):
     return config
 
 
-def configuration(path):
+def configuration(path, available_only=False):
+    if available_only:
+        from Server.team.available import configuration as available_configuration
+        return available_configuration(path)
     config = connection_configuration(path)
     for name in ('python', 'llm_python', 'evolution_config'):
         config[name] = interpreter_path(config[name]) if name.endswith('python') else resolve(config[name])
@@ -177,10 +180,11 @@ def stop_matching(command):
 
 
 def service_commands(config):
-    cpu, gpu = str(config['python']), str(config['llm_python'])
-    llm, vision = str(config['llm_config']), str(config['vision_config'])
+    cpu, gpu = str(config['python']), str(config.get('llm_python', config['python']))
+    llm, vision = str(config.get('llm_config', '')), str(config.get('vision_config', ''))
+    router = str(config.get('router_config', llm))
     commands = {
-        'router': (18090, [cpu, '-B', '-m', 'Server.local_probe.router', '--key-config', llm]),
+        'router': (18090, [cpu, '-B', '-m', 'Server.local_probe.router', '--key-config', router]),
         'vision': (18094, [cpu, '-B', '-m', 'Server.local_probe.vision_gateway', '--config', vision]),
         'llm': (18091, [gpu, '-B', '-m', 'Server.local_probe.gpu_gateway', '--config', llm]),
         'evolution': (18093, [cpu, '-B', '-m', 'Server.local_probe.local_services',
@@ -188,6 +192,10 @@ def service_commands(config):
     }
     if config.get('pose_python'):
         commands['pose']=(18095,[str(interpreter_path(config['pose_python'])),'-B','-m','Ai.Pose.unity_service'])
+    if config.get('available_only'):
+        commands = {name: value for name, value in commands.items() if name in config['enabled']}
+        if 'evolution' in commands:
+            commands['evolution'][1].append('--available-only')
     return commands
 
 
@@ -211,9 +219,16 @@ def supervise(config):
         return  # Exactly one supervisor per checkout owns the GPU queue.
     STOP.unlink(missing_ok=True)
     owned = set()
+    children = {}
+    skipped = dict(config.get('skipped', {}))
+    failures = {}
+    def report(phase, **extra):
+        write_status(phase, skipped=skipped, failed=failures, **extra)
     with ExitStack() as files:
         files.callback(lock.release)
         def start(name):
+            if name not in commands:
+                return
             port, command = commands[name]
             existing = matching_processes(command)
             available = health(port)
@@ -225,28 +240,54 @@ def supervise(config):
                     return  # Still warming up; never start a second GPU model.
                 output = files.enter_context((RUNTIME / ('local-' + name + '.stdout.log')).open('a', encoding='utf-8'))
                 errors = files.enter_context((RUNTIME / ('local-' + name + '.stderr.log')).open('a', encoding='utf-8'))
-                subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=errors,
+                children[name] = subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=errors,
                                  creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
 
         def stop(name):
             # A healthy existing gateway is adopted only when its exact private
             # config belongs to this checkout; unrelated listeners are untouched.
-            stop_matching(commands[name][1])
+            if name in commands:
+                stop_matching(commands[name][1])
 
         try:
-            write_status('starting')
-            for name in commands:
-                start(name)
+            report('starting')
+            for name in tuple(commands):
+                try:
+                    start(name)
+                except Exception as error:
+                    if not config.get('available_only') or name == 'router':
+                        raise
+                    failures[name] = 'startup failed: ' + type(error).__name__
+                    commands.pop(name)
             deadline = time.monotonic() + 300
             while not STOP.exists():
+                if config.get('available_only'):
+                    for name, child in tuple(children.items()):
+                        if name in commands and name != 'router' and child.poll() is not None:
+                            stop(name)
+                            failures[name] = 'process exited; see local-' + name + '.stderr.log'
+                            commands.pop(name)
                 ready = {name: health(port) for name, (port, _) in commands.items()}
-                write_status('ready' if all(ready.values()) else 'starting', services=ready)
+                report('ready' if all(ready.values()) else 'starting', services=ready)
                 if all(ready.values()):
                     break
                 if time.monotonic() > deadline:
-                    raise RuntimeError('AI startup timed out; inspect .runtime/local-*.stderr.log')
+                    if not config.get('available_only') or not ready.get('router'):
+                        raise RuntimeError('AI startup timed out; inspect .runtime/local-*.stderr.log')
+                    for name, available in ready.items():
+                        if not available:
+                            stop(name)
+                            failures[name] = 'startup timed out; see local-' + name + '.stderr.log'
+                            commands.pop(name)
+                    break
                 time.sleep(2)
             if STOP.exists():
+                return
+            if 'evolution' not in commands:
+                while not STOP.exists():
+                    ready = {name: health(port) for name, (port, _) in commands.items()}
+                    report('ready' if all(ready.values()) else 'degraded', services=ready)
+                    time.sleep(2)
                 return
             from Ai.Generation3D.runtime.common_gateway.service import Settings
             from Ai.Generation3D.runtime.common_gateway.store import Store
@@ -258,11 +299,11 @@ def supervise(config):
                 with store.connect() as connection:
                     pending = connection.execute("SELECT id FROM jobs WHERE status='queued' OR (status='running' AND lease_until<?) LIMIT 1", (time.time(),)).fetchone()
                 if pending:
-                    write_status('generating_3d', services={'router': True, 'vision': True, 'llm': False, 'evolution': True})
+                    report('generating_3d', services={'router': True, 'vision': True, 'llm': False, 'evolution': True})
                     finished = threading.Event()
                     def heartbeat():
                         while not finished.wait(2):
-                            write_status('stopping' if STOP.exists() else 'generating_3d',
+                            report('stopping' if STOP.exists() else 'generating_3d',
                                          active_generation=True, services={'router': True, 'vision': True, 'llm': False, 'evolution': True})
                     pulse = threading.Thread(target=heartbeat, daemon=True)
                     pulse.start()
@@ -280,25 +321,26 @@ def supervise(config):
                     for name, available in ready.items():
                         if not available:
                             start(name)
-                    write_status('ready' if all(ready.values()) else 'starting', services=ready)
+                    report('ready' if all(ready.values()) else 'starting', services=ready)
                 time.sleep(2)
         except Exception as error:
-            write_status('failed', error=type(error).__name__, message=str(error)[:180])
+            report('failed', error=type(error).__name__, message=str(error)[:180])
             raise
         finally:
             if STOP.exists():
-                write_status('stopping')
+                report('stopping')
             for name in reversed(tuple(commands)):
                 if name in owned:
                     stop(name)
             if STOP.exists():
-                write_status('stopped')
+                report('stopped')
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('action', choices=['configure', 'check', 'run', 'evolution', 'stop'])
     parser.add_argument('--config', default='.runtime/local-services.json')
+    parser.add_argument('--available-only', action='store_true')
     args = parser.parse_args()
     if args.action == 'stop':
         RUNTIME.mkdir(exist_ok=True)
@@ -311,9 +353,12 @@ def main():
         configure_environment(config)
         print('Stable API-to-AI connection prepared. Model readiness has not been assumed.')
         return
-    config = configuration(args.config)
+    config = configuration(args.config, available_only=args.available_only)
     config['path'] = resolve(args.config)
     if args.action == 'check':
+        if args.available_only:
+            print(json.dumps({'enabled': config['enabled'], 'skipped': config['skipped']}))
+            return
         check_backend_connection(config)
         subprocess.run(['docker', 'image', 'inspect', 'healthmon-3d:3090'], stdout=subprocess.DEVNULL, check=True)
         if config['evolution'].get('image_model_root'):

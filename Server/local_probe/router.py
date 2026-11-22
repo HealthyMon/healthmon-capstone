@@ -44,8 +44,16 @@ def create_app(key_file):
             phase = state.get('phase') if time.time() - state.get('updated_at', 0) < 15 else None
         except (OSError, ValueError, TypeError):
             phase = None
+            state = {}
+        skipped = state.get('skipped', {}) if phase else {}
+        failed = state.get('failed', {}) if phase else {}
         async with httpx.AsyncClient(timeout=.8, trust_env=False) as client:
             async def probe(name, capability):
+                key = {'chat': 'llm', 'vision': 'vision', 'evolution': 'evolution'}[name]
+                if key in failed:
+                    return name, {'available': False, 'status': 'error', 'reason': failed[key]}
+                if key in skipped:
+                    return name, {'available': False, 'status': 'not_installed', 'reason': skipped[key]}
                 try:
                     response = await client.get(CAPABILITY_ORIGINS[capability] + '/health')
                     response.raise_for_status()
@@ -64,7 +72,7 @@ def create_app(key_file):
             status = 'generating_3d'
         elif phase == 'failed':
             status = 'error'
-        elif all(item['available'] for item in results.values()):
+        elif all(item['available'] or item['status'] == 'not_installed' for item in results.values()):
             status = 'ready'
         else:
             status = 'loading' if phase == 'starting' else 'error'
@@ -82,6 +90,16 @@ def create_app(key_file):
             capability = 'evolutions'
         else:
             raise HTTPException(404, 'Capability is not configured')
+        from .local_services import STATUS
+        try:
+            state = json.loads(STATUS.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            state = {}
+        service = {'chat': 'llm', 'embedding': 'llm', 'food': 'vision', 'evolutions': 'evolution'}[capability]
+        if time.time() - state.get('updated_at', 0) < 15 and service in state.get('failed', {}):
+            raise HTTPException(503, {'code': 'capability_startup_failed', 'capability': capability})
+        if time.time() - state.get('updated_at', 0) < 15 and service in state.get('skipped', {}):
+            raise HTTPException(501, {'code': 'capability_not_installed', 'capability': capability})
         base = CAPABILITY_ORIGINS[capability]
         limit = FOOD_REQUEST_LIMIT if capability == 'food' else DEFAULT_REQUEST_LIMIT
         declared = request.headers.get('content-length')

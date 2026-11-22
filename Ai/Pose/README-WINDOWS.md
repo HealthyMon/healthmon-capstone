@@ -5,7 +5,7 @@
 ## 실행
 
 1. 처음 설치할 때 저장소 루트의 `Start-HealthMon.cmd -Target Setup`를 실행합니다. 프로젝트 전용 `.runtime/pose-venv`에 고정 버전 패키지를 설치하고 공식 모델을 내려받아 SHA-256을 확인합니다. 기존 LLM/진화 AI 환경은 변경하지 않습니다.
-2. 기존 AI 최초 설정 후 `Start-HealthMon.cmd -Target AI`를 실행합니다. 대화·음식·진화·관절 AI가 함께 시작됩니다. 관절 AI 주소는 `http://127.0.0.1:18095`입니다.
+2. 최초 5번 설치 후 `Start-HealthMon.cmd -Target AI`를 실행합니다. 설치된 대화·음식·진화·관절 AI가 시작되며, 모델이 없는 기능만 건너뜁니다. 관절 AI 주소는 `http://127.0.0.1:18095`입니다.
 3. Unity Hub에서 `Client/HealthMonUnity`를 열고 `Assets/HealthMon/Scenes/MainARScene.unity`를 실행합니다. 저장된 씬에 UI와 진입 버튼이 포함되어 있어 별도 설치 메뉴는 필요 없습니다.
 4. 하단 **운동** → 종목 선택 → **훈련 준비** → **훈련 시작**을 누릅니다. 카메라 장치가 필요합니다. 연결 주소는 내부에서 자동 적용됩니다.
 5. 끝나면 **훈련 종료**, AI 전체를 끌 때는 `Stop-HealthMon.cmd -Target AI`를 실행합니다.

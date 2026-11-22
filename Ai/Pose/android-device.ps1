@@ -1,4 +1,4 @@
-param(
+﻿param(
     [ValidateSet('connect','disconnect','status')][string]$Action='connect',
     [string]$Serial,
     [string]$AdbPath,
@@ -23,12 +23,45 @@ if (-not $AdbPath) {
     }
     $AdbPath=$candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
 }
+# Menu 1/2/3 only reuses an existing Android debugging session. Initial
+# Android connection is explicit in menu 4; PC startup never creates a daemon.
+if ($Auto) {
+    $client = New-Object Net.Sockets.TcpClient
+    try {
+        $pending = $client.ConnectAsync('127.0.0.1',5037)
+        if (-not $pending.Wait(500) -or -not $client.Connected) { exit 0 }
+    } catch { exit 0 }
+    finally { $client.Dispose() }
+}
 if (-not $AdbPath) {
     if ($Auto) { exit 0 }
     throw 'Android SDK platform-tools/adb.exe is required. Pass -AdbPath with its location.'
 }
-$lines=& $AdbPath devices
-if ($LASTEXITCODE -ne 0) { throw 'adb could not inspect connected devices.' }
+# Device discovery is optional during PC startup. A stuck ADB daemon must not
+# hold the backend/AI menu open indefinitely. Stop only this discovery client.
+$probe = New-Object Diagnostics.Process
+$probe.StartInfo.FileName = $AdbPath
+$probe.StartInfo.Arguments = 'devices'
+$probe.StartInfo.UseShellExecute = $false
+$probe.StartInfo.CreateNoWindow = $true
+$probe.StartInfo.RedirectStandardOutput = $true
+$probe.StartInfo.RedirectStandardError = $true
+try {
+    [void]$probe.Start()
+    $output = $probe.StandardOutput.ReadToEndAsync()
+    $errors = $probe.StandardError.ReadToEndAsync()
+    if (-not $probe.WaitForExit(8000)) {
+        $probe.Kill()
+        if ($Auto) { Write-Warning 'Android discovery timed out. PC services remain ready; retry menu 4 later.'; exit 0 }
+        throw 'Android device discovery timed out. Retry after checking the USB connection.'
+    }
+    if ($probe.ExitCode -ne 0) { throw 'adb could not inspect connected devices.' }
+    if (-not $output.Wait(1000)) {
+        if ($Auto) { Write-Warning 'Android discovery did not finish. PC services remain ready; retry menu 4 later.'; exit 0 }
+        throw 'Android discovery output timed out.'
+    }
+    $lines = $output.GetAwaiter().GetResult() -split "`r?`n"
+} finally { $probe.Dispose() }
 $devices=@($lines | Select-String '^([^\s]+)\s+(device|unauthorized|offline)$' | ForEach-Object {
     [pscustomobject]@{serial=$_.Matches[0].Groups[1].Value;state=$_.Matches[0].Groups[2].Value}
 })

@@ -87,3 +87,18 @@ def test_unknown_or_invalid_health_cannot_report_ready(monkeypatch, status, body
                                       ai_token='private-fixture', allow_http_ai=True))
     result = monitor.snapshot('owner')
     assert result['status'] == expected and result['available'] is not True
+
+
+def test_missing_optional_models_leave_food_ready(monkeypatch):
+    original=httpx.Client
+    body={'status':'ready','services':{
+      'chat':{'status':'not_installed','available':False},
+      'vision':{'status':'ready','available':True},
+      'evolution':{'status':'not_installed','available':False}}}
+    transport=httpx.MockTransport(lambda _:httpx.Response(200,json=body))
+    monkeypatch.setattr(httpx,'Client',lambda **kwargs:original(transport=transport,**kwargs))
+    monitor=AIDependencies(settings(ai_mode='remote',ai_base_url='http://fixture.invalid',ai_token='fixture',allow_http_ai=True))
+    value=monitor.snapshot('owner')
+    assert value['available'] is True and value['status']=='ready'
+    assert value['services']['vision']['available'] is True
+    assert value['services']['chat']['status']=='not_installed'

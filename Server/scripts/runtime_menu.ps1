@@ -5,7 +5,6 @@ param(
     [ValidateSet('All', 'Backend', 'AI', 'Android', 'Setup')][string]$Target,
     [string]$Serial,
     [string]$AdbPath,
-    [string]$BundlePath,
     [switch]$NoPause,
     [switch]$NoOpen
 )
@@ -18,9 +17,9 @@ try {
         Write-Host ('HealthMon - ' + $Action)
         Write-Host '  1. All (Backend + AI)'
         Write-Host '  2. Backend only (API + database)'
-        Write-Host '  3. AI only (Dialogue + Food + Evolution + Pose)'
+        Write-Host '  3. AI (all installed models; skip missing)'
         Write-Host ('  4. Android USB - ' + $(if ($Action -eq 'Start') { 'connect' } else { 'disconnect' }))
-        if ($Action -eq 'Start') { Write-Host '  5. First-time setup (all AI environments + models)' }
+        if ($Action -eq 'Start') { Write-Host '  5. First-time setup (Backend + Food + Pose)' }
         Write-Host '  0. Exit'
         while (-not $Target) {
             $choice = Read-Host 'Select [1]'
@@ -46,13 +45,10 @@ try {
         }
         'Setup' {
             if ($Action -ne 'Start') { throw 'Setup is available from Start-HealthMon.cmd only.' }
-            $commandArgs += @((Join-Path $ProjectRoot 'Server/portable/setup.ps1'))
-            if ($BundlePath) { $commandArgs += @('-BundlePath', $BundlePath) }
+            $commandArgs += @((Join-Path $ProjectRoot 'Server/team/setup.ps1'))
         }
         default {
-            $launcher = if (Test-Path -LiteralPath (Join-Path $ProjectRoot '.runtime/portable/enabled')) {
-                Join-Path $ProjectRoot 'Server/portable/runtime.ps1'
-            } else { Join-Path $PSScriptRoot 'local_server.ps1' }
+            $launcher = Join-Path $ProjectRoot 'Server/team/runtime.ps1'
             $commandArgs += @($launcher, '-Action', $Action, '-Target', $Target)
             if ($NoOpen -or $Action -eq 'Start') { $commandArgs += '-NoOpen' }
         }
@@ -65,8 +61,13 @@ try {
             (Join-Path $ProjectRoot 'Ai/Pose/android-device.ps1'),'-Action','connect','-Auto')
         if ($Serial) { $usbArgs += @('-Serial',$Serial) }
         if ($AdbPath) { $usbArgs += @('-AdbPath',$AdbPath) }
-        & powershell.exe @usbArgs
-        if ($LASTEXITCODE -ne 0) { Write-Warning 'PC services are ready. Android USB setup can be retried with menu 4.' }
+        try {
+            $logs = Join-Path $ProjectRoot '.runtime'
+            [IO.Directory]::CreateDirectory($logs) | Out-Null
+            $tag = 'usb-auto-' + [guid]::NewGuid().ToString('N')
+            $quoted = ($usbArgs | ForEach-Object { '"' + $_.Replace('"', '\"') + '"' }) -join ' '
+            Start-Process -FilePath powershell.exe -ArgumentList $quoted -WindowStyle Hidden -RedirectStandardOutput (Join-Path $logs ($tag + '.stdout.log')) -RedirectStandardError (Join-Path $logs ($tag + '.stderr.log')) | Out-Null
+        } catch { Write-Warning 'PC services are ready. Android USB setup can be retried with menu 4.' }
     }
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red

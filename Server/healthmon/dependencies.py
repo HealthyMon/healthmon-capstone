@@ -41,7 +41,7 @@ class AIDependencies:
                     else:
                         response.raise_for_status()
                         body = response.json()
-                        states = {'ready', 'loading', 'generating_3d', 'stopping', 'off', 'error'}
+                        states = {'ready', 'loading', 'generating_3d', 'stopping', 'off', 'error', 'not_installed'}
                         if body.get('status') not in states or not isinstance(body.get('services'), dict):
                             raise ValueError('Invalid service health response')
                         entries = {}
@@ -50,7 +50,7 @@ class AIDependencies:
                             if item.get('status') not in states or type(item.get('available')) is not bool:
                                 raise ValueError('Invalid capability health response')
                             entries[name] = {'status': item['status'], 'available': item['available']}
-                        value = {'status': body['status'], 'available': body['status'] == 'ready' and all(x['available'] for x in entries.values()), 'services': entries}
+                        value = {'status': body['status'], 'available': body['status'] == 'ready' and any(x['available'] for x in entries.values()) and all(x['available'] or x['status'] == 'not_installed' for x in entries.values()), 'services': entries}
             except (httpx.ConnectError, httpx.ConnectTimeout):
                 value = self.unavailable('off')
             except (httpx.HTTPError, ValueError, TypeError, AttributeError):
