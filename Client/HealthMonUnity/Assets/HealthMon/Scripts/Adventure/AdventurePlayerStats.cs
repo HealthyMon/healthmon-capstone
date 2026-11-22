@@ -1,6 +1,12 @@
-
+﻿
 using System;
 using UnityEngine;
+
+// 이벤트/아이템에서 변경할 수 있는 탐험 능력치
+public enum AdventureStatType
+{
+    HP, MaxHP, ST, MaxST, ATK, DEF, RES, SPD, LUK
+}
 
 public class AdventurePlayerStats : MonoBehaviour
 {
@@ -157,5 +163,104 @@ public class AdventurePlayerStats : MonoBehaviour
         );
 
         OnStatsChanged?.Invoke();
+    }
+
+    // 현재 탐험에만 적용되는 능력치 변경. 실제 반영량을 반환한다.
+    // 정수 능력치(HP, MaxHP, ATK 등)의 amount는 반올림한다.
+    public float ModifyStat(AdventureStatType stat, float amount)
+    {
+        if (!initialized || float.IsNaN(amount) || float.IsInfinity(amount))
+            return 0f;
+
+        float before = GetStatValue(stat);
+        int delta = Mathf.RoundToInt(amount);
+
+        switch (stat)
+        {
+            case AdventureStatType.HP:
+                currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP);
+                break;
+            case AdventureStatType.MaxHP:
+                maxHP = Mathf.Max(1, maxHP + delta);
+                currentHP = Mathf.Min(currentHP, maxHP);
+                break;
+            case AdventureStatType.ST:
+                currentST = Mathf.Clamp(currentST + amount, 0f, maxST);
+                break;
+            case AdventureStatType.MaxST:
+                maxST = Mathf.Max(0.1f, maxST + amount);
+                currentST = Mathf.Min(currentST, maxST);
+                break;
+            case AdventureStatType.ATK:
+                ATK = Mathf.Max(0, ATK + delta);
+                break;
+            case AdventureStatType.DEF:
+                DEF = Mathf.Max(0, DEF + delta);
+                break;
+            case AdventureStatType.RES:
+                RES = Mathf.Max(0, RES + delta);
+                break;
+            case AdventureStatType.SPD:
+                SPD = Mathf.Max(1, SPD + delta);
+                break;
+            case AdventureStatType.LUK:
+                LUK = Mathf.Max(0, LUK + delta);
+                break;
+            default:
+                return 0f;
+        }
+
+        float applied = GetStatValue(stat) - before;
+        if (!Mathf.Approximately(applied, 0f))
+        {
+            OnStatsChanged?.Invoke();
+            Debug.Log($"[AdventureStats] {stat}: {before:0.##} -> {GetStatValue(stat):0.##}");
+        }
+        return applied;
+    }
+
+    public float GetStatValue(AdventureStatType stat)
+    {
+        switch (stat)
+        {
+            case AdventureStatType.HP: return currentHP;
+            case AdventureStatType.MaxHP: return maxHP;
+            case AdventureStatType.ST: return currentST;
+            case AdventureStatType.MaxST: return maxST;
+            case AdventureStatType.ATK: return ATK;
+            case AdventureStatType.DEF: return DEF;
+            case AdventureStatType.RES: return RES;
+            case AdventureStatType.SPD: return SPD;
+            case AdventureStatType.LUK: return LUK;
+            default: return 0f;
+        }
+    }
+
+    public AdventureStatsData CreateSnapshot()
+    {
+        return new AdventureStatsData
+        {
+            maxHP = maxHP, currentHP = currentHP,
+            maxST = maxST, currentST = currentST,
+            ATK = ATK, DEF = DEF, RES = RES, SPD = SPD, LUK = LUK
+        };
+    }
+
+    public bool RestoreSnapshot(AdventureStatsData data)
+    {
+        if (data == null || !data.IsValid()) return false;
+
+        maxHP = data.maxHP;
+        currentHP = data.currentHP;
+        maxST = data.maxST;
+        currentST = data.currentST;
+        ATK = data.ATK;
+        DEF = data.DEF;
+        RES = data.RES;
+        SPD = data.SPD;
+        LUK = data.LUK;
+        initialized = true;
+        OnStatsChanged?.Invoke();
+        return true;
     }
 }
