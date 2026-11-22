@@ -209,5 +209,6 @@ def create_app(models=None):
 app = create_app()
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=18095, access_log=False)
+    uvicorn.run(app, host=os.environ.get('HEALTHMON_POSE_BIND', "127.0.0.1"), port=18095, access_log=False)

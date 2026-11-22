@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import os
+import venv
 
 from fastapi.testclient import TestClient
 import pytest
@@ -14,6 +16,20 @@ import pytest
 Image = pytest.importorskip('PIL.Image', reason='Use the existing Vision CPU Pillow runtime for these optional integration tests')
 
 from Server.local_probe import vision_gateway as vision
+
+
+@pytest.mark.skipif(os.name == 'nt', reason='POSIX virtualenv executable symlink regression')
+def test_vision_worker_keeps_its_virtualenv(tmp_path, monkeypatch):
+    environment = tmp_path / 'vision-env'
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+    python = environment / 'bin/python'
+    assets = tmp_path / 'assets'
+    assets.mkdir()
+    monkeypatch.setattr(vision, 'verify_assets', lambda path: {})
+    monkeypatch.setattr(vision, 'file_digest', lambda path: 'fixture')
+    runner = vision.VisionRunner({'vision_python': str(python), 'vision_assets': str(assets)}, tmp_path)
+    actual = subprocess.check_output([str(runner.python), '-c', 'import sys; print(sys.prefix)'], text=True).strip()
+    assert Path(actual) == environment
 
 
 def picture(color='red', size=(8, 8), format='PNG'):

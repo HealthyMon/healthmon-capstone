@@ -48,7 +48,9 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         InputArea = field.transform.parent as RectTransform;
         header = Panel.Find("Header") as RectTransform;
         BottomNavigation = FindActiveNavigation();
-        if (InputArea == null || BottomNavigation == null) return;
+        // Navigation can still be inactive during Awake. Configure the controls
+        // now, then let LateUpdate lay them out once their page becomes visible.
+        if (InputArea == null) return;
         UserBubble = BubbleOf(userText); ResponseBubble = BubbleOf(responseText);
         if (!configured)
         {
@@ -58,6 +60,18 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         UserScroll = EnsureScroll(UserBubble, userText, new Vector2(25, 20));
         ResponseScroll = EnsureScroll(ResponseBubble, responseText, new Vector2(30, 30));
         configured = true;
+        HealthMonUILayout.Place(input.textViewport, .04f, .12f, .96f, .88f);
+        foreach (var text in input.GetComponentsInChildren<TMP_Text>(true))
+        {
+            HealthMonUILayout.Text(text, 0, 0, 1, 1, 32);
+            text.alignment = TextAlignmentOptions.MidlineLeft;
+            text.fontStyle = FontStyles.Normal;
+        }
+        foreach (var text in sendButton.GetComponentsInChildren<TMP_Text>(true))
+        {
+            HealthMonUILayout.Text(text, .06f, .12f, .94f, .88f, 30);
+            text.alignment = TextAlignmentOptions.Center;
+        }
         ApplyNow();
     }
 
@@ -131,7 +145,8 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         Rect panel = Panel.rect;
         Rect nav = BoundsInPanel(BottomNavigation);
         float navTop = nav.yMax - panel.yMin;
-        float top = header == null ? panel.height - 100 : BoundsInPanel(header).yMin - panel.yMin;
+        float headerBottom = header == null ? panel.height - 100 : BoundsInPanel(header).yMin - panel.yMin;
+        float top = Mathf.Min(headerBottom, panel.height * .58f);
         float margin = (float)Math.Min(30, panel.width * .04f);
         float userWidth = (float)Math.Min(userMaximumWidth, panel.width - 2 * margin);
         float responseWidth = (float)Math.Min(responseMaximumWidth, panel.width - 2 * margin);
@@ -150,6 +165,29 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         var inputBounds = new Rect(plan.Input.x + 20, plan.Input.y + 20,
             (float)Math.Max(1, sendBounds.xMin - 20 - (plan.Input.x + 20)), controlHeight);
         Place(send, sendBounds); Place(input.GetComponent<RectTransform>(), inputBounds);
+        var portrait = Panel.Find("CharacterArea/CharacterPlaceholder") as RectTransform;
+        if (portrait != null)
+        {
+#if UNITY_EDITOR
+            portrait.gameObject.SetActive(true);
+#endif
+            float portraitBottom = plan.User.yMax + 24;
+            Place(portrait, new Rect(panel.width * .16f, portraitBottom, panel.width * .68f,
+                Mathf.Max(1, headerBottom - 30 - portraitBottom)));
+            var preview = portrait.Find("PetPreviewImage")?.GetComponent<RawImage>();
+            if (preview != null && preview.texture != null)
+            {
+#if UNITY_EDITOR
+                preview.enabled = true;
+                preview.gameObject.SetActive(true);
+#endif
+                var fitter = preview.GetComponent<AspectRatioFitter>() ?? preview.gameObject.AddComponent<AspectRatioFitter>();
+                fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+                fitter.aspectRatio = (float)preview.texture.width / preview.texture.height;
+                var placeholder = portrait.Find("Text (TMP)");
+                if (placeholder != null) placeholder.gameObject.SetActive(false);
+            }
+        }
         Canvas.ForceUpdateCanvases();
         SizeContent(UserScroll, user, userChanged); SizeContent(ResponseScroll, response, responseChanged);
         lastUser = user.text; lastResponse = response.text; lastPanelSize = panel.size;

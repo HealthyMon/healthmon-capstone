@@ -23,7 +23,14 @@ public class HealthMonShopProductCard : MonoBehaviour
         if (icon != null) { icon.sprite = item.icon; icon.enabled = item.icon != null; icon.preserveAspect = true; }
         if (cardBackground != null && normalBackground != null)
             cardBackground.sprite = item.featured && featuredBackground != null ? featuredBackground : normalBackground;
-        if (nameLabel != null) nameLabel.text = item.displayName;
+        if (nameLabel != null)
+        {
+            nameLabel.text = item.displayName;
+            nameLabel.enableAutoSizing = true;
+            nameLabel.fontSizeMin = 21;
+            nameLabel.fontSizeMax = 37;
+            nameLabel.overflowMode = TextOverflowModes.Ellipsis;
+        }
         if (subtitleLabel != null) subtitleLabel.text = item.category == HealthMonShopCategory.Accessory ? "장신구" : "새로운 헬스몬";
         if (priceLabel != null) priceLabel.text = owned ? "보유 중" : (item.displayCoinPrice.ToString("N0") + " C");
         if (cardButton != null)

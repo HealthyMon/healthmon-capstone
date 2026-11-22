@@ -6,6 +6,37 @@ import pytest
 from Server.local_probe import local_services as services
 
 
+def test_interpreter_path_preserves_virtualenv_symlink(tmp_path, monkeypatch):
+    import os
+    import sys
+    if os.name == 'nt':
+        pytest.skip('POSIX virtualenv symlinks are verified in the portable Linux image')
+    launcher = tmp_path / 'venv/bin/python'
+    launcher.parent.mkdir(parents=True)
+    launcher.symlink_to(sys.executable)
+    monkeypatch.setattr(services, 'ROOT', tmp_path)
+    assert services.interpreter_path('venv/bin/python') == launcher
+    assert launcher.resolve() != launcher
+    commands = services.service_commands(dict(python=launcher, llm_python=launcher,
+        llm_config='llm.json', vision_config='vision.json', path='services.json', pose_python=launcher))
+    assert all(command[0] == str(launcher) for _, command in commands.values())
+
+
+@pytest.mark.parametrize('body,expected', [
+    ({'service': 'healthmon-pose', 'status': 'idle'}, True),
+    ({'service': 'healthmon-pose', 'status': 'ready'}, True),
+    ({'service': 'healthmon-pose', 'status': 'failed'}, False),
+    ({'service': 'other', 'status': 'idle'}, False),
+    ({'ready': False, 'status': 'ok'}, False),
+])
+def test_health_accepts_only_pose_lazy_loading_contract(monkeypatch, body, expected):
+    import httpx
+    client_type = httpx.Client
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, json=body))
+    monkeypatch.setattr(services.httpx, 'Client', lambda **kwargs: client_type(transport=transport, **kwargs))
+    assert services.health(18095) is expected
+
+
 @pytest.mark.parametrize('busy_attempts', [2, 5])
 def test_status_reader_lock_cannot_kill_heartbeat(tmp_path, monkeypatch, busy_attempts):
     status = tmp_path / 'status.json'
@@ -104,7 +135,7 @@ def test_ai_toggle_rejects_unprepared_connection_without_rewriting_env(tmp_path,
     path = tmp_path / '.env'
     original = 'APP_ENV=test\nAI_MODE=disabled\nDEV_TOKENS={"fixture":"owner"}\n'
     path.write_text(original)
-    with pytest.raises(ValueError, match='Start-Backend'):
+    with pytest.raises(ValueError, match=r'Start-HealthMon\.cmd -Target Backend'):
         services.check_backend_connection({'token': 'private-fixture'})
     assert path.read_text() == original
 

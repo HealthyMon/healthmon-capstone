@@ -57,7 +57,8 @@ public static class HealthMonShopPrefabIconBaker
             var job = jobs[0];
             jobs.RemoveAt(0);
             if (job.item == null || job.item.productPrefab == null) continue;
-            Texture2D preview = AssetPreview.GetAssetPreview(job.item.productPrefab);
+            bool character = job.item.productPrefab.name.StartsWith("Cute_Slime", StringComparison.Ordinal);
+            Texture2D preview = character ? HealthMonFrontPortrait.Render(job.item.productPrefab) : AssetPreview.GetAssetPreview(job.item.productPrefab);
             if (preview == null)
             {
                 job.attempts++;
@@ -99,6 +100,7 @@ public static class HealthMonShopPrefabIconBaker
                 missed++;
                 Debug.LogWarning("[ShopIcons] " + job.item.itemId + " 아이콘 저장 오류: " + e.Message);
             }
+            finally { if (character && preview != null) UnityEngine.Object.DestroyImmediate(preview); }
         }
         if (jobs.Count == 0)
         {

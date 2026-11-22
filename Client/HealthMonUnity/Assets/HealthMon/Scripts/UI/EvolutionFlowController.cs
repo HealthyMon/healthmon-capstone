@@ -66,6 +66,14 @@ public sealed class EvolutionFlowController : MonoBehaviour
         if (client == null || connection == null || !connection.IsConnected || screen == null) return;
         if (HomeModel == null || PreviewModel == null)
         { screen.ShowEvolutionError("진화 화면 준비 실패 · 홈에서 다시 시도"); return; }
+        // Re-open the real published result without submitting another GPU job.
+        if (client.Current != null && client.Current.stage > 0 && IsApplied &&
+            string.IsNullOrEmpty(client.ActiveRequestId) && connection.LatestState != null &&
+            connection.LatestState.evolution_target_stage <= connection.LatestState.published_model_stage)
+        {
+            Open(null, client.Current.stage);
+            return;
+        }
         // A local download/import retry must never submit another generation job.
         if (NeedsModelRetry && string.IsNullOrEmpty(client.ActiveRequestId))
         {

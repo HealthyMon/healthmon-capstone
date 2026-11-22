@@ -126,14 +126,80 @@ public class CustomizationPrototype : MonoBehaviour
 
     private void Start()
     {
+        LayoutDetails();
         SelectNecklace();
         RefreshUI();
     }
 
-    public void SelectNecklace() => SelectItem("목걸이", "헬스몬에게 처음부터 제공되는 목걸이입니다.", IsUnlocked("목걸이"));
-    public void SelectEarring() => SelectItem("귀걸이", "상점에서 획득한 귀걸이를 사용할 수 있어요.", IsUnlocked("귀걸이"));
-    public void SelectPendant() => SelectItem("펜던트", "상점에서 획득한 펜던트를 사용할 수 있어요.", IsUnlocked("펜던트"));
-    public void SelectRing() => SelectItem("반지", "상점에서 획득한 반지를 사용할 수 있어요.", IsUnlocked("반지"));
+    private void LayoutDetails()
+    {
+        foreach (var locked in new[] { necklaceLockText, earringLockText, pendantLockText, ringLockText })
+        {
+            if (locked == null) continue;
+            HealthMonUILayout.Text(locked, .08f, .10f, .92f, .25f, 25);
+            HealthMonUILayout.Text(locked.transform.parent.Find("ItemNameText")?.GetComponent<TMP_Text>(), .08f, .29f, .92f, .45f, 30);
+        }
+        if (selectedItemNameText != null)
+        {
+            var panel = selectedItemNameText.transform.parent as RectTransform;
+            var collection = panel.parent;
+            var grid = collection.Find("ItemGrid");
+            if (grid != null) foreach (var card in grid.GetComponentsInChildren<Button>(true))
+            {
+                HealthMonUILayout.Text(card.transform.Find("ItemNameText")?.GetComponent<TMP_Text>(), .08f, .29f, .92f, .45f, 30);
+                HealthMonUILayout.Text(card.transform.Find("LockText")?.GetComponent<TMP_Text>(), .08f, .10f, .92f, .25f, 25);
+            }
+            var guide = collection.Find("GuideText")?.GetComponent<TMP_Text>();
+            HealthMonUILayout.Text(guide, .12f, .373f, .88f, .393f, 24);
+            HealthMonUILayout.Place(grid as RectTransform, .04f, .405f, .96f, .79f);
+            if (guide != null) guide.text = "장신구를 선택해 상세 정보 확인";
+            HealthMonUILayout.Place(panel, .09f, .17f, .91f, .36f);
+            HealthMonUILayout.Text(selectedItemNameText, .08f, .69f, .73f, .90f, 35);
+            HealthMonUILayout.Text(selectedItemDescriptionText, .08f, .39f, .73f, .64f, 28);
+            HealthMonUILayout.Place(panel.Find("SelectedItemJewelryIcon") as RectTransform, .77f, .40f, .92f, .83f);
+            if (customizeButton != null) HealthMonUILayout.Place(customizeButton.transform as RectTransform, .27f, .10f, .73f, .32f);
+        }
+        HealthMonUILayout.Text(customizeItemNameText, .08f, .74f, .73f, .91f, 38);
+        HealthMonUILayout.Text(customizeDescriptionText, .08f, .49f, .73f, .71f, 30);
+        if (customizeItemNameText != null)
+            HealthMonUILayout.Place(customizeItemNameText.transform.parent.Find("SelectedItemJewelryIcon") as RectTransform, .77f, .51f, .92f, .86f);
+        if (equipButton != null) HealthMonUILayout.Place(equipButton.transform as RectTransform, .30f, .21f, .70f, .44f);
+        HealthMonUILayout.Text(statusText, .08f, .06f, .92f, .18f, 26);
+        if (statusText != null) statusText.text = "장착할 아이템 선택";
+        HealthMonUILayout.Text(equippedItemText, .08f, .05f, .92f, .15f, 28);
+        if (equippedItemText == null) return;
+        var preview = equippedItemText.transform.parent;
+        var image = preview.Find("PetPreviewImage")?.GetComponent<RawImage>();
+        if (image == null || image.texture == null) return;
+        var placeholder = preview.Find("PreviewText");
+        if (placeholder != null) placeholder.gameObject.SetActive(false);
+        // Keep the render texture's proportions inside the preview card.
+        var frame = new GameObject("FittedPetPreview", typeof(RectTransform)).GetComponent<RectTransform>();
+        frame.SetParent(preview, false);
+        HealthMonUILayout.Place(frame, .07f, .18f, .93f, .93f);
+        image.transform.SetParent(frame, false);
+        var fitter = image.GetComponent<AspectRatioFitter>() ?? image.gameObject.AddComponent<AspectRatioFitter>();
+        fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+        fitter.aspectRatio = (float)image.texture.width / image.texture.height;
+        Camera previewCamera = null;
+        GameObject previewRoot = null;
+        // The preview gate disables its camera while the home page is open.
+        // GameObject.Find therefore misses it during this component's Start.
+        foreach (var candidate in FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (candidate.name == "PetPreviewCamera") { previewCamera = candidate; break; }
+        foreach (var candidate in FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (candidate.name == "PetPreviewRoot") { previewRoot = candidate.gameObject; break; }
+        if (previewCamera != null && previewRoot != null)
+        {
+            var framing = previewCamera.GetComponent<HealthMonPreviewFraming>() ?? previewCamera.gameObject.AddComponent<HealthMonPreviewFraming>();
+            framing.target = previewRoot.transform;
+        }
+    }
+
+    public void SelectNecklace() => SelectItem("목걸이", "기본 지급 장신구 · 목걸이 슬롯", IsUnlocked("목걸이"));
+    public void SelectEarring() => SelectItem("귀걸이", "상점 획득 장신구 · 귀걸이 슬롯", IsUnlocked("귀걸이"));
+    public void SelectPendant() => SelectItem("펜던트", "상점 획득 장신구 · 펜던트 슬롯", IsUnlocked("펜던트"));
+    public void SelectRing() => SelectItem("반지", "상점 획득 장신구 · 반지 슬롯", IsUnlocked("반지"));
 
     // Old button OnClick aliases retained temporarily.
     public void SelectBadge() => SelectNecklace();

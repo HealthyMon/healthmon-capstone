@@ -13,6 +13,10 @@ public class UISpriteSequence : MonoBehaviour
     private float timer;
     private int currentFrame;
 
+    public int CurrentFrame => currentFrame;
+    public int FrameCount => frames == null ? 0 : frames.Length;
+    public float Duration => FrameCount * frameDuration;
+
     private void OnEnable()
     {
         timer = 0f;

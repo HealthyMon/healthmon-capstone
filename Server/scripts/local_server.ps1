@@ -222,6 +222,15 @@ function Wait-LocalDocker {
 function Write-ConnectionGuide {
     param($Configuration, [string]$BaseUrl, [object[]]$Pets)
     $environment = $Configuration.services.api.environment
+    $directory = Join-Path $ProjectRoot '.runtime'
+    [IO.Directory]::CreateDirectory($directory) | Out-Null
+    $handoffPath = Join-Path $directory 'client-connection.json'
+    $previousOwner = $null
+    if (Test-Path -LiteralPath $handoffPath) {
+        $previous = Get-Content -LiteralPath $handoffPath -Raw | ConvertFrom-Json
+        if ($previous.server_instance_id -eq $environment.SERVER_INSTANCE_ID) { $previousOwner = $previous.owner_id }
+    }
+    $handoff = $null
     $cards = New-Object System.Collections.Generic.List[string]
     $tokens = $null
     if ($environment.DEV_TOKENS) { $tokens = $environment.DEV_TOKENS | ConvertFrom-Json }
@@ -229,12 +238,23 @@ function Write-ConnectionGuide {
         foreach ($entry in $tokens.PSObject.Properties) {
             $pet = $Pets | Where-Object { $_.owner -eq $entry.Value } | Select-Object -First 1
             if (-not $pet) { continue }
+            if (-not $handoff -and (-not $previousOwner -or $previousOwner -eq $entry.Value)) {
+                $handoff = [ordered]@{schema_version=1; environment=[string]$environment.APP_ENV; api_base_url=$BaseUrl;
+                    bearer_token=[string]$entry.Name; owner_id=[string]$entry.Value; pet_id=[string]$pet.pet_id;
+                    server_instance_id=[string]$environment.SERVER_INSTANCE_ID}
+            }
             $owner = [Net.WebUtility]::HtmlEncode([string]$entry.Value)
             $token = [Net.WebUtility]::HtmlEncode([string]$entry.Name)
             $petId = [Net.WebUtility]::HtmlEncode([string]$pet.pet_id)
             $cards.Add("<section><h2>$owner</h2><label>User bearer token<input readonly value='$token'></label><label>Pet ID<input readonly value='$petId'></label></section>")
         }
     }
+    if ($handoff -and $environment.APP_ENV -eq 'test' -and ([Uri]$BaseUrl).IsLoopback) {
+        $temporary = $handoffPath + '.tmp'
+        [IO.File]::WriteAllText($temporary, ($handoff | ConvertTo-Json), (New-Object Text.UTF8Encoding($false)))
+        Move-Item -LiteralPath $temporary -Destination $handoffPath -Force
+        Write-Host 'Unity auto-connect ready. Open the project and press Play; no address or token entry is needed.'
+    } else { Write-Warning 'Automatic client setup needs a local test account. Existing connection information was preserved.' }
     if ($cards.Count -eq 0) { $cards.Add('<p>DEV_TOKENS 설정에 대응하는 계정이 없습니다. 기존 서버의 발급 토큰을 사용하세요.</p>') }
     $safeUrl = [Net.WebUtility]::HtmlEncode($BaseUrl)
     $aiMode = [Net.WebUtility]::HtmlEncode([string]$environment.AI_MODE)
@@ -245,9 +265,9 @@ body{max-width:760px;margin:40px auto;padding:0 24px;font:17px/1.65 system-ui,sa
 h1{color:#087851}section{padding:16px 24px;background:white;border-radius:14px;margin:20px 0}label{display:block;margin:14px 0}
 input{display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #9bafbf;border-radius:8px;font:15px monospace;background:#f7fafc}
 button{padding:8px 16px;margin-top:7px;cursor:pointer}small{display:block}code{background:white;padding:3px 7px}
-</style><h1>서버가 켜졌어요</h1><p>Unity의 설정 → COMMON SERVER 패널에서 아래 주소와 같은 계정의 토큰·펫 ID를 넣고 <b>Connect / change connection</b>을 누르세요.</p>
+</style><h1>서버 준비 완료</h1><p>Unity에서 Play를 누르면 자동 연결됩니다. 주소·토큰을 직접 입력할 필요가 없습니다.</p><details><summary>수동 연결 정보</summary>
 <section><label>API_BASE_URL<input readonly value='$safeUrl'></label><a href='$safeUrl/health/ready' target='_blank'>서버 준비 상태 확인</a></section>
-$($cards -join "`n")
+$($cards -join "`n")</details>
 <p>입력칸을 누르면 전체 선택됩니다. 복사 버튼 또는 Ctrl+C로 복사하세요.</p>
 <p>이 PC의 서버 연결 정보입니다. 인증 토큰이 있으니 이 페이지 파일을 다른 사람에게 보내지 마세요.</p>
 <p>API·DB는 <code>Start-HealthMon.cmd -Target Backend</code> / <code>Stop-HealthMon.cmd -Target Backend</code>, AI는 <code>Start-HealthMon.cmd -Target AI</code> / <code>Stop-HealthMon.cmd -Target AI</code>로 각각 켜고 끕니다. 펫과 기록은 유지됩니다.</p>

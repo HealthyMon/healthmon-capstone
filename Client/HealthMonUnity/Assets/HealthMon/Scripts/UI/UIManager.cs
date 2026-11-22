@@ -4,6 +4,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Main Panels")]
     [SerializeField] private GameObject homePanel;
+    public bool IsHomeVisible => homePanel != null && homePanel.activeInHierarchy;
     [SerializeField] private GameObject statusPanel;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject foodScanPanel;
@@ -24,6 +25,18 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        HealthMonUILayout.Navigation(homePanel.transform.parent);
+        // In the desktop editor there is no AR camera feed. Reuse the authored
+        // conversation backdrop so an unavailable camera does not show black.
+#if UNITY_EDITOR
+        var dialogueBackground = dialoguePanel.GetComponent<UnityEngine.UI.Image>();
+        var sourceBackground = collectionPanel.GetComponent<UnityEngine.UI.Image>();
+        if (dialogueBackground != null && sourceBackground != null)
+        {
+            dialogueBackground.sprite = sourceBackground.sprite;
+            dialogueBackground.color = Color.white; dialogueBackground.enabled = true;
+        }
+#endif
         viewMode = GetComponent<HealthMonViewModeController>();
         if (viewMode == null)
             Debug.LogWarning("[UIManager] HealthMonViewModeController missing: only panel switching will run.");
@@ -32,6 +45,7 @@ public class UIManager : MonoBehaviour
             if (label.text.Contains("오늘도 같이"))
             {
                 evolutionStatusText = label;
+                label.text = "출전 준비 완료!";
                 break;
             }
         }

@@ -141,13 +141,16 @@ def write_guide(profile, open_browser):
     if selected and not any(pet['pet_id'] == selected for pet in pets):
         raise RuntimeError('The original selected pet is missing; no replacement was created')
     selected = selected or (pets[-1]['pet_id'] if pets else '')
+    from Server.scripts.client_connection import write_connection
+    write_connection(ROOT, base_url=base, token=token, owner_id=identity['owner_id'], pet_id=selected,
+                     server_instance_id=profile['environment']['SERVER_INSTANCE_ID'], environment='test')
     def field(label, value):
         return '<label>' + label + '<input readonly onclick="this.select()" value="' + html.escape(value, quote=True) + '"></label>'
     document = '''<!doctype html><html lang="ko"><meta charset="utf-8"><title>기존 HealthMon 서버</title>
 <style>body{max-width:780px;margin:40px auto;font:18px/1.7 system-ui;padding:20px;background:#edf5fa;color:#193147}input{display:block;width:100%;padding:12px;box-sizing:border-box;font:16px monospace;margin-bottom:20px}h1{color:#087851}</style>
-<h1>기존 18092 서버 준비 완료</h1><p>기존 계정·펫·진화 모델·기록을 그대로 사용합니다. Unity 설정에서 아래 값을 사용하세요. 입력칸을 누르면 전체 선택됩니다.</p>'''
+<h1>HealthMon 서버 준비 완료</h1><p>Unity에서 Play를 누르면 자동 연결됩니다. 기존 계정·펫·진화 모델·기록을 그대로 사용합니다.</p><details><summary>수동 연결 정보</summary>'''
     document += field('API 주소', base) + field('사용자 토큰', token) + field('기존 펫 ID', selected)
-    document += '<p>이 페이지에는 인증 정보가 있습니다. 파일을 공유하지 마세요.</p><p>API·DB: Start-HealthMon.cmd -Target Backend / Stop-HealthMon.cmd -Target Backend. AI: Start-HealthMon.cmd -Target AI / Stop-HealthMon.cmd -Target AI.</p></html>'
+    document += '</details><p>이 페이지에는 인증 정보가 있습니다. 파일을 공유하지 마세요.</p><p>API·DB: Start-HealthMon.cmd -Target Backend / Stop-HealthMon.cmd -Target Backend. AI: Start-HealthMon.cmd -Target AI / Stop-HealthMon.cmd -Target AI.</p></html>'
     path = RUNTIME / 'local-server-connection.html'
     path.write_text(document, encoding='utf-8')
     # A local-only handoff for editor verification; no credential is printed.

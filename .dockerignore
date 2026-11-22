@@ -1,5 +1,11 @@
 **
 !compose.yaml
+!Client/
+!Client/HealthMonUnity/
+!Client/HealthMonUnity/Assets/
+!Client/HealthMonUnity/Assets/HealthMon/
+!Client/HealthMonUnity/Assets/HealthMon/Shop/
+!Client/HealthMonUnity/Assets/HealthMon/Shop/HealthMonShopCatalog.asset
 !Server/
 !Server/**
 !Ai/

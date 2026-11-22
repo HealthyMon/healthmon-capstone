@@ -1,0 +1,49 @@
+{
+  "format": "native DiffSynth-Studio LoRA; not a complete base model",
+  "adapter_file": "weights/healthmon_epoch10.safetensors",
+  "adapter_bytes": 943905448,
+  "adapter_sha256": "9bc8cf6752972b0035a787cba3f2d21a27d501902e9edd199ae7fc02de57350e",
+  "checkpoint": "epoch-10",
+  "selection": "Pre-designated final epoch, not a best-checkpoint claim",
+  "base_model_id": "Qwen/Qwen-Image-Edit-2511",
+  "base_revision": "6f3ccc0b56e431dc6a0c2b2039706d7d26f22cb9",
+  "rank": 32,
+  "training_alpha": 32,
+  "training_alpha_div_rank": 1.0,
+  "loader_alpha": 1.0,
+  "dropout": 0.0,
+  "tensor_dtype": "F32",
+  "tensor_count": 1440,
+  "linear_layer_pairs": 720,
+  "target_modules": [
+    "to_q",
+    "to_k",
+    "to_v",
+    "add_q_proj",
+    "add_k_proj",
+    "add_v_proj",
+    "to_out.0",
+    "to_add_out",
+    "img_mlp.net.2",
+    "img_mod.1",
+    "txt_mlp.net.2",
+    "txt_mod.1"
+  ],
+  "updates": 1760,
+  "microsteps": 7040,
+  "backend": {
+    "name": "DiffSynth-Studio",
+    "version": "2.2.0",
+    "commit": "08fdc0da8f41426885d9432e9007e6e460a4c30d"
+  },
+  "inference": {
+    "height": 512,
+    "width": 512,
+    "steps": 24,
+    "cfg_scale": 4.0,
+    "zero_cond_t": true,
+    "edit_image_auto_resize": false,
+    "lora_scale": 1.0,
+    "negative_prompt": " "
+  }
+}

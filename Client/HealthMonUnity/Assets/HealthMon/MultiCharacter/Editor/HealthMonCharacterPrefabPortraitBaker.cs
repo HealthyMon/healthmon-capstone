@@ -24,6 +24,8 @@ public static class HealthMonCharacterPrefabPortraitBaker
     private static HealthMonCharacterRosterAsset catalog;
     private static int generated;
     private static int failed;
+    public static bool IsRunning => queue.Count > 0;
+    public static int FailedCount => failed;
 
     static HealthMonCharacterPrefabPortraitBaker()
     {
@@ -42,15 +44,7 @@ public static class HealthMonCharacterPrefabPortraitBaker
         foreach (var entry in catalog.entries)
         {
             if (entry == null || entry.visualPrefab == null) continue;
-            // A shop-baked sprite is already an image of the actual prefab.
-            if (entry.portrait != null)
-            {
-                string oldPath = AssetDatabase.GetAssetPath(entry.portrait);
-                if (oldPath.StartsWith("Assets/HealthMon/Shop/Generated/Icons/", StringComparison.Ordinal) ||
-                    oldPath.StartsWith(Folder + "/", StringComparison.Ordinal)) continue;
-            }
             queue.Add(new Job { entry = entry });
-            AssetPreview.GetAssetPreview(entry.visualPrefab);
         }
         if (queue.Count == 0)
         {
@@ -73,7 +67,7 @@ public static class HealthMonCharacterPrefabPortraitBaker
             var job = queue[0];
             queue.RemoveAt(0);
             if (job.entry == null || job.entry.visualPrefab == null) continue;
-            var image = AssetPreview.GetAssetPreview(job.entry.visualPrefab);
+            var image = HealthMonFrontPortrait.Render(job.entry.visualPrefab);
             if (image == null)
             {
                 if (++job.attempts < 180) queue.Add(job);
@@ -82,7 +76,10 @@ public static class HealthMonCharacterPrefabPortraitBaker
             }
             try
             {
-                string path = Folder + "/" + job.entry.id + ".png";
+                string path = AssetDatabase.GetAssetPath(job.entry.portrait);
+                if (!path.StartsWith("Assets/HealthMon/Shop/Generated/Icons/", StringComparison.Ordinal) &&
+                    !path.StartsWith(Folder + "/", StringComparison.Ordinal))
+                    path = Folder + "/" + job.entry.id + ".png";
                 File.WriteAllBytes(path, RenderPng(image));
                 AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
@@ -104,6 +101,7 @@ public static class HealthMonCharacterPrefabPortraitBaker
                 failed++;
                 Debug.LogWarning("[RosterPortrait] " + job.entry.id + " 이미지 저장 실패: " + e.Message);
             }
+            finally { UnityEngine.Object.DestroyImmediate(image); }
         }
         if (queue.Count == 0) Finish(true);
     }

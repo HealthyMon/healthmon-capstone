@@ -188,7 +188,9 @@ def normalize_result(raw):
 
 class VisionRunner:
     def __init__(self, config, runtime):
-        self.python = Path(config['vision_python']).resolve()
+        # POSIX venv executables are symlinks. Resolving the link launches the
+        # base interpreter and discards the vision environment's dependencies.
+        self.python = Path(os.path.abspath(config['vision_python']))
         self.assets = Path(config['vision_assets']).resolve()
         self.runtime = runtime
         if not self.python.is_file() or not self.assets.is_dir():

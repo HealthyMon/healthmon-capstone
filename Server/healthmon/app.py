@@ -146,7 +146,7 @@ def create_app(settings=None, database=None):
             state, _ = service.refresh(c, p, timestamp, available)
             # Pets created before packaged starters existed also need a visible
             # stage0 asset. Never replace a published model or reset progression.
-            if state['published_model_stage'] == 0 and not state.get('model_reference'):
+            if state['published_model_stage'] == 0:
                 from . import starters
                 if starters.bind_default(c, p, timestamp, available):
                     state, _ = service.refresh(c, service.owned(c, owner, pet, True), timestamp, available)
@@ -520,6 +520,11 @@ def create_app(settings=None, database=None):
         with db.connect() as c:
             p = service.owned(c, owner, pet, True)
             state, _ = service.refresh(c, p, now(), settings.chat_available(owner))
+            if state['published_model_stage']==0:
+                from . import starters
+                if starters.bind_default(c,p,now(),settings.chat_available(owner)):
+                    p=service.owned(c,owner,pet,True)
+                    state,_=service.refresh(c,p,now(),settings.chat_available(owner))
             job = enqueue_evolution(c, p, state, body.request_id, now())
         return job_view(job, state['state_version'])
 

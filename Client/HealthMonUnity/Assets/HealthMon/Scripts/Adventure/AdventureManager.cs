@@ -48,7 +48,11 @@ public class AdventureManager : MonoBehaviour
     {
         if (battleController != null) battleController.BattleFinished -= OnBattleFinished;
     }
-    private void Start() => InitializeExploration();
+    private void Start()
+    {
+        gameObject.AddComponent<HealthMonAdventureLayout>();
+        InitializeExploration();
+    }
 
     private void InitializeExploration()
     {

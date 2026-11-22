@@ -44,6 +44,10 @@ def art_direction(compiled):
     if not isinstance(policy.get('shared_direction'), str) or not policy['shared_direction'].strip():
         raise ValueError('An explicit stage transformation direction is required')
     species = compiled['recipe']['species']
+    # This historical policy is explicit to Mora/Nubi. Its mandatory animal
+    # limbs must not override the slime's own three-stage contract.
+    if species == 'slime':
+        return None
     specific = policy.get('species_directions', {}).get(species, '')
     if not isinstance(specific, str):
         raise ValueError('Invalid species art direction')
@@ -84,6 +88,11 @@ def planning_request(compiled, axis_sources):
         'from whole_form_axes), decision_ko and form_why_ko (short Korean sentences describing the artistic decision). '
         'Across the three entries cover all supplied persistent physical and behavioral fields through their declared axes. '
         'Explain proposed shapes only; do not claim observed exercise, food or unprovided history.')
+    if contract['species'] == 'slime':
+        system = system.replace('a complete three-quarter figure', 'a complete straight-on front-facing figure')
+        system += (' This is a SLIME at every stage: one continuous jelly body with its eyes and mouth on the front. '
+            'Interpret muscle, limb and abdomen cues as upper/lower jelly volumes and grounded base, '
+            'never as a separate animal head, muzzle, fur, ears, paws or tail. Keep both eyes visible from the front.')
     if policy is not None:
         system += (' The explicit evolution_art_policy is the stage-2 transformation requirement. '
             'Name three major new structures in structural_changes and express them clearly in image_prompt. '
@@ -122,10 +131,15 @@ def image_prompt(compiled, concept):
     ancestry = ('Create ONE original radically evolved descendant of the ' + contract['species'] + ' lineage. '
         'Ancestral symbols may be reorganized into the mandatory new body plan; do not retain ancestral limb function.\n') if policy else (
         'Create ONE original newly evolved ' + contract['identity'] + '\n' + contract['stage_directions'][str(stage)])
+    pose = ('Straight-on FRONT VIEW at eye level, both eyes and the mouth clearly visible, '
+        'the entire rounded slime body and grounded base inside generous white margins. '
+        'No rear view, profile view, canine muzzle, pointed animal ears, fur, paws or tail. '
+        if contract['species'] == 'slime' else
+        'Calm three-quarter standing pose. Full body and complete tail inside generous margins. ')
     return (ancestry + stage_text + '\nSCORE-DERIVED BODY CONDITION: '
         + body_instruction(compiled) + '\nINHERITED FAMILY SYMBOLS, not target body-plan constraints: '
         + '; '.join(contract['lineage_anchors']) + '\nACTUAL PARENT-GROUNDED DESIGN: '
         + concept['image_prompt'] + '\nSmooth high-quality stylized 3D fantasy-game character render. '
-        'Coherent connected anatomy, broad legible forms, soft studio lighting, calm three-quarter standing pose. '
-        'Full body and complete tail inside generous margins on a plain WHITE square background. '
+        'Coherent connected anatomy, broad legible forms, soft studio lighting. ' + pose +
+        'Plain WHITE square background. '
         'Exactly ONE creature, no labels, text, grids, comparison panels, extra heads, floating fragments, clothing or weapons.\n')

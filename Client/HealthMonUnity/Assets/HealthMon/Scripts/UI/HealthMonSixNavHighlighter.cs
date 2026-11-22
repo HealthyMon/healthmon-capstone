@@ -41,7 +41,8 @@ public sealed class HealthMonSixNavHighlighter : MonoBehaviour
             }
             return;
         }
-        // Other panels (e.g. customization) intentionally keep the last selection.
+        // Subpages do not inherit a highlight from an unrelated previous page.
+        if (selectedIndex != -1) { selectedIndex = -1; RefreshVisuals(); }
     }
 
     private void RefreshVisuals()

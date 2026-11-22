@@ -189,6 +189,7 @@ namespace HealthMon.Evolution
             bool hasTexture = texture != null;
             if (petPreview3D != null)
             {
+                petPreview3D.rectTransform.localScale = Vector3.one;
                 petPreview3D.texture = hasTexture ? (Texture)texture : Texture2D.whiteTexture;
                 petPreview3D.enabled = hasTexture;
             }
@@ -196,6 +197,7 @@ namespace HealthMon.Evolution
             if (petPreviewFallback != null) petPreviewFallback.enabled = !hasTexture;
             if (resultPreview3D != null)
             {
+                resultPreview3D.rectTransform.localScale = Vector3.one;
                 resultPreview3D.texture = hasTexture ? (Texture)texture : Texture2D.whiteTexture;
                 resultPreview3D.enabled = hasTexture;
             }

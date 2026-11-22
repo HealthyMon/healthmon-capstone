@@ -90,7 +90,7 @@ class Settings:
         if os.getenv('APP_ENV', 'development') != 'production':
             for token, owner in json.loads(os.getenv('DEV_TOKENS', '{}')).items():
                 hashes[hashlib.sha256(token.encode()).hexdigest()] = owner
-        starter_manifest=os.getenv('STARTER_MODEL_MANIFEST', str(ROOT / 'Server/assets/starter/lucan/manifest.json'))
+        starter_manifest=os.getenv('STARTER_MODEL_MANIFEST', str(ROOT / 'Server/assets/starter/slime/manifest.json'))
         return cls(database_url=os.getenv('DATABASE_URL', ''), environment=os.getenv('APP_ENV', 'development'),
                    ai_mode=os.getenv('AI_MODE', 'disabled'), ai_base_url=os.getenv('AI_BASE_URL', '').rstrip('/'),
                    ai_token=os.getenv('AI_SERVER_TOKEN', ''), ai_timeout=float(os.getenv('AI_TIMEOUT_SECONDS', '30')),

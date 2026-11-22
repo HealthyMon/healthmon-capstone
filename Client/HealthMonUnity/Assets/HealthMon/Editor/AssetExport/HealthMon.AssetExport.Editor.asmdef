@@ -1,0 +1,6 @@
+{
+  "name": "HealthMon.AssetExport.Editor",
+  "references": ["glTFast", "glTFast.Export"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

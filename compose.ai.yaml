@@ -1,0 +1,29 @@
+# Invoked independently so Backend / AI / All retain their original meaning.
+name: ${COMPOSE_PROJECT_NAME:-healthmon-test}-ai
+services:
+  ai:
+    image: healthmon-ai:local
+    init: true
+    gpus: all
+    ports:
+      - "127.0.0.1:18090:18090"
+      - "127.0.0.1:18095:18095"
+    volumes:
+      - ./.runtime/portable:/app/.runtime/portable
+      - ${HEALTHMON_3D_MODELS:-./.runtime/models/generation3d/models}:/models/generation3d:ro
+      - ${HEALTHMON_2511_MODELS:-./.runtime/models/evolution-2511}:/models/evolution2511:ro
+      - ${HEALTHMON_DIALOGUE_MODELS:-./.runtime/models/dialogue}:/models/dialogue:ro
+      - ${HEALTHMON_EMBEDDING_MODELS:-./.runtime/models/embedding}:/models/embedding:ro
+      - ${HEALTHMON_DIALOGUE_ADAPTER:-./.runtime/models/dialogue-adapter}:/models/dialogue-adapter:ro
+      - ./Ai/Vision:/app/Ai/Vision:ro
+      - ./Ai/Pose/mac-exercise-counter/models:/app/Ai/Pose/mac-exercise-counter/models:ro
+      - ./.runtime/portable/cache/flex_gemm:/models/generation3d/trellis/flex_gemm
+      - ./.runtime/portable/cache/torch_extensions:/models/generation3d/trellis/torch_extensions
+      - ./.runtime/portable/cache/triton:/models/generation3d/trellis/triton
+    healthcheck:
+      test: [CMD, /opt/healthmon-envs/control/bin/python, -B, -m, Server.portable.bootstrap, health]
+      interval: 10s
+      timeout: 5s
+      start_period: 300s
+      retries: 12
+    restart: "no"

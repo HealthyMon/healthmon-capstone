@@ -403,6 +403,9 @@ public sealed class CommonServerNativeE2ERunner : MonoBehaviour
 
     private async Task RunCase(NativeE2ECase item)
     {
+        // The shop is an independent overlay; normal page routing does not
+        // close it. A preceding purchase must not cover model evidence.
+        FindAnyObjectByType<HealthMonShopScreen>(FindObjectsInactive.Include)?.CloseShop();
         current = new NativeE2ECaseResult { case_id = item.case_id, status = "running",
             manual_visual_review_required = item.require_model_display }; results.Add(current);
         if (item.require_model_display) report.manual_visual_review_required = true;

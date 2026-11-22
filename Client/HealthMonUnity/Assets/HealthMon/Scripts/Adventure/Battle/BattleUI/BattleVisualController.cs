@@ -21,6 +21,7 @@ public class BattleVisualController : MonoBehaviour
 
     private Coroutine hitCoroutine;
     private Coroutine shakeCoroutine;
+    private Material arenaMaterial;
 
     private void Awake()
     {
@@ -77,6 +78,46 @@ public class BattleVisualController : MonoBehaviour
                 enemyVisual.transform.localPosition;
         }
     }
+
+    public void FrameNormalEnemy()
+    {
+        if (enemyVisual == null || battleCamera == null) return;
+        var renderers = enemyVisual.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) return;
+        var bounds = renderers[0].bounds;
+        foreach (var renderer in renderers)
+            if (renderer.enabled) bounds.Encapsulate(renderer.bounds);
+        battleCamera.orthographic = true;
+        battleCamera.clearFlags = CameraClearFlags.SolidColor;
+        battleCamera.backgroundColor = new Color(.19f, .10f, .065f);
+        battleCamera.orthographicSize = Mathf.Max(bounds.extents.y / .32f,
+            bounds.extents.x / (.64f * battleCamera.aspect));
+        battleCamera.transform.rotation = Quaternion.Euler(12f, 0f, 0f);
+        float distance = Mathf.Max(8, bounds.size.magnitude * 3);
+        battleCamera.transform.position = bounds.center - battleCamera.transform.forward * distance
+            - battleCamera.transform.up * (.52f - .5f) * 2 * battleCamera.orthographicSize;
+        battleCamera.farClipPlane = Mathf.Max(150, distance * 4);
+        var ground = GameObject.Find("BattleRoot/BattleEnvironment/Ground");
+        if (ground != null)
+        {
+            // The old small default-grey plane exposed a hard horizon behind the monster.
+            ground.transform.localScale = new Vector3(30, 1, 30);
+            var renderer = ground.GetComponent<Renderer>();
+            if (renderer != null && arenaMaterial == null)
+            {
+                arenaMaterial = new Material(renderer.sharedMaterial);
+                arenaMaterial.color = new Color(.28f, .13f, .065f);
+                if (arenaMaterial.HasProperty("_BaseColor")) arenaMaterial.SetColor("_BaseColor", arenaMaterial.color);
+                if (arenaMaterial.HasProperty("_Smoothness")) arenaMaterial.SetFloat("_Smoothness", .08f);
+                renderer.sharedMaterial = arenaMaterial;
+            }
+        }
+        var cameraData = battleCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
+        if (cameraData != null)
+            cameraData.antialiasing = UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+        cameraOriginalPosition = battleCamera.transform.localPosition;
+    }
+    private void OnDestroy() { if (arenaMaterial != null) Destroy(arenaMaterial); }
 
 
     public void PlayEnemyHit(bool strong)

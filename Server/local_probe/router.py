@@ -115,11 +115,12 @@ def create_app(key_file):
 
 
 def main():
+    import os
     parser = argparse.ArgumentParser()
     parser.add_argument('--key-config', type=Path, required=True)
     args = parser.parse_args()
     import uvicorn
-    uvicorn.run(create_app(args.key_config), host='127.0.0.1', port=18090, access_log=False)
+    uvicorn.run(create_app(args.key_config), host=os.environ.get('HEALTHMON_ROUTER_BIND','127.0.0.1'), port=18090, access_log=False)
 
 
 if __name__ == '__main__':

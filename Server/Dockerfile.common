@@ -9,6 +9,8 @@ COPY Server/migrations Server/migrations
 COPY Ai/LLM/migrations Ai/LLM/migrations
 COPY Server/scripts Server/scripts
 COPY Server/assets Server/assets
+COPY Ai/Generation3D/src/healthmon/__init__.py Ai/Generation3D/src/healthmon/__init__.py
+COPY Ai/Generation3D/src/healthmon/species_contract.py Ai/Generation3D/src/healthmon/species_contract.py
 RUN useradd --uid 10001 --create-home healthmon
 USER 10001
 EXPOSE 8000
@@ -18,6 +20,7 @@ FROM runtime AS checks
 USER root
 RUN pip install --no-cache-dir pytest==9.0.2
 COPY Server/tests Server/tests
+COPY Client/HealthMonUnity/Assets/HealthMon/Shop/HealthMonShopCatalog.asset Client/HealthMonUnity/Assets/HealthMon/Shop/HealthMonShopCatalog.asset
 COPY Ai/Generation3D/configs Ai/Generation3D/configs
 COPY Ai/Generation3D/src/healthmon/__init__.py Ai/Generation3D/src/healthmon/__init__.py
 COPY Ai/Generation3D/src/healthmon/individual_evolution.py Ai/Generation3D/src/healthmon/individual_evolution.py

@@ -52,7 +52,10 @@ public class DialoguePrototype : MonoBehaviour
             for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
                 if (button.onClick.GetPersistentTarget(i) == this && button.onClick.GetPersistentMethodName(i) == nameof(SendMessage))
                     sendButton = button;
-        SetCharacterSpeech("실제 LLM 서버에 Connect한 뒤 대화해 주세요.");
+        if (sendButton == null && messageInput != null)
+            sendButton = messageInput.transform.parent.Find("SendButton")?.GetComponent<Button>();
+        SetCharacterSpeech("교감 연결 대기 중");
+        if (userMessageText != null) userMessageText.text = "첫 대화 시작!";
         if (sendButton != null) sendLabel = sendButton.GetComponentInChildren<TMP_Text>(true);
         ConfigureRuntimeLayout();
     }
@@ -81,11 +84,11 @@ public class DialoguePrototype : MonoBehaviour
         layout.Configure(messageInput, userMessageText, characterResponseText, sendButton);
         // One readable response surface: the fixed panel supports long replies
         // even before AR tracking/placement. Avoid a duplicate over the model.
-        if (layout.HasValidLayout && floatingBubbleText != null && floatingBubbleText != characterResponseText)
+        if (layout.Panel != null && floatingBubbleText != null && floatingBubbleText != characterResponseText)
         {
             var floating = floatingBubbleText.GetComponentInParent<SpeechBubbleFollowTarget>();
-            if (floating != null && floating.gameObject != layout.ResponseBubble.gameObject)
-                floating.gameObject.SetActive(false);
+            var bubble = floating != null ? floating.gameObject : floatingBubbleText.transform.parent.gameObject;
+            if (bubble != layout.ResponseBubble?.gameObject) bubble.SetActive(false);
         }
     }
     private void BindApiEvents()

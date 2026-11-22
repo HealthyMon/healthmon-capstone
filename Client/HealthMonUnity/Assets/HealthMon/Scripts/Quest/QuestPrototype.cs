@@ -85,6 +85,11 @@ public class QuestPrototype : MonoBehaviour
 
     private void Start()
     {
+        foreach (var progress in new[] { walkProgressText, foodProgressText, dialogueProgressText, arProgressText })
+        {
+            var reward = progress != null ? progress.transform.parent.Find("RewardText")?.GetComponent<TMP_Text>() : null;
+            HealthMonUILayout.Text(reward, .04f, .12f, .70f, .36f, 32);
+        }
         if (ServerMode)
         {
             foreach (var text in new[] { walkProgressText, foodProgressText, dialogueProgressText, arProgressText, summaryText })

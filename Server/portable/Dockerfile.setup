@@ -1,0 +1,6 @@
+FROM python:3.12-slim
+RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -m pip install huggingface-hub==1.33.0 python-dotenv==1.2.2
+WORKDIR /app
+ENTRYPOINT ["python", "-B", "-m", "Server.portable.bootstrap"]

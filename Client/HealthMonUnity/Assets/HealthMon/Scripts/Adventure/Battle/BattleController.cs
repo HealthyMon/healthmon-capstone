@@ -58,7 +58,11 @@ public class BattleController : MonoBehaviour
             floorPanel.SetActive(false);
 
         if (explorationCamera != null)
+        {
             explorationCamera.enabled = false;
+            var listener = explorationCamera.GetComponent<AudioListener>();
+            if (listener != null) listener.enabled = false;
+        }
 
         battleRoot.SetActive(true);
 
@@ -77,7 +81,11 @@ public class BattleController : MonoBehaviour
             battleRoot.SetActive(false);
 
             if (explorationCamera != null)
+            {
                 explorationCamera.enabled = true;
+                var listener = explorationCamera.GetComponent<AudioListener>();
+                if (listener != null) listener.enabled = true;
+            }
 
             if (floorPanel != null)
                 floorPanel.SetActive(true);
@@ -131,7 +139,11 @@ public class BattleController : MonoBehaviour
 
         // 4. 탐험 카메라 복구
         if (explorationCamera != null)
+        {
             explorationCamera.enabled = true;
+            var listener = explorationCamera.GetComponent<AudioListener>();
+            if (listener != null) listener.enabled = true;
+        }
 
         // 5. 탐험 UI 복구
         if (floorPanel != null)

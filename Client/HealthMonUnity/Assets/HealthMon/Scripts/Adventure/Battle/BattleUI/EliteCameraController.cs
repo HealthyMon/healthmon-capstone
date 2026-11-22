@@ -44,6 +44,12 @@ public class EliteCameraController : MonoBehaviour
         }
 
         cam.LookAt(lookTarget);
+        targetCamera.clearFlags = CameraClearFlags.SolidColor;
+        targetCamera.backgroundColor = new Color(.19f, .10f, .065f);
+        targetCamera.farClipPlane = 150;
+        var cameraData = targetCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
+        if (cameraData != null)
+            cameraData.antialiasing = UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
 
         Debug.Log(
             $"[EliteCamera] Position: {cam.position}, " +

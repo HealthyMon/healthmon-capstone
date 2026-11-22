@@ -14,7 +14,7 @@ import httpx
 import psutil
 
 ROOT = Path(__file__).resolve().parents[2]
-RUNTIME = ROOT / '.runtime'
+RUNTIME = Path(os.environ.get('HEALTHMON_SERVICE_STATE',str(ROOT / '.runtime'))).resolve()
 STATUS = RUNTIME / 'local-services-status.json'
 STOP = RUNTIME / 'local-services.stop'
 
@@ -22,6 +22,13 @@ STOP = RUNTIME / 'local-services.stop'
 def resolve(value):
     path = Path(value)
     return (ROOT / path).resolve() if not path.is_absolute() else path.resolve()
+
+
+def interpreter_path(value):
+    # POSIX venv Python is a symlink. Resolving it would discard pyvenv.cfg
+    # and launch the base interpreter without the service's installed packages.
+    path = Path(value)
+    return Path(os.path.abspath(ROOT / path if not path.is_absolute() else path))
 
 
 def connection_configuration(path):
@@ -47,7 +54,7 @@ def connection_configuration(path):
 def configuration(path):
     config = connection_configuration(path)
     for name in ('python', 'llm_python', 'evolution_config'):
-        config[name] = resolve(config[name])
+        config[name] = interpreter_path(config[name]) if name.endswith('python') else resolve(config[name])
         if not config[name].is_file():
             raise ValueError('Missing local AI prerequisite: ' + name)
     llm = json.loads(config['llm_config'].read_text(encoding='utf-8-sig'))
@@ -62,6 +69,10 @@ def configuration(path):
         evolution[name] = resolve(evolution[name])
         if name != 'work_root' and not evolution[name].is_dir():
             raise ValueError('Missing existing 3D prerequisite: ' + name)
+    if evolution.get('image_model_root'):
+        evolution['image_model_root'] = resolve(evolution['image_model_root'])
+        if not evolution['image_model_root'].is_dir():
+            raise ValueError('Missing new evolution model directory')
     config.update(evolution=evolution)
     return config
 
@@ -105,6 +116,10 @@ def health(port):
             response = client.get(f'http://127.0.0.1:{port}/health')
             response.raise_for_status()
             body = response.json()
+            # Pose loads its CPU models on the first session; idle is its
+            # documented serving state, not a failed startup.
+            if body.get('service') == 'healthmon-pose':
+                return body.get('status') in ('idle', 'ready')
             return body.get('ready', body.get('status') == 'ok') is True
     except (httpx.HTTPError, ValueError):
         return False
@@ -164,13 +179,16 @@ def stop_matching(command):
 def service_commands(config):
     cpu, gpu = str(config['python']), str(config['llm_python'])
     llm, vision = str(config['llm_config']), str(config['vision_config'])
-    return {
+    commands = {
         'router': (18090, [cpu, '-B', '-m', 'Server.local_probe.router', '--key-config', llm]),
         'vision': (18094, [cpu, '-B', '-m', 'Server.local_probe.vision_gateway', '--config', vision]),
         'llm': (18091, [gpu, '-B', '-m', 'Server.local_probe.gpu_gateway', '--config', llm]),
         'evolution': (18093, [cpu, '-B', '-m', 'Server.local_probe.local_services',
                                'evolution', '--config', str(config['path'])]),
     }
+    if config.get('pose_python'):
+        commands['pose']=(18095,[str(interpreter_path(config['pose_python'])),'-B','-m','Ai.Pose.unity_service'])
+    return commands
 
 
 def generate_queued(generate, start_llm, stop_llm, stopping=lambda: False):
@@ -250,7 +268,9 @@ def supervise(config):
                     pulse.start()
                     try:
                         generate_queued(
-                            lambda: run_once(settings, store, evolution['model_root'], evolution['vendor_root'], allow_gpu=True),
+                            lambda: run_once(settings, store, evolution['model_root'], evolution['vendor_root'],
+                                             allow_gpu=True, image_model_root=evolution.get('image_model_root'),
+                                             execution_mode=evolution.get('execution_mode','docker')),
                             lambda: start('llm'), lambda: stop('llm'), STOP.exists)
                     finally:
                         finished.set()
@@ -296,6 +316,8 @@ def main():
     if args.action == 'check':
         check_backend_connection(config)
         subprocess.run(['docker', 'image', 'inspect', 'healthmon-3d:3090'], stdout=subprocess.DEVNULL, check=True)
+        if config['evolution'].get('image_model_root'):
+            subprocess.run(['docker', 'image', 'inspect', 'healthmon-evolution-2511:local'], stdout=subprocess.DEVNULL, check=True)
         print('Local AI prerequisites verified; no API settings were changed.')
     elif args.action == 'evolution':
         import uvicorn

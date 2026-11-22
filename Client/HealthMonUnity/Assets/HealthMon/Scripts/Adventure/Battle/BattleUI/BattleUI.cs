@@ -146,15 +146,7 @@ public class BattleUI : MonoBehaviour
         moveButton.gameObject.SetActive(isElite);
         itemButton.gameObject.SetActive(!isElite);
 
-        if (enemyStatusPanel != null)
-        {
-            Vector2 position = enemyStatusPanel.anchoredPosition;
-
-            position.y = isElite
-                ? eliteEnemyStatusY
-                : normalEnemyStatusY;
-
-            enemyStatusPanel.anchoredPosition = position;
-        }
+        // Both modes share the same reserved HUD region on every portrait ratio.
+        HealthMonUILayout.Place(enemyStatusPanel, .09f, .77f, .91f, .86f);
     }
 }

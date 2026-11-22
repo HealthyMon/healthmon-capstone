@@ -10,14 +10,60 @@ from psycopg.types.json import Jsonb
 from Server.healthmon import rules,service,starters
 
 
+def packaged(species):
+    from pathlib import Path
+    return Path(__file__).resolve().parents[1]/'assets/starter'/species/'manifest.json'
+
+
+def level_ten(db,pet):
+    with db.connect() as c:
+        exp=sum(rules.required_exp(v) for v in range(1,10))
+        c.execute('INSERT INTO game_ledger(pet_id,reward_key,exp,coin,reason) VALUES(%s,%s,%s,17,%s)',
+                  (pet,'slime-migration-fixture',exp,'synthetic test'))
+
+
+def test_shipped_wolf_is_corrected_to_actual_slime_without_resetting_progress(client,db):
+    with db.connect() as c:old=starters.register(c,packaged('lucan'),set_default=True)
+    pet=client.post('/pets',json={'name':'기존 슬라임'}).json()['pet_id']
+    level_ten(db,pet)
+    before=client.get(f'/pets/{pet}/state').json()
+    with db.connect() as c:new_id=starters.ensure_default(c,packaged('slime'))
+    # Submit directly: repair must not depend on visiting the state endpoint first.
+    queued=client.post(f'/pets/{pet}/evolutions',json={'request_id':'slime-repaired'}).json()
+    after=client.get(f'/pets/{pet}/state').json()
+    assert after['model_reference'].endswith(new_id) and new_id!=old['starter_id']
+    for key in ('level','total_exp','coin','upper_body','lower_body','published_model_stage'):
+        assert after[key]==before[key]
+    with db.connect() as c:
+        job=c.execute('SELECT input FROM ai_jobs WHERE id=%s',(queued['job_id'],)).fetchone()['input']
+    parent=job['parent_asset']
+    assert parent['species']=='slime' and parent['species_contract']['species']=='slime'
+    assert parent['image_sha256']==json.loads(packaged('slime').read_text())['image_sha256']
+    assert client.get(f'/pets/{pet}/state').json()['state_version']==after['state_version']
+
+
+def test_frozen_legacy_evolution_is_not_rewritten_by_starter_upgrade(client,db):
+    with db.connect() as c:old=starters.register(c,packaged('lucan'),set_default=True)
+    pet=client.post('/pets',json={'name':'진행 중 기록'}).json()['pet_id']
+    level_ten(db,pet)
+    queued=client.post(f'/pets/{pet}/evolutions',json={'request_id':'before-slime'}).json()
+    with db.connect() as c:
+        before=c.execute('SELECT input FROM ai_jobs WHERE id=%s',(queued['job_id'],)).fetchone()['input']
+        starters.ensure_default(c,packaged('slime'))
+    assert client.get(f'/pets/{pet}/state').json()['model_reference'].endswith(old['starter_id'])
+    with db.connect() as c:
+        assert c.execute('SELECT input FROM ai_jobs WHERE id=%s',(queued['job_id'],)).fetchone()['input']==before
+
+
 def test_packaged_starter_bootstraps_new_environment_and_survives_restart(settings,db):
     from dataclasses import replace
     from pathlib import Path
     from fastapi.testclient import TestClient
     from Server.healthmon.app import create_app
-    path=Path(__file__).resolve().parents[1]/'assets/starter/lucan/manifest.json'
+    path=Path(__file__).resolve().parents[1]/'assets/starter/slime/manifest.json'
     config=replace(settings,starter_manifest=path)
-    asset_hash='77a7b4d49b6561b7d20206d1c1a405b90e160005a69c81decc806cf9452d269d'
+    expected=json.loads(path.read_text(encoding='utf-8'))
+    asset_hash=expected['model_sha256']
     references=[]
     for _ in range(2):
         with TestClient(create_app(config,db)) as api:
@@ -25,7 +71,9 @@ def test_packaged_starter_bootstraps_new_environment_and_survives_restart(settin
             created=api.post('/pets',json={'name':'배포 초기종'});assert created.status_code==200
             state=created.json()['state'];assert state['published_model_stage']==0 and state['asset_status']=='ready'
             asset=api.get(state['model_reference']);assert asset.status_code==200
-            assert len(asset.content)==6966452 and hashlib.sha256(asset.content).hexdigest()==asset_hash
+            assert hashlib.sha256(asset.content).hexdigest()==asset_hash
+            manifest=api.get(f"/pets/{created.json()['pet_id']}/evolutions/{state['model_reference'].split('/')[-1]}").json()
+            assert manifest['species']=='slime'
             references.append(state['model_reference'].split('/')[-1])
     assert references[0]==references[1]
     with db.connect() as c:
@@ -40,7 +88,7 @@ def test_packaged_bootstrap_preserves_operator_default_and_existing_pet(settings
     from Server.healthmon.app import create_app
     path,_=files(tmp_path)
     with db.connect() as c:chosen=starters.register(c,path,set_default=True)
-    packaged=Path(__file__).resolve().parents[1]/'assets/starter/lucan/manifest.json'
+    packaged=Path(__file__).resolve().parents[1]/'assets/starter/slime/manifest.json'
     with TestClient(create_app(replace(settings,starter_manifest=packaged),db)) as api:
         api.headers['Authorization']='Bearer test-owner-a-token'
         state=api.post('/pets',json={'name':'기존 선택 유지'}).json()['state']

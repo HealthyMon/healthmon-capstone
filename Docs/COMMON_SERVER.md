@@ -109,9 +109,11 @@ CPU API 이미지는 GPU 라이브러리와 추론 가중치를 포함하지 않
 [로컬 AI Gateway](../Server/local_probe/README.md)와
 [3D Gateway](../Ai/Generation3D/runtime/common_gateway/README.md)는 별도로 실행합니다.
 
-기본 초기종의 GLB·PNG·manifest는 `Server/assets/starter/lucan`에 있습니다.
+기본 초기종의 GLB·PNG·manifest는 `Server/assets/starter/slime`에 있습니다.
 첫 기동 시 기본 자산을 등록하고 새 펫에 연결합니다.
-기존 기본 자산과 기존 펫의 연결은 유지합니다.
+이전 배포판에 포함된 늑대 자산과 정확히 같은 해시의 기본값은 슬라임으로 교체합니다.
+기존 펫은 진화 작업 이력이 없는 0단계의 해당 늑대 연결만 교정하며, 능력치·코인·기록을 유지합니다.
+이미 요청된 진화의 입력, 생성된 외형, 별도로 등록한 초기종은 자동으로 덮어쓰지 않습니다.
 다른 초기종은 `Server/scripts/provision_starter.py --manifest PATH --set-default`로 등록합니다.
 첫 진화는 부모 PNG·종 계약·파일 해시를 작업 입력에 동결하며, 이후 진화는 이전 단계의 결과를 계승합니다.
 상세 흐름은 [3D 진화](3D_UNITY_INTEGRATION.md)를 참고합니다.

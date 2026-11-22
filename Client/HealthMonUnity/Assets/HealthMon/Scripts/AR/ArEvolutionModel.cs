@@ -107,8 +107,16 @@ namespace Healthmon.Evolution
                         throw new InvalidOperationException("GLB import/instantiation failed.");
                     if (this == null) { Destroy(candidate); importer.Dispose(); return; }
                     if (desired == null || desired.revision != manifest.revision) { Destroy(candidate); importer.Dispose(); continue; }
+                    SmoothOrganicSurface(candidate);
                     FitOnPlane(candidate, fitPlaceholder ? presentationHeight :
                         Mathf.Clamp(EvolutionClient.Instance.Settings.display_height_m, .05f, 2f));
+                    // The reconstruction predicts an almost fully metallic map
+                    // for the orange jelly body. Keep its actual generated color
+                    // and geometry, but present organic pets as non-metallic.
+                    foreach (var renderer in candidate.GetComponentsInChildren<Renderer>(true))
+                        foreach (var material in renderer.sharedMaterials)
+                            if (material != null && material.HasProperty("metallicFactor"))
+                                material.SetFloat("metallicFactor", 0f);
                     foreach (var child in candidate.GetComponentsInChildren<Transform>(true))
                         child.gameObject.layer = gameObject.layer;
                     var skinned = candidate.GetComponentsInChildren<SkinnedMeshRenderer>(true);
@@ -141,9 +149,34 @@ namespace Healthmon.Evolution
             loading = false;
         }
 
+        private static void SmoothOrganicSurface(GameObject model)
+        {
+            foreach (var skin in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                var mesh = skin.sharedMesh;
+                if (mesh == null || !mesh.isReadable) continue;
+                // UV islands duplicate positions. Rebuild geometric normals and
+                // share their direction across those seams, retaining vertices,
+                // UVs, rig weights and the original downloaded GLB unchanged.
+                mesh.RecalculateNormals();
+                var positions = mesh.vertices;
+                var normals = mesh.normals;
+                var sums = new System.Collections.Generic.Dictionary<Vector3, Vector3>(positions.Length);
+                for (int i = 0; i < positions.Length; i++)
+                {
+                    sums.TryGetValue(positions[i], out var sum);
+                    sums[positions[i]] = sum + normals[i];
+                }
+                for (int i = 0; i < positions.Length; i++) normals[i] = sums[positions[i]].normalized;
+                mesh.normals = normals;
+            }
+        }
+
         private void FitOnPlane(GameObject model, float heightMetres)
         {
-            model.transform.localRotation = Quaternion.Euler(0, EvolutionClient.Instance.Settings.model_yaw_degrees, 0);
+            // Home/preview roots already face their own cameras. Applying the
+            // AR placement offset again turns their imported +Z face backwards.
+            model.transform.localRotation = Quaternion.Euler(0, fitPlaceholder ? 0 : EvolutionClient.Instance.Settings.model_yaw_degrees, 0);
             var renderers = model.GetComponentsInChildren<Renderer>(true);
             Bounds bounds = GeometryBounds(renderers);
             float scale = heightMetres / bounds.size.y;

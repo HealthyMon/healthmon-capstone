@@ -68,6 +68,11 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
         model.transform.localPosition = Vector3.zero;
         model.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
         model.transform.localScale = Vector3.one * 1.15f;
+        foreach (var child in model.GetComponentsInChildren<Transform>(true))
+            if (child.name.StartsWith("Jewelry_", System.StringComparison.OrdinalIgnoreCase) ||
+                child.name.IndexOf("AccessoryAnchor", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                child.gameObject.SetActive(false);
+        foreach (var animator in model.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
 
         Color tint = previewColors[Mathf.Clamp(index, 0, previewColors.Length - 1)];
         TintAllRenderers(model, tint);
@@ -88,6 +93,15 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
         cam.nearClipPlane = 0.1f;
         cam.farClipPlane = 50f;
         cam.enabled = true;
+        var visible = model.GetComponentsInChildren<Renderer>();
+        if (visible.Length > 0)
+        {
+            var bounds = visible[0].bounds;
+            foreach (var renderer in visible) if (renderer.enabled) bounds.Encapsulate(renderer.bounds);
+            cam.orthographic = true;
+            cam.orthographicSize = Mathf.Max(bounds.extents.x, bounds.extents.y) * 1.2f;
+            cam.transform.position = bounds.center - cam.transform.forward * 4;
+        }
 
         // 중요: 배경 투명 유지용 포맷
         RenderTexture rt = new RenderTexture(512, 512, 24, RenderTextureFormat.ARGB32);
@@ -118,25 +132,18 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
 
         foreach (Renderer r in renderers)
         {
-            Material[] mats = r.materials;
-
-            for (int i = 0; i < mats.Length; i++)
-            {
-                if (mats[i] == null) continue;
-
-                Material newMat = new Material(mats[i]);
-
-                // URP / Standard 둘 다 대응
-                if (newMat.HasProperty("_BaseColor"))
-                    newMat.SetColor("_BaseColor", tint);
-
-                if (newMat.HasProperty("_Color"))
-                    newMat.SetColor("_Color", tint);
-
-                mats[i] = newMat;
-            }
-
-            r.materials = mats;
+            var block = new MaterialPropertyBlock();
+            r.GetPropertyBlock(block);
+            block.SetColor("_BaseColor", tint);
+            block.SetColor("_Color", tint);
+            r.SetPropertyBlock(block);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (runtimeRoot != null) Destroy(runtimeRoot.gameObject);
+        foreach (var texture in renderTextures)
+            if (texture != null) { texture.Release(); Destroy(texture); }
     }
 }

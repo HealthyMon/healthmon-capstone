@@ -1,0 +1,15 @@
+{
+  "dialogue": {
+    "repo_id": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "adapter_checksums": {
+      "adapter_config.json": "970a72233d5bd8810b3722c27a147ee0ad5e35e3d3b259d9228ff3c278e3e475",
+      "adapter_model.safetensors": "26030bd0363aabcc5f49095c0a8bce76660bb9f038ef2e314c6dc1a9491e0133"
+    }
+  },
+  "embedding": {
+    "repo_id": "BAAI/bge-m3",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+  }
+}

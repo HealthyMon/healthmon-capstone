@@ -3,6 +3,7 @@ using Healthmon.Beta;
 using Healthmon.Common;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorkoutHistoryController : MonoBehaviour
 {
@@ -28,7 +29,38 @@ public class WorkoutHistoryController : MonoBehaviour
 
     private void OnEnable()
     {
+        LayoutHistory();
         RefreshWorkoutList();
+    }
+
+    private void LayoutHistory()
+    {
+        if (countText == null) return;
+        var page = countText.transform.parent as RectTransform;
+        var unusedTabs = page.parent.Find("TabBar");
+        if (unusedTabs != null && unusedTabs.childCount == 0) unusedTabs.gameObject.SetActive(false);
+        HealthMonUILayout.Place(page, .05f, .17f, .95f, .97f);
+        HealthMonUILayout.Text(page.Find("TitleText")?.GetComponent<TMP_Text>(), .06f, .90f, .67f, .98f, 42);
+        HealthMonUILayout.Text(countText, .06f, .82f, .68f, .90f, 28);
+        var refresh = page.Find("RefresthButton") as RectTransform;
+        HealthMonUILayout.Place(refresh, .72f, .85f, .94f, .94f);
+        if (refresh != null)
+        {
+            var label = refresh.GetComponentInChildren<Text>(true);
+            if (label != null) { label.resizeTextForBestFit = true; label.resizeTextMinSize = 16; label.resizeTextMaxSize = 26; }
+        }
+        HealthMonUILayout.Place(page.Find("Scroll View") as RectTransform, .04f, .04f, .96f, .80f);
+        if (page.Find("EmptyHistory") == null)
+        {
+            var empty = new GameObject("EmptyHistory", typeof(RectTransform), typeof(TextMeshProUGUI));
+            empty.transform.SetParent(page, false);
+            var label = empty.GetComponent<TMP_Text>(); label.font = countText.font;
+            label.color = new Color(.82f, .91f, 1);
+            label.alignment = TextAlignmentOptions.Center;
+            HealthMonUILayout.Text(label, .12f, .38f, .88f, .55f, 30);
+            label.text = "아직 기록이 없다!\n훈련을 완료해 첫 기록을 남겨라.";
+            empty.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -70,7 +102,11 @@ public class WorkoutHistoryController : MonoBehaviour
         // A server failure must never reveal another account's local history.
         try
         {
-            var history = JsonUtility.FromJson<WorkoutRecordDataList>(HealthMonAndroidBridge.GetPendingWorkoutResults());
+            string json = HealthMonAndroidBridge.GetPendingWorkoutResults();
+            // The Editor bridge and some Android versions return a bare array.
+            if (string.IsNullOrWhiteSpace(json)) json = "[]";
+            if (json.TrimStart().StartsWith("[")) json = "{\"items\":" + json + "}";
+            var history = JsonUtility.FromJson<WorkoutRecordDataList>(json);
             int displayed = 0;
             foreach (var record in history?.items ?? new WorkoutRecordData[0])
             {
@@ -78,6 +114,7 @@ public class WorkoutHistoryController : MonoBehaviour
                 Instantiate(itemPrefab, content).SetData(record, ++displayed);
             }
             countText.text = $"기기 운동 기록 · {displayed}";
+            countText.transform.parent.Find("EmptyHistory")?.gameObject.SetActive(displayed == 0);
         }
         catch (System.Exception)
         {
@@ -150,6 +187,7 @@ public class WorkoutHistoryController : MonoBehaviour
 
     private void ClearList()
     {
+        countText?.transform.parent.Find("EmptyHistory")?.gameObject.SetActive(false);
         if (content == null) return;
         for (int i = content.childCount - 1; i >= 0; i--)
         {

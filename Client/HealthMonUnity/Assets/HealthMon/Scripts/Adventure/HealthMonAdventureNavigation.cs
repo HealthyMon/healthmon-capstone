@@ -6,7 +6,7 @@ public sealed class HealthMonAdventureNavigation : MonoBehaviour
 {
     private bool loading;
 
-    public void OpenAdventure() { Load("AdventureScene"); }
+    public void OpenAdventure() { HealthMonAdventureAppearance.CaptureHome(); Load("AdventureScene"); }
     public void ReturnHome() { Load("MainARScene"); }
 
     private void Load(string sceneName)

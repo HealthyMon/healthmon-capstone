@@ -132,6 +132,7 @@ public class BattleManager : MonoBehaviour
         currentState = BattleState.Running;
 
         battleUI.SetBattleModeUI(false);
+        battleVisual?.FrameNormalEnemy();
         battleUI.ShowBattlePanel();
         battleUI.AddLog("일반 전투가 시작되었습니다.");
         battleUI.RefreshUI();
@@ -543,6 +544,7 @@ public class BattleManager : MonoBehaviour
         if (playerVisual != null)
         {
             playerVisual.SetActive(visible);
+            if (visible) HealthMonAdventureAppearance.Apply(playerVisual.transform);
         }
     }
 

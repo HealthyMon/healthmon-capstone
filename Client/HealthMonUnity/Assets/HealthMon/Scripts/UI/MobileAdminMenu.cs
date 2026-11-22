@@ -95,9 +95,9 @@ public sealed class MobileAdminMenu : MonoBehaviour
         foreach (string label in labels) pages.Add(Vertical(label, content).gameObject);
         BuildCharacter(pages[0].transform); BuildExercise(pages[1].transform);
         BuildQuests(pages[2].transform); BuildConnection(pages[3].transform);
-        launcher = FixedButton("UnifiedSettingsButton", canvas.transform, "설정 · 관리", () => manager.ShowAdmin());
+        launcher = FixedButton("UnifiedSettingsButton", canvas.transform, "설정", () => manager.ShowAdmin());
         launcher.anchorMin = launcher.anchorMax = launcher.pivot = Vector2.one;
-        launcher.sizeDelta = new Vector2(260, 112);
+        launcher.sizeDelta = new Vector2(136, 78);
         SelectPage(0);
     }
 
@@ -160,30 +160,37 @@ public sealed class MobileAdminMenu : MonoBehaviour
     private void BuildConnection(Transform page)
     {
         connectionStatus = Label(page, "연결 상태 확인 중", 190);
-        address = Input(page, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:8020");
-        token = Input(page, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
-        pet = Input(page, "펫 ID · 비워두면 기존 선택 유지", "");
-        Button("Connect", page, "서버 연결 / 연결 변경", () => {
-            Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 연결을 확인하고 있어요.";
+        Button("AutoConnect", page, "서버 자동 연결", () => {
+            Connection.EnableAutomaticConnection(); notice.text = "자동 연결 활성화";
+        });
+        RectTransform manual = null;
+        Button("ManualConnection", page, "수동 연결 설정 ▾", () => manual.gameObject.SetActive(!manual.gameObject.activeSelf));
+        manual = Vertical("ManualConnectionFields", page);
+        address = Input(manual, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:18092");
+        token = Input(manual, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
+        pet = Input(manual, "펫 ID · 비워두면 기존 선택 유지", "");
+        Button("Connect", manual, "서버 연결 / 연결 변경", () => {
+            Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 접속 중";
         });
         Button("Refresh", page, "서버 상태 새로고침", () => { Connection.RefreshState(); Connection.RefreshQuests(); });
         Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => Healthmon.Evolution.EvolutionClient.Instance?.RequestCommonEvolution());
         Label(page, "웨어러블 운동 기록 자동 동기화", 70);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Label(page, "관절 AI · 개발 설정", 86, 36);
-        Label(page, "다음 운동부터 적용됩니다. 일반 운동 화면에서는 연결 설정을 자동으로 사용합니다.", 110);
-        var poseAddress = Input(page, "관절 AI 서버 주소", HealthMonPoseClient.ConfiguredEndpoint);
-        Button("SavePoseEndpoint", page, "관절 AI 연결 설정 저장", () => {
+        Label(manual, "관절 AI · 개발 설정", 86, 36);
+        Label(manual, "다음 운동부터 적용. 일반 운동 화면은 자동 연결 설정을 사용합니다.", 110);
+        var poseAddress = Input(manual, "관절 AI 서버 주소", HealthMonPoseClient.ConfiguredEndpoint);
+        Button("SavePoseEndpoint", manual, "관절 AI 연결 설정 저장", () => {
             notice.text = HealthMonPoseClient.SaveDevelopmentEndpoint(poseAddress.text)
                 ? "저장했습니다. 다음 운동부터 적용됩니다."
                 : "올바른 HTTP 또는 HTTPS 주소를 입력해 주세요.";
         });
-        Button("ResetPoseEndpoint", page, "관절 AI 기본 연결 복원", () => {
+        Button("ResetPoseEndpoint", manual, "관절 AI 기본 연결 복원", () => {
             HealthMonPoseClient.SaveDevelopmentEndpoint(HealthMonPoseClient.DefaultEndpoint);
             poseAddress.text = HealthMonPoseClient.ConfiguredEndpoint;
             notice.text = "기본 연결을 복원했습니다. 다음 운동부터 적용됩니다.";
         });
 #endif
+        manual.gameObject.SetActive(false);
     }
 
     private void SelectPage(int index)
@@ -197,7 +204,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
         if (panel == null || launcher == null || safeRoot == null) return;
         bool open = panel.activeInHierarchy;
         bool evolving = evolutionScreen != null && evolutionScreen.evolutionOverlay != null && evolutionScreen.evolutionOverlay.activeInHierarchy;
-        launcher.gameObject.SetActive(!open && !evolving);
+        launcher.gameObject.SetActive(manager.IsHomeVisible && !open && !evolving);
         Rect safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);

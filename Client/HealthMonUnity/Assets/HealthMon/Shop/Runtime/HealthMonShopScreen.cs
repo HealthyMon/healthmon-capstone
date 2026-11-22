@@ -69,6 +69,9 @@ public sealed class HealthMonShopScreen : MonoBehaviour
 
     private void Awake()
     {
+        HealthMonUILayout.Text(selectedTitle, .22f, .62f, .66f, .85f, 35);
+        HealthMonUILayout.Text(selectedDescription, .22f, .17f, .65f, .58f, 25);
+        if (selectedIcon != null) HealthMonUILayout.Place(selectedIcon.rectTransform, .04f, .23f, .19f, .77f);
         if (CommonServerConnection.UsesServerAuthority)
         {
             // Runtime copy: server prices must never overwrite the saved asset
@@ -323,7 +326,10 @@ public sealed class HealthMonShopScreen : MonoBehaviour
     {
         selected = item;
         if (selectedTitle != null) selectedTitle.text = item.displayName;
-        if (selectedDescription != null) selectedDescription.text = item.description;
+        if (selectedDescription != null) selectedDescription.text =
+            item.description != null && item.description.Contains("프리팹")
+                ? (item.category == HealthMonShopCategory.Character ? "새로운 헬스몬 영입" : item.jewelryName + " 슬롯에 장착 가능한 장신구")
+                : item.description;
         if (selectedPrice != null) selectedPrice.text = IsOwned(item) ? "보유 중" : (item.displayCoinPrice.ToString("N0") + " C");
         if (selectedIcon != null) { selectedIcon.sprite = item.icon; selectedIcon.enabled = item.icon != null; selectedIcon.preserveAspect = true; }
         RefreshActionButton();
