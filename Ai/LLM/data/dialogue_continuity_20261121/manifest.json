@@ -1,0 +1,12 @@
+{
+  "train": 420,
+  "validation": 16,
+  "new_continuation_examples": 240,
+  "motivation": {
+    "high": 84,
+    "neutral": 264,
+    "low": 72
+  },
+  "evaluation": "fresh multi-turn generated-answer rollout",
+  "human_review": false
+}

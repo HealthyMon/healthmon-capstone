@@ -1,0 +1,86 @@
+{
+  "counts": {
+    "train": 245,
+    "healthmon_train": 216,
+    "aihub_train": 29,
+    "validation": 43
+  },
+  "sha256": {
+    "train.jsonl": "7ddd40051a81bf262381b3981c50419f3eb8243efd376d826be3b206c31d0b4e",
+    "validation.jsonl": "2318effb8b9f9af911d7a5be08c04042a0ce70956556f05a5d6bc66aba667299"
+  },
+  "aihub_archives": [
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_가족.zip",
+      "sha256": "f74ba117c26ba6701182d7f5bdfccb28cbd6e59c3db3f658a25cfb7f74a966c4"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_건강,의학.zip",
+      "sha256": "cc350280cd8cb125e3385282f3bd25f078fc06875aa3fa34d7bda38a29135c9b"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_과학,기술,IT.zip",
+      "sha256": "c47531fd96d49420092f2fb88037f26ff0df88f2a3d2fb5ee9e3c523d2cca3de"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_미디어,콘텐츠.zip",
+      "sha256": "ea6c7dc3a34435f8d5e1b79ebce0e446a5fd976de3584be5ea1dd4495f803eb5"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_미용,외모.zip",
+      "sha256": "fa7566dc8f038f22bcaa59ad3da89e35d1005654a31c648d2333592a93a3fba9"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_반려동물.zip",
+      "sha256": "318f0602aa871d8c5442bb343f42a27baf527dfd2bda91301137c251acae2db7"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_쇼핑,상품.zip",
+      "sha256": "91563400c36c37c2cb25208f8256c847de6c61d0f4f144e205caa689b814bbbe"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_스포츠.zip",
+      "sha256": "8003bdfdde86bc8739e9df706b2f62461ffe8eb32a8deee98e7bf9c2cbcdf2d2"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_시사,사회,인문.zip",
+      "sha256": "5342b6b5c1a32583fb2b7e096a5b0c097373d8be6dae4800d4adfbf26ec0b625"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_식음료.zip",
+      "sha256": "680430f7d3e4cf9cff41ba71a55cb34a91957250bc4b32e9ccb8e228594bb0ae"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_아티스트,공연.zip",
+      "sha256": "689ffd59c281d8c317332bbcd98b20745ead188f3ec465451f95cf3589ef9296"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_여행,레저.zip",
+      "sha256": "4c6ac3bf783da119a1d562d4d41f056e5ef1cccf1f874b48f418245395235cb3"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_연애,결혼.zip",
+      "sha256": "79303e92f76f62357f00f15357d784f14f22c9a8b3d0421492689b005e51185c"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_예술,문학.zip",
+      "sha256": "758731b65a3f0f0a64fb3ba2fdf17d2b01371e1c65e5db99b4d23e5a565b7383"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_일,직장.zip",
+      "sha256": "1e109b66985502a1fe599e3178f11f00dbddb3ffe6c4f333ed74ec07930faf58"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_주거,생활.zip",
+      "sha256": "efaf12b36357d879ae95cfe9e3edd2545ced7a83069f92163d8b1caccdc48b39"
+    },
+    {
+      "file": "C:\\Users\\user\\Desktop\\capstone\\044.페르소나 대화\\01-1.정식개방데이터\\Training\\02.라벨링데이터\\TL_학교,학업.zip",
+      "sha256": "10274474d079c0a0c97c91ba6bb34733b30266001f024d2acf35b3d030f8d430"
+    }
+  ],
+  "human_review": false,
+  "historical_final_used_for_training": false,
+  "prompt_contract": "Ai/LLM/src/prompts.py messages(context,user_text)",
+  "scope": "Candidate for original LLM API; common-server classification training is a separate contract."
+}

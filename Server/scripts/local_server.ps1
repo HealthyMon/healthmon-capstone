@@ -63,9 +63,8 @@ function Get-LocalAIConfiguration {
     $llm = Join-Path $directory 'local-gpu-probe/base-only/private-base.json'
     $vision = Join-Path $directory 'local-vision-probe/private.json'
     $priorEvolution = Join-Path $directory 'evolution-stage-matrix.json'
-    $gpu = @((Join-Path $ProjectRoot '.venv/Scripts/python.exe'),
-             (Join-Path $ProjectRoot '../.venv-healthmon-v2/Scripts/python.exe'),
-             (Join-Path $ProjectRoot '../.venv/Scripts/python.exe')) |
+    $gpu = @((Join-Path $ProjectRoot '.runtime/qwen4b-venv/Scripts/python.exe'),
+             (Join-Path $ProjectRoot '.venv/Scripts/python.exe')) |
         Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
     if (-not $gpu) { return $null }
     $cpu = [IO.Path]::GetFullPath($gpu)
@@ -97,8 +96,17 @@ function Start-LocalAI {
             throw 'AI is not configured. Prepare .runtime/local-services.json using Server/local_probe/local-services.example.json, or set a shared AI Gateway in .env. See Server/local_probe/README.md. No AI-ready result was reported.'
         }
         $probeUrl = ([string]$environment.AI_BASE_URL).Replace('host.docker.internal', '127.0.0.1').TrimEnd('/') + '/health'
-        $null = Invoke-RestMethod -Uri $probeUrl -TimeoutSec 10
-        Write-Host 'Configured remote AI Gateway is reachable.'
+        try {
+            $null = Invoke-RestMethod -Uri $probeUrl -TimeoutSec 10
+            Write-Host 'Configured remote AI Gateway is reachable.'
+        } catch {
+            # Food has its own gateway. Do not block the entire API on chat startup.
+            $foodUrl = [string]$environment.FOOD_AI_BASE_URL
+            if (-not $foodUrl) { throw }
+            $foodHealth = Invoke-RestMethod -Uri ($foodUrl.Replace('host.docker.internal','127.0.0.1').TrimEnd('/') + '/health') -TimeoutSec 5
+            if ($foodHealth.service -ne 'healthmon-multifood' -or $foodHealth.status -ne 'ok') { throw 'Food AI is not ready.' }
+            Write-Warning 'Chat AI Gateway is unavailable. Starting common API with the separate food AI server; chat remains unavailable.'
+        }
         return
     }
     $local = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json

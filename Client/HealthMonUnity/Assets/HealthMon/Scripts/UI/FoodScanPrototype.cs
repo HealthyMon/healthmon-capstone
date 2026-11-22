@@ -217,11 +217,24 @@ public class FoodScanPrototype : MonoBehaviour
         if (vegetablesConfirmed != null) vegetablesConfirmed.isOn = false;
         if (kcalConfirmed != null) kcalConfirmed.isOn = false;
         SelectMealType(null);
+        SyncPortionTotal();
         RenderSelection();
         if (confirmationScroll != null) { Canvas.ForceUpdateCanvases(); confirmationScroll.verticalNormalizedPosition = 1; }
     }
+    private void SyncPortionTotal()
+    {
+        if(gramsInput==null)return;
+        bool all=multiResults!=null&&multiResults.HasPortions;
+        gramsInput.readOnly=all;
+        if(!all)return;
+        float total=multiResults.TotalGrams;
+        gramsInput.SetTextWithoutNotify(total>0?total.ToString("0.###",CultureInfo.InvariantCulture):"");
+        if(quantityConfirmed!=null)quantityConfirmed.isOn=false;
+        RenderSelection();
+    }
     public void UseEstimatedQuantity()
     {
+        if(multiResults!=null&&multiResults.HasPortions){SyncPortionTotal();return;}
         if (selected == null || !selected.has_estimated_grams || gramsInput == null) return;
         gramsInput.text = selected.estimated_grams.ToString("0.0", CultureInfo.InvariantCulture);
         if (quantityConfirmed != null) quantityConfirmed.isOn = false;
@@ -263,7 +276,7 @@ public class FoodScanPrototype : MonoBehaviour
     public void ConfirmFood()
     {
         if (confirming || selected == null || Api == null || Api.IsBusy) return;
-        if (multiResults != null && multiResults.HasEdits) { StatusInConfirmation("카드 수정은 화면 미리보기에 적용됩니다. 기존 기록하기는 수정 전 후보를 저장하므로, 수정 결과는 카드 아래 JSON 저장을 이용하세요."); return; }
+
         if (string.IsNullOrEmpty(analysisScope) || analysisScope != CurrentScope || (syntheticFixture && syntheticFixtureScope != CurrentScope))
         { StatusInConfirmation("분석 이후 연결이 바뀌었습니다. 현재 연결에서 사진을 다시 분석하세요."); return; }
         if (selectedMealType == null)
@@ -283,6 +296,13 @@ public class FoodScanPrototype : MonoBehaviour
         }
         else if (vegetablesInput != null && !string.IsNullOrWhiteSpace(vegetablesInput.text))
         { StatusInConfirmation("채소·과일량을 확인 체크하거나, 모르면 입력을 비워 주세요."); return; }
+        ConfirmedFoodItem[] items = null;
+        if(multiResults!=null && multiResults.HasPortions)
+        {
+            if(quantityConfirmed==null||!quantityConfirmed.isOn){StatusInConfirmation("각 음식 카드의 중량이 실제 먹은 양인지 확인 체크해 주세요.");return;}
+            try{items=multiResults.ConfirmedItems();grams=multiResults.TotalGrams;}
+            catch(ArgumentException e){StatusInConfirmation(e.Message);return;}
+        }
         HasFoodFailure = false;
         LastConfirmation = null;
         confirming = true;
@@ -301,7 +321,7 @@ public class FoodScanPrototype : MonoBehaviour
             Debug.Log($"[HealthMon Food] FoodRecorded source_id={result.source_id} duplicate={result.duplicate} state_version={result.state_version}");
         }, error => { confirming = false; Failure(error); },
             mealType: selectedMealType, kcalReconfirmed: kcalConfirmed != null && kcalConfirmed.isOn,
-            vegetableFruitGrams: vegetables, syntheticFixture: syntheticFixture);
+            vegetableFruitGrams: vegetables, syntheticFixture: syntheticFixture, items: items);
     }
     public void ShowCapture()
     {
@@ -422,6 +442,7 @@ public class FoodScanPrototype : MonoBehaviour
             panel.transform.SetParent(content, false);
             multiResults = panel.GetComponent<MainFoodResultsPanel>();
             multiResults.Initialize(foodNameText.font);
+            multiResults.PortionsChanged += SyncPortionTotal;
             foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText }) label.gameObject.SetActive(false);
         }
         else

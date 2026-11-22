@@ -1,0 +1,13 @@
+{
+  "environment": "test",
+  "server_token": "REUSE_EXISTING_AI_SERVER_TOKEN",
+  "embedding_path": "REUSE_EXISTING_BGE_M3_PATH",
+  "warmup": true,
+  "model_path": "C:\\Users\\user\\Desktop\\capstone\\healthmon-capstone-feature-dd\\healthmon-capstone-feature-dd\\Ai\\LLM\\models\\qwen3.5-4b",
+  "adapter_path": "C:\\Users\\user\\Desktop\\capstone\\healthmon-capstone-feature-dd\\healthmon-capstone-feature-dd\\Ai\\LLM\\runs\\qwen4b-natural-v1\\checkpoint-epoch-2",
+  "quantization": "nf4",
+  "expected_model_version": "qwen4b-v1",
+  "expected_model_mode": "lora",
+  "full_personality_facts": true,
+  "fine_tune_run": "qwen4b-natural-v1"
+}

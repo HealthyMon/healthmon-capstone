@@ -13,7 +13,7 @@ from dotenv import dotenv_values
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--runtime-root', type=Path, default=Path(r'E:\qwen-llm'))
+    parser.add_argument('--runtime-root', type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument('--pet', default='')
     parser.add_argument('--api-only', action='store_true')
     args = parser.parse_args()

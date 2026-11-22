@@ -1,4 +1,4 @@
-param([string]$RuntimeRoot = 'E:\qwen-llm')
+﻿param([string]$RuntimeRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..')))
 $ErrorActionPreference = 'Stop'
 $llmRoot = Split-Path $PSScriptRoot -Parent
 $python = Join-Path $RuntimeRoot '.venv\Scripts\python.exe'

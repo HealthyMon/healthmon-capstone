@@ -17,6 +17,17 @@ public sealed class MainFoodResultsPanel : MonoBehaviour
     VisionCatalog catalog;
     readonly List<Texture2D> textures = new List<Texture2D>();
     public bool HasEdits { get; private set; }
+    public event Action PortionsChanged;
+    public bool HasPortions => analysis != null && analysis.foods != null && analysis.foods.Length > 0 && analysis.image_width > 0;
+    public float TotalGrams {
+        get { float total=0; if(!HasPortions)return 0; foreach(var f in analysis.foods){if(!f.has_weight||float.IsNaN(f.grams)||float.IsInfinity(f.grams)||f.grams<=0)return 0; total+=f.grams;} return total; }
+    }
+    public ConfirmedFoodItem[] ConfirmedItems() {
+        if(!HasPortions || TotalGrams<=0 || TotalGrams>10000)throw new ArgumentException("음식별 중량을 확인해 주세요. 합계는 10,000g 이하여야 합니다.");
+        var items=new List<ConfirmedFoodItem>();
+        foreach(var f in analysis.foods)items.Add(new ConfirmedFoodItem{region_id=f.id,class_id=f.class_id,grams=f.grams});
+        return items.ToArray();
+    }
 
     public void Initialize(TMP_FontAsset value)
     {
@@ -141,7 +152,7 @@ public sealed class MainFoodResultsPanel : MonoBehaviour
         HasEdits=true;analysis.annotated_base64="";CloseEditor();
         // Crop textures are regenerated with the cards; retain only the whole-photo texture.
         for(int i=textures.Count-1;i>=1;i--){Destroy(textures[i]);textures.RemoveAt(i);}
-        RenderCards();feedback.text="수정 완료. 카드 수정은 아래 JSON 저장에 반영됩니다. 기존 기록하기는 수정 결과를 저장하지 않습니다.";
+        RenderCards();PortionsChanged?.Invoke();feedback.text="수정 완료. 실제 먹은 양을 확인 체크한 뒤 기록하기를 누르면 모든 음식이 한 식사로 저장됩니다.";
     }
     void Save()
     {

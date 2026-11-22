@@ -8,7 +8,7 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--runtime-root', type=Path, default=Path(r'E:\qwen-llm'))
+    parser.add_argument('--runtime-root', type=Path, default=Path(__file__).resolve().parents[3])
     args = parser.parse_args()
     uv = shutil.which('uv')
     if not uv:

@@ -1,0 +1,13 @@
+{
+  "common_train": 43,
+  "legacy_replay": 48,
+  "common_validation": 6,
+  "legacy_validation": 43,
+  "human_review": false,
+  "labels": "agent-authored, not 9B distillation",
+  "prompt": "unchanged projected_messages(full_personality_facts=True)",
+  "sha256": {
+    "train": "f2c89ca037819402d4a30f771cecef0a69270605249913b2e7bfff54da03d4f3",
+    "validation": "c4eef31ad7d0c1cc31814044b307069332a06b75ed92e32211a69a98607761fe"
+  }
+}

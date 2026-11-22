@@ -1,0 +1,18 @@
+{
+  "model_id": "Qwen/Qwen3.5-4B",
+  "model_path": "C:\\Users\\user\\Desktop\\capstone\\healthmon-capstone-feature-dd\\healthmon-capstone-feature-dd\\Ai\\LLM\\models\\qwen3.5-4b",
+  "adapter_path": "C:\\Users\\user\\Desktop\\capstone\\healthmon-capstone-feature-dd\\healthmon-capstone-feature-dd\\Ai\\LLM\\runs\\qwen4b-healthmon-sft-v1\\checkpoint-epoch-2",
+  "quantization": "nf4",
+  "expected_model_version": "qwen4b-v1",
+  "expected_model_mode": "lora",
+  "full_personality_facts": true,
+  "status": "trained_candidate",
+  "nine_b_parity_verified": false,
+  "fine_tune_run": "qwen4b-healthmon-sft-v1",
+  "merge_lora_for_inference": true,
+  "dequantize_for_inference": true,
+  "text_only_inference": true,
+  "fused_linear_attention": true,
+  "inference_cpu_threads": 1,
+  "release_cuda_cache_after_request": false
+}

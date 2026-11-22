@@ -1,0 +1,11 @@
+{
+  "objective": "axis-conditioned behavior before general chat fluency",
+  "factorial_examples": 256,
+  "fixed_recent_context_in_factorial_pairs": true,
+  "single_axis_examples": 72,
+  "memory_examples": 8,
+  "respect_user_intent_examples": 16,
+  "train": 352,
+  "validation_not_trained": 30,
+  "original_source_files_modified": false
+}

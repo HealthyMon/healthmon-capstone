@@ -8,3 +8,5 @@ Ai/Vision/*.pth filter=lfs diff=lfs merge=lfs -text
 *.sh text eol=lf
 Server/assets/starter/lucan/model.glb -filter -diff -merge -text
 Server/assets/starter/lucan/manifest.json text eol=lf
+ filter=lfs diff=lfs merge=lfs -text
+Ai/Vision/Vision/음식[[:space:]]탐지/acc_0.941036058619663_lr_1e-05_bs_16_layer_11_base_384_16_linear_ImageNet_NoisyViT.pkl filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,14 @@
+{
+  "train": 514,
+  "parameter_examples": 324,
+  "validation": 27,
+  "test": 32,
+  "motivation_counts": {
+    "high": 141,
+    "neutral": 258,
+    "low": 115
+  },
+  "test_separate_from_loss_validation": true,
+  "human_review": false,
+  "notes": "Fixed classification across traits; fresh topic-group test; replay preserves previous tasks."
+}

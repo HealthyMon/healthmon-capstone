@@ -1,0 +1,7 @@
+{
+  "purpose": "remove unsolicited style narration; preserve memory and JSON contracts",
+  "agent_authored": true,
+  "train": 147,
+  "validation": 49,
+  "base_replay": 91
+}

@@ -1,0 +1,10 @@
+.venv/
+.venv-aihub/
+.yolo/
+.matplotlib/
+assets/
+outputs/
+runs/
+__pycache__/
+.pytest_cache/
+*.cache

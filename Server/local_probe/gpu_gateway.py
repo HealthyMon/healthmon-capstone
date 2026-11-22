@@ -883,6 +883,10 @@ def create_app(config_path):
     if not runtime.is_relative_to(ROOT / '.runtime'):
         raise ValueError('Private configuration and all runtime files must stay under this checkout .runtime')
     config = json.loads(config_path.read_text(encoding='utf-8'))
+    # Resolve project-relative assets independently of the caller's directory.
+    for key in ('model_path', 'adapter_path', 'embedding_path'):
+        if config.get(key) and not Path(config[key]).is_absolute():
+            config[key] = str((ROOT / config[key]).resolve())
     if config.get('environment') != 'test' or not config.get('server_token'):
         raise ValueError('Local GPU probe requires explicit test configuration and server authentication')
     for key in ('HF_HOME', 'TRANSFORMERS_CACHE', 'TORCH_HOME', 'XDG_CACHE_HOME', 'HF_MODULES_CACHE',

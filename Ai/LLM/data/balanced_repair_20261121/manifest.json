@@ -1,0 +1,17 @@
+{
+  "train": 500,
+  "validation": 34,
+  "prior_validation_now_training": true,
+  "human_review": false,
+  "training_motivation": {
+    "low": 154,
+    "high": 97,
+    "neutral": 249
+  },
+  "training_sentiment": {
+    "negative": 207,
+    "positive": 144,
+    "neutral": 149
+  },
+  "scope": "curated corrections plus user data replay; no guarantee all failures resolved"
+}

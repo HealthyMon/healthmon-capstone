@@ -1,0 +1,110 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "base_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "status": "trained_and_locally_verified",
+  "ollama_model_modified": false,
+  "training_method": "NF4 QLoRA, BF16 compute, rank 8",
+  "hardware": "NVIDIA GeForce RTX 4070 Ti 12GB",
+  "legacy_prompt_modified": false,
+  "common_server_prompt_modified": true,
+  "server_state_rules_modified": false,
+  "memory_retrieval_modified": false,
+  "smoke_training_completed": true,
+  "stage_one_completed": true,
+  "stage_one_validation_loss_before": 1.0207025110174757,
+  "stage_one_validation_loss_after": 0.6172258994789845,
+  "stage_two_intermediate_validation": false,
+  "full_training_completed": true,
+  "live_unity_apk_verified": false,
+  "nine_b_parity_verified": false,
+  "production_quality_approved": false,
+  "stage_one_data": {
+    "healthmon": 216,
+    "aihub": 29,
+    "validation": 43
+  },
+  "stage_two_data": {
+    "common_server": 43,
+    "legacy_replay": 48,
+    "validation": 49
+  },
+  "base_raw_contract_validation": {
+    "valid": 13,
+    "count": 16
+  },
+  "missing_comparison_artifact": "Original deployed 9B LoRA checkpoint",
+  "deployment_state": "Local LLM ready; common API dialogue returned HTTP 200. Known semantic issues remain.",
+  "stage_two_completed": true,
+  "selected_adapter": "runs/parameter-dialogue-20261121/training/checkpoint-epoch-2",
+  "final_validation_batches": 1,
+  "unit_tests_passed": 108,
+  "legacy_raw_contract_validation": {
+    "valid": 15,
+    "count": 16
+  },
+  "common_raw_contract_validation": {
+    "valid": 12,
+    "count": 12
+  },
+  "stage_two_validation_loss": 0.5489321279129541,
+  "model_quality_tradeoff_accepted_by_user": true,
+  "known_limitations": [
+    "Activity/Affinity expression differences are weak in observed low/high cases",
+    "One character-affection utterance was classified as other",
+    "One legacy formal-speech case failed validation",
+    "Some ordinary dialogue and quest-expiry explanations remain inaccurate",
+    "No original 9B checkpoint comparison or live Unity APK test"
+  ],
+  "final_validation_completed": true,
+  "real_http_gateway_verified": true,
+  "http_cases": 3,
+  "final_report": "docs/QWEN4B_RESULT_KO.md",
+  "final_evidence": "runs/qwen4b-final-validation-v1/summary.json",
+  "natural_dialogue_update": {
+    "run": "qwen4b-natural-v1",
+    "adapter": "runs/qwen4b-natural-v1/checkpoint-epoch-2",
+    "trained": true,
+    "promoted": true,
+    "contract_cases_passed": 24,
+    "contract_cases_total": 24,
+    "style_narration_cases": 0,
+    "known_limitations": [
+      "Some phrasing remains awkward",
+      "Formal register mixed in 2 of 6 formal cases"
+    ],
+    "report": "docs/QWEN4B_NATURAL_RESULT_KO.md"
+  },
+  "current_serving_run": "parameter-dialogue-20261121",
+  "healthmon_sft_update": {
+    "run": "qwen4b-healthmon-sft-v1",
+    "adapter_sha256": "32e561f128b75a32f9f22cae2214526a21bc6c262c4048e85b0b31cbb0f9f5a9",
+    "user_requested_no_further_validation": true,
+    "semantic_quality_reviewed": false,
+    "previous_adapter_retained": true,
+    "inference_optimizations_retained": true
+  },
+  "axis_priority_update": {
+    "run": "qwen4b-axis-priority-v1",
+    "adapter_sha256": "a4353a9b4ec24e92f2c611a33e7678932a744c492cebb972f9577d707b82f753",
+    "validation_skipped_by_user": true,
+    "previous_adapter_retained": true,
+    "inference_optimizations_retained": true,
+    "final_parameter_comparison": {
+      "completed": true,
+      "date": "2026-11-11",
+      "requests": 24,
+      "contract_success": 24,
+      "activity_pairs_distinguished": 3,
+      "initiative_pairs_distinguished": 3,
+      "pairs_per_axis": 3,
+      "semantic_quality_fully_passed": false,
+      "limitations": [
+        "Korean grammar and register errors",
+        "Mixed English and Chinese tokens",
+        "Unsupported context assumptions"
+      ],
+      "report": "docs/QWEN4B_AXIS_PRIORITY_RESULT_KO.md",
+      "scope": "current model controlled parameter comparison, not previous model comparison"
+    }
+  }
+}

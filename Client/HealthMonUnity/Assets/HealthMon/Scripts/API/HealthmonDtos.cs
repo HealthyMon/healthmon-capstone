@@ -25,9 +25,11 @@ namespace Healthmon.Beta
         public global::VisionAnalysis vision;
         public bool IsSynthetic { get { return synthetic || provenance == "synthetic" || backend == "mock"; } }
     }
+    [Serializable] public class ConfirmedFoodItem { public int region_id, class_id; public float grams; }
     [Serializable] public class FoodConfirmationWithoutQuantity
     {
         public string analysis_id;
+        public ConfirmedFoodItem[] items;
         public int candidate_id;
         public int revision = 1;
         public string meal_type = "snack";

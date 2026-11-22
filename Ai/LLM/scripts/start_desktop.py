@@ -11,7 +11,7 @@ from urllib.request import urlopen
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--runtime-root', type=Path, default=Path(r'E:\qwen-llm'))
+    parser.add_argument('--runtime-root', type=Path, default=Path(__file__).resolve().parents[3])
     args = parser.parse_args()
     runtime = args.runtime_root.resolve()
     llm = Path(__file__).resolve().parents[1]

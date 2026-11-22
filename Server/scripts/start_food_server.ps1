@@ -1,5 +1,6 @@
-param([int]$Port = 8001)
+﻿param([int]$Port = 8001)
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'project_runtime.ps1')
 $projectRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $visionRoot = Join-Path $projectRoot 'Ai\Vision\Vision'
 $python = Join-Path $visionRoot '.venv\Scripts\python.exe'

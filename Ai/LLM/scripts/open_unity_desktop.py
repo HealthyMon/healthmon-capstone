@@ -35,7 +35,7 @@ def resolve_pet(runtime, token, preferred=''):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--runtime-root', type=Path, default=Path(r'E:\qwen-llm'))
+    parser.add_argument('--runtime-root', type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument('--editor', type=Path)
     parser.add_argument('--pet', default='')
     args = parser.parse_args()
