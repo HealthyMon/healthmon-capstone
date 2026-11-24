@@ -12,15 +12,14 @@ public sealed class PetExperienceUI : MonoBehaviour
     private GameObject arPanel;
     private TMP_FontAsset font;
     private Button evolutionButton, freshPetButton;
-    private TMP_Text evolutionLabel, statusText, arHint;
+    private TMP_Text evolutionLabel, arHint;
     private ARPlacementManager placement;
     private EvolutionFlowController evolutionFlow;
-    private PetStateManager localPet;
+    public HealthMonStatusView StatusView { get; private set; }
 
     public void Configure(UIManager owner, GameObject home, GameObject status, GameObject admin)
     {
         manager = owner;
-        localPet = FindAnyObjectByType<PetStateManager>();
         if (CommonServerConnection.UsesServerAuthority)
         {
             evolutionFlow = gameObject.AddComponent<EvolutionFlowController>();
@@ -49,24 +48,9 @@ public sealed class PetExperienceUI : MonoBehaviour
             break;
         }
 
-        // Replace the legacy unlabeled sample values in both authority modes.
-        {
-            var style = status.transform.Find("StatPanel")?.GetComponent<Image>();
-            foreach (var name in new[] { "ProfilePanel", "StatPanel", "GrowthPanel" })
-            {
-                var old = status.transform.Find(name);
-                if (old != null) old.gameObject.SetActive(false);
-            }
-            var card = MakePanel("CommonPetStatus", status.transform, new Vector2(.08f, .20f),
-                new Vector2(.92f, .88f), new Color(.11f, .17f, .26f));
-            if (style != null) { var target = card.GetComponent<Image>(); target.sprite = style.sprite; target.type = style.type; target.color = style.color; }
-            statusText = MakeText("ServerStats", card.transform, "상태 동기화 대기",
-                new Vector2(.08f, .07f), new Vector2(.92f, .93f));
-            statusText.alignment = TextAlignmentOptions.Left;
-            statusText.color = Color.white;
-            statusText.lineSpacing = 9;
-            statusText.fontSizeMax = 36;
-        }
+        StatusView = status.GetComponent<HealthMonStatusView>();
+        if (StatusView == null) StatusView = status.AddComponent<HealthMonStatusView>();
+        StatusView.Configure(font, manager.ShowHome);
 
         var canvas = home.GetComponentInParent<Canvas>();
         if (canvas != null)
@@ -122,16 +106,6 @@ public sealed class PetExperienceUI : MonoBehaviour
         if (freshPetButton != null)
             freshPetButton.interactable = state != null && connection.EnvironmentName == "test" &&
                 !connection.Api.IsBusy && !connection.Api.HasPendingChat && !pending;
-        if (statusText != null)
-            statusText.text = !CommonServerConnection.UsesServerAuthority ? LocalStatus() : state == null ? "서버 접속 대기" :
-                $"<b>{state.settings?.name ?? "헬스몬"} · Lv. {state.level}</b>\n" +
-                $"EXP {state.current_exp} / {state.required_exp}    코인 {state.coin}\n\n" +
-                $"상체 {state.upper_body:0.#}    하체 {state.lower_body:0.#}\n" +
-                $"영양 {state.nutrition:0.#}    에너지 균형 {state.energy_balance:0.#}\n" +
-                $"친밀도 {state.affinity:0.#}    활동성 {state.activity:0.#}\n" +
-                $"주도성 {state.initiative:0.#}\n\n" +
-                $"현재 모습: {(state.published_model_stage == 0 ? "초기형" : state.published_model_stage + "차 진화")}\n" +
-                "진화 해금 · Lv. 10 / 20 / 30" + CombatStatus();
         if (arPanel != null && arPanel.activeSelf)
         {
             bool desktop = Application.isEditor || !Application.isMobilePlatform;
@@ -159,22 +133,6 @@ public sealed class PetExperienceUI : MonoBehaviour
     }
 
     private void RequestEvolution() { evolutionFlow?.Begin(); }
-    private string LocalStatus()
-    {
-        var pet = localPet;
-        if (pet == null) return "캐릭터 상태 불러오는 중";
-        return $"<b>헬스몬 · Lv. {pet.CurrentLevel}</b>\n\n" +
-            $"보유 코인    {pet.CurrentCoin}\n\n" +
-            $"친밀도    {pet.CurrentIntimacy} / 100\n\n" +
-            $"활동성    {pet.CurrentActivity} / 100\n\n" +
-            $"다정함    {pet.CurrentKindness} / 100\n\n" +
-            $"호기심    {pet.CurrentCuriosity} / 100" + CombatStatus();
-    }
-    private static string CombatStatus()
-    {
-        return PetCombatStatsSource.TryGetCurrent(out var stats, out _) ? "\n\n" + stats.StatusText : "";
-    }
-
     private void StartFreshPet()
     {
         CommonServerConnection.Instance?.CreateFreshTestPet();

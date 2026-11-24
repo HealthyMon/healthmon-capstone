@@ -41,10 +41,15 @@ public sealed class HealthMonStatsRunner : MonoBehaviour
     CommonServerConnection c;UIManager ui;HealthMonPoseScreen pose;
     async Task SampleState(string name){
         ui.ShowStatus();await Task.Delay(400);
-        var experience=FindAnyObjectByType<PetExperienceUI>();var text=Field<TMP_Text>(experience,"statusText").text;
+        var view=FindAnyObjectByType<PetExperienceUI>().StatusView;
+        view.RefreshNow();
+        var text=string.Join(" / ",Enumerable.Range(0,6).Select(i=>HealthMonStatusSnapshot.AxisNames[i]+" "+view.AxisText(i)))+" / 에너지 균형 "+view.EnergyText;
         var s=c.LatestState;PetCombatStatsSource.TryGetCurrent(out var combat,out _);
-        Check(text.Contains($"상체 {s.upper_body:0.#}    하체 {s.lower_body:0.#}"),name+" Unity status equals server body stats");
-        Check(text.Contains($"영양 {s.nutrition:0.#}    에너지 균형 {s.energy_balance:0.#}"),name+" Unity status equals server meal stats");
+        var scores=new[]{s.upper_body,s.affinity,s.activity,s.nutrition,s.initiative,s.lower_body};
+        Check(Enumerable.Range(0,6).All(i=>view.AxisText(i)==HealthMonStatusSnapshot.Number(scores[i])),name+" Unity radar labels equal server lifestyle stats");
+        Check(view.CurrentSnapshot.Energy==s.energy_balance,name+" Unity energy gauge equals server meal stats");
+        var values=new[]{combat.ATK,combat.DEF,combat.RES,combat.SPD,combat.LUK};
+        Check(Enumerable.Range(0,5).All(i=>view.CombatText(i)==values[i].ToString()),name+" Unity combat slots equal battle values");
         Check(combat.StatusText==PetCombatStats.FromState(s).StatusText,name+" combat projection equals current state");
         report.samples.Add(new Sample{label=name,state=JsonUtility.FromJson<PetState>(JsonUtility.ToJson(s)),status_text=text,combat=combat.StatusText});
         await Capture(name+".png");

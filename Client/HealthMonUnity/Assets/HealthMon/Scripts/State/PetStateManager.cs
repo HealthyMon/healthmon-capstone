@@ -340,6 +340,10 @@ public class PetStateManager : MonoBehaviour
 
     public int CurrentLevel => level;
     public int CurrentCoin => coin;
+    public string CurrentName => petName;
+    public int CurrentExperience => currentExp;
+    public int RequiredExperience => expToNextLevel;
+    public string CurrentGrowthStage => growthStage;
 
     public int CurrentIntimacy => intimacy;
     public int CurrentActivity => activity;

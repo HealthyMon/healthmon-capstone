@@ -13,6 +13,14 @@
 이미 존재하던 서버의 생활 기록 점수, EXP/코인 지급, 식사 판정과 진화 해금 규칙은 바꾸지 않는다.
 밸런스 수치는 추후 플레이 테스트에서 조정할 수 있다.
 
+### 규칙 출처와 상태창 연동 (2026-11-24)
+
+- **팀원이 구현한 전투 규칙은 이미 존재한다.** `builtmilk`의 [PR #19](https://github.com/HealthyMon/healthmon-capstone/pull/19) 원본 커밋 `edfeae069`에는 ATB 행동 게이지, 물리·마법 피해, 행동별 ST 소비, 대기·승리 시 ST 회복 등이 구현되어 있다. Inspector에서 조정 가능한 기본값도 포함한다.
+- 별도로, [PR #15](https://github.com/HealthyMon/healthmon-capstone/pull/15)는 **생활 스탯을 전투 능력치로 변환하는 연결**을 후속 작업으로 명시했다. PR #19 당시 `AdventurePlayerStats`는 HP/ST를 `BattleUnit`에서, 나머지 능력치를 Inspector 설정값에서 가져왔다.
+- 이 문서의 `PetCombatStats` 생활→전투 계산식은 이후 통합 커밋 `9733db0b1`에 추가한 밸런스 v1이다. 기존 팀원의 전투 진행 규칙과 구분하며, 팀원이 확정한 변환식으로 표시하지 않는다.
+- 새 레이더 상태창은 현재 전투에서 사용하는 계산 결과를 그대로 표시한다. 생활 점수 6축, 에너지 균형, 최대 HP/ST, 공격·방어·저항·속도·행운, 행동 속도·ST 회복 배율을 보여준다. UI 변경은 전투 수식이나 운동·식사 보상을 수정하지 않는다.
+- 상태창의 HP/ST는 **최대치**다. 탐험 중 소비한 현재 HP/ST와 혼동하지 않도록 화면에도 최대치로 명시한다.
+
 ## 값의 전달
 
 - 온라인: 관리자 테스트 API 또는 일반 운동·식사·대화/퀘스트의 서버 응답 → CommonServerConnection.LatestState → PetCombatStats.
