@@ -1,7 +1,12 @@
 # HEALTHMON
 
-운동·식사 기록과 캐릭터 성장, 대화, 3D 진화를 연결하는 프로젝트입니다.
+운동·식사 기록을 슬라임의 성장에 연결하는 Android AR 캐릭터 육성 게임입니다.
+육성·탐험·전투와 AI 대화·음식 분석·관절 인식·3D 진화를 연결합니다.
 공용 FastAPI와 PostgreSQL이 게임 상태를 관리하며 Unity와 Android가 같은 API를 사용합니다.
+
+**처음 받았다면 [설치·실행·AI 가중치 안내](Docs/SETUP_AND_MODEL_GUIDE.md)를 먼저 확인하세요.**
+필수 프로그램, `5 → 2 → 3 → 4` 실행 순서, 포함된 가중치와 별도 모델,
+SW 등록 자료에 사용할 프로그램 구성 설명을 정리했습니다.
 
 ## 실행
 
@@ -12,7 +17,7 @@
 명령줄에서는 아래의 `-Target` 옵션으로 메뉴를 건너뛸 수 있습니다.
 
 **Unity 관절 AI 운동 화면:** Windows에서 `Start-HealthMon.cmd -Target Setup`(최초 1회) →
-`Start-HealthMon.cmd -Target AI` → Unity 홈의 **운동** 버튼 순서로 실행합니다.
+`Start-HealthMon.cmd -Target Backend` → `Start-HealthMon.cmd -Target AI` → Unity 홈의 **운동** 버튼 순서로 실행합니다.
 Android 휴대폰 촬영은 `Start-HealthMon.cmd -Target Android`로 USB 연결 후 앱의 **운동** 화면을 사용합니다. [Android 실행·APK 안내](Ai/Pose/README-ANDROID.md)
 스쿼트·팔굽혀펴기·컬을 카메라로 세며 AI 전체 종료는 `Stop-HealthMon.cmd -Target AI`입니다.
 게임 백엔드와 독립적으로 대화·음식·진화·관절 AI를 관리하며, 설치되지 않은 모델은 건너뜁니다. [실행 및 검증 안내](Ai/Pose/README-WINDOWS.md)
@@ -46,9 +51,10 @@ Windows에서는 Docker Desktop을 준비합니다. AI까지 함께 실행하려
 새 통합 설치에서는 관절 AI도 Docker 내부 CPU 환경을 사용합니다. 기존 PC의 네이티브 실행 환경은 유지합니다.
 끌 때는 **`Stop-HealthMon.cmd`**를 실행합니다.
 기존 설정·펫·기록은 유지하며 첫 설정의 기본 포트는 `18092`입니다.
-AI 모델 파일은 Git에 넣지 않으며, 아래 최초 설치에서 다운로드하고 Python/CUDA 환경을 Docker 이미지에 설치합니다.
+음식 가중치는 Git LFS로 관리하며, 기본 5번은 음식·관절 모델과 CPU 실행 환경을 준비합니다.
+대화·진화용 대형 기본 모델과 별도 LoRA는 5번에서 받지 않습니다. [모델별 포함 범위](Docs/SETUP_AND_MODEL_GUIDE.md#3-ai-가중치가-포함된-범위)를 참고하세요.
 AI 준비가 빠지면 실행기가 원인을 표시하며, 이미 켜진 백엔드는 유지합니다.
-[AI 최초 설정](Server/local_probe/README.md) · [1차 정리 내역과 남은 작업](Docs/LOCAL_RUNTIME_REFACTOR.md)을 참고하세요.
+[기본 설치 안내](Docs/SETUP_AND_MODEL_GUIDE.md) · [기존 전체 AI 수동 설정](Server/local_probe/README.md) · [1차 정리 내역과 남은 작업](Docs/LOCAL_RUNTIME_REFACTOR.md)을 참고하세요.
 모델 연결이 없던 기존 펫에도 기본 3D 캐릭터를 자동 연결하며 레벨과 기록은 유지합니다.
 
 ### 주소·토큰 입력 없이 접속
@@ -72,6 +78,7 @@ Android에서는 ADB `run-as`로 앱 내부 저장소에만 전달합니다. 일
 
 Windows x64에서 Docker Desktop의 Linux 컨테이너와 WSL2를 준비하고 Unity는 별도로 설치합니다.
 호스트에 Python을 따로 설치하거나 주소·토큰을 입력할 필요는 없습니다.
+Unity 버전·Android 빌드 모듈·ADB·워치 앱 조건은 [필수 프로그램과 연결 안내](Docs/SETUP_AND_MODEL_GUIDE.md)를 확인하세요.
 
 1. 저장소를 받은 뒤 `Start-HealthMon.cmd`의 **5번**: 백엔드·DB와 음식 분석·관절 인식 실행 환경을 준비합니다.
 2. **2번**: 백엔드 실행. 워치 데이터·게임 기록·성장·상점·전투를 테스트합니다.
@@ -93,8 +100,9 @@ Hugging Face 접속·로그인, 비공개 LoRA, 100GB급 대화·진화 기본 �
 기존 전체 AI 환경의 수동 설치 코드는 `Server/portable`에 보존되어 있으며 기본 5번에서는 호출하지 않습니다.
 기존 DB·계정·펫·인증 정보와 모델 파일은 삭제하거나 새로 만들지 않습니다.
 
-명령줄로 직접 실행하려면:
+### 개발자용 수동 실행
 
+아래는 CMD의 5번 설치와 별개인 수동 개발 경로입니다. 이 경로에서는
 Git, Python 3.10 이상, Docker Compose v2를 준비하고 저장소 루트에서 실행합니다.
 
 ```sh
@@ -103,7 +111,8 @@ docker compose up -d --build
 python Server/scripts/manage.py seed
 ```
 
-기본 API는 `http://127.0.0.1:8020`, 준비 상태는 `/health/ready`입니다.
+이 수동 경로의 기본 API는 `http://127.0.0.1:8020`, 준비 상태는 `/health/ready`입니다.
+위 CMD 팀원 설치 경로는 `18092`를 사용합니다.
 Unity 버전은 `Client/HealthMonUnity/ProjectSettings/ProjectVersion.txt`를 따릅니다.
 
 | 경로 | 역할 |
