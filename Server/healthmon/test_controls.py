@@ -11,7 +11,7 @@ from .contracts import Strict
 
 
 class TestPetState(Strict):
-    level: int = Field(ge=1, le=100)
+    level: int = Field(ge=1, le=30)
     coin: int = Field(ge=0, le=1000000)
     upper_body: float = Field(ge=0, le=100)
     lower_body: float = Field(ge=0, le=100)
@@ -49,10 +49,11 @@ def register(app, settings, db, identity, now):
             if rules.exp_progress(level_exp)['evolution_target_stage'] < state['published_model_stage']:
                 raise HTTPException(409, 'The selected level cannot undo a published evolution')
             ledger = c.execute('SELECT coalesce(sum(exp),0) AS exp,coalesce(sum(coin),0) AS coin FROM game_ledger WHERE pet_id=%s', (pet,)).fetchone()
+            from .shop import spent
             state['_test_controls'] = {
                 'offsets': {axis: getattr(body, axis) - projection['state'][axis] for axis in
                             ('upper_body', 'lower_body', 'nutrition', 'energy_balance', 'activity', 'affinity', 'initiative')},
-                'exp_offset': level_exp - ledger['exp'], 'coin_offset': body.coin - ledger['coin']}
+                'exp_offset': level_exp - ledger['exp'], 'coin_offset': body.coin - ledger['coin'] + spent(c, pet)}
             c.execute('UPDATE game_states SET state=%s WHERE pet_id=%s', (Jsonb(state), pet))
             updated, _ = service.refresh(c, service.owned(c, owner, pet, True), timestamp, settings.chat_available(owner), True, 'test_controls_changed')
         return updated

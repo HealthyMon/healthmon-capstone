@@ -20,7 +20,9 @@ def initialize(test=False, port=8020):
     path = ROOT / '.env'
     owner_a, owner_b = 'dev-test-a', 'dev-test-b'
     token_a, token_b = secrets.token_urlsafe(36), secrets.token_urlsafe(36)
-    project = re.sub('[^a-z0-9_-]', '-', ROOT.name.lower())
+    # Setup runs at /app in Docker. A shared "app" project would attach a
+    # second checkout to the first checkout's database and containers.
+    project = re.sub('[^a-z0-9_-]', '-', ROOT.name.lower()) + '-' + uuid.uuid4().hex[:8]
     lines = {'COMPOSE_PROJECT_NAME': project, 'API_BIND': '127.0.0.1', 'API_PORT': str(port),
              'PUBLIC_BASE_URL': f'http://localhost:{port}', 'POSTGRES_PASSWORD': secrets.token_urlsafe(36), 'POSTGRES_DB': 'healthmon',
              'APP_ENV': 'test' if test else 'development', 'AI_MODE': 'disabled', 'AI_BASE_URL': '', 'AI_SERVER_TOKEN': '',

@@ -102,10 +102,12 @@ public class PetStateManager : MonoBehaviour
         if (ServerAuthority) return;
         currentExp += amount;
 
-        while (currentExp >= expToNextLevel)
+        while (level < 30 && currentExp >= expToNextLevel)
         {
             currentExp -= expToNextLevel;
             level++;
+            // HM-GAMEFLOW-EXP-v1
+            expToNextLevel = 100 + 10 * (level - 1);
             LevelChanged?.Invoke(level);
 
             Debug.Log(
@@ -113,6 +115,7 @@ public class PetStateManager : MonoBehaviour
             );
         }
 
+        if (level >= 30) { level = 30; currentExp = 0; expToNextLevel = 390; }
         RefreshAllUI();
         SavePetData();
     }
@@ -166,7 +169,7 @@ public class PetStateManager : MonoBehaviour
         if (ServerAuthority) return;
         int completedStage = Mathf.Clamp(stage, 0, 3);
         growthStage = new[] { "초기형", "1차 진화", "2차 진화", "3차 진화" }[completedStage];
-        level = Mathf.Max(level, new[] { 1, 15, 30, 50 }[completedStage]);
+        level = Mathf.Min(30, Mathf.Max(level, new[] { 1, 15, 30, 50 }[completedStage]));
         RefreshAllUI();
         SavePetData();
     }
@@ -309,9 +312,9 @@ public class PetStateManager : MonoBehaviour
                 return;
 
             petName = data.petName;
-            level = Mathf.Max(1, data.level);
-            currentExp = Mathf.Max(0, data.currentExp);
-            expToNextLevel = Mathf.Max(1, data.expToNextLevel);
+            level = Mathf.Clamp(data.level, 1, 30);
+            currentExp = level == 30 ? 0 : Mathf.Max(0, data.currentExp);
+            expToNextLevel = 100 + 10 * (level - 1);
             coin = Mathf.Max(0, data.coin);
 
             intimacy = Mathf.Clamp(data.intimacy, 0, 100);
@@ -357,7 +360,9 @@ public class PetStateManager : MonoBehaviour
         int newCuriosity)
     {
         if (ServerAuthority) return;
-        level = Mathf.Max(1, newLevel);
+        level = Mathf.Clamp(newLevel, 1, 30);
+        if (level == 30) currentExp = 0;
+        expToNextLevel = 100 + 10 * (level - 1);
         coin = Mathf.Max(0, newCoin);
 
         intimacy = Mathf.Clamp(newIntimacy, 0, 100);

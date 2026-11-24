@@ -32,7 +32,9 @@ def upstreams(tmp_path, monkeypatch):
                 observed.append({'capability': capability, 'method': self.command, 'path': self.path,
                     'body_sha256': hashlib.sha256(body).hexdigest(), 'size': len(body),
                     'authorization': self.headers.get('Authorization'), 'content_type': self.headers.get('Content-Type')})
-                if self.path == '/v1/food':
+                if self.path == '/health':
+                    content, status = json.dumps({'ready': getattr(self.server, 'ready', True)}).encode(), 200
+                elif self.path == '/v1/food':
                     value = json.loads(body)
                     content = json.dumps({'contract_version': 'healthmon.ai.v1', 'request_id': value['request_id'],
                         'provenance': 'real', 'result': result}).encode()
@@ -143,3 +145,47 @@ def test_default_food_origin_and_health_describe_configuration_only(tmp_path):
     assert health['automatic_fallback'] is False and health['food_json_request_limit_bytes']==17*1024*1024
     assert health['configured_capability_origins']['food']=='http://127.0.0.1:18094'
     assert 'ready' not in health
+
+
+def test_live_services_require_auth_and_distinguish_loading_generation_and_stopping(upstreams, tmp_path, monkeypatch):
+    import time
+    from Server.local_probe import local_services
+    state_path, stop_path = tmp_path / 'status.json', tmp_path / 'stop'
+    monkeypatch.setattr(local_services, 'STATUS', state_path)
+    monkeypatch.setattr(local_services, 'STOP', stop_path)
+    client, seen, servers = upstreams
+    assert client.get('/health/services').status_code == 401
+    assert not seen
+    assert client.get('/health/services', headers=HEADERS).json()['status'] == 'ready'
+    servers['chat'].ready = False
+    state_path.write_text(json.dumps({'phase': 'starting', 'updated_at': time.time()}))
+    body = client.get('/health/services', headers=HEADERS).json()
+    assert body['status'] == 'loading' and body['services']['chat']['available'] is False
+    assert body['services']['vision']['available'] is True
+    state_path.write_text(json.dumps({'phase': 'generating_3d', 'updated_at': time.time()}))
+    body = client.get('/health/services', headers=HEADERS).json()
+    assert body['status'] == 'generating_3d' and body['services']['chat']['status'] == 'generating_3d'
+    stop_path.touch()
+    assert client.get('/health/services', headers=HEADERS).json()['status'] == 'stopping'
+    # The router's own readiness must not depend on downstream model warmup.
+    assert client.get('/health').json()['status'] == 'ok'
+
+
+@pytest.mark.parametrize('failed,code,status', [(False,501,'not_installed'),(True,503,'error')])
+def test_uninstalled_or_failed_capability_is_isolated(upstreams,tmp_path,monkeypatch,failed,code,status):
+    import time
+    from Server.local_probe import local_services
+    state=tmp_path/'status.json';stop=tmp_path/'stop'
+    monkeypatch.setattr(local_services,'STATUS',state)
+    monkeypatch.setattr(local_services,'STOP',stop)
+    state.write_text(json.dumps({'phase':'ready','updated_at':time.time(),
+        'failed' if failed else 'skipped':{'llm':'controlled fixture'}}))
+    client,seen,_=upstreams
+    assert client.post('/v1/chat',json={},headers=HEADERS).status_code==code
+    assert seen==[]
+    response=client.post('/v1/food',json=wrapper(),headers=HEADERS)
+    assert response.status_code==200 and [x['capability'] for x in seen]==['food']
+    response=client.get('/health/services',headers=HEADERS).json()
+    assert response['services']['chat']['status']==status
+    assert response['services']['vision']['available'] is True
+    assert response['status']==('error' if failed else 'ready')

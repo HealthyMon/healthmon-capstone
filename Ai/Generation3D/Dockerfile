@@ -2,8 +2,9 @@
 ARG BASE_IMAGE=nvidia/cuda@sha256:435220c0fef35cbf712e11999f8670a83835ef3cdd18564e5e8122f83078c88c
 FROM --platform=linux/amd64 ${BASE_IMAGE}
 ARG MAX_JOBS=4
+ARG TARGET_CUDA_ARCHS=8.6
 ENV DEBIAN_FRONTEND=noninteractive PYTHONDONTWRITEBYTECODE=1 \
-    TORCH_CUDA_ARCH_LIST=8.6 FLASH_ATTN_CUDA_ARCHS=80 \
+    TORCH_CUDA_ARCH_LIST=${TARGET_CUDA_ARCHS} FLASH_ATTN_CUDA_ARCHS=80 \
     FLASH_ATTENTION_FORCE_BUILD=TRUE MAX_JOBS=${MAX_JOBS}
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates git build-essential cmake ninja-build pkg-config util-linux \

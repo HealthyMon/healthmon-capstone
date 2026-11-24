@@ -11,13 +11,25 @@ from psycopg.types.json import Jsonb
 from . import service
 
 PREFIX='starter-'
+LEGACY_PACKAGED_MODEL='77a7b4d49b6561b7d20206d1c1a405b90e160005a69c81decc806cf9452d269d'
+LEGACY_PACKAGED_IMAGE='8104f93d8adde21ef4c9d76a36fc2a325301e7a625eaf4552aa53cfd892a0872'
+
+
+def is_packaged_wolf(row):
+    return row['sha256']==LEGACY_PACKAGED_MODEL and row['image_sha256']==LEGACY_PACKAGED_IMAGE
 
 
 def ensure_default(c,manifest_path):
     """Bootstrap the packaged game asset without replacing an operator's choice."""
     c.execute("SELECT pg_advisory_xact_lock(hashtext('healthmon.starter.default'))")
-    existing=c.execute('SELECT starter_id FROM starter_model_default WHERE singleton').fetchone()
-    if existing:return existing['starter_id']
+    existing=c.execute('SELECT d.starter_id,s.sha256,s.image_sha256 FROM starter_model_default d '
+                       'JOIN starter_models s ON s.id=d.starter_id WHERE singleton').fetchone()
+    if existing:
+        packaged=json.loads(Path(manifest_path).read_text(encoding='utf-8-sig'))
+        if not is_packaged_wolf(existing) or packaged.get('species')!='slime':
+            return existing['starter_id']
+        # Correct only the exact former shipped wolf. Preserve custom defaults.
+        return register(c,manifest_path,set_default=True)['starter_id']
     result=register(c,manifest_path)
     c.execute('INSERT INTO starter_model_default(singleton,starter_id) VALUES(true,%s) ON CONFLICT(singleton) DO NOTHING',
               (result['starter_id'],))
@@ -49,7 +61,11 @@ def register(c, manifest_path, *, set_default=False):
     provenance={'source_kind':'verified_existing_stage0','new_generation':False,'stage':0,
                 'species':species,'model_sha256':digest,'image_sha256':image_digest,
                 'manifest_sha256':manifest_digest}
-    if manifest.get('species_contract') is not None:provenance['species_contract']=manifest['species_contract']
+    if manifest.get('species_contract') is not None:
+        from Ai.Generation3D.src.healthmon.species_contract import validate_contract
+        provenance['species_contract']=validate_contract(manifest['species_contract'],species)
+    elif species=='slime':
+        raise ValueError('A slime starter must include its evolution species contract')
     c.execute('INSERT INTO starter_models(id,species,sha256,size_bytes,image_sha256,manifest_sha256,provenance,data,image_data) '
               'VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(id) DO NOTHING',
               (ident,species,digest,len(data),image_digest,manifest_digest,Jsonb(provenance),data,image_data))
@@ -68,9 +84,24 @@ def bind_default(c,p,timestamp,ai_available=False):
     p=service.owned(c,p['owner_id'],p['id'],True)
     default=c.execute('SELECT starter_id FROM starter_model_default WHERE singleton').fetchone()
     if not default:return None
-    existing=c.execute('SELECT starter_id FROM pet_starter_models WHERE pet_id=%s',(p['id'],)).fetchone()
-    if existing:return manifest(c,p,existing['starter_id'])
+    existing=c.execute('SELECT b.starter_id,s.sha256,s.image_sha256 FROM pet_starter_models b '
+                       'JOIN starter_models s ON s.id=b.starter_id WHERE pet_id=%s',(p['id'],)).fetchone()
     state,_=service.refresh(c,p,timestamp,ai_available)
+    if existing:
+        chosen=c.execute('SELECT species FROM starter_models WHERE id=%s',(default['starter_id'],)).fetchone()
+        has_job=c.execute("SELECT id FROM ai_jobs WHERE pet_id=%s AND kind='evolution' LIMIT 1",(p['id'],)).fetchone()
+        old_reference=f"/pets/{p['id']}/assets/{existing['starter_id']}"
+        if (not is_packaged_wolf(existing) or chosen['species']!='slime' or has_job or
+            state['published_model_stage']!=0 or state.get('model_reference')!=old_reference):
+            return manifest(c,p,existing['starter_id'])
+        # Safe stage-zero repair: preserve scores, wallet, history and published
+        # generations. Queued/frozen evolution inputs must never be rewritten.
+        c.execute('UPDATE pet_starter_models SET starter_id=%s WHERE pet_id=%s',
+                  (default['starter_id'],p['id']))
+        state.update(model_reference=f"/pets/{p['id']}/assets/{default['starter_id']}",asset_status='ready')
+        c.execute('UPDATE game_states SET state=%s WHERE pet_id=%s',(Jsonb(state),p['id']))
+        service.refresh(c,p,timestamp,ai_available,True,'starter_slime_corrected')
+        return manifest(c,service.owned(c,p['owner_id'],p['id']),default['starter_id'])
     if state['published_model_stage']!=0 or state.get('model_reference'):
         raise HTTPException(409,'An existing published model cannot be replaced by a starter')
     ident=default['starter_id']

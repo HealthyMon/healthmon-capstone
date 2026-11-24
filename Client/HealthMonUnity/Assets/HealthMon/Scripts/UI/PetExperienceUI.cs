@@ -14,31 +14,58 @@ public sealed class PetExperienceUI : MonoBehaviour
     private Button evolutionButton, freshPetButton;
     private TMP_Text evolutionLabel, statusText, arHint;
     private ARPlacementManager placement;
+    private EvolutionFlowController evolutionFlow;
+    private PetStateManager localPet;
 
     public void Configure(UIManager owner, GameObject home, GameObject status, GameObject admin)
     {
         manager = owner;
+        localPet = FindAnyObjectByType<PetStateManager>();
+        if (CommonServerConnection.UsesServerAuthority)
+        {
+            evolutionFlow = gameObject.AddComponent<EvolutionFlowController>();
+            evolutionFlow.Configure(owner);
+        }
         var reference = home.GetComponentInChildren<TMP_Text>(true);
         font = reference != null ? reference.font : TMP_Settings.defaultFontAsset;
         evolutionButton = MakeButton("HomeEvolutionButton", home.transform, "진화", RequestEvolution,
-            new Vector2(.82f, .36f), new Vector2(.97f, .45f));
+            new Vector2(.70f, .38f), new Vector2(.97f, .45f));
         evolutionLabel = evolutionButton.GetComponentInChildren<TMP_Text>();
-
-        if (CommonServerConnection.UsesServerAuthority)
+        var arButton = MakeButton("PetARButton", home.transform, "펫 AR", manager.ShowAR,
+            new Vector2(.74f, .76f), new Vector2(.98f, .81f));
+        foreach (var button in home.GetComponentsInChildren<Button>(true))
         {
+            var label = button.GetComponentInChildren<TMP_Text>(true);
+            if (button == evolutionButton || label == null || label.text.Replace(" ", "") != "상태보기") continue;
+            if (button.targetGraphic is Image style && evolutionButton.targetGraphic is Image target)
+            {
+                target.sprite = style.sprite; target.type = style.type; target.color = style.color;
+                var arStyle = arButton.GetComponent<Image>();
+                arStyle.sprite = style.sprite; arStyle.type = style.type; arStyle.color = style.color;
+            }
+            var colors = button.colors;
+            colors.disabledColor = Color.white;
+            evolutionButton.colors = colors;
+            break;
+        }
+
+        // Replace the legacy unlabeled sample values in both authority modes.
+        {
+            var style = status.transform.Find("StatPanel")?.GetComponent<Image>();
             foreach (var name in new[] { "ProfilePanel", "StatPanel", "GrowthPanel" })
             {
                 var old = status.transform.Find(name);
                 if (old != null) old.gameObject.SetActive(false);
             }
-            var card = MakePanel("CommonPetStatus", status.transform, new Vector2(.22f, .20f),
-                new Vector2(.78f, .82f), new Color(.11f, .17f, .26f));
-            statusText = MakeText("ServerStats", card.transform, "서버에 연결하면 상태를 불러와요.",
-                new Vector2(.05f, .04f), new Vector2(.95f, .96f));
+            var card = MakePanel("CommonPetStatus", status.transform, new Vector2(.08f, .20f),
+                new Vector2(.92f, .88f), new Color(.11f, .17f, .26f));
+            if (style != null) { var target = card.GetComponent<Image>(); target.sprite = style.sprite; target.type = style.type; target.color = style.color; }
+            statusText = MakeText("ServerStats", card.transform, "상태 동기화 대기",
+                new Vector2(.08f, .07f), new Vector2(.92f, .93f));
             statusText.alignment = TextAlignmentOptions.Left;
             statusText.color = Color.white;
             statusText.lineSpacing = 9;
-            statusText.fontSizeMax = 42;
+            statusText.fontSizeMax = 36;
         }
 
         var canvas = home.GetComponentInParent<Canvas>();
@@ -54,15 +81,6 @@ public sealed class PetExperienceUI : MonoBehaviour
             arHint = MakeText("Hint", hint.transform, "", new Vector2(.03f, .05f), new Vector2(.97f, .95f));
             arHint.color = Color.white;
             arPanel.SetActive(false);
-            foreach (var nav in canvas.GetComponentsInChildren<HorizontalLayoutGroup>(true))
-            {
-                if (nav.name != "BottomNav") continue;
-                var arButton = MakeButton("PetARButton", nav.transform, "펫 AR", manager.ShowAR, Vector2.zero, Vector2.one);
-                arButton.transform.SetSiblingIndex(2);
-                var layout = arButton.gameObject.AddComponent<LayoutElement>();
-                layout.flexibleWidth = 1;
-                break;
-            }
         }
 
         if (admin != null && CommonServerConnection.UsesServerAuthority)
@@ -92,17 +110,20 @@ public sealed class PetExperienceUI : MonoBehaviour
         bool available = state != null && state.evolution_target_stage > state.published_model_stage;
         if (evolutionButton != null)
         {
-            evolutionButton.interactable = available && evolution != null && (!pending || !string.IsNullOrEmpty(evolution.LastError));
+            bool retryModel = evolutionFlow != null && evolutionFlow.NeedsModelRetry;
+            bool published = state != null && state.published_model_stage > 0 && evolutionFlow != null && evolutionFlow.IsApplied;
+            evolutionButton.interactable = state != null && evolution != null && (available || pending || retryModel || published);
             evolutionLabel.text = state == null ? "진화 · 연결 필요" :
-                pending ? (string.IsNullOrEmpty(evolution.LastError) ? "진화 진행 중" : "진화 다시 시도") :
-                available ? "진화하기" : state.published_model_stage >= 3 ? "3차 진화 완료" :
-                state.published_model_stage > 0 ? $"{state.published_model_stage}차 진화 완료 · 다음 Lv.{(state.published_model_stage + 1) * 10}" : "첫 진화 · Lv.10";
+                retryModel ? "진화 외형 다시 받기" :
+                pending ? (evolution.HasTerminalError ? "진화 다시 시도" : "진화 확인") :
+                available ? "진화하기" : state.published_model_stage >= 3 ? "3차 진화 확인" :
+                state.published_model_stage > 0 ? $"{state.published_model_stage}차 진화 확인\n다음 Lv.{(state.published_model_stage + 1) * 10}" : "첫 진화 · Lv.10";
         }
         if (freshPetButton != null)
             freshPetButton.interactable = state != null && connection.EnvironmentName == "test" &&
                 !connection.Api.IsBusy && !connection.Api.HasPendingChat && !pending;
         if (statusText != null)
-            statusText.text = state == null ? "서버에 연결하면 상태를 불러와요." :
+            statusText.text = !CommonServerConnection.UsesServerAuthority ? LocalStatus() : state == null ? "서버 접속 대기" :
                 $"<b>{state.settings?.name ?? "헬스몬"} · Lv. {state.level}</b>\n" +
                 $"EXP {state.current_exp} / {state.required_exp}    코인 {state.coin}\n\n" +
                 $"상체 {state.upper_body:0.#}    하체 {state.lower_body:0.#}\n" +
@@ -110,13 +131,12 @@ public sealed class PetExperienceUI : MonoBehaviour
                 $"친밀도 {state.affinity:0.#}    활동성 {state.activity:0.#}\n" +
                 $"주도성 {state.initiative:0.#}\n\n" +
                 $"현재 모습: {(state.published_model_stage == 0 ? "초기형" : state.published_model_stage + "차 진화")}\n" +
-                "Lv. 10 · 20 · 30에 다음 진화가 열려요.";
+                "진화 해금 · Lv. 10 / 20 / 30" + CombatStatus();
         if (arPanel != null && arPanel.activeSelf)
         {
             bool desktop = Application.isEditor || !Application.isMobilePlatform;
-            arHint.text = state == null ? "서버에 연결하면 내 펫을 불러와요." : desktop ?
-                "PC에서는 펫 미리보기를 표시해요. 실제 바닥 배치는 AR을 지원하는 휴대폰에서 사용할 수 있어요." :
-                "휴대폰으로 바닥을 비추고, 인식된 바닥을 터치해 펫을 배치하세요.";
+            arHint.text = desktop ? "펫 미리보기\n바닥 소환은 AR 지원 휴대폰에서!" :
+                "바닥을 스캔하고 터치!\n현실 세계에 헬스몬 소환";
         }
     }
 
@@ -138,7 +158,23 @@ public sealed class PetExperienceUI : MonoBehaviour
         return placement;
     }
 
-    private void RequestEvolution() { EvolutionClient.Instance?.RequestCommonEvolution(); }
+    private void RequestEvolution() { evolutionFlow?.Begin(); }
+    private string LocalStatus()
+    {
+        var pet = localPet;
+        if (pet == null) return "캐릭터 상태 불러오는 중";
+        return $"<b>헬스몬 · Lv. {pet.CurrentLevel}</b>\n\n" +
+            $"보유 코인    {pet.CurrentCoin}\n\n" +
+            $"친밀도    {pet.CurrentIntimacy} / 100\n\n" +
+            $"활동성    {pet.CurrentActivity} / 100\n\n" +
+            $"다정함    {pet.CurrentKindness} / 100\n\n" +
+            $"호기심    {pet.CurrentCuriosity} / 100" + CombatStatus();
+    }
+    private static string CombatStatus()
+    {
+        return PetCombatStatsSource.TryGetCurrent(out var stats, out _) ? "\n\n" + stats.StatusText : "";
+    }
+
     private void StartFreshPet()
     {
         CommonServerConnection.Instance?.CreateFreshTestPet();

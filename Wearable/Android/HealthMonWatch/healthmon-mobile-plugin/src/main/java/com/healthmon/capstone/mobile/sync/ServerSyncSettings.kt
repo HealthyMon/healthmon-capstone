@@ -15,7 +15,8 @@ import javax.crypto.spec.GCMParameterSpec
 data class SyncDestination(
     val baseUrl: String, val bearer: String, val petId: String,
     val serverInstanceId: String, val ownerId: String, val environment: String,
-    val generation: String = UUID.randomUUID().toString()
+    val generation: String = UUID.randomUUID().toString(),
+    val autoSyncStartedAt: Long = System.currentTimeMillis()
 ) {
     override fun toString(): String = "SyncDestination(credentials=redacted)"
 }
@@ -44,6 +45,7 @@ object ServerSyncSettings {
             put("url", value.baseUrl); put("bearer", value.bearer); put("pet", value.petId)
             put("server", value.serverInstanceId); put("owner", value.ownerId)
             put("environment", value.environment); put("generation", value.generation)
+            put("auto_since", value.autoSyncStartedAt)
         }.toString().toByteArray(Charsets.UTF_8)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding").apply { init(Cipher.ENCRYPT_MODE, key()) }
         val encrypted = cipher.doFinal(plaintext)
@@ -63,7 +65,7 @@ object ServerSyncSettings {
             val json = JSONObject(String(cipher.doFinal(Base64.decode(encrypted, Base64.NO_WRAP)), Charsets.UTF_8))
             SyncDestination(json.getString("url"), json.getString("bearer"), json.getString("pet"),
                 json.getString("server"), json.getString("owner"), json.getString("environment"),
-                json.getString("generation"))
+                json.getString("generation"), json.optLong("auto_since", Long.MAX_VALUE))
         } catch (_: Exception) {
             // Restored preferences cannot decrypt on a new device: force runtime login.
             clear(context); setStatus(context, "auth_required"); null

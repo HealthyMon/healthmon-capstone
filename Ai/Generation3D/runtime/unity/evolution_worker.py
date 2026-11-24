@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -37,6 +38,9 @@ def plan(folder, job):
 
 
 def plan_from_parent(folder, job, parent, source):
+    if job.get('image_backend') == 'healthmon-2511':
+        from Ai.Generation3D.runtime.evolution_2511.lineage import require_slime_parent
+        require_slime_parent(source)
     from healthmon.individual_evolution import compile_individual, design_planning_request, infer_design_brief
     from healthmon.qwen_runner import MODEL_ID, MODEL_REVISION
     from healthmon.species_contract import body_instruction as species_body, image_prompt as species_prompt, art_direction
@@ -65,7 +69,7 @@ def plan_from_parent(folder, job, parent, source):
     data['explicit_score_condition_direction'] = species_body(compiled) if contract else body_instruction(compiled)
     if v22:
         from Ai.Generation3D.runtime.common_gateway.appearance import body_condition
-        direction=body_condition(job['authoritative_profile'])
+        direction=body_condition(job['authoritative_profile'], species=profile['species'])
         data['explicit_score_condition_direction']=direction
         data['authoritative_body_condition']=direction
         data['condition_role']='The shared v2.2 appearance is a required visible whole-body condition, not an optional secondary nuance.'
@@ -131,18 +135,29 @@ def plan_from_parent(folder, job, parent, source):
             'Exactly ONE creature, no text, comparison panels, extra heads, floating fragments, clothes or weapons.\n')
     if v22:
         from Ai.Generation3D.runtime.common_gateway.appearance import apply_to_prompt
-        prompt=apply_to_prompt(prompt,job['authoritative_profile'])
+        prompt=apply_to_prompt(prompt,job['authoritative_profile'], species=profile['species'])
     (folder / 'prompt.txt').write_text(prompt, encoding='utf-8')
 
 
 def image(folder, job):
     output = folder / 'image.png'
+    modern = job.get('image_backend') == 'healthmon-2511'
+    if job.get('image_backend') not in (None, 'qwen-2.1', 'healthmon-2511'):
+        raise ValueError('Unsupported image backend')
     if output.exists() and output.with_suffix('.png.json').exists():
         metadata = read(output.with_suffix('.png.json'))
-        if metadata['status'] == 'PASS' and metadata['output']['sha256'] == sha(output) and metadata['source_prompt_sha256'] == sha(folder / 'prompt.txt'):
+        if modern:
+            from runtime.evolution_2511.provenance import validate_image
+            validate_image(metadata, output, folder/'prompt.txt', Path(read(folder/'parent.json')['path']))
+        elif metadata['status'] == 'PASS' and metadata['output']['sha256'] == sha(output) and metadata.get('source_prompt_sha256') == sha(folder / 'prompt.txt'):
             pass
         else:
             raise ValueError('Image cache failed provenance check')
+    elif modern:
+        subprocess.run([sys.executable, str(ROOT / 'runtime/evolution_2511/runner.py'),
+            '--model-root', os.environ.get('HEALTHMON_EVOLUTION_MODEL_ROOT', str(ROOT / 'models/evolution-2511')),
+            '--parent', read(folder/'parent.json')['path'], '--prompt-file', str(folder/'prompt.txt'),
+            '--output', str(output), '--seed', str(job.get('seed', 42))], check=True, cwd=ROOT)
     else:
         subprocess.run([sys.executable, str(ROOT / 'runtime/lineage/qwen_runner.py'),
             '--prompt-file', str(folder / 'prompt.txt'), '--output', str(output), '--seed', str(job.get('seed', 42)),

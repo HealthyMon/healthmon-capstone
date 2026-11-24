@@ -14,6 +14,12 @@ import subprocess
 
 
 def run(command: list[str], log: Path, env: dict[str, str] | None = None) -> None:
+    # Fresh imports expose more package assemblies; long checkout paths can
+    # exceed Windows' command-line limit even for the small guard executables.
+    if len(command) > 2 and Path(command[1]).name == 'csc.exe' and not command[2].startswith('@'):
+        response = log.with_suffix('.rsp')
+        response.write_text('\n'.join('"' + value + '"' for value in command[2:]), encoding='utf-8')
+        command = command[:2] + ['@' + str(response)]
     result = subprocess.run(command, capture_output=True, encoding="utf-8-sig", errors="replace", env=env)
     log.write_text(result.stdout + result.stderr, encoding="utf-8")
     for line in result.stdout.splitlines():
@@ -37,9 +43,31 @@ def main() -> None:
     scripts = project / "Assets/HealthMon/Scripts"
     exe = output / "ContractChecks.exe"
     run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(exe),
-         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"),
+         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"), str(scripts / "Food/MultiFoodContract.cs"),
          str(project / "Tests/ContractChecks.cs")], output / "contracts-compile.log")
     run([str(mono), str(exe)], output / "contracts-results.log")
+    pose = output / "PoseFrameChecks.exe"
+    run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(pose),
+         str(scripts / "Pose/HealthMonPoseFrame.cs"), str(project / "Tests/PoseFrameChecks.cs")], output / "pose-frame-compile.log")
+    run([str(mono), str(pose)], output / "pose-frame-results.log")
+    combat = output / "CombatStatsChecks.exe"
+    run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(combat),
+         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"), str(scripts / "Food/MultiFoodContract.cs"),
+         str(scripts / "Adventure/PetCombatStats.cs"), str(project / "Tests/CombatStatsChecks.cs")],
+        output / "combat-compile.log")
+    import sys
+    sys.path.insert(0, str(project.parents[1]))
+    from Server.healthmon.rules import evolution_profile, initial_state
+    import itertools
+    fixtures = output / "combat-body-fixtures.tsv"
+    rows = []
+    for upper, lower, nutrition, energy in itertools.product(
+            (0, 30, 44, 45, 50, 64, 65, 80, 100), (0, 30, 44, 45, 50, 64, 65, 80, 100),
+            (0, 39, 40, 59, 60, 100), (-100, -30, -29, 0, 29, 30, 100)):
+        state = dict(initial_state(), upper_body=upper, lower_body=lower, nutrition=nutrition, energy_balance=energy)
+        rows.append("\t".join(map(str, (upper, lower, nutrition, energy, evolution_profile(state)["appearance"]))))
+    fixtures.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    run([str(mono), str(combat), str(fixtures)], output / "combat-results.log")
     if args.package_assemblies:
         managed = editor / "Data/Managed"
         references = list((managed / "UnityEngine").glob("*.dll")) + list((managed / "UnityEditor").glob("*.dll"))
@@ -47,7 +75,9 @@ def main() -> None:
                        if not file.name.startswith("Assembly-CSharp")]
         references += [editor / "Data/MonoBleedingEdge/lib/mono/4.5/Facades/netstandard.dll"]
         for target, defines in [("Editor", "UNITY_EDITOR;UNITY_STANDALONE_WIN"), ("Android", "UNITY_ANDROID")]:
-            sources = [file for file in scripts.rglob("*.cs") if target == "Editor" or "Editor" not in file.parts]
+            # Include the shop/offline/evolution code that lives outside Scripts.
+            sources = [file for root in (project / "Assets/HealthMon", project / "Assets/Evolution")
+                       for file in sorted(root.rglob("*.cs")) if target == "Editor" or "Editor" not in file.parts]
             options = ["-nologo", "-langversion:9.0", "-target:library", "-define:" + defines,
                        "-out:" + str(output / ("HealthMon." + target + ".dll"))]
             options += ["-r:" + str(file) for file in references]

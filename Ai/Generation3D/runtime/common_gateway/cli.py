@@ -14,6 +14,7 @@ def main():
     parser.add_argument('--work-root',type=Path,required=True)
     parser.add_argument('--model-root',type=Path)
     parser.add_argument('--vendor-root',type=Path)
+    parser.add_argument('--image-model-root',type=Path,help='Verified HealthMon 2511 model installation')
     parser.add_argument('--pet-id')
     parser.add_argument('--parent-manifest',type=Path)
     parser.add_argument('--allow-gpu',action='store_true',help='Only after the operator has released all other GPU workloads')
@@ -32,7 +33,7 @@ def main():
     if not args.allow_gpu: parser.error('GPU run explicitly prohibited without --allow-gpu')
     from .worker import run_once
     settings=Settings(args.work_root,os.environ.get('AI_SERVER_TOKEN',''))
-    result=run_once(settings,store,args.model_root,args.vendor_root,allow_gpu=True)
+    result=run_once(settings,store,args.model_root,args.vendor_root,allow_gpu=True,image_model_root=args.image_model_root)
     print('No queued jobs' if result is None else 'Job '+result['id']+': '+result['status'])
 
 

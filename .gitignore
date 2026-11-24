@@ -11,6 +11,7 @@
 **/.utmp/
 **/[Ll]ibrary/
 **/[Tt]emp/
+/Client/HealthMonUnity/Assets/XR/Temp.meta
 **/[Oo]bj/
 **/[Bb]uild/
 **/[Bb]uilds/
@@ -200,3 +201,29 @@ Docs/verification/
 /.runtime/
 *.dump
 *.sql.gz
+
+# Editor-generated snapshots are recoverable from Git; do not recommit copies.
+/Client/HealthMonUnity/Assets/HealthMon/OfflinePlay/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/OfflinePlay/Backups.meta
+/Client/HealthMonUnity/Assets/HealthMon/Shop/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/Shop/Backups.meta
+/Client/HealthMonUnity/Assets/HealthMon/UIRefineV31/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/UIRefineV31/Backups.meta
+/Client/HealthMonUnity/Assets/HealthMon/UIStyleKitV4/SceneBackups/
+/Client/HealthMonUnity/Assets/HealthMon/UIStyleKitV4/SceneBackups.meta
+/Client/HealthMonUnity/Assets/HealthMon/MultiCharacter/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/MultiCharacter/Backups.meta
+
+/Client/HealthMonUnity/Assets/HealthMon/UIRecoveryV1/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/UIRecoveryV1/Backups.meta
+/Client/HealthMonUnity/Assets/HealthMon/GameFlow/Backups/
+/Client/HealthMonUnity/Assets/HealthMon/GameFlow/Backups.meta
+/Client/HealthMonUnity/Assets/HealthMon/UIStyleKit/UIStyleKitV4/SceneBackups/
+/Client/HealthMonUnity/Assets/HealthMon/UIStyleKit/UIStyleKitV4/SceneBackups.meta
+
+# Multi-food models are restored from pinned distribution metadata.
+/Ai/Vision/multifood/models/*
+!/Ai/Vision/multifood/models/manifest.json
+/Ai/Vision/multifood/outputs/
+/Ai/Vision/multifood/.yolo/
+/Ai/Vision/multifood/.matplotlib/

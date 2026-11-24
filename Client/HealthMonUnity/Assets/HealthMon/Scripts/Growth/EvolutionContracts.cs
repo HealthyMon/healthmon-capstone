@@ -35,7 +35,7 @@ namespace Healthmon.Evolution
         public string certificate_sha256;
         public string pet_id = "lucan-local";
         public float display_height_m = 0.35f;
-        public float model_yaw_degrees = 180f;
+        public float model_yaw_degrees = 0f;
         public bool auto_level_evolution = true;
     }
 }

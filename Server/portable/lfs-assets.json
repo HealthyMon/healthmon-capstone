@@ -1,0 +1,1489 @@
+{
+  "schema_version": 1,
+  "repository": "HealthyMon/healthmon-capstone",
+  "revision": "f7c104660ab15a5b478a61e8ab1ef516119eabdc",
+  "files": [
+    {
+      "path": "Ai/Vision/cuboid_model.pth",
+      "bytes": 44818550,
+      "sha256": "f7b30d57422d264b81efb09951a017497bddfd5d810243e10e2b8c116b8d75ad",
+      "group": "food"
+    },
+    {
+      "path": "Ai/Vision/food_detector.pth",
+      "bytes": 562041637,
+      "sha256": "38282bbf4034c15e16c2ddb9384ba8714072a5bc71ef14f9b30c8eedd657514a",
+      "group": "food"
+    },
+    {
+      "path": "Ai/Vision/food_weight_checkpoint.pth",
+      "bytes": 134293849,
+      "sha256": "df1fd971d8cb82fe15e109e700c4305e5effc17aed7d87390385fbf532719af7",
+      "group": "food"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_001.fbx",
+      "bytes": 52620,
+      "sha256": "a88167e6b8eec6c73fb8d71d9ca14fbc0d1d2f1835f16c2f46df99007f4b5278",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_002.fbx",
+      "bytes": 39164,
+      "sha256": "86e3ec3ee09f29dad3d01bc891fbfc433db7fff6d9975e0b9b3b450b3a157720",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_003.fbx",
+      "bytes": 34204,
+      "sha256": "f7674adb0fc39f8062fe91c2202a41295a1b703d64cb663ac5e7f3a830ce6e0b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_004.fbx",
+      "bytes": 43324,
+      "sha256": "ba6006061f2feebdcf8c991801515dfc5e92a584f22b23e2a6cf0d1d84b42024",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_005.fbx",
+      "bytes": 69308,
+      "sha256": "89372cfb05e3e2c4489f11d53b550def5e4091b898e27bb4e562550a31f8630f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_006.fbx",
+      "bytes": 53164,
+      "sha256": "5f60550c55640900c996f623853a2ab4e587975cab60c0a8e1a43bff13a6e060",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_007.fbx",
+      "bytes": 54172,
+      "sha256": "ab7d5695ddbd9dbaadd2471a3201f5a755a350f1c773c2494e50f929c989554f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_008.fbx",
+      "bytes": 37868,
+      "sha256": "69e0089a560f73e1c0139d7b6ace629fecd0e7cc7aa030e049681a7778354612",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_009.fbx",
+      "bytes": 66300,
+      "sha256": "1faa6ffb07851bdfe67c45df1ec1ec9e42b90c4250c9e09721a3d8d21c44c725",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_010.fbx",
+      "bytes": 35052,
+      "sha256": "23fcffa97d04dee46cf79d8b9439548af95276879a2d69cc1797f498204bf156",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_011.fbx",
+      "bytes": 61740,
+      "sha256": "6478ea9350b7281c41899fd0d6dd1c05de957708ea35e80a656b47ed4e2ccab4",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_012.fbx",
+      "bytes": 48188,
+      "sha256": "6aeb1bd18163f95379a8ff6681e95e74fa389008540ad438b8a3e5db8bb52e94",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_013.fbx",
+      "bytes": 48828,
+      "sha256": "86539403b736c20114b6b50b8080c3c5e173eb72f6a6116df2deb2012fabfbb9",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_014.fbx",
+      "bytes": 45324,
+      "sha256": "0518aa27b9d00de30844b2c2351496029ddbf0fbcc0ae3ce9c65a301bb1a8d3c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_015.fbx",
+      "bytes": 125180,
+      "sha256": "5d9e448e8b0efc0e772f96fff4707f48cd978066cd1aec91d8980ab0d5dbb911",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_016.fbx",
+      "bytes": 51964,
+      "sha256": "641e1480ffece220714eda57402a1e46c190aedcf8c0d51a24bd4e3c5558851f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_017.fbx",
+      "bytes": 45436,
+      "sha256": "44f898ad4797abae21508798d5b1b71a3168acc6938b8d45f60cff49cd42a43a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_018.fbx",
+      "bytes": 70940,
+      "sha256": "7f9cc99066a7b0c332cdb735cc7b2cdd2e0b2ae9d07b519ec7334be25cf34a9a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_019.fbx",
+      "bytes": 45436,
+      "sha256": "afda3ad3e8f8dceecd854031bbd9fbdc2500f92f6e31cb5298ce86eb615a51d5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Characters/Items/Models/Equipment/Spheres/Sphere_020.fbx",
+      "bytes": 34188,
+      "sha256": "18bc527f02adaf6fa47a5bcf1ff53aa829844e413ee6bcbd2d708286b2970153",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Angry.fbx",
+      "bytes": 39600,
+      "sha256": "2f4b2e6290cae35aae34f0d86f3c476cd7484cf5284d54713b340f55d74a405c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Attack.fbx",
+      "bytes": 42480,
+      "sha256": "07de3200060d288f8685a5bcd3d459469cedd5daaa4212dea269029484251267",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Damage.fbx",
+      "bytes": 38288,
+      "sha256": "fe4cb83e88d60c6937bd82b24aa31ff79b0b585161aed216801d78638ab348e1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Die.fbx",
+      "bytes": 39616,
+      "sha256": "3f3e41f7b643200938f2c01aa45012c787d12eecd591ed8147d7431378cabf99",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Die2.fbx",
+      "bytes": 44032,
+      "sha256": "a10fc7b55f072a830ba319cbc6627ecf291cc15ab0dc8319a4ce3ce3b191f09b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Die2_Inplace.fbx",
+      "bytes": 44208,
+      "sha256": "fd296929b8c7c68c72c6746143b2cdf77981fbd47e0296eb3eacfac25c144dd5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Eating.fbx",
+      "bytes": 40464,
+      "sha256": "e653cfb360c2d3c6f63a50c9bef2837ae0d75fb945838f43c16c7f4409ab7792",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Excited.fbx",
+      "bytes": 47072,
+      "sha256": "46e9e4db305123468b6511bb16d9c331e32fd8f9efd04d1eed40959afce22ca7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Happy.fbx",
+      "bytes": 42352,
+      "sha256": "5d2abe8ec566312da658b1ccfc3b46853f96cf64a448aa187fac80f5fe5509cb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Idle.fbx",
+      "bytes": 39184,
+      "sha256": "60ca3081b4281c2a17f912f4a8fff0fcc32efbd2919088568813e78702931e81",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Jump.fbx",
+      "bytes": 37584,
+      "sha256": "fefd73e7250d96a5d61bf5d5fafef23db81de62acddcf222556ea08d08be3258",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Move.fbx",
+      "bytes": 39376,
+      "sha256": "c4730103025d537cd89f9a4b23e5fe4f582dd6438d08c1b6a053e7c75638188b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@No.fbx",
+      "bytes": 40896,
+      "sha256": "daf66c3a6eb6f678b3cd981b9c7b5d245e68f67b246b3610508b1f61ed40f0a2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Sick.fbx",
+      "bytes": 42352,
+      "sha256": "5faba91e4c9ae135321d1dbe23b74241f48d30dd8c120c8e8cd833775fe32b54",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Stun.fbx",
+      "bytes": 39136,
+      "sha256": "1eea77eb982ef73d55987691985725ed67786e26234d834b84fe74cce06b48af",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/Animations/Anim_Cute_Slime@Yes.fbx",
+      "bytes": 39184,
+      "sha256": "3708b09a1ed2f840248313e771a04db6c143aaf8fd4d664b157046fc7d83c82c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_N.fbx",
+      "bytes": 84608,
+      "sha256": "08f8a2ae2c3e9dc24fc06b94babdbc3d12be3964ebc525282400a6ddfdb427f4",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_O.fbx",
+      "bytes": 96192,
+      "sha256": "5e096392bda842814c77317170a67635ec0b8a9b2a78f3c3cfb4dadf34fa82db",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_P.fbx",
+      "bytes": 97824,
+      "sha256": "1a84bbe265a9ec4bfe4009861fc63e4402e0e3bceef3d03d6ef4c8c150d1258e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_Q.fbx",
+      "bytes": 78640,
+      "sha256": "4763f37aa7b6725076f33d3b2cc39b00dc8b021c6e04dc53d2f3807edc023b5b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_R.fbx",
+      "bytes": 79424,
+      "sha256": "3bece652c80afa46e803dd77c88629d37ee19045c8c02ad7ef8e08e812915e09",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/HealthMon/Prefabs/Cute_Slime/FBX/Cute_Slime_S.fbx",
+      "bytes": 93072,
+      "sha256": "d483f1f6249aa53a69db21c02f20186d94db29ed9c2b744ac8b2089dcbf444cd",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Angry.fbx",
+      "bytes": 39600,
+      "sha256": "2f4b2e6290cae35aae34f0d86f3c476cd7484cf5284d54713b340f55d74a405c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Attack.fbx",
+      "bytes": 42480,
+      "sha256": "07de3200060d288f8685a5bcd3d459469cedd5daaa4212dea269029484251267",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Damage.fbx",
+      "bytes": 38288,
+      "sha256": "fe4cb83e88d60c6937bd82b24aa31ff79b0b585161aed216801d78638ab348e1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Die.fbx",
+      "bytes": 39616,
+      "sha256": "3f3e41f7b643200938f2c01aa45012c787d12eecd591ed8147d7431378cabf99",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Die2.fbx",
+      "bytes": 44032,
+      "sha256": "a10fc7b55f072a830ba319cbc6627ecf291cc15ab0dc8319a4ce3ce3b191f09b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Die2_Inplace.fbx",
+      "bytes": 44208,
+      "sha256": "fd296929b8c7c68c72c6746143b2cdf77981fbd47e0296eb3eacfac25c144dd5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Eating.fbx",
+      "bytes": 40464,
+      "sha256": "e653cfb360c2d3c6f63a50c9bef2837ae0d75fb945838f43c16c7f4409ab7792",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Excited.fbx",
+      "bytes": 47072,
+      "sha256": "46e9e4db305123468b6511bb16d9c331e32fd8f9efd04d1eed40959afce22ca7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Happy.fbx",
+      "bytes": 42352,
+      "sha256": "5d2abe8ec566312da658b1ccfc3b46853f96cf64a448aa187fac80f5fe5509cb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Idle.fbx",
+      "bytes": 39184,
+      "sha256": "60ca3081b4281c2a17f912f4a8fff0fcc32efbd2919088568813e78702931e81",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Jump.fbx",
+      "bytes": 37584,
+      "sha256": "fefd73e7250d96a5d61bf5d5fafef23db81de62acddcf222556ea08d08be3258",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Move.fbx",
+      "bytes": 39376,
+      "sha256": "c4730103025d537cd89f9a4b23e5fe4f582dd6438d08c1b6a053e7c75638188b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@No.fbx",
+      "bytes": 40896,
+      "sha256": "daf66c3a6eb6f678b3cd981b9c7b5d245e68f67b246b3610508b1f61ed40f0a2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Sick.fbx",
+      "bytes": 42352,
+      "sha256": "5faba91e4c9ae135321d1dbe23b74241f48d30dd8c120c8e8cd833775fe32b54",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Stun.fbx",
+      "bytes": 39136,
+      "sha256": "1eea77eb982ef73d55987691985725ed67786e26234d834b84fe74cce06b48af",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/Animations/Anim_Cute_Slime@Yes.fbx",
+      "bytes": 39184,
+      "sha256": "3708b09a1ed2f840248313e771a04db6c143aaf8fd4d664b157046fc7d83c82c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_N.fbx",
+      "bytes": 84608,
+      "sha256": "08f8a2ae2c3e9dc24fc06b94babdbc3d12be3964ebc525282400a6ddfdb427f4",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_O.fbx",
+      "bytes": 96192,
+      "sha256": "5e096392bda842814c77317170a67635ec0b8a9b2a78f3c3cfb4dadf34fa82db",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_P.fbx",
+      "bytes": 97824,
+      "sha256": "1a84bbe265a9ec4bfe4009861fc63e4402e0e3bceef3d03d6ef4c8c150d1258e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_Q.fbx",
+      "bytes": 78640,
+      "sha256": "4763f37aa7b6725076f33d3b2cc39b00dc8b021c6e04dc53d2f3807edc023b5b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_R.fbx",
+      "bytes": 79424,
+      "sha256": "3bece652c80afa46e803dd77c88629d37ee19045c8c02ad7ef8e08e812915e09",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/Suriyun/Cute_Slime/FBX/Cute_Slime_S.fbx",
+      "bytes": 93072,
+      "sha256": "d483f1f6249aa53a69db21c02f20186d94db29ed9c2b744ac8b2089dcbf444cd",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type10_Color1.fbx",
+      "bytes": 87132,
+      "sha256": "e30afe7e90c63c9f5ec7a8e08f5aefae29a9871aca0831c636adb350f3d28079",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type10_Color2.fbx",
+      "bytes": 87148,
+      "sha256": "c93b3124ca6366bb329d0cdf9e25fa5ff9b4e2ecd2efcd9bdf506f9a1ea046d5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type10_Color3.fbx",
+      "bytes": 87116,
+      "sha256": "fdc72041dbf5b08649b0e5ba8f6a3e9684c9c46b3614e9e789ac19133dea894a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type1_Color1.fbx",
+      "bytes": 92396,
+      "sha256": "012f5ccfb0df63691ba96b6af638d367e9fe188202e24af21431a2b14a50a88b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type1_Color2.fbx",
+      "bytes": 92332,
+      "sha256": "78126d832286889fdbfed6c9095d35aaa26cfcc4e487934be4ad6d6fa69291e7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type1_Color3.fbx",
+      "bytes": 91708,
+      "sha256": "8f98ae33d4b9dd407b0e0d82e3d66e69b3585d0a03eefeb5c82f376d645ccc6b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type2_Color1.fbx",
+      "bytes": 108348,
+      "sha256": "57d80cf3a982df5f9a0f243dd449b3d209730175a1b9c5e08d548252a5024aef",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type2_Color2.fbx",
+      "bytes": 108348,
+      "sha256": "d404548f1ee4fe842c37acc91ef2aa621eee162bce7f45bec87bc5597b899a7c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type2_Color3.fbx",
+      "bytes": 108412,
+      "sha256": "0dbc0e021266d32a2b1e3de596a61e1fc05d7e4f60fe64ca1382674f24ec7ac7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type3_Color1.fbx",
+      "bytes": 96188,
+      "sha256": "a4af34b36108c3a0d8171817cacb6e4295eefb9e68a72769f66a849a05be51f3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type3_Color2.fbx",
+      "bytes": 96140,
+      "sha256": "77e57e1bb5180a8e8c47b6b5ddb6c829e5efec12cf4ea047e994e43db5324f28",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type3_Color3.fbx",
+      "bytes": 96140,
+      "sha256": "f2fa40a029e07a98e4a056a0a0afaf9307b041d05b6c744610452da0106f56a9",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type4_Color1.fbx",
+      "bytes": 113244,
+      "sha256": "e518da65745be626c3c8f1288fc9a0b87c1ae739a9c82075a204d770a4c5ac80",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type4_Color2.fbx",
+      "bytes": 113244,
+      "sha256": "ebbf09486c7a821468478d8e52c8a8dd6f2328a568a48d65db5e35c77e4face5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type4_Color3.fbx",
+      "bytes": 113420,
+      "sha256": "0f15d9cdae7b5d5e5f3bce977990afa5bdad5d0691d1473250aaeaa8fae5b012",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type5_Color1.fbx",
+      "bytes": 116476,
+      "sha256": "34e7d2aa5b1823f002070ba5276b03945e244ba23a67b829588be3585795ad73",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type5_Color2.fbx",
+      "bytes": 116412,
+      "sha256": "15bd11d298fcb85b2a821c9cb7fe3b222dfac1f47d48f7a3ab063ee5322500f8",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type5_Color3.fbx",
+      "bytes": 116412,
+      "sha256": "21c503f971623660e728d21ba903ea9e084eda451c04272c0b465c75e5b57d05",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type6_Color1.fbx",
+      "bytes": 125564,
+      "sha256": "234dd02cf23a2bafd4adc57649ee87f2ccada96e0a5289cfa8d7b5192a28a8f2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type6_Color2.fbx",
+      "bytes": 125516,
+      "sha256": "1043bfe1c8b96728fae5f9c4823a5a071cae088dd02aa2309795f29c11e1746d",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type6_Color3.fbx",
+      "bytes": 125228,
+      "sha256": "4b9ba440ec71311c06e34a586b1829f710fab11d40231f862363231288c778fb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type7_Color1.fbx",
+      "bytes": 96636,
+      "sha256": "f2adcbe5020b90fb2bb385a2eeb202f5191b4be8aabd73431dd90537e5b02fe2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type7_Color2.fbx",
+      "bytes": 96636,
+      "sha256": "784af03490b35570e33141cc2482ab0b1bade67a03cabc16d2d6276a1a9ef89f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type7_Color3.fbx",
+      "bytes": 96636,
+      "sha256": "9c5a118e328dd3f9ba427f8274b32d572b48f16e35ea07fa0bea42b3b1c63ab3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type8_Color1.fbx",
+      "bytes": 96140,
+      "sha256": "4e8122399ec032c34e97677eb60f99f561aa971632bb52111cf5cb023cd5c02a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type8_Color2.fbx",
+      "bytes": 96172,
+      "sha256": "575fbfe6770284fb7bec95a32d8386edcd8c88fadaccc5d6b3955ef1a06bd76b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type8_Color3.fbx",
+      "bytes": 96012,
+      "sha256": "7cf920f1fa48764c911748fca50cf28478f495dbfa9600181b5070450f8c5ab2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type9_Color1.fbx",
+      "bytes": 51836,
+      "sha256": "ddaff8722b23cb63fe7c62dd46b53965527a21f073ea70b1b57e719a3009b0e6",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type9_Color2.fbx",
+      "bytes": 51788,
+      "sha256": "205a51cac69b44b21081693ca7399c24bd8ac555f3e1bdc8c22e1705d0c12ccb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Chain_Type9_Color3.fbx",
+      "bytes": 51756,
+      "sha256": "e95868fb3eff0c7e8a2f7cebf3180b0bfacf4e0666e9d3464b17d5fb3ea8c4b7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type10_Color1.fbx",
+      "bytes": 51148,
+      "sha256": "f308ec090e703e2dbf5500117ebe10a13f95ffbf6e72597039e9593cd5040134",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type10_Color2.fbx",
+      "bytes": 51148,
+      "sha256": "73fbf12410a28fb842a57b457a4f2e2454328904c7e8da5743f88e7d7472646a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type10_Color3.fbx",
+      "bytes": 51100,
+      "sha256": "9f79ac12a789665a3401ddece2078a8f048214fb91caa39643a8f8aa734135a7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type1_Color1.fbx",
+      "bytes": 41500,
+      "sha256": "44683c285e23a0760ad547ac42189d02a507631ea7d40eec24ab05e087d3e15e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type1_Color2.fbx",
+      "bytes": 41372,
+      "sha256": "4718a05968f82053c276a3a6c711fb484afddeea2e8c8ea4e3aeadd467cbabb3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type1_Color3.fbx",
+      "bytes": 41116,
+      "sha256": "ed654c2c8621dfe323de5e70d789e9246ab957a15f2d27d6b00208d1788bf808",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type2_Color1.fbx",
+      "bytes": 66604,
+      "sha256": "e4d86030b5434f0aebe40da05c406ad4c36fd60f2f65a8af1ca291518653a637",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type2_Color2.fbx",
+      "bytes": 66684,
+      "sha256": "440380803538ba43d4efb2ebe9e901895de8d259e89cac8c7d8c578889556c8e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type2_Color3.fbx",
+      "bytes": 66588,
+      "sha256": "9c0668c466103d09fd6f1989320c87926a786354d4cba84780be9f6e1d5346ce",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type3_Color1.fbx",
+      "bytes": 46220,
+      "sha256": "fe33ada13c943ead9ebc5b8bb90165d045287b7dc32f181072109b6dcc06b562",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type3_Color2.fbx",
+      "bytes": 46140,
+      "sha256": "3c47ec02589dfdc4624497e4fa0bb9ae7500837494c8091318e7c444a68c3c3e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type3_Color3.fbx",
+      "bytes": 46140,
+      "sha256": "189c0e62c1c5023eef91e5020e0495e70323d41032f21ecda5cf38b6caf71881",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type4_Color1.fbx",
+      "bytes": 40348,
+      "sha256": "e810b16878b91add0b0e150dc0e9db182fd7fd895ab04e74a01f1655c5f252f2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type4_Color2.fbx",
+      "bytes": 40236,
+      "sha256": "e691409c44a0dfde616deee03ce3e13deca0f3d5297b9b74c90c130e1145371d",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type4_Color3.fbx",
+      "bytes": 39980,
+      "sha256": "018fea916cdea187e2b0e10b15ebc14d66d23a63b253f130ef14949eee79708d",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type5_Color1.fbx",
+      "bytes": 46700,
+      "sha256": "5174f99df196d80bbb1fe9d7e38a6e54d036b20255c966bdcebbb7f6ed45b7e2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type5_Color2.fbx",
+      "bytes": 46492,
+      "sha256": "94293d42567f4b1d4f7ed19f748b9ce8c8e7ae0363d65ed2b58bddfa6048abc3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type5_Color3.fbx",
+      "bytes": 46508,
+      "sha256": "cf0b36bbab3b780881d28a6794351aed2f1b3f737c2eeab90f8b571639b5ae56",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type6_Color1.fbx",
+      "bytes": 41596,
+      "sha256": "28112e47a2c406d8b6a772db6f49edaa6841d851960d7cdad0617283320a9171",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type6_Color2.fbx",
+      "bytes": 41564,
+      "sha256": "18affcbfc88f2eb7bd93966bf2e68bac56c3e26824bff494abf72cf571503905",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type6_Color3.fbx",
+      "bytes": 41564,
+      "sha256": "e0825f01eb62671bdf2b4c79eaf478cf312af809957f7a6a7a061a9c87af5131",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type7_Color1.fbx",
+      "bytes": 57372,
+      "sha256": "a85418eae8cfd6f40ec5ab37ce284250115e4aa7a85dd5a48762395dd5b81c49",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type7_Color2.fbx",
+      "bytes": 57292,
+      "sha256": "2d1c1705090c3ba1ec0c31cf0a681aafe6f62e1d87ad2fc95ae1e81a0e73cf35",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type7_Color3.fbx",
+      "bytes": 57292,
+      "sha256": "a4d8954cb336503ec5425c3cdbb6c250b54e79d8f5c425b55d2c1c1bf9bfb00c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type8_Color1.fbx",
+      "bytes": 58364,
+      "sha256": "982326d7f099206b4cc756a47485a5bc088da04b26714b64fca973467b53e3d1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type8_Color2.fbx",
+      "bytes": 58220,
+      "sha256": "c5c43178774564dd24e8aa43390d2b79c254e1ea904d1caec94ef6c14f6124a9",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type8_Color3.fbx",
+      "bytes": 57916,
+      "sha256": "c5008ab9a7d914cc4a7d5c339253eeee5d65d740df53a5ab1cde256210db0dea",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type9_Color1.fbx",
+      "bytes": 37580,
+      "sha256": "01323d02aed4bf74363d27127106d6402c4cae5f432b09cb61825844c1cb66af",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type9_Color2.fbx",
+      "bytes": 37676,
+      "sha256": "93caba6044fb261922705aa619ddee59b7ca2590373e1caea959f962824e319f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Earring_Type9_Color3.fbx",
+      "bytes": 37388,
+      "sha256": "b735b8a87782d3500fdadde40d925d9632618bde982bc8a9a417d34a5d9568d3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type10_Color1.fbx",
+      "bytes": 121596,
+      "sha256": "f468c3ca5d70b7a8ab9287c68c391c97d8c1f85675c27d249b484df2c87f770c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type10_Color2.fbx",
+      "bytes": 121660,
+      "sha256": "7fc03c207514d9f5a59788458eb909e593703626572bb373cd950faabbb1b2a2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type10_Color3.fbx",
+      "bytes": 121532,
+      "sha256": "2b6ce75ae3ee33055667ecc48868de417252a44ec4378b2d9bd2a3da39f05644",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type1_Color1.fbx",
+      "bytes": 131564,
+      "sha256": "67ae84ca43174c6f3f3c28b03d4d49dc281577722dd9b629f31d812ab8ce9f9f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type1_Color2.fbx",
+      "bytes": 131452,
+      "sha256": "a93096a1c348659b5360c76420392e2eb48aa69fdc87f298493b3d3efc865979",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type1_Color3.fbx",
+      "bytes": 130140,
+      "sha256": "a1858b6d154436dc5f7aabf8c52860d70a77d728190fec06bc281faab074e81b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type2_Color1.fbx",
+      "bytes": 125436,
+      "sha256": "c00cb1cc6c1c60eab196d77e8fea48d9c841b4b952f372fceff6d8e36af7c904",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type2_Color2.fbx",
+      "bytes": 125516,
+      "sha256": "7ffa90a2ae0b4505444a26b68f189aa8ea4faf2ebbf1c7e2c15420bbe8ea5ed5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type2_Color3.fbx",
+      "bytes": 125500,
+      "sha256": "43bd7e04195a802f0f6c707c6631a5583dcd92cd364f7be1aee276955a1cf456",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type3_Color1.fbx",
+      "bytes": 151676,
+      "sha256": "3ec9b9040a8654393a72b9746b89e9789b221b580f10247d430b834f714b8126",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type3_Color2.fbx",
+      "bytes": 151356,
+      "sha256": "2890a1204517a26bf6652859202c0823d22f45db51f41818bc0a88071d683284",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type3_Color3.fbx",
+      "bytes": 151500,
+      "sha256": "26c62a28cc9b1dd5fa9aa5ab37be3a8a7269fc1d5d0523de2ec797978d472da0",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type4_Color1.fbx",
+      "bytes": 175308,
+      "sha256": "f212c20297bb03bc4bd81cfc77cbc07987fd18c65d2357420ae67c1b7193d8f3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type4_Color2.fbx",
+      "bytes": 175068,
+      "sha256": "c90f692bf6a061def43b66904e3f6045729fb4998ff3c84c69631ca54eeb75e3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type4_Color3.fbx",
+      "bytes": 174908,
+      "sha256": "4a42a2eaa7978414437a14312711da7f3d659879e8ad8fbc2324f8eee0e358d1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type5_Color1.fbx",
+      "bytes": 153132,
+      "sha256": "3cb059bf6045fcbe91a5099e6dfa1c7c2ce1e4c8b70b827e56b3bd3c83f8ceff",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type5_Color2.fbx",
+      "bytes": 152892,
+      "sha256": "23571c5156cb4efecf2af8b4a5b2e5c5c8ade11b2f1f9aca90943f62e8aba0fb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type5_Color3.fbx",
+      "bytes": 152876,
+      "sha256": "d7880dd8eede4f73c17d55204cab4cf9843bcef2f347b9264796b98fe5d93ed1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type6_Color1.fbx",
+      "bytes": 160252,
+      "sha256": "f6dd909db24c922588211c0975b4033df0a7136c1726c0cb005b32693fb3430b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type6_Color2.fbx",
+      "bytes": 160076,
+      "sha256": "61ca6ef1e9c15426538902aa28d138a0a38f46955148f70e70747a2d14e2b6a3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type6_Color3.fbx",
+      "bytes": 159820,
+      "sha256": "2f0dab511d91e7d074af1ccb5fbd00dc64e04c50535451c5a8d30746cdaa53bf",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type7_Color1.fbx",
+      "bytes": 116332,
+      "sha256": "0141d4e3ac4007dd702b5ed77c35bc86531d97001d2c3c018c115a9118dbd899",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type7_Color2.fbx",
+      "bytes": 116204,
+      "sha256": "269d1d0dce81443e9cc654a2bee9d9419ab8e720243ed33192b8ffea476e00a7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type7_Color3.fbx",
+      "bytes": 116188,
+      "sha256": "dbf1ea03e812bd85ea37faf809d5a888ac4cb38fceb405e2f2248aac48d4c612",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type8_Color1.fbx",
+      "bytes": 168364,
+      "sha256": "76484fd28963a2ca745cd93d1e9622672ae86637c0cbefae2da13def91ed89ad",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type8_Color2.fbx",
+      "bytes": 168108,
+      "sha256": "5734f47b561535508ad40eceddfc7a6242f67ee47cfa66e15542912bfb097759",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type8_Color3.fbx",
+      "bytes": 167900,
+      "sha256": "c4d826c82b122a3dfb0548d92e64d72a8175f619515d4a4ab23f5d8d7430aefb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type9_Color1.fbx",
+      "bytes": 94108,
+      "sha256": "ab3d0dee1ed09967686c681e748190c40167e6424339b14cbd5ac23a89847aca",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type9_Color2.fbx",
+      "bytes": 94108,
+      "sha256": "72ef4fd5bd16accebdbe8b79c44d8ba323faa8b55a0c2ad96f3575ffe05466cb",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Necklace_Type9_Color3.fbx",
+      "bytes": 94044,
+      "sha256": "c42fa5ee503f37ca15a905373a6c1ded5af3a504550821528ec98e07c0b73243",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type10_Color1.fbx",
+      "bytes": 43836,
+      "sha256": "bc7e0490b078319b80c57af151ec0c20deefbddf8527fd4c5d852ab24a8392d1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type10_Color2.fbx",
+      "bytes": 43900,
+      "sha256": "0af5a964c6b1525929cde2cbd8d3fc7a501abc5e7ad3e7ad05704002fde17e52",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type10_Color3.fbx",
+      "bytes": 43836,
+      "sha256": "7eec801fba8e13b4c9db6822666b03ddd25cd9e8739a526c2aa8c58e81c37caa",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type1_Color1.fbx",
+      "bytes": 50908,
+      "sha256": "dbd52431999d9f5f8d6b36ab78c9870ae54c1033bf1068b328cdf7ad0425713b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type1_Color2.fbx",
+      "bytes": 50892,
+      "sha256": "9d30d4193d911210a2766dfb63726ef5cc17585ddfed73f0f8cb072efa8340d7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type1_Color3.fbx",
+      "bytes": 50652,
+      "sha256": "3396b4e87538edbff35f4bdf3962c25b65197f0ccd4fa9d98333a6e99565f1fc",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type2_Color1.fbx",
+      "bytes": 32972,
+      "sha256": "e7c2d101ea1d45cdf1c9fea8fdce70d0853446affd66b5da9433338588e45743",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type2_Color2.fbx",
+      "bytes": 32924,
+      "sha256": "bb9c7e74270ed2a578ac662f13832504105f4b441b4167f716f6fcc598b6368b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type2_Color3.fbx",
+      "bytes": 32908,
+      "sha256": "1f2a43a49e6b12ae39ef6ab09350cfc1b008d83d55ec9cfe4151a9fd74df566b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type3_Color1.fbx",
+      "bytes": 70076,
+      "sha256": "96f6bfa9d5c28bd7700e245e29284cc75729b76a334410f61ebd8825f33dbc93",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type3_Color2.fbx",
+      "bytes": 69964,
+      "sha256": "b39d02878499eb5926f7516d37b51fd816c6b99bd84b7c9233743efc93783436",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type3_Color3.fbx",
+      "bytes": 70140,
+      "sha256": "b0952745967383d025324d9dd31922aa50e060c276c22462df8a2223d24dc6d3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type4_Color1.fbx",
+      "bytes": 73564,
+      "sha256": "52bc720bbe7a8eb2beeafa0c41c88daf73b92263271ef3e987a3c2c5e987e347",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type4_Color2.fbx",
+      "bytes": 73372,
+      "sha256": "c4ab924d15d844e1daf82db4527661a500cd9df203ae1a39cdc918dc20dbf089",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type4_Color3.fbx",
+      "bytes": 73020,
+      "sha256": "d4386873cbf327eda98d436e80cc24838848d2bc8cc3b05794ccb2e58732c441",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type5_Color1.fbx",
+      "bytes": 45196,
+      "sha256": "2ed9efc275c4052c36e5c3d838a6e2895f686d6261a0c05901f3119829215daf",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type5_Color2.fbx",
+      "bytes": 45100,
+      "sha256": "c4ce7d03613cc710c662608efb8af6a615d3cf2b1fc765d0d8d4560841c44a33",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type5_Color3.fbx",
+      "bytes": 45068,
+      "sha256": "dfe18ae3f5f30c57f5a65fe7c1bc7420dba3b8a18eb09ee7175db40e01cff423",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type6_Color1.fbx",
+      "bytes": 51260,
+      "sha256": "8e68c1e3cea66de4054838cd05152a018beedeb05a89c9b9e0a4c8ad89549d12",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type6_Color2.fbx",
+      "bytes": 51260,
+      "sha256": "f3cb4538981f03114965a9023329d356337c9f9c2f4775c42516df91a935a777",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type6_Color3.fbx",
+      "bytes": 51196,
+      "sha256": "4e03e6d5656b2e38e2f3ba7012fac305457f2179d593a2f0653e7ac400f76927",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type7_Color1.fbx",
+      "bytes": 36652,
+      "sha256": "47b3f08c4d575526d81c94ddf86994f634a836a0eae67d31d2109c707dec5589",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type7_Color2.fbx",
+      "bytes": 36524,
+      "sha256": "4c0bf66ad2f81933573571de86c7f61aaa16e307602f674ae34e50a591c67274",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type7_Color3.fbx",
+      "bytes": 36524,
+      "sha256": "da6843e16f80150224f2055529741c244868f3b81f7266e2c8d250a0256df193",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type8_Color1.fbx",
+      "bytes": 82972,
+      "sha256": "24f63213789a80e6e71d817f3885b95cd71235bd3c8b5d59fcab2be6e33ca3ec",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type8_Color2.fbx",
+      "bytes": 82812,
+      "sha256": "782e535f3aaa42ca549ac047f6a4d473961f0e9c2ec374efca148b114dab680b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type8_Color3.fbx",
+      "bytes": 82748,
+      "sha256": "5d7379ff2004061e63768b1dc9df4113fbdfcd1ad6ba19b56fcfae8d09cf5f95",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type9_Color1.fbx",
+      "bytes": 56476,
+      "sha256": "a7cef38dfb6e9eb39b6954c4993d63e92678a5adacaacda73d39302feab6c625",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type9_Color2.fbx",
+      "bytes": 56380,
+      "sha256": "a183975e825f5bc253b37e583357114b7c7a7f561b055d4094de7827cfce9f42",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Pendant_Type9_Color3.fbx",
+      "bytes": 56364,
+      "sha256": "d4a61d2f05a9917c1b065574bcb18aed305673458ccacc3d78035a6dcb4e3d60",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape1_Color1.fbx",
+      "bytes": 35452,
+      "sha256": "dab654eba9e012ba563059c4a415413afe860eee0abab17c6147e80582495e8e",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape1_Color2.fbx",
+      "bytes": 35516,
+      "sha256": "7b82dfe4a763086149669bd0365187d2e0aba2210fed43022b14c19ed0d896aa",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape1_Color3.fbx",
+      "bytes": 35436,
+      "sha256": "8bab8ef25ad4773860ecf1480762bc8615f91b049bfa6c6cb6e91eb5d1f61f3c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape2_Color1.fbx",
+      "bytes": 37068,
+      "sha256": "d307eecc7e7c4451d61cdda194c6baa52177afabd19a8554f6f48e6765ba75d8",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape2_Color2.fbx",
+      "bytes": 37148,
+      "sha256": "4b40a4a9917e09016abc85f1d40332b757b7158f87153e7c120ab4df397fed91",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type10_Shape2_Color3.fbx",
+      "bytes": 37068,
+      "sha256": "4b86d9b71f0c15279791c1e3442f477da85eb3907525e458061df45bc896c5f2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape1_Color1.fbx",
+      "bytes": 35484,
+      "sha256": "6322438b52c0c38c7753c98307c7a6c5a36b09851e72acfe2ff34b9a44b48f39",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape1_Color2.fbx",
+      "bytes": 35452,
+      "sha256": "1c7abd49f0f959c8b68088e369df359f27579d6c24d107127d3ee5f1c24bf2c0",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape1_Color3.fbx",
+      "bytes": 35404,
+      "sha256": "35ccbe0bc157c6dbfe0e0814a40a02794b10b80ebe6a162d788a0bbe6d197349",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape2_Color1.fbx",
+      "bytes": 37452,
+      "sha256": "e3600328ae28aa5327d3e8005c6229f34759c78d03a17985d05b94007e1a5cb1",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape2_Color2.fbx",
+      "bytes": 37436,
+      "sha256": "f8c18d05d1826affb2ed43d0ef0a3eedb20bc655d147013729ac4533427ec8ee",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type1_Shape2_Color3.fbx",
+      "bytes": 37372,
+      "sha256": "9151377eb4483d9e604c3b4e37323771aac0f79c5890e9f957555e131abb43df",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape1_Color1.fbx",
+      "bytes": 35868,
+      "sha256": "139cd75b96309abcdb208033ccd59576864b43b673b0cec876fdaeea7b991fb5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape1_Color2.fbx",
+      "bytes": 35852,
+      "sha256": "45f93431f46ca4e9d659706dcea762443185423b484c6354c1d09f00ffef8dd4",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape1_Color3.fbx",
+      "bytes": 35868,
+      "sha256": "e12bee047d40e174b4794e272831bd6478ad652267c01e716c9edd189af91bcd",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape2_Color1.fbx",
+      "bytes": 37356,
+      "sha256": "60c490e76fbbf9441124ffb081dc248bbd6bbf44a5390c9b27d01e2bf56f7c44",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape2_Color2.fbx",
+      "bytes": 37356,
+      "sha256": "7eb93e7f33bf669fe074e10a15519adf573054551714f147c00047fa3bcbe04d",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type2_Shape2_Color3.fbx",
+      "bytes": 37340,
+      "sha256": "a621263e7179b9906e02073fb0743503be84e386c0adc5d5c6902a74bb9d3c34",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape1_Color1.fbx",
+      "bytes": 26140,
+      "sha256": "d494c4670ae672f4fc9339456e9aae74cca886fcb9d2221a8a4b9465c2a0749b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape1_Color2.fbx",
+      "bytes": 26076,
+      "sha256": "c8a19a309eb191cf3cbd51b228847f04a3acb5323624b3e8e0c90fc88d3b5f00",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape1_Color3.fbx",
+      "bytes": 26076,
+      "sha256": "1fa185b16da3246e9e0579c77b86c541e5f535547191bb02721cf8c29340e6d7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape2_Color1.fbx",
+      "bytes": 28684,
+      "sha256": "1bf6d11b51dbda0fb72550c80fa695e762e751b318b59fcb48b1198477672915",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape2_Color2.fbx",
+      "bytes": 28572,
+      "sha256": "1151668f405511455e30ed99cf819502e5480c0274ec6226eb41799a386e7eb9",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type3_Shape2_Color3.fbx",
+      "bytes": 28572,
+      "sha256": "166ced2e29790876dea6902e579d5e43a9ca2c09a039c3fe053a4686013221b8",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape1_Color1.fbx",
+      "bytes": 42716,
+      "sha256": "4397d57ef30caf723f6c8d5c39a12c12d0c437747d520f4a4b6cc36bdecedcab",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape1_Color2.fbx",
+      "bytes": 42620,
+      "sha256": "7f09498d5c0c574c5731bde000065b9b4f1914fec32be9dc83e71439fe8f048f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape1_Color3.fbx",
+      "bytes": 42364,
+      "sha256": "98f29f6c9e680fa371537223e2561d31bd9a070be2f3fbb3755e4944855dd5e0",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape2_Color1.fbx",
+      "bytes": 47500,
+      "sha256": "fc38f29749f6da060ae8361ba3b10cbd88a3044659026cba574196359bf53147",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape2_Color2.fbx",
+      "bytes": 47452,
+      "sha256": "ab8ddf2a4509194f62e2ea45a0e7e6b7530a949f48c542be6d0c45bfc3cc2169",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type4_Shape2_Color3.fbx",
+      "bytes": 47276,
+      "sha256": "8894a8a585c663e05ef523a0369daac7139a51d22bc1ab4d8cdae472669c7dc4",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape1_Color1.fbx",
+      "bytes": 37884,
+      "sha256": "63df8b098346d356a08966f6ca5d42736c244d5365f8351d4a8e33971527b6af",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape1_Color2.fbx",
+      "bytes": 37836,
+      "sha256": "8810a1db374f49f2521cb766e897fd330f2aff6f779541c9e76259dd66be6f8a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape1_Color3.fbx",
+      "bytes": 37836,
+      "sha256": "09fdc09b57b31b57d4a6bc9426b28da6de9ba5191623d16eeeeebae6d629476a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape2_Color1.fbx",
+      "bytes": 41356,
+      "sha256": "0927db997ac3ace3e703f79243edb063801787e0ad498fdcc118a15bfa2ce162",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape2_Color2.fbx",
+      "bytes": 41244,
+      "sha256": "4f0ba6a3f141cd2321d3bcc88394e89dd2ec93448169faba9e4f65ea86ae84c3",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type5_Shape2_Color3.fbx",
+      "bytes": 41244,
+      "sha256": "f35c8fc19a5ec09a5012a59d6f0cce3f3deaa96f58d07f089941b12d09168cce",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape1_Color1.fbx",
+      "bytes": 45772,
+      "sha256": "03a4256558275d927fd925c31800d48e8b5d0bf2cc0725dcd653b3c5f23787c2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape1_Color2.fbx",
+      "bytes": 45820,
+      "sha256": "c202345c7f0d953f4fd30e7c0cb1cac828a3b4c0ccd3bfce32a8fe5c573d362f",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape1_Color3.fbx",
+      "bytes": 45772,
+      "sha256": "e5931eee60c603a52a8a9ebdeb05df0613ca53b154c0125667c0a032ee706c17",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape2_Color1.fbx",
+      "bytes": 48428,
+      "sha256": "33ce09aa87400f8c2e3c9a9a4d59ba5743d815a5ae772929c4cdcda085d543b6",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape2_Color2.fbx",
+      "bytes": 48412,
+      "sha256": "f3f57c948d4c54f78ec79fc1ee44baa574eea5d4f88f67472ef15c937faf6d55",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type6_Shape2_Color3.fbx",
+      "bytes": 48236,
+      "sha256": "b1a712843cc607cd5441f76d81c57d8b35d10f8f2cf7660eef9a8cd20e56e995",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape1_Color1.fbx",
+      "bytes": 42108,
+      "sha256": "441cebbbb52d2a548bdeec58092f145dbc2fff1f2553fb3037469077a5d4d4b7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape1_Color2.fbx",
+      "bytes": 42092,
+      "sha256": "a406c50c032d8297a881ac554870afe1d6addf433089e3ece036e57399422693",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape1_Color3.fbx",
+      "bytes": 42044,
+      "sha256": "c2cec1b944d40cc0eed2a9819a79dcf1ddb7a599472d015101f4fefa1f94e657",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape2_Color1.fbx",
+      "bytes": 45100,
+      "sha256": "d6d39a233615539469cae6703a19bb42b046687e0e9c69b73cbc832558053dca",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape2_Color2.fbx",
+      "bytes": 44812,
+      "sha256": "c3000947385ece48b3e34ccb3c17a5a227fa869477837b3d4da65491244b89c2",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type7_Shape2_Color3.fbx",
+      "bytes": 44812,
+      "sha256": "83f279c0142dca9469aafb71bac4cf97e030aa2204e73fff43ceb548260f3ee5",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape1_Color1.fbx",
+      "bytes": 53020,
+      "sha256": "4edbf9acc17a9a9ce5cffae6efa82c9fa5ecc42664ec749d5a1944cd97bc1dd7",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape1_Color2.fbx",
+      "bytes": 53068,
+      "sha256": "cc423f6653376f59320a81f75219612b045024cf89bb8330fa0d3304f272eee6",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape1_Color3.fbx",
+      "bytes": 53020,
+      "sha256": "0dc3c8eeacfbf02a5f33b2bb94ac01c7afd4c18d7ff9364d7a5a168fcf26fc95",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape2_Color1.fbx",
+      "bytes": 55692,
+      "sha256": "8ce397b56c7367fdafe55bf5d4f6006203433787e0f71ddf6e13bf5bb02c0f64",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape2_Color2.fbx",
+      "bytes": 55676,
+      "sha256": "89abe15204e7d6c9ac176db95f9bd9a627a95f12400f9a426e03c24f470d5f40",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type8_Shape2_Color3.fbx",
+      "bytes": 55676,
+      "sha256": "e656875a7006cea9b3dfe19790d72004e5a9c0b9037578cd22b2564d89ba66c8",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape1_Color1.fbx",
+      "bytes": 51644,
+      "sha256": "16a66d5a7c723324fedbd90fa83a2532fb4eacc979d5b9cf5bc89960ff32e28a",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape1_Color2.fbx",
+      "bytes": 51596,
+      "sha256": "f2dbd991d87e55c5c35e4473593198aba8d3bdf13dfea92b37ac49e15f1f1743",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape1_Color3.fbx",
+      "bytes": 51532,
+      "sha256": "31bd466ba4e8251d182514b2de0680c78ddfdda3b9bfe582c919a9f517239c3b",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape2_Color1.fbx",
+      "bytes": 53612,
+      "sha256": "77f93da94ede6e46b42b5d7d2a1b32a71bac341662d8fd2eeef777e9e90704e9",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape2_Color2.fbx",
+      "bytes": 53548,
+      "sha256": "399652a1792944a606f4a2b68ee5b9b9721ff61bf85c8e5313fd4aee69ec243c",
+      "group": "client"
+    },
+    {
+      "path": "Client/HealthMonUnity/Assets/URP GanzSe Jewelry/Models/Original 1.0/Jewelry_Ring_Type9_Shape2_Color3.fbx",
+      "bytes": 53468,
+      "sha256": "0f9ff740a42b9d9ca9859e950c601da15c506b717bf47deb3305642129e9b85d",
+      "group": "client"
+    }
+  ]
+}

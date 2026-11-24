@@ -1,0 +1,46 @@
+{
+  "artifact": "healthmon-2511-epoch10-20261119",
+  "destination_repo": "emc2square/healthmon-3d-models",
+  "destination_prefix": "healthmon-2511-epoch10-20261119",
+  "source_package": "healthmon_docker_deploy_2511_20261119.zip",
+  "purpose": "Versioned backup of the final trained evolution LoRA and exact base-model requirements",
+  "format": "native DiffSynth-Studio LoRA; not a complete base model",
+  "checkpoint": "epoch-10",
+  "selection": "Pre-designated final epoch, not a best-checkpoint claim",
+  "backend": {
+    "name": "DiffSynth-Studio",
+    "version": "2.2.0",
+    "commit": "08fdc0da8f41426885d9432e9007e6e460a4c30d"
+  },
+  "inference": {
+    "height": 512,
+    "width": 512,
+    "steps": 24,
+    "cfg_scale": 4.0,
+    "zero_cond_t": true,
+    "edit_image_auto_resize": false,
+    "lora_scale": 1.0,
+    "negative_prompt": " "
+  },
+  "files": [
+    {
+      "path": "configs/base_models.json",
+      "bytes": 6772,
+      "sha256": "bbfabf832f71953f9293e123e4f0a625f31dd16595f3cb631253382534aba449"
+    },
+    {
+      "path": "configs/model.json",
+      "bytes": 1264,
+      "sha256": "c28d79a3e980155690b03296a9bb9661b02407d0d92a62ac511c791392c6746a"
+    },
+    {
+      "path": "weights/healthmon_epoch10.safetensors",
+      "bytes": 943905448,
+      "sha256": "9bc8cf6752972b0035a787cba3f2d21a27d501902e9edd199ae7fc02de57350e"
+    }
+  ],
+  "base_weights_included": false,
+  "runtime_code_included": false,
+  "deployment_status": "Artifact storage only. GitHub develop and running Docker have not been changed. This is not a drop-in replacement for Qwen-Image-2.1.",
+  "validation": "Local adapter size and full SHA-256 verified against the supplied deployment package. No new inference or semantic-quality validation performed during upload preparation."
+}

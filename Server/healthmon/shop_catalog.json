@@ -1,0 +1,329 @@
+{
+  "version": "healthmon.shop.v1",
+  "items": [
+    {
+      "item_id": "prefab_jewelry_chain_type1_color2",
+      "category": "accessory",
+      "coin_price": 90,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_chain_type2_color2",
+      "category": "accessory",
+      "coin_price": 90,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_chain_type3_color2",
+      "category": "accessory",
+      "coin_price": 90,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_earring_type1_color2",
+      "category": "accessory",
+      "coin_price": 120,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_earring_type3_color2",
+      "category": "accessory",
+      "coin_price": 120,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_earring_type4_color3",
+      "category": "accessory",
+      "coin_price": 120,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_earring_type7_color1",
+      "category": "accessory",
+      "coin_price": 120,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_earring_type9_color1",
+      "category": "accessory",
+      "coin_price": 120,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_pendant_type5_color1",
+      "category": "accessory",
+      "coin_price": 180,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_pendant_type7_color1",
+      "category": "accessory",
+      "coin_price": 180,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_pendant_type8_color1",
+      "category": "accessory",
+      "coin_price": 180,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type10_shape1_color3",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type1_shape1_color3_variant",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type1_shape1_color3",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type2_shape1_color3",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type3_shape2_color1",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type4_shape2_color3",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_jewelry_ring_type8_shape1_color3",
+      "category": "accessory",
+      "coin_price": 160,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n1",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n2",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n3",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n4",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n5",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_n6",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o1",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o2",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o3",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o4",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o5",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_o6",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p1",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p2",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p3",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p4",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p5",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_p6",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q1",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q2",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q3",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q4",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q5",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_q6",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r1",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r2",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r3",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r4",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r5",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_r6",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s1",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s2",
+      "category": "character",
+      "coin_price": 700,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s3",
+      "category": "character",
+      "coin_price": 300,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s4",
+      "category": "character",
+      "coin_price": 400,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s5",
+      "category": "character",
+      "coin_price": 500,
+      "included_by_default": false
+    },
+    {
+      "item_id": "prefab_cute_slime_s6",
+      "category": "character",
+      "coin_price": 600,
+      "included_by_default": false
+    }
+  ]
+}

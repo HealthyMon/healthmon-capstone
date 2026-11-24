@@ -1,0 +1,19 @@
+FROM python:3.11-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 CUDA_VISIBLE_DEVICES="" YOLO_AUTOINSTALL=false
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+COPY Server/team/requirements.txt /tmp/control.txt
+COPY Ai/Vision/multifood/requirements.txt /tmp/vision.txt
+RUN python -m pip install --no-cache-dir -r /tmp/control.txt \
+    && python -m venv /opt/vision \
+    && /opt/vision/bin/python -m pip install --no-cache-dir torch==2.6.0+cpu torchvision==0.21.0+cpu --index-url https://download.pytorch.org/whl/cpu \
+    && /opt/vision/bin/python -m pip install --no-cache-dir -r /tmp/vision.txt \
+    && /opt/vision/bin/python -c "import torch, torchvision; assert torch.version.cuda is None"
+WORKDIR /app
+COPY Server/__init__.py Server/__init__.py
+COPY Server/team/ Server/team/
+COPY Server/healthmon/ Server/healthmon/
+COPY Server/local_probe/vision_gateway.py Server/local_probe/vision_worker.py Server/local_probe/
+COPY Ai/Vision/ Ai/Vision/
+ENTRYPOINT ["python", "-B", "-m", "Server.team.bootstrap"]
+CMD ["food"]

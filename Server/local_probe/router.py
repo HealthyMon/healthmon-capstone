@@ -5,10 +5,12 @@ router preserves one AI origin while forwarding only the declared capabilities.
 It neither creates fallback output nor exposes a user-facing inference service.
 """
 import argparse
+import asyncio
 import hmac
 import json
 from pathlib import Path
 import re
+import time
 
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import Response
@@ -32,6 +34,50 @@ def create_app(key_file):
                 'configured_capability_origins': dict(CAPABILITY_ORIGINS),
                 'food_json_request_limit_bytes': FOOD_REQUEST_LIMIT}
 
+    @app.get('/health/services')
+    async def services(authorization: str = Header(default='')):
+        if not authorization.startswith('Bearer ') or not hmac.compare_digest(authorization[7:], token):
+            raise HTTPException(401, 'Server authentication required')
+        from .local_services import STATUS, STOP
+        try:
+            state = json.loads(STATUS.read_text(encoding='utf-8'))
+            phase = state.get('phase') if time.time() - state.get('updated_at', 0) < 15 else None
+        except (OSError, ValueError, TypeError):
+            phase = None
+            state = {}
+        skipped = state.get('skipped', {}) if phase else {}
+        failed = state.get('failed', {}) if phase else {}
+        async with httpx.AsyncClient(timeout=.8, trust_env=False) as client:
+            async def probe(name, capability):
+                key = {'chat': 'llm', 'vision': 'vision', 'evolution': 'evolution'}[name]
+                if key in failed:
+                    return name, {'available': False, 'status': 'error', 'reason': failed[key]}
+                if key in skipped:
+                    return name, {'available': False, 'status': 'not_installed', 'reason': skipped[key]}
+                try:
+                    response = await client.get(CAPABILITY_ORIGINS[capability] + '/health')
+                    response.raise_for_status()
+                    body = response.json()
+                    available = body.get('ready', body.get('status') == 'ok') is True
+                except (httpx.HTTPError, ValueError, AttributeError):
+                    available = False
+                status = 'ready' if available else 'loading' if phase == 'starting' else 'off'
+                if name == 'chat' and phase == 'generating_3d':
+                    status, available = 'generating_3d', False
+                return name, {'available': available, 'status': status}
+            results = dict(await asyncio.gather(probe('chat', 'chat'), probe('vision', 'food'), probe('evolution', 'evolutions')))
+        if STOP.exists():
+            status = 'stopping'
+        elif phase == 'generating_3d':
+            status = 'generating_3d'
+        elif phase == 'failed':
+            status = 'error'
+        elif all(item['available'] or item['status'] == 'not_installed' for item in results.values()):
+            status = 'ready'
+        else:
+            status = 'loading' if phase == 'starting' else 'error'
+        return {'status': status, 'services': results}
+
     @app.api_route('/v1/{path:path}', methods=['POST', 'PUT', 'GET'])
     async def route(path: str, request: Request, authorization: str = Header(default='')):
         if not authorization.startswith('Bearer ') or not hmac.compare_digest(authorization[7:], token):
@@ -44,6 +90,16 @@ def create_app(key_file):
             capability = 'evolutions'
         else:
             raise HTTPException(404, 'Capability is not configured')
+        from .local_services import STATUS
+        try:
+            state = json.loads(STATUS.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            state = {}
+        service = {'chat': 'llm', 'embedding': 'llm', 'food': 'vision', 'evolutions': 'evolution'}[capability]
+        if time.time() - state.get('updated_at', 0) < 15 and service in state.get('failed', {}):
+            raise HTTPException(503, {'code': 'capability_startup_failed', 'capability': capability})
+        if time.time() - state.get('updated_at', 0) < 15 and service in state.get('skipped', {}):
+            raise HTTPException(501, {'code': 'capability_not_installed', 'capability': capability})
         base = CAPABILITY_ORIGINS[capability]
         limit = FOOD_REQUEST_LIMIT if capability == 'food' else DEFAULT_REQUEST_LIMIT
         declared = request.headers.get('content-length')
@@ -77,11 +133,12 @@ def create_app(key_file):
 
 
 def main():
+    import os
     parser = argparse.ArgumentParser()
     parser.add_argument('--key-config', type=Path, required=True)
     args = parser.parse_args()
     import uvicorn
-    uvicorn.run(create_app(args.key_config), host='127.0.0.1', port=18090, access_log=False)
+    uvicorn.run(create_app(args.key_config), host=os.environ.get('HEALTHMON_ROUTER_BIND','127.0.0.1'), port=18090, access_log=False)
 
 
 if __name__ == '__main__':

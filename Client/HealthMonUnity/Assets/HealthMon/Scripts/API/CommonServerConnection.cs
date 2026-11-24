@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Threading.Tasks;
 using Healthmon.Beta;
 using UnityEngine;
@@ -21,10 +22,12 @@ namespace Healthmon.Common
         public string OwnerId { get; private set; }
         public string EnvironmentName { get; private set; }
         public bool IsConnected { get; private set; }
+        public bool IsConnecting => connecting;
         public bool CanUseTestControls { get; private set; }
         public string ConnectionAddress => urlInput;
         public string BaseUrl { get; private set; }
-        public string Status { get; private set; } = "Configure the common server and a development user token.";
+        public string Status { get; private set; } = "서버 연결 대기";
+        public string AIStatus { get; private set; } = "AI 상태 미확인";
         public PhoneSyncStatus PhoneStatus { get; private set; }
         public string NextFoodMealType { get; private set; } = "snack";
         public bool NextFoodKcalReconfirmed { get; private set; }
@@ -32,7 +35,12 @@ namespace Healthmon.Common
         private string urlInput, petInput = "";
         [NonSerialized] private string tokenInput = "", runtimeToken;
         private bool expanded, connecting, phoneBusy;
+        private bool automaticConnection = true, automaticProbeBusy;
+        private float nextConnectionAttempt;
+        private const string AutomaticConnectionKey = "HealthMon.AutomaticLocalConnection.v1";
         private float nextRefresh;
+        private float nextAIRefresh;
+        private bool aiStatusBusy;
         private int configGeneration;
         private Vector2 scroll;
         private QuestList quests;
@@ -43,7 +51,7 @@ namespace Healthmon.Common
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
         {
-            LocalDemoEnabled = System.Environment.GetEnvironmentVariable("HEALTHMON_LOCAL_DEMO") == "1";
+            LocalDemoEnabled = System.Environment.GetEnvironmentVariable("HEALTHMON_LOCAL_DEMO") == "1" || PlayerPrefs.GetInt("HealthMon_Offline_Mode_v1", 0) == 1;
             if (Instance == null) new GameObject("HealthMon Common Server").AddComponent<CommonServerConnection>();
         }
         private void Awake()
@@ -53,11 +61,13 @@ namespace Healthmon.Common
             DontDestroyOnLoad(gameObject);
             Api = gameObject.AddComponent<HealthmonApiClient>();
             Api.StateReceived += Received;
+            gameObject.AddComponent<HealthMonPoseWorkoutSync>();
             HealthMonAndroidBridge.Initialize();
             urlInput = System.Environment.GetEnvironmentVariable("API_BASE_URL") ??
-                System.Environment.GetEnvironmentVariable("HEALTHMON_SERVER_URL") ?? "http://127.0.0.1:8000";
+                System.Environment.GetEnvironmentVariable("HEALTHMON_SERVER_URL") ?? "http://127.0.0.1:18092";
             tokenInput = System.Environment.GetEnvironmentVariable("HEALTHMON_USER_TOKEN") ?? "";
             petInput = System.Environment.GetEnvironmentVariable("HEALTHMON_PET_ID") ?? "";
+            automaticConnection = string.IsNullOrEmpty(tokenInput) && PlayerPrefs.GetInt(AutomaticConnectionKey, 1) == 1;
 #if UNITY_EDITOR
             if (string.IsNullOrEmpty(tokenInput) && EditorConnectionSession.TryRead(out var restoredUrl, out var restoredToken, out var restoredPet))
             { urlInput = restoredUrl; tokenInput = restoredToken; petInput = restoredPet; }
@@ -67,6 +77,7 @@ namespace Healthmon.Common
         private void Start()
         {
             if (!UsesServerAuthority) { Status = "LOCAL DEMO — synthetic local rewards; no server sync."; return; }
+            if (automaticConnection) { Status = "서버 연결 대기 · 실행기를 켜면 자동 접속"; return; }
             if (!string.IsNullOrEmpty(tokenInput)) Connect(urlInput, tokenInput, petInput);
         }
         private void OnEnable()
@@ -79,7 +90,7 @@ namespace Healthmon.Common
             if (string.IsNullOrEmpty(runtimeToken) || !Api.IsConfigured)
             {
                 IsConnected = false; connecting = false;
-                Status = Api.HasPendingChat ? "Re-enter the same account token to recover the retained chat." : "Open developer settings and enter a user token.";
+                Status = Api.HasPendingChat ? "대기 중인 대화 복구 필요" : "서버 연결 대기 · 실행기를 켜면 자동 접속";
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.delayCall += RestoreEditorConnection;
 #endif
@@ -89,6 +100,7 @@ namespace Healthmon.Common
         private void RestoreEditorConnection()
         {
             if (this == null || !Application.isPlaying || !UsesServerAuthority || IsConnected || connecting || Api == null || Api.IsBusy) return;
+            if (automaticConnection && !Api.HasPendingChat) return;
             if (!EditorConnectionSession.TryRead(out var url, out var token, out var pet)) return;
             urlInput = url; petInput = pet;
             if (Api.HasPendingChat) ReauthenticatePendingToken(token);
@@ -97,6 +109,48 @@ namespace Healthmon.Common
 #endif
         public void Connect(string url, string token, string petId = null)
         {
+            automaticConnection = false;
+            PlayerPrefs.SetInt(AutomaticConnectionKey, 0); PlayerPrefs.Save();
+            ConnectCore(url, token, petId);
+        }
+
+        public void EnableAutomaticConnection()
+        {
+            automaticConnection = true;
+            PlayerPrefs.SetInt(AutomaticConnectionKey, 1); PlayerPrefs.Save();
+            nextConnectionAttempt = 0;
+            if (!IsConnected) Status = "서버 자동 연결 대기";
+        }
+
+        private IEnumerator TryAutomaticConnection()
+        {
+            automaticProbeBusy = true;
+            try
+            {
+                if (!LocalConnectionProfile.TryRead(out var profile))
+                { Status = "서버 연결 대기 · 실행기에서 1번 또는 2번 실행"; yield break; }
+                // Verify the expected local server before sending any credential.
+                using (var probe = UnityWebRequest.Get(profile.api_base_url + "/server-info"))
+                {
+                    probe.timeout = 3; probe.redirectLimit = 0;
+                    yield return probe.SendWebRequest();
+                    if (!automaticConnection || IsConnected || connecting || Api.IsBusy || Api.HasPendingChat) yield break;
+                    if (probe.result != UnityWebRequest.Result.Success)
+                    { Status = "서버 준비 대기 · 자동 재접속 중"; yield break; }
+                    ServerInfo info = null;
+                    try { info = JsonUtility.FromJson<ServerInfo>(probe.downloadHandler.text); }
+                    catch (ArgumentException) { }
+                    if (info == null || info.environment != "test" || info.server_instance_id != profile.server_instance_id)
+                    { Status = "서버 정보 불일치 · 실행기 연결 설정 확인 필요"; yield break; }
+                }
+                ConnectCore(profile.api_base_url, profile.bearer_token, profile.pet_id, profile);
+            }
+            finally { automaticProbeBusy = false; nextConnectionAttempt = Time.unscaledTime + 5; }
+        }
+
+        private void ConnectCore(string url, string token, string petId, LocalConnectionProfile automaticProfile = null)
+        {
+            if (!UsesServerAuthority) { Status = "오프라인 데모입니다. 서버 모드를 선택한 뒤 다시 실행하세요."; return; }
             if (connecting || Api.IsBusy || Api.HasPendingChat)
             { Status = "Resolve the pending request before changing server/account/pet."; return; }
             if (string.IsNullOrWhiteSpace(token)) { Status = "Enter a user token."; return; }
@@ -108,6 +162,7 @@ namespace Healthmon.Common
             }
             catch (ArgumentException) { Status = "Invalid URL or token format."; return; }
             configGeneration++;
+            AIStatus = "AI 상태 확인 중"; nextAIRefresh = 0;
             quests = null; proposalDisplays.Reset(null, null, null);
             IsConnected = false; CanUseTestControls = false; connecting = true; LatestState = null;
             ServerInstanceId = OwnerId = EnvironmentName = null;
@@ -120,21 +175,26 @@ namespace Healthmon.Common
             {
                 if (string.IsNullOrWhiteSpace(info.server_instance_id) || string.IsNullOrWhiteSpace(info.environment))
                 { Failed(new ApiFailure(0, "Invalid server identity.")); return; }
+                if (automaticProfile != null && (info.environment != "test" || info.server_instance_id != automaticProfile.server_instance_id))
+                { Failed(new ApiFailure(0, "Local server identity changed.")); return; }
                 ServerInstanceId = info.server_instance_id; EnvironmentName = info.environment;
                 Api.GetIdentity(identity =>
                 {
                     if (string.IsNullOrWhiteSpace(identity.owner_id)) { Failed(new ApiFailure(0, "Invalid account identity.")); return; }
+                    if (automaticProfile != null && identity.owner_id != automaticProfile.owner_id)
+                    { Failed(new ApiFailure(0, "Local account identity changed.")); return; }
                     OwnerId = identity.owner_id;
                     CanUseTestControls = identity.test_controls_available;
                     Api.BindIdentity(ServerInstanceId, OwnerId);
-                    if (!string.IsNullOrWhiteSpace(petId)) SelectPet(petId);
+                    if (!string.IsNullOrWhiteSpace(petId) && automaticProfile == null) SelectPet(petId);
                     else Api.ListPets(list =>
                     {
                         if (list.pets != null && list.pets.Length > 0)
                         {
                             string saved = PlayerPrefs.GetString(SelectedPetKey, "");
                             var previous = Array.Find(list.pets, candidate => candidate.pet_id == saved);
-                            SelectPet(previous != null ? previous.pet_id : list.pets[0].pet_id);
+                            var preferred = Array.Find(list.pets, candidate => candidate.pet_id == petId);
+                            SelectPet(previous != null ? previous.pet_id : preferred != null ? preferred.pet_id : list.pets[0].pet_id);
                         }
                         else { connecting = false; Status = "Verified account. Create a pet to continue."; }
                     }, Failed);
@@ -309,17 +369,63 @@ namespace Healthmon.Common
             _ = phoneConfigurations.Enqueue(() => generation == configGeneration && IsConnected,
                 () => ConfigurePhoneInOrder(generation, url, token, pet));
         }
+
         private async Task ConfigurePhoneInOrder(int generation, string url, string token, string pet)
         {
             try
             {
-                string result = await Task.Run(() => HealthMonAndroidBridge.ConfigureServerSync(url, token, pet));
-                if (generation != configGeneration || !IsConnected) return;
-                PhoneStatus = JsonUtility.FromJson<PhoneSyncStatus>(result);
+                Debug.Log(
+                    "[WorkoutSync] ConfigurePhoneInOrder started"
+                );
+
+                string result = await Task.Run(() =>
+                    HealthMonAndroidBridge.ConfigureServerSync(
+                        url,
+                        token,
+                        pet
+                    )
+                );
+
+                if (generation != configGeneration || !IsConnected)
+                {
+                    Debug.LogWarning(
+                        "[WorkoutSync] Configuration result ignored: " +
+                        "connection changed or disconnected."
+                    );
+                    return;
+                }
+
+                PhoneStatus =
+                    JsonUtility.FromJson<PhoneSyncStatus>(result);
+
+                if (PhoneStatus == null)
+                {
+                    Debug.LogError(
+                        "[WorkoutSync] Failed to parse PhoneSyncStatus."
+                    );
+                    return;
+                }
+
+                Debug.Log(
+                    "[WorkoutSync] Parsed status=" +
+                    PhoneStatus.status
+                );
             }
             catch (Exception)
-            { if (generation == configGeneration && IsConnected) Status = "Connected; Android sync setup failed. Retry sync after checking the plugin."; }
+            {
+                Debug.LogError(
+                    "[WorkoutSync] Phone sync configuration failed."
+                );
+
+                if (generation == configGeneration && IsConnected)
+                {
+                    Status =
+                        "Connected; Android sync setup failed. " +
+                        "Retry sync after checking the plugin.";
+                }
+            }
         }
+
         public async void RefreshPhoneStatus()
         {
             if (phoneBusy || !HealthMonAndroidBridge.IsAndroidDevice || !IsConnected) return;
@@ -338,12 +444,56 @@ namespace Healthmon.Common
         }
         private void Update()
         {
+            if (UsesServerAuthority && automaticConnection && !IsConnected && !connecting && !automaticProbeBusy &&
+                Api != null && !Api.IsBusy && !Api.HasPendingChat && Time.unscaledTime >= nextConnectionAttempt)
+                StartCoroutine(TryAutomaticConnection());
             SendObservedProposalAcknowledgement();
+            if (IsConnected && !aiStatusBusy && Time.unscaledTime >= nextAIRefresh)
+            { nextAIRefresh = Time.unscaledTime + 5; StartCoroutine(RefreshAIStatus()); }
             if (!IsConnected || Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + 15;
             RefreshState(); RefreshPhoneStatus();
         }
         private void OnApplicationFocus(bool focused) { if (focused) { RefreshState(); RefreshPhoneStatus(); } }
+        private IEnumerator RefreshAIStatus()
+        {
+            aiStatusBusy = true;
+            int generation = configGeneration;
+            try
+            {
+                using (var request = UnityWebRequest.Get(BaseUrl + "/health/dependencies"))
+                {
+                    request.SetRequestHeader("Authorization", "Bearer " + runtimeToken);
+                    request.timeout = 5;
+                    yield return request.SendWebRequest();
+                    if (generation != configGeneration) yield break;
+                    if (request.result != UnityWebRequest.Result.Success)
+                    { AIStatus = "AI 상태 확인 실패"; yield break; }
+                    AIDependencyStatus status = null;
+                    try { status = JsonUtility.FromJson<AIDependencyStatus>(request.downloadHandler.text); }
+                    catch (ArgumentException) { }
+                    AIStatus = "AI " + AIStateLabel(status?.ai?.status) + " · 대화 " + AIStateLabel(status?.chat?.status) +
+                        " · 음식 " + AIStateLabel(status?.vision?.status) + " · 진화 " + AIStateLabel(status?.evolution?.status);
+                }
+            }
+            finally { aiStatusBusy = false; }
+        }
+        private static string AIStateLabel(string status)
+        {
+            switch (status)
+            {
+                case "ready": return "준비됨";
+                case "off": return "꺼짐/연결 불가";
+                case "disabled": return "미설정";
+                case "loading": return "로딩 중";
+                case "generating_3d": return "3D 생성 중";
+                case "not_installed": return "미설치";
+                case "stopping": return "종료 대기";
+                case "error": return "오류";
+                case "synthetic": return "테스트 데이터";
+                default: return "미확인";
+            }
+        }
         private void OnGUI()
         {
             if (MobileAdminMenu.Instance != null) return;
@@ -370,6 +520,8 @@ namespace Healthmon.Common
                 var paintedProposals = new List<KeyValuePair<QuestOffer, Rect>>();
                 scroll = GUILayout.BeginScrollView(scroll);
                 GUILayout.Label(Status);
+                GUILayout.Label(AIStatus);
+                if (GUILayout.Button("실행기 설정으로 자동 연결")) EnableAutomaticConnection();
                 GUILayout.Label("API_BASE_URL (Android: use explicit LAN host / emulator 10.0.2.2)");
                 urlInput = GUILayout.TextField(urlInput ?? "");
                 GUILayout.Label("User bearer token (runtime only)");
@@ -449,14 +601,10 @@ namespace Healthmon.Common
                 }
                 if (HealthMonAndroidBridge.IsAndroidDevice)
                 {
-                    if (GUILayout.Button("Sync phone records and refresh")) { HealthMonAndroidBridge.RequestServerSync(); RefreshPhoneStatus(); }
                     if (PhoneStatus != null)
                     {
                         GUILayout.Label("Phone sync " + PhoneStatus.status + "; unbound " + PhoneStatus.unbound_count);
-                        GUILayout.Label("Confirm only your own workouts for this server/account/pet:");
-                        foreach (var workout in PhoneStatus.unbound ?? new UnboundWorkout[0])
-                            if (GUILayout.Button("Confirm my workout: " + workout.exercise + " " + DateTimeOffset.FromUnixTimeMilliseconds(workout.start_time).ToString("u")))
-                            { HealthMonAndroidBridge.ConfirmWorkoutUpload(workout.id); RefreshPhoneStatus(); }
+                        if (PhoneStatus.unbound_count > 0) GUILayout.Label("Older unbound workouts are not automatically assigned to an account.");
                     }
                 }
                 GUI.enabled = true;

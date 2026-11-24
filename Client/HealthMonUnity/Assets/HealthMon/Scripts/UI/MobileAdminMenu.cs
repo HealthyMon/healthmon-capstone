@@ -14,6 +14,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
     private GameObject panel;
     private RectTransform safeRoot, launcher, content;
     private TMP_FontAsset font;
+    private HealthMon.Evolution.EvolutionUIController evolutionScreen;
     private TMP_Text connectionStatus, notice, stateSummary;
     private TMP_InputField level, coin, address, token, pet, amount;
     private readonly Dictionary<string, Slider> axes = new Dictionary<string, Slider>();
@@ -40,6 +41,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     public void Configure(UIManager owner, GameObject admin, Canvas canvas, TMP_FontAsset textFont)
     {
+        evolutionScreen = FindAnyObjectByType<HealthMon.Evolution.EvolutionUIController>(FindObjectsInactive.Include);
         Instance = this; manager = owner; panel = admin; font = textFont;
         if (canvas == null) return;
         // Runtime UnityEvent listeners do not survive script reloads.
@@ -93,15 +95,15 @@ public sealed class MobileAdminMenu : MonoBehaviour
         foreach (string label in labels) pages.Add(Vertical(label, content).gameObject);
         BuildCharacter(pages[0].transform); BuildExercise(pages[1].transform);
         BuildQuests(pages[2].transform); BuildConnection(pages[3].transform);
-        launcher = FixedButton("UnifiedSettingsButton", canvas.transform, "설정 · 관리", () => manager.ShowAdmin());
+        launcher = FixedButton("UnifiedSettingsButton", canvas.transform, "설정", () => manager.ShowAdmin());
         launcher.anchorMin = launcher.anchorMax = launcher.pivot = Vector2.one;
-        launcher.sizeDelta = new Vector2(260, 112);
+        launcher.sizeDelta = new Vector2(136, 78);
         SelectPage(0);
     }
 
     private void BuildCharacter(Transform page)
     {
-        stateSummary = Label(page, "서버에 연결하면 현재 상태를 불러옵니다.", 120);
+        stateSummary = Label(page, "서버에 연결하면 현재 상태를 불러옵니다.", 300);
         Label(page, "테스트 계정에서만 아래 값을 변경할 수 있어요. 실제 운동·식사 기록은 유지됩니다.", 90);
         var basic = Row(page, 184);
         level = Input(basic, "레벨", "1", TMP_InputField.ContentType.IntegerNumber);
@@ -157,16 +159,38 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     private void BuildConnection(Transform page)
     {
-        connectionStatus = Label(page, "연결 상태 확인 중", 110);
-        address = Input(page, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:8020");
-        token = Input(page, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
-        pet = Input(page, "펫 ID · 비워두면 기존 선택 유지", "");
-        Button("Connect", page, "서버 연결 / 연결 변경", () => {
-            Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 연결을 확인하고 있어요.";
+        connectionStatus = Label(page, "연결 상태 확인 중", 190);
+        Button("AutoConnect", page, "서버 자동 연결", () => {
+            Connection.EnableAutomaticConnection(); notice.text = "자동 연결 활성화";
+        });
+        RectTransform manual = null;
+        Button("ManualConnection", page, "수동 연결 설정 ▾", () => manual.gameObject.SetActive(!manual.gameObject.activeSelf));
+        manual = Vertical("ManualConnectionFields", page);
+        address = Input(manual, "서버 주소", Connection?.ConnectionAddress ?? "http://127.0.0.1:18092");
+        token = Input(manual, "사용자 토큰", ""); token.contentType = TMP_InputField.ContentType.Password;
+        pet = Input(manual, "펫 ID · 비워두면 기존 선택 유지", "");
+        Button("Connect", manual, "서버 연결 / 연결 변경", () => {
+            Connection.Connect(address.text, token.text, pet.text); token.text = ""; notice.text = "서버 접속 중";
         });
         Button("Refresh", page, "서버 상태 새로고침", () => { Connection.RefreshState(); Connection.RefreshQuests(); });
         Button("Evolution", page, "진화 요청 / 같은 작업 재시도", () => Healthmon.Evolution.EvolutionClient.Instance?.RequestCommonEvolution());
-        Button("PhoneSync", page, "휴대폰 운동 동기화", () => { HealthMonAndroidBridge.RequestServerSync(); Connection.RefreshPhoneStatus(); });
+        Label(page, "웨어러블 운동 기록 자동 동기화", 70);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Label(manual, "관절 AI · 개발 설정", 86, 36);
+        Label(manual, "다음 운동부터 적용. 일반 운동 화면은 자동 연결 설정을 사용합니다.", 110);
+        var poseAddress = Input(manual, "관절 AI 서버 주소", HealthMonPoseClient.ConfiguredEndpoint);
+        Button("SavePoseEndpoint", manual, "관절 AI 연결 설정 저장", () => {
+            notice.text = HealthMonPoseClient.SaveDevelopmentEndpoint(poseAddress.text)
+                ? "저장했습니다. 다음 운동부터 적용됩니다."
+                : "올바른 HTTP 또는 HTTPS 주소를 입력해 주세요.";
+        });
+        Button("ResetPoseEndpoint", manual, "관절 AI 기본 연결 복원", () => {
+            HealthMonPoseClient.SaveDevelopmentEndpoint(HealthMonPoseClient.DefaultEndpoint);
+            poseAddress.text = HealthMonPoseClient.ConfiguredEndpoint;
+            notice.text = "기본 연결을 복원했습니다. 다음 운동부터 적용됩니다.";
+        });
+#endif
+        manual.gameObject.SetActive(false);
     }
 
     private void SelectPage(int index)
@@ -179,7 +203,8 @@ public sealed class MobileAdminMenu : MonoBehaviour
     {
         if (panel == null || launcher == null || safeRoot == null) return;
         bool open = panel.activeInHierarchy;
-        launcher.gameObject.SetActive(!open);
+        bool evolving = evolutionScreen != null && evolutionScreen.evolutionOverlay != null && evolutionScreen.evolutionOverlay.activeInHierarchy;
+        launcher.gameObject.SetActive(manager.IsHomeVisible && !open && !evolving);
         Rect safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
@@ -194,7 +219,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
         bool allowed = connection != null && connection.IsConnected && connection.CanUseTestControls && !connection.Api.IsBusy && !connection.Api.HasPendingChat;
         foreach (var button in testButtons) button.interactable = allowed;
         connectionStatus.text = connection == null ? "서버 연결이 필요합니다." : connection.IsConnected
-            ? "연결됨 · " + connection.EnvironmentName + "\n" + connection.BaseUrl + "\n펫 " + connection.Api.PetId
+            ? "연결됨 · " + connection.EnvironmentName + "\n" + connection.BaseUrl + "\n펫 " + connection.Api.PetId + "\n" + connection.AIStatus
             : connection.Status;
         if (!allowed && string.IsNullOrEmpty(notice.text)) notice.text = "연결된 테스트 계정에서 캐릭터·운동·퀘스트를 조작할 수 있어요.";
     }
@@ -208,18 +233,19 @@ public sealed class MobileAdminMenu : MonoBehaviour
         axes["upper_body"].value = state.upper_body; axes["lower_body"].value = state.lower_body;
         axes["nutrition"].value = state.nutrition; axes["energy_balance"].value = state.energy_balance;
         stateSummary.text = state.settings?.name + " · Lv. " + state.level + " · 코인 " + state.coin + "\n친밀도 " + state.affinity + " · 활동성 " + state.activity + " · 주도성 " + state.initiative;
+        stateSummary.text += "\n" + PetCombatStats.FromState(state).StatusText;
     }
     private void ApplyState()
     {
         int selectedLevel, selectedCoin;
-        if (!int.TryParse(level.text, out selectedLevel) || selectedLevel < 1 || selectedLevel > 100 || !int.TryParse(coin.text, out selectedCoin) || selectedCoin < 0)
-        { notice.text = "레벨 1~100, 코인 0 이상의 정수를 입력해 주세요."; return; }
+        if (!int.TryParse(level.text, out selectedLevel) || selectedLevel < 1 || selectedLevel > 30 || !int.TryParse(coin.text, out selectedCoin) || selectedCoin < 0)
+        { notice.text = "레벨 1~30, 코인 0 이상의 정수를 입력해 주세요."; return; }
         Connection.Api.ApplyTestState(new TestPetStateRequest { level = selectedLevel, coin = selectedCoin,
             affinity = axes["affinity"].value, activity = axes["activity"].value, initiative = axes["initiative"].value,
             upper_body = axes["upper_body"].value, lower_body = axes["lower_body"].value, nutrition = axes["nutrition"].value,
             energy_balance = axes["energy_balance"].value }, Applied, Failed);
     }
-    private void Applied(PetState state) { notice.text = "서버에 적용했습니다."; LoadState(); Connection.RefreshQuests(); }
+    private void Applied(PetState state) { notice.text = "서버에 적용했습니다. 변경 능력치는 다음 전투부터 사용합니다."; LoadState(); Connection.RefreshQuests(); }
     private void Failed(ApiFailure error) { notice.text = "적용하지 못했습니다. 연결과 테스트 계정을 확인해 주세요. (" + error.StatusCode + ")"; }
 
     private Button TestButton(Transform parent, string label, UnityEngine.Events.UnityAction action)

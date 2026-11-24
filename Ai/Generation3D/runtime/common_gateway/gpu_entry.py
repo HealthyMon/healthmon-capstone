@@ -25,6 +25,8 @@ def main():
          'game_contract':'healthmon.v2.2',
          'authoritative_state':value['input']['input']['state'],
          'authoritative_profile':value['input']['input']['profile']}
+    if value.get('image_backend'):
+        job['image_backend']=value['image_backend']
     import evolution_worker as existing
     if args.phase=='plan': existing.plan_from_parent(folder,job,image,parent)
     elif args.phase=='image': existing.image(folder,job)

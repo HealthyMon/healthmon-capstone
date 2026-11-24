@@ -1,0 +1,36 @@
+# CPU test services; lifecycle is independent of the game API and database.
+name: ${HEALTHMON_TEAM_PROJECT:?Run menu 5 first}
+services:
+  food:
+    image: healthmon-multifood:local
+    build:
+      context: .
+      dockerfile: Server/team/Dockerfile.food
+    init: true
+    ports: ["127.0.0.1:18090:18090"]
+    volumes:
+      - ./.runtime/team:/app/.runtime/team
+      - ./Ai/Vision:/app/Ai/Vision:ro
+    healthcheck:
+      test: [CMD, python, -c, "import json,urllib.request; assert json.load(urllib.request.urlopen('http://localhost:18090/health',timeout=3))['ready']"]
+      interval: 5s
+      timeout: 4s
+      start_period: 30s
+      retries: 12
+    restart: "no"
+  pose:
+    image: healthmon-team-pose:local
+    build:
+      context: .
+      dockerfile: Server/team/Dockerfile.pose
+    init: true
+    ports: ["127.0.0.1:18095:18095"]
+    volumes:
+      - ./Ai/Pose/mac-exercise-counter/models:/app/Ai/Pose/mac-exercise-counter/models:ro
+    healthcheck:
+      test: [CMD, python, -c, "import json,urllib.request; assert json.load(urllib.request.urlopen('http://localhost:18095/health',timeout=3))['service']=='healthmon-pose'"]
+      interval: 5s
+      timeout: 4s
+      start_period: 20s
+      retries: 12
+    restart: "no"

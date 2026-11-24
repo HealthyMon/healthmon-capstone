@@ -1,0 +1,17 @@
+{
+  "schema_version": "healthmon.species.v1",
+  "species": "slime",
+  "label_ko": "헬스몬 슬라임",
+  "identity": "HealthMon slime: one smooth rounded elastic jelly body with its large expressive eyes and small mouth directly on the front of the body, retaining the actual parent slime's colors and facial identity",
+  "starter_prompt": "The actual HealthMon starter slime shown in the parent image. One rounded jelly body, large eyes and small mouth on the front, broad grounded base, smooth game-character surface. Preserve the parent color. No separate animal head or muzzle, fur, wolf ears, paws, tail, clothes or equipment.",
+  "lineage_anchors": [
+    "one continuous rounded elastic slime body with a broad grounded base",
+    "large expressive eyes and a small mouth on the front of the body",
+    "the actual parent's body color relationships and smooth jelly-like surface"
+  ],
+  "stage_directions": {
+    "1": "FIRST SLIME EVOLUTION: develop the actual starter into a clearly stronger young slime. Change the overall jelly silhouette, upper-body mass and supporting base according to its game stats while retaining one continuous rounded body and the recognizable face. Sculpt broad soft integrated lobes, never separate animal limbs. It must remain unmistakably a slime.",
+    "2": "SECOND SLIME EVOLUTION: develop a more substantial mature slime with a distinct upper-body contour, waist-to-base mass distribution and integrated jelly lobes. Preserve the single continuous slime body, parent colors and face. Show a meaningful silhouette change beyond simple scaling. Do not turn the slime into a humanoid or a four-legged animal.",
+    "3": "THIRD SLIME EVOLUTION: create the fully evolved powerful slime with a distinctive layered jelly silhouette, broad stable base and mature expressive face. Strong or soft body volumes must reflect the supplied game stats. All growth remains connected slime material. Keep the slime family identity; no wolf, canine anatomy, separate animal head, fur, paws, tail, clothing, armor or weapons."
+  }
+}

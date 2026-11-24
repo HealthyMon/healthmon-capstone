@@ -4,6 +4,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Main Panels")]
     [SerializeField] private GameObject homePanel;
+    public bool IsHomeVisible => homePanel != null && homePanel.activeInHierarchy;
     [SerializeField] private GameObject statusPanel;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject foodScanPanel;
@@ -20,14 +21,31 @@ public class UIManager : MonoBehaviour
     private TMPro.TMP_Text evolutionStatusText;
     private bool showingEvolution;
     private PetExperienceUI petExperience;
+    private HealthMonViewModeController viewMode;
 
     private void Start()
     {
+        HealthMonUILayout.Navigation(homePanel.transform.parent);
+        // In the desktop editor there is no AR camera feed. Reuse the authored
+        // conversation backdrop so an unavailable camera does not show black.
+#if UNITY_EDITOR
+        var dialogueBackground = dialoguePanel.GetComponent<UnityEngine.UI.Image>();
+        var sourceBackground = collectionPanel.GetComponent<UnityEngine.UI.Image>();
+        if (dialogueBackground != null && sourceBackground != null)
+        {
+            dialogueBackground.sprite = sourceBackground.sprite;
+            dialogueBackground.color = Color.white; dialogueBackground.enabled = true;
+        }
+#endif
+        viewMode = GetComponent<HealthMonViewModeController>();
+        if (viewMode == null)
+            Debug.LogWarning("[UIManager] HealthMonViewModeController missing: only panel switching will run.");
         foreach (var label in homePanel.GetComponentsInChildren<TMPro.TMP_Text>(true))
         {
             if (label.text.Contains("오늘도 같이"))
             {
                 evolutionStatusText = label;
+                label.text = "출전 준비 완료!";
                 break;
             }
         }
@@ -49,18 +67,19 @@ public class UIManager : MonoBehaviour
             showingEvolution = true;
             switch (evolution.Phase)
             {
-                case "waiting_for_gpu": evolutionStatusText.text = "이전 작업이 끝나면 진화를 시작해요."; break;
-                case "plan": evolutionStatusText.text = "성장 기록으로 다음 모습을 구상하고 있어요."; break;
-                case "image": evolutionStatusText.text = "새로운 진화 이미지를 만들고 있어요."; break;
-                case "reconstruction": evolutionStatusText.text = "진화 모델과 움직일 뼈대를 만들고 있어요."; break;
-                default: evolutionStatusText.text = "진화를 준비하고 있어요."; break;
+                case "waiting_for_gpu": evolutionStatusText.text = "진화 에너지 충전 대기"; break;
+                case "plan": evolutionStatusText.text = "성장 기록 동기화 중"; break;
+                case "image": evolutionStatusText.text = "새로운 형태 각성 중"; break;
+                case "reconstruction": evolutionStatusText.text = "진화 외형 구성 중"; break;
+                default: evolutionStatusText.text = "진화 준비 중"; break;
             }
         }
         else if (showingEvolution)
         {
-            evolutionStatusText.text = evolution.Phase == "complete"
-                ? "새로운 모습으로 진화했어요!"
-                : "진화를 완료하지 못했어요. 기존 모습은 유지돼요.";
+            var flow = GetComponent<EvolutionFlowController>();
+            evolutionStatusText.text = flow != null && flow.IsApplied
+                ? "진화 완료! 새로운 힘으로 출전!"
+                : "진화 외형 불러오는 중";
         }
     }
 
@@ -75,6 +94,7 @@ public class UIManager : MonoBehaviour
         statusPanel.SetActive(false);
         dialoguePanel.SetActive(false);
         foodScanPanel.SetActive(false);
+        FindAnyObjectByType<ARFoodCameraCapture>()?.StopPreview();
         questPanel.SetActive(false);
         rewardPanel.SetActive(false);
         customizationPanel.SetActive(false);
@@ -88,18 +108,21 @@ public class UIManager : MonoBehaviour
     public void ShowHome()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         homePanel.SetActive(true);
     }
 
     public void ShowStatus()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         statusPanel.SetActive(true);
     }
 
     public void ShowAR()
     {
         HideAllPanels();
+        viewMode?.ShowARWorld(true);
         if (petExperience != null) petExperience.ShowAR();
     }
 
@@ -109,6 +132,7 @@ public class UIManager : MonoBehaviour
             return;
 
         HideAllPanels();
+        viewMode?.ShowARWorld(true);
         dialoguePanel.SetActive(true);
         FindAnyObjectByType<DialoguePrototype>(FindObjectsInactive.Include)?.EnterConversation();
     }
@@ -116,12 +140,15 @@ public class UIManager : MonoBehaviour
     public void ShowFoodScan()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         foodScanPanel.SetActive(true);
+        FindAnyObjectByType<FoodScanPrototype>(FindObjectsInactive.Include)?.ShowCapture();
     }
 
     public void ShowQuest()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         questPanel.SetActive(true);
         Healthmon.Common.CommonServerConnection.Instance?.RefreshQuests();
     }
@@ -129,18 +156,21 @@ public class UIManager : MonoBehaviour
     public void ShowReward()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         rewardPanel.SetActive(true);
     }
 
     public void ShowCustomization()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         customizationPanel.SetActive(true);
     }
 
     public void ShowCollection()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         collectionPanel.SetActive(true);
     }
 
@@ -148,6 +178,7 @@ public class UIManager : MonoBehaviour
     public void ShowWearable()
     {
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         if (wearablePanel != null) wearablePanel.SetActive(true);
     }
 
@@ -162,6 +193,7 @@ public class UIManager : MonoBehaviour
         }
 
         HideAllPanels();
+        viewMode?.ShowHomeWorld();
         adminPanel.SetActive(true);
 
         Debug.Log("[UIManager] 관리자 모드 열기");

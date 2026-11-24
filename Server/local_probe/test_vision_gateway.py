@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import os
+import venv
 
 from fastapi.testclient import TestClient
 import pytest
@@ -14,6 +16,20 @@ import pytest
 Image = pytest.importorskip('PIL.Image', reason='Use the existing Vision CPU Pillow runtime for these optional integration tests')
 
 from Server.local_probe import vision_gateway as vision
+
+
+@pytest.mark.skipif(os.name == 'nt', reason='POSIX virtualenv executable symlink regression')
+def test_vision_worker_keeps_its_virtualenv(tmp_path, monkeypatch):
+    environment = tmp_path / 'vision-env'
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+    python = environment / 'bin/python'
+    assets = tmp_path / 'assets'
+    assets.mkdir()
+    monkeypatch.setattr(vision, 'verify_assets', lambda path: {})
+    monkeypatch.setattr(vision, 'file_digest', lambda path: 'fixture')
+    runner = vision.VisionRunner({'vision_python': str(python), 'vision_assets': str(assets)}, tmp_path)
+    actual = subprocess.check_output([str(runner.python), '-c', 'import sys; print(sys.prefix)'], text=True).strip()
+    assert Path(actual) == environment
 
 
 def picture(color='red', size=(8, 8), format='PNG'):
@@ -213,6 +229,27 @@ def test_lfs_declarations_require_exact_existing_model_bytes(tmp_path):
         vision.verify_assets(assets, source)
 
 
+@pytest.mark.parametrize('corrupt', [None, 'source', 'assets', 'manifest'])
+def test_hydrated_lfs_checkpoints_require_pinned_manifest(tmp_path, corrupt):
+    source, assets = tmp_path / 'source', tmp_path / 'assets'
+    source.mkdir(); assets.mkdir()
+    manifest = {}
+    for name in vision.WEIGHTS:
+        raw = b'\x80binary-checkpoint-' + name.encode()
+        (source / name).write_bytes(raw)
+        (assets / name).write_bytes(raw)
+        manifest[name] = {'sha256': hashlib.sha256(raw).hexdigest(), 'size_bytes': len(raw)}
+    if corrupt != 'manifest':
+        (source / 'weights-manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
+    if corrupt in ('source', 'assets'):
+        ((source if corrupt == 'source' else assets) / vision.WEIGHTS[0]).write_bytes(b'wrong-checkpoint')
+    if corrupt:
+        with pytest.raises(ValueError):
+            vision.verify_assets(assets, source)
+    else:
+        assert vision.verify_assets(assets, source) == manifest
+
+
 @pytest.mark.parametrize('change', [{'environment': 'production'}, {'vision_enabled': False}, {'server_token': ''}])
 def test_private_explicit_opt_in_is_required(bridge, change):
     config = bridge[2] / 'private.json'
@@ -239,6 +276,7 @@ def test_runner_timeout_invokes_its_owned_tree_cleanup_and_keeps_failure_metadat
     monkeypatch.setattr(vision, 'stop_owned_worker', lambda process: stopped.append(process) or {
         'root_pid': process.pid, 'root_reaped': True, 'owned_tree_termination_confirmed': True})
     runner = vision.VisionRunner.__new__(vision.VisionRunner)
+    runner.multifood = runner.container = False
     runner.python, runner.assets, runner.runtime, runner.timeout = Path(sys.executable), tmp_path, tmp_path, 1
     (tmp_path / 'logs').mkdir()
     with pytest.raises(subprocess.TimeoutExpired):

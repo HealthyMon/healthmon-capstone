@@ -1,0 +1,15 @@
+# The existing reconstruction image is retained; the new native LoRA loader is
+# installed in a derived image so older jobs remain reproducible.
+ARG BASE_IMAGE=healthmon-3d:3090
+FROM ${BASE_IMAGE}
+USER root
+ENV HF_HUB_OFFLINE=0 TRANSFORMERS_OFFLINE=0
+COPY migration/environment/requirements-evolution2511.txt /tmp/requirements-evolution2511.txt
+RUN git clone https://github.com/modelscope/DiffSynth-Studio.git /opt/diffsynth \
+    && git -C /opt/diffsynth checkout --detach 08fdc0da8f41426885d9432e9007e6e460a4c30d \
+    && python3 -m venv --system-site-packages /opt/healthmon-envs/evolution2511 \
+    && /opt/healthmon-envs/evolution2511/bin/python -m pip install -r /tmp/requirements-evolution2511.txt \
+    && /opt/healthmon-envs/evolution2511/bin/python -m pip install --no-deps /opt/diffsynth \
+    && /opt/healthmon-envs/evolution2511/bin/python -c "from diffsynth.pipelines.qwen_image import QwenImagePipeline; from transformers.models.qwen2_5_vl.modeling_qwen2_5_vl import Qwen2_5_VisionRotaryEmbedding" \
+    && printf '%s\n' 08fdc0da8f41426885d9432e9007e6e460a4c30d > /opt/healthmon-diffsynth-commit
+ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 DIFFSYNTH_SKIP_DOWNLOAD=True

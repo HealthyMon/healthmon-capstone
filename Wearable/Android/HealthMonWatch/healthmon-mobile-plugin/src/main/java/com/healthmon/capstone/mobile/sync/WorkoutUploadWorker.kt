@@ -1,9 +1,11 @@
 package com.healthmon.capstone.mobile.sync
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.healthmon.capstone.mobile.data.local.HealthMonPhoneDatabase
+import com.healthmon.capstone.mobile.data.local.WorkoutUploadEntity
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,6 +34,27 @@ class WorkoutUploadWorker(context: Context, parameters: WorkerParameters) : Coro
             if (JSONObject(identity.body).getString("owner_id") != destination.ownerId) {
                 ServerSyncSettings.setCurrentStatus(applicationContext, destination, "identity_changed")
                 return@withContext Result.success()
+            }
+            // The explicit Unity connection selected this server/account/pet. Automatically
+            // assign only workouts received AFTER that selection, not historical unbound rows.
+            val candidates = dao.autoCandidates(destination.autoSyncStartedAt)
+            val allWorkouts = HealthMonPhoneDatabase
+                .getInstance(applicationContext)
+                .workoutDao()
+                .getAllWorkouts()
+
+            Log.d(
+                "HealthMonAutoSync",
+                "Room=${allWorkouts.size}, " +
+                        "AutoCandidates=${candidates.size}, " +
+                        "AutoSince=${destination.autoSyncStartedAt}"
+            )
+
+            for (workout in candidates) {
+                if (isStopped || !ServerSyncSettings.current(applicationContext, destination))
+                    return@withContext Result.success()
+                dao.confirm(WorkoutUploadEntity(workout.id, destination.serverInstanceId,
+                    destination.ownerId, destination.petId, confirmedAt = System.currentTimeMillis()))
             }
             val pending = dao.forDestination(destination.serverInstanceId, destination.ownerId, destination.petId)
                 .filter { it.status == "pending" }

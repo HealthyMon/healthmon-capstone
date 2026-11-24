@@ -9,9 +9,15 @@ namespace Healthmon.Evolution
     {
         public string DisplayedRevision { get; private set; }
         public string LastError { get; private set; }
+        public bool IsLoading => loading;
         private GameObject displayed;
         private GltfImport displayedImport;
         private Renderer[] placeholderRenderers;
+        private bool[] placeholderEnabled;
+        private bool fitPlaceholder;
+        private int minimumStage;
+        private float presentationHeight;
+        private Vector3 presentationFeet;
         [NonSerialized] private bool loading;
         private ModelManifest desired;
         [NonSerialized] private EvolutionClient observedClient;
@@ -22,11 +28,29 @@ namespace Healthmon.Evolution
             return view != null ? view : arCharacter.AddComponent<ArEvolutionModel>();
         }
 
+        // Home and the evolution RenderTexture keep their existing framing and layers.
+        // Stage zero stays the game's starter slime; generated stages use the shared loader.
+        public void ConfigurePresentation()
+        {
+            fitPlaceholder = true;
+            minimumStage = 1;
+        }
+
         private void Start()
         {
             var accessories = GetComponent<HealthMonAccessoryView>();
             placeholderRenderers = System.Array.FindAll(GetComponentsInChildren<Renderer>(true),
                 renderer => accessories == null || !accessories.ContainsAccessory(renderer.transform));
+            placeholderEnabled = System.Array.ConvertAll(placeholderRenderers, renderer => renderer.enabled);
+            if (fitPlaceholder)
+            {
+                var body = System.Array.FindAll(placeholderRenderers,
+                    renderer => renderer.enabled && renderer.gameObject.activeInHierarchy &&
+                    (renderer is MeshRenderer || renderer is SkinnedMeshRenderer));
+                var bounds = GeometryBounds(body);
+                presentationHeight = bounds.size.y;
+                presentationFeet = transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.min.y, bounds.center.z));
+            }
             BindClient();
         }
 
@@ -48,12 +72,16 @@ namespace Healthmon.Evolution
 
         public void Changed(ModelManifest manifest)
         {
+            if (manifest != null && manifest.stage < minimumStage) manifest = null;
             desired = manifest;
+            LastError = null;
             if (manifest == null)
             {
                 if (displayed != null) Destroy(displayed);
                 displayed = null; displayedImport?.Dispose(); displayedImport = null; DisplayedRevision = null;
-                if (placeholderRenderers != null) foreach (var renderer in placeholderRenderers) renderer.enabled = true;
+                if (placeholderRenderers != null)
+                    for (int i = 0; i < placeholderRenderers.Length; i++)
+                        if (placeholderRenderers[i] != null) placeholderRenderers[i].enabled = placeholderEnabled[i];
                 return;
             }
             if (!loading && manifest.revision != DisplayedRevision) _ = ApplyDesired();
@@ -79,7 +107,18 @@ namespace Healthmon.Evolution
                         throw new InvalidOperationException("GLB import/instantiation failed.");
                     if (this == null) { Destroy(candidate); importer.Dispose(); return; }
                     if (desired == null || desired.revision != manifest.revision) { Destroy(candidate); importer.Dispose(); continue; }
-                    FitOnPlane(candidate, EvolutionClient.Instance.Settings.display_height_m);
+                    SmoothOrganicSurface(candidate);
+                    FitOnPlane(candidate, fitPlaceholder ? presentationHeight :
+                        Mathf.Clamp(EvolutionClient.Instance.Settings.display_height_m, .05f, 2f));
+                    // The reconstruction predicts an almost fully metallic map
+                    // for the orange jelly body. Keep its actual generated color
+                    // and geometry, but present organic pets as non-metallic.
+                    foreach (var renderer in candidate.GetComponentsInChildren<Renderer>(true))
+                        foreach (var material in renderer.sharedMaterials)
+                            if (material != null && material.HasProperty("metallicFactor"))
+                                material.SetFloat("metallicFactor", 0f);
+                    foreach (var child in candidate.GetComponentsInChildren<Transform>(true))
+                        child.gameObject.layer = gameObject.layer;
                     var skinned = candidate.GetComponentsInChildren<SkinnedMeshRenderer>(true);
                     if (skinned.Length == 0) throw new InvalidOperationException("Imported model has no skin.");
                     foreach (var renderer in skinned)
@@ -95,24 +134,59 @@ namespace Healthmon.Evolution
                     candidate.SetActive(true);
                     DisplayedRevision = manifest.revision;
                     LastError = null;
-                    Debug.Log("[HealthMon Evolution] AR model ready: stage " + manifest.stage + " revision " + manifest.revision);
+                    Debug.Log("[HealthMon Evolution] " + name + " model ready: stage " + manifest.stage + " revision " + manifest.revision);
                 }
                 catch (Exception error)
                 {
                     if (candidate != null) Destroy(candidate);
                     importer.Dispose();
+                    if (desired == null || desired.revision != manifest.revision) continue;
                     LastError = error.Message;
-                    Debug.LogWarning("[HealthMon Evolution] Keeping previous AR model: " + error.Message);
+                    Debug.LogWarning("[HealthMon Evolution] Keeping previous model: " + error.Message);
                     break;
                 }
             }
             loading = false;
         }
 
+        private static void SmoothOrganicSurface(GameObject model)
+        {
+            foreach (var skin in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                var mesh = skin.sharedMesh;
+                if (mesh == null || !mesh.isReadable) continue;
+                // UV islands duplicate positions. Rebuild geometric normals and
+                // share their direction across those seams, retaining vertices,
+                // UVs, rig weights and the original downloaded GLB unchanged.
+                mesh.RecalculateNormals();
+                var positions = mesh.vertices;
+                var normals = mesh.normals;
+                var sums = new System.Collections.Generic.Dictionary<Vector3, Vector3>(positions.Length);
+                for (int i = 0; i < positions.Length; i++)
+                {
+                    sums.TryGetValue(positions[i], out var sum);
+                    sums[positions[i]] = sum + normals[i];
+                }
+                for (int i = 0; i < positions.Length; i++) normals[i] = sums[positions[i]].normalized;
+                mesh.normals = normals;
+            }
+        }
+
         private void FitOnPlane(GameObject model, float heightMetres)
         {
-            model.transform.localRotation = Quaternion.Euler(0, EvolutionClient.Instance.Settings.model_yaw_degrees, 0);
+            // Home/preview roots already face their own cameras. Applying the
+            // AR placement offset again turns their imported +Z face backwards.
+            model.transform.localRotation = Quaternion.Euler(0, fitPlaceholder ? 0 : EvolutionClient.Instance.Settings.model_yaw_degrees, 0);
             var renderers = model.GetComponentsInChildren<Renderer>(true);
+            Bounds bounds = GeometryBounds(renderers);
+            float scale = heightMetres / bounds.size.y;
+            Vector3 localFeet = transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.min.y, bounds.center.z));
+            model.transform.localScale = Vector3.one * scale;
+            model.transform.localPosition = (fitPlaceholder ? presentationFeet : Vector3.zero) - localFeet * scale;
+        }
+
+        private static Bounds GeometryBounds(Renderer[] renderers)
+        {
             if (renderers.Length == 0) throw new InvalidOperationException("Model has no renderers.");
             bool initialized = false;
             Bounds bounds = new Bounds();
@@ -125,7 +199,10 @@ namespace Healthmon.Evolution
                 {
                     // Imported skin culling bounds can be loose; fit the actual rest geometry.
                     baked = new Mesh();
-                    skin.BakeMesh(baked);
+                    // Compensate for the skin transform's scale before converting
+                    // local vertices to world space below. The AR prefab is scaled
+                    // to 0.3; applying that scale twice made a 0.35 m pet 1.17 m tall.
+                    skin.BakeMesh(baked, true);
                     local = baked.bounds;
                     skin.localBounds = local;
                 }
@@ -141,15 +218,13 @@ namespace Healthmon.Evolution
                 if (baked != null) Destroy(baked);
             }
             if (bounds.size.y < 0.0001f) throw new InvalidOperationException("Model bounds are empty.");
-            float scale = Mathf.Clamp(heightMetres, 0.05f, 2f) / bounds.size.y;
-            Vector3 localFeet = transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.min.y, bounds.center.z));
-            model.transform.localScale = Vector3.one * scale;
-            model.transform.localPosition = -localFeet * scale;
+            return bounds;
         }
 
         private void OnDestroy()
         {
-            if (EvolutionClient.Instance != null) EvolutionClient.Instance.ModelChanged -= Changed;
+            desired = null;
+            if (observedClient != null) observedClient.ModelChanged -= Changed;
             displayedImport?.Dispose();
         }
     }

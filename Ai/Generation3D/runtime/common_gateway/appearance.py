@@ -18,24 +18,43 @@ BODY_CONDITIONS = {
 }
 
 
-def body_condition(profile):
+SLIME_CONDITIONS = {
+    'adipose': 'A very full soft jelly body, broad rounded sides, a strongly projecting lower-front volume and a wide grounded base. No hard muscle definition.',
+    'lean_athletic': 'A compact tall elastic jelly body with a taut narrow middle, firm upper and lower jelly masses and a stable base. Keep the outline lean.',
+    'lean': 'A visibly slim lightly built jelly body with a narrow middle, modest upper volume and a small but stable grounded base.',
+    'bulky_athletic': 'A broad powerful jelly body with large firm integrated upper lobes and a substantial supporting base. Firm elastic mass rather than a sagging soft bulge.',
+    'rounded_general': 'A moderately full soft jelly body with gently projecting lower-front volume and rounded sides, less full than the strongly adipose form.',
+    'upper_developed': 'Develop the upper jelly volume and broad integrated upper lobes more than the lower body. Keep one continuous rounded slime with a stable base.',
+    'lower_developed': 'Develop the lower jelly volume and broad supporting base more than the upper body. Keep one continuous rounded slime with the same front face.',
+    'balanced_athletic': 'Balanced firm elastic upper and lower jelly volumes with a defined middle and a stable base. A proportionate athletic slime silhouette.',
+    'developed_general': 'Substantial firm connected jelly volumes, more developed than the ordinary slime, with a smooth proportionate outline.',
+    'ordinary': 'An ordinary proportionate rounded slime with moderate jelly volume and a balanced stable base, distinct from very full or highly developed forms.',
+    'undertrained': 'A small softly defined upper jelly volume and modest base, with less structural development than an ordinary slime. Keep the whole body connected.'
+}
+
+
+def body_condition(profile, *, species=None):
     if profile.get('rule_version') != 'healthmon.v2.2':
         raise ValueError('An authoritative shared v2.2 profile is required')
     appearance=profile.get('appearance')
     if appearance not in BODY_CONDITIONS:
         raise ValueError('Unsupported authoritative appearance')
-    return 'AUTHORITATIVE V2.2 APPEARANCE ['+appearance+']: '+BODY_CONDITIONS[appearance]
+    directions = SLIME_CONDITIONS if species == 'slime' else BODY_CONDITIONS
+    return 'AUTHORITATIVE V2.2 APPEARANCE ['+appearance+']: '+directions[appearance]
 
 
-def apply_to_prompt(prompt,profile):
+def apply_to_prompt(prompt,profile, *, species=None):
     """Replace the legacy condition line only in the explicit v2.2 adapter branch."""
-    instruction=body_condition(profile)
+    instruction=body_condition(profile, species=species)
     lines=prompt.splitlines()
     indexes=[index for index,line in enumerate(lines) if line.startswith('SCORE-DERIVED BODY CONDITION: ')]
     if len(indexes)!=1:
         raise ValueError('Expected exactly one explicit body condition in the existing prompt')
     lines[indexes[0]]='SCORE-DERIVED BODY CONDITION: '+instruction
-    return '\n'.join(lines)+'\nFINAL AUTHORITATIVE BODY CONDITION: '+instruction+(
+    suffix = (' Apply this condition to the upper/lower jelly volumes, middle, sides and grounded base. '
+        'Keep the slime body and front-facing eyes/mouth. No animal limbs, muzzle, fur or tail.\n'
+        if species == 'slime' else (
         ' Apply this condition to the actual abdomen, waist, flanks and supporting body masses, '
         'rather than changing only pose, colors, coat or decorative motifs. Preserve the specified '
-        'species, evolution-stage anatomy and all complete supporting limbs.\n')
+        'species, evolution-stage anatomy and all complete supporting limbs.\n'))
+    return '\n'.join(lines)+'\nFINAL AUTHORITATIVE BODY CONDITION: '+instruction+suffix

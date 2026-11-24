@@ -24,6 +24,21 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     private bool configured;
     private float userMaximumWidth = 650, responseMaximumWidth = 760;
 
+    [Header("New bottom navigation spacing")]
+    [SerializeField, Min(0f)] private float additionalNavGap = 20f;
+    private float lastNavTop = float.NaN;
+
+    // Always prefer the active six-button navigation over the old disabled one.
+    private RectTransform FindActiveNavigation()
+    {
+        if (Panel == null || Panel.parent == null) return null;
+        var newNav = Panel.parent.Find("BottomNavV2") as RectTransform;
+        if (newNav != null && newNav.gameObject.activeInHierarchy) return newNav;
+        var oldNav = Panel.parent.Find("BottomNav") as RectTransform;
+        if (oldNav != null && oldNav.gameObject.activeInHierarchy) return oldNav;
+        return null;
+    }
+
     public void Configure(TMP_InputField field, TMP_Text userText, TMP_Text responseText, Button sendButton)
     {
         if (field == null || userText == null || responseText == null || sendButton == null) return;
@@ -32,8 +47,10 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         if (Panel == null || FindPanel(userText.transform) != Panel || FindPanel(responseText.transform) != Panel) return;
         InputArea = field.transform.parent as RectTransform;
         header = Panel.Find("Header") as RectTransform;
-        BottomNavigation = Panel.parent?.Find("BottomNav") as RectTransform;
-        if (InputArea == null || BottomNavigation == null) return;
+        BottomNavigation = FindActiveNavigation();
+        // Navigation can still be inactive during Awake. Configure the controls
+        // now, then let LateUpdate lay them out once their page becomes visible.
+        if (InputArea == null) return;
         UserBubble = BubbleOf(userText); ResponseBubble = BubbleOf(responseText);
         if (!configured)
         {
@@ -43,6 +60,18 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         UserScroll = EnsureScroll(UserBubble, userText, new Vector2(25, 20));
         ResponseScroll = EnsureScroll(ResponseBubble, responseText, new Vector2(30, 30));
         configured = true;
+        HealthMonUILayout.Place(input.textViewport, .04f, .12f, .96f, .88f);
+        foreach (var text in input.GetComponentsInChildren<TMP_Text>(true))
+        {
+            HealthMonUILayout.Text(text, 0, 0, 1, 1, 32);
+            text.alignment = TextAlignmentOptions.MidlineLeft;
+            text.fontStyle = FontStyles.Normal;
+        }
+        foreach (var text in sendButton.GetComponentsInChildren<TMP_Text>(true))
+        {
+            HealthMonUILayout.Text(text, .06f, .12f, .94f, .88f, 30);
+            text.alignment = TextAlignmentOptions.Center;
+        }
         ApplyNow();
     }
 
@@ -60,6 +89,13 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     }
     private static ScrollRect EnsureScroll(RectTransform bubble, TMP_Text text, Vector2 padding)
     {
+        // This is the readable conversation panel. A disabled AR follower and
+        // its serialized transparent CanvasGroup must not hide or block it.
+        var follower = bubble.GetComponent<SpeechBubbleFollowTarget>();
+        if (follower != null) follower.enabled = false;
+        var group = bubble.GetComponent<CanvasGroup>();
+        if (group != null) { group.alpha = 1; group.interactable = true; group.blocksRaycasts = true; }
+        text.raycastTarget = true;
         var viewport = bubble.Find("RuntimeDialogueViewport") as RectTransform;
         if (viewport == null)
         {
@@ -85,23 +121,39 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
     private void LateUpdate()
     {
         if (!configured || Panel == null || !Panel.gameObject.activeInHierarchy) return;
-        if (lastUser != user.text || lastResponse != response.text || lastPanelSize != Panel.rect.size ||
+        var currentNav = FindActiveNavigation();
+        if (currentNav == null) return;
+        // A navigation swap or a layout-driven nav height change must reflow the input too.
+        bool navChanged = currentNav != BottomNavigation;
+        BottomNavigation = currentNav;
+        float navTop = BoundsInPanel(currentNav).yMax - Panel.rect.yMin;
+        if (navChanged || !Mathf.Approximately(navTop, lastNavTop) ||
+            lastUser != user.text || lastResponse != response.text || lastPanelSize != Panel.rect.size ||
             lastScreenWidth != Screen.width || lastScreenHeight != Screen.height) ApplyNow();
     }
 
     public void ApplyNow()
     {
         if (!configured || Panel == null || !Panel.gameObject.activeInHierarchy) return;
+        BottomNavigation = FindActiveNavigation();
+        if (BottomNavigation == null)
+        {
+            HasValidLayout = false;
+            return;
+        }
         Canvas.ForceUpdateCanvases();
         Rect panel = Panel.rect;
         Rect nav = BoundsInPanel(BottomNavigation);
-        float top = header == null ? panel.height - 100 : BoundsInPanel(header).yMin - panel.yMin;
+        float navTop = nav.yMax - panel.yMin;
+        float headerBottom = header == null ? panel.height - 100 : BoundsInPanel(header).yMin - panel.yMin;
+        float top = Mathf.Min(headerBottom, panel.height * .58f);
         float margin = (float)Math.Min(30, panel.width * .04f);
         float userWidth = (float)Math.Min(userMaximumWidth, panel.width - 2 * margin);
         float responseWidth = (float)Math.Min(responseMaximumWidth, panel.width - 2 * margin);
         float preferredUser = user.GetPreferredValues(user.text, Math.Max(1, userWidth - 50), float.PositiveInfinity).y + 42;
         float preferredResponse = response.GetPreferredValues(response.text, Math.Max(1, responseWidth - 60), float.PositiveInfinity).y + 62;
-        var plan = DialogueLayoutPlan.Calculate(panel.width, panel.height, nav.yMax - panel.yMin, top,
+        // Leave extra room between the new two-row menu and the input field.
+        var plan = DialogueLayoutPlan.Calculate(panel.width, panel.height, navTop + additionalNavGap, top,
             userWidth, responseWidth, preferredUser, preferredResponse);
         HasValidLayout = plan.Valid;
         if (!plan.Valid) return;
@@ -113,10 +165,34 @@ public sealed class DialogueRuntimeLayout : MonoBehaviour
         var inputBounds = new Rect(plan.Input.x + 20, plan.Input.y + 20,
             (float)Math.Max(1, sendBounds.xMin - 20 - (plan.Input.x + 20)), controlHeight);
         Place(send, sendBounds); Place(input.GetComponent<RectTransform>(), inputBounds);
+        var portrait = Panel.Find("CharacterArea/CharacterPlaceholder") as RectTransform;
+        if (portrait != null)
+        {
+#if UNITY_EDITOR
+            portrait.gameObject.SetActive(true);
+#endif
+            float portraitBottom = plan.User.yMax + 24;
+            Place(portrait, new Rect(panel.width * .16f, portraitBottom, panel.width * .68f,
+                Mathf.Max(1, headerBottom - 30 - portraitBottom)));
+            var preview = portrait.Find("PetPreviewImage")?.GetComponent<RawImage>();
+            if (preview != null && preview.texture != null)
+            {
+#if UNITY_EDITOR
+                preview.enabled = true;
+                preview.gameObject.SetActive(true);
+#endif
+                var fitter = preview.GetComponent<AspectRatioFitter>() ?? preview.gameObject.AddComponent<AspectRatioFitter>();
+                fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+                fitter.aspectRatio = (float)preview.texture.width / preview.texture.height;
+                var placeholder = portrait.Find("Text (TMP)");
+                if (placeholder != null) placeholder.gameObject.SetActive(false);
+            }
+        }
         Canvas.ForceUpdateCanvases();
         SizeContent(UserScroll, user, userChanged); SizeContent(ResponseScroll, response, responseChanged);
         lastUser = user.text; lastResponse = response.text; lastPanelSize = panel.size;
         lastScreenWidth = Screen.width; lastScreenHeight = Screen.height;
+        lastNavTop = navTop;
     }
 
     private static void SizeContent(ScrollRect scroll, TMP_Text text, bool changed)

@@ -50,7 +50,7 @@ def prepare_execution_caches(root,model_root):
     record.write_text(canonical({'source_root':str(model_root/'trellis'),'files':copied})+'\n',encoding='utf-8')
 
 
-def prepare_runtime(root,model_root,vendor_root):
+def prepare_runtime(root,model_root,vendor_root,*,versioned=False):
     root=Path(root).resolve();runtime=root/'runtime'
     model_root=Path(model_root).resolve();vendor_root=Path(vendor_root).resolve()
     if not model_root.is_dir() or not vendor_root.is_dir(): raise ValueError('Existing models and vendor directories are required')
@@ -59,7 +59,15 @@ def prepare_runtime(root,model_root,vendor_root):
         raise ValueError('Runtime must be an isolated new output/code directory')
     manifest=code_manifest()
     signature={'sources':manifest,'model_mount':str(model_root),'vendor_mount':str(vendor_root)}
-    record=root/'runtime-provenance.json'
+    if versioned:
+        # Keep historical code and published assets in place. New code gets an
+        # immutable snapshot; upgrading must not require deleting the job DB.
+        snapshot=root/'runtimes'/fingerprint(signature)
+        runtime=snapshot/'runtime'
+        snapshot.mkdir(parents=True,exist_ok=True)
+        record=snapshot/'runtime-provenance.json'
+    else:
+        record=root/'runtime-provenance.json'
     if record.exists():
         old=json.loads(record.read_text(encoding='utf-8'))
         if old!=signature: raise ValueError('Runtime/source changed; preserve old jobs and use a fresh work root')

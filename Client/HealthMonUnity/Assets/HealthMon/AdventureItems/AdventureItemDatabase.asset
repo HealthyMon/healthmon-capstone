@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d7a21584f2fb5b4dbd2efe364902889, type: 3}
+  m_Name: AdventureItemDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::AdventureItemDatabase
+  items:
+  - {fileID: 11400000, guid: 88d1a69e0ec850c48951eb96729e3f0a, type: 2}
+  - {fileID: 11400000, guid: 9efd15819c0304e4787a0a6dc43d9110, type: 2}
+  - {fileID: 11400000, guid: 5dcd8cfed9af6d941be902d592731dd3, type: 2}
+  - {fileID: 11400000, guid: 8bbdcc66a57cba44c831eef270397f9e, type: 2}

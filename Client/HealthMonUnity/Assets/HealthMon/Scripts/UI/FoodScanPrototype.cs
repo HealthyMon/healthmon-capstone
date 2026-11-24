@@ -35,6 +35,7 @@ public class FoodScanPrototype : MonoBehaviour
     private string analysisScope;
     private readonly Button[] candidateButtons = new Button[3];
     private bool confirming;
+    private MainFoodResultsPanel multiResults;
     public string LastAnalysisId { get; private set; }
     public string LastRecordedSourceId { get; private set; }
     public FoodAnalysis LastAnalysis { get; private set; }
@@ -62,6 +63,8 @@ public class FoodScanPrototype : MonoBehaviour
         {
             cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureCompleted += HandleCaptureCompleted;
             cameraCapture.OnCaptureFailed -= HandleCaptureFailed; cameraCapture.OnCaptureFailed += HandleCaptureFailed;
+            cameraCapture.OnPreviewStatusChanged -= Status; cameraCapture.OnPreviewStatusChanged += Status;
+            cameraCapture.ConfigurePreview(capturedPreview, captureView);
         }
         if (candidateView != null)
             foreach (var button in candidateView.GetComponentsInChildren<Button>(true))
@@ -121,9 +124,10 @@ public class FoodScanPrototype : MonoBehaviour
             desktop.onClick = new Button.ButtonClickedEvent();
             desktop.onClick.AddListener(ChooseDesktopPhoto);
             var desktopRect = desktop.GetComponent<RectTransform>();
-            desktopRect.anchorMin = new Vector2(.74f, .12f);
-            desktopRect.anchorMax = new Vector2(.96f, .22f);
-            desktopRect.offsetMin = desktopRect.offsetMax = Vector2.zero;
+            desktopRect.anchorMin = desktopRect.anchorMax = new Vector2(.5f, 0);
+            desktopRect.pivot = new Vector2(.5f, 0);
+            desktopRect.anchoredPosition = new Vector2(0, 120);
+            desktopRect.sizeDelta = new Vector2(300, 80);
             var label = desktop.GetComponentInChildren<TMP_Text>(true);
             if (label != null) label.text = "PC 사진 선택";
             desktop.interactable = true;
@@ -139,12 +143,14 @@ public class FoodScanPrototype : MonoBehaviour
     public void CaptureRealPhoto()
     {
         if (cameraCapture == null) { Status("카메라가 연결되지 않았습니다."); return; }
+        capturedBytes = null;
         Status("촬영 중…"); cameraCapture.Capture();
     }
     private void HandleCaptureCompleted(Texture2D texture, byte[] bytes)
     {
         capturedBytes = bytes; analysis = null; selected = null; LastAnalysis = null; LastAnalysisId = null;
-        if (capturedPreview != null) { capturedPreview.texture = texture; capturedPreview.gameObject.SetActive(true); }
+        if (cameraCapture != null) cameraCapture.ShowPhoto(texture);
+        else if (capturedPreview != null) { capturedPreview.texture = texture; capturedPreview.gameObject.SetActive(true); }
         Status(cameraCapture != null && cameraCapture.LastCaptureWasTestImage
             ? "PC 시연 사진입니다. 음식 분석을 눌러주세요."
             : "사진 준비 완료. 음식 분석을 눌러주세요.");
@@ -168,12 +174,27 @@ public class FoodScanPrototype : MonoBehaviour
         if (capturedBytes == null) { Status("먼저 사진을 촬영하거나 선택해 주세요."); return; }
         if (Api == null || !dialogue.IsConnected) { Status("서버에 먼저 연결해 주세요."); return; }
         HasFoodFailure = false; LastConfirmation = null;
-        Status("음식을 분석하고 있어요…");
+        Status("음식 분석 중…");
         Api.AnalyzeFood(capturedBytes, result =>
         {
             analysis = result; analysisScope = CurrentScope; LastAnalysis = result; LastAnalysisId = result.analysis_id; selected = null;
             UpdateAnalysisOrigin();
-            if (result.candidates == null || result.candidates.Length == 0) { Status("음식을 찾지 못했어요. 다른 사진으로 시도해 주세요."); return; }
+            if (multiResults != null)
+            {
+                try { multiResults.Show(result, capturedBytes); }
+                catch(Exception) { HasFoodFailure=true; Status("분석 결과 형식 오류 · 다시 촬영"); return; }
+                foreach(var label in new[]{foodNameText,caloriesText,proteinText,carbText,fatText})
+                    label.gameObject.SetActive(!multiResults.HasPortions);
+            }
+            if (result.candidates == null || result.candidates.Length == 0) { Status("음식 감지 실패 · 다시 촬영"); return; }
+            if (multiResults != null && multiResults.HasPortions)
+            {
+                // Initialize the legacy confirmation controls without opening the candidate picker.
+                // The multi-food panel still displays every detected food.
+                SelectCandidate(0);
+            }
+            else
+            {
             for (int i = 0; i < candidateButtons.Length; i++)
             {
                 var button = candidateButtons[i]; if (button == null) continue;
@@ -185,6 +206,7 @@ public class FoodScanPrototype : MonoBehaviour
                 }
             }
             ShowCandidates();
+            }
             if (result.IsSynthetic)
                 Status("MOCK / SYNTHETIC — 개발용 합성 분석입니다. 실제 영양 측정값이 아닙니다.");
             Debug.Log($"[HealthMon Vision] AnalysisDisplayed id={result.analysis_id} candidates={result.candidates.Length}");
@@ -206,11 +228,24 @@ public class FoodScanPrototype : MonoBehaviour
         if (vegetablesConfirmed != null) vegetablesConfirmed.isOn = false;
         if (kcalConfirmed != null) kcalConfirmed.isOn = false;
         SelectMealType(null);
+        SyncPortionTotal();
         RenderSelection();
         if (confirmationScroll != null) { Canvas.ForceUpdateCanvases(); confirmationScroll.verticalNormalizedPosition = 1; }
     }
+    private void SyncPortionTotal()
+    {
+        if(gramsInput==null)return;
+        bool all=multiResults!=null&&multiResults.HasPortions;
+        gramsInput.readOnly=all;
+        if(!all)return;
+        float total=multiResults.TotalGrams;
+        gramsInput.SetTextWithoutNotify(total>0?total.ToString("0.###",CultureInfo.InvariantCulture):"");
+        if(quantityConfirmed!=null)quantityConfirmed.isOn=false;
+        RenderSelection();
+    }
     public void UseEstimatedQuantity()
     {
+        if(multiResults!=null&&multiResults.HasPortions){SyncPortionTotal();return;}
         if (selected == null || !selected.has_estimated_grams || gramsInput == null) return;
         gramsInput.text = selected.estimated_grams.ToString("0.0", CultureInfo.InvariantCulture);
         if (quantityConfirmed != null) quantityConfirmed.isOn = false;
@@ -232,7 +267,7 @@ public class FoodScanPrototype : MonoBehaviour
         if (selected == null) return;
         float? grams; bool valid = Quantity(out grams);
         float scale = valid && grams.HasValue ? grams.Value / 100 : 1;
-        if (estimateButton != null) estimateButton.gameObject.SetActive(selected.has_estimated_grams);
+        if (estimateButton != null) estimateButton.gameObject.SetActive(selected.has_estimated_grams && !(multiResults!=null && multiResults.HasPortions));
         var saveLabel = saveButton == null ? null : saveButton.GetComponentInChildren<TMP_Text>(true);
         if (saveLabel != null) saveLabel.text = "기록하기";
         foodNameText.text = selected.food + (grams.HasValue ? "\n입력한 " + grams.Value.ToString("F1") + "g 기준" : "\n100g당 참고값 (실제 섭취량 미입력)") +
@@ -241,6 +276,16 @@ public class FoodScanPrototype : MonoBehaviour
         proteinText.text = Nutrient("단백질", selected.per_100g.protein_g, scale, " g");
         carbText.text = Nutrient("탄수화물", selected.per_100g.carbohydrate_g, scale, " g");
         fatText.text = Nutrient("지방", selected.per_100g.fat_g, scale, " g");
+        if (multiResults != null && multiResults.HasPortions && confirmationNotice != null)
+        {
+            confirmationNotice.text = (syntheticFixture ? "검증용 섭취량 · 실제 식사 기록 아님\n" : "") +
+                (selectedMealType == null ? "식사 구분 선택 필요" : MealLabel(selectedMealType) + " · 음식 " + analysis.vision.foods.Length + "개") +
+                "\n아래로 스크롤 · 음식명과 중량 수정 후 섭취량 확인" +
+                (quantityConfirmed != null && quantityConfirmed.isOn ? "\n섭취량 확인 완료 · 기록 가능" : "\n사진 추정량은 참고값 · 섭취량 확인 필요");
+            LayoutHeight(confirmationNotice.gameObject, syntheticFixture ? 132 : 104);
+            return;
+        }
+        if (confirmationNotice != null) LayoutHeight(confirmationNotice.gameObject, 200);
         if (confirmationNotice != null) confirmationNotice.text = (syntheticFixture ? "SYNTHETIC CONSUMPTION FIXTURE · 아래 양은 테스트 입력이며 실제 섭취/사진 정답이 아닙니다.\n" : "") +
             (selectedMealType == null ? "아침·점심·저녁·간식 중 실제 식사 구분을 선택하세요.\n" : "선택한 구분: " + MealLabel(selectedMealType) + "\n") +
             (!grams.HasValue ? "먹은 양을 비워 저장하면 식사 퀘스트·기록 EXP에 반영되지 않아요.\n" :
@@ -252,6 +297,7 @@ public class FoodScanPrototype : MonoBehaviour
     public void ConfirmFood()
     {
         if (confirming || selected == null || Api == null || Api.IsBusy) return;
+
         if (string.IsNullOrEmpty(analysisScope) || analysisScope != CurrentScope || (syntheticFixture && syntheticFixtureScope != CurrentScope))
         { StatusInConfirmation("분석 이후 연결이 바뀌었습니다. 현재 연결에서 사진을 다시 분석하세요."); return; }
         if (selectedMealType == null)
@@ -271,10 +317,17 @@ public class FoodScanPrototype : MonoBehaviour
         }
         else if (vegetablesInput != null && !string.IsNullOrWhiteSpace(vegetablesInput.text))
         { StatusInConfirmation("채소·과일량을 확인 체크하거나, 모르면 입력을 비워 주세요."); return; }
+        ConfirmedFoodItem[] items = null;
+        if(multiResults!=null && multiResults.HasPortions)
+        {
+            if(quantityConfirmed==null||!quantityConfirmed.isOn){StatusInConfirmation("음식별 섭취량 확인 필요");return;}
+            try{items=multiResults.ConfirmedItems();grams=multiResults.TotalGrams;}
+            catch(ArgumentException e){StatusInConfirmation(e.Message);return;}
+        }
         HasFoodFailure = false;
         LastConfirmation = null;
         confirming = true;
-        StatusInConfirmation("음식 기록을 저장하고 있어요…");
+        StatusInConfirmation("식사 기록 중…");
         Api.ConfirmFood(analysis.analysis_id, selected.candidate_id, grams, result =>
         {
             confirming = false; LastRecordedSourceId = result.source_id; LastConfirmation = result;
@@ -289,12 +342,13 @@ public class FoodScanPrototype : MonoBehaviour
             Debug.Log($"[HealthMon Food] FoodRecorded source_id={result.source_id} duplicate={result.duplicate} state_version={result.state_version}");
         }, error => { confirming = false; Failure(error); },
             mealType: selectedMealType, kcalReconfirmed: kcalConfirmed != null && kcalConfirmed.isOn,
-            vegetableFruitGrams: vegetables, syntheticFixture: syntheticFixture);
+            vegetableFruitGrams: vegetables, syntheticFixture: syntheticFixture, items: items);
     }
     public void ShowCapture()
     {
         captureView.SetActive(true); candidateView.SetActive(false); resultView.SetActive(false);
         capturedBytes = null; analysis = null; selected = null;
+        cameraCapture?.ResetPreview();
         if (capturedPreview != null) capturedPreview.gameObject.SetActive(false);
         Status("음식 사진을 촬영하거나 선택해 주세요.");
     }
@@ -319,7 +373,7 @@ public class FoodScanPrototype : MonoBehaviour
     {
         string label = analysis == null ? "분석 대기" : analysis.IsSynthetic
             ? "MOCK / SYNTHETIC · 합성 분석 · 실제 영양 측정값 아님"
-            : "REAL · 실제 원격 Vision 분석 · 사진 추정값은 섭취량 확정이 아님";
+            : "분석 완료 · 섭취량 확인 필요";
         if (syntheticFixture) label += "\n섭취 확인량은 별도의 SYNTHETIC 테스트 입력입니다.";
         if (candidateOriginText != null) candidateOriginText.text = label;
         if (analysisOriginText != null) analysisOriginText.text = label;
@@ -404,8 +458,18 @@ public class FoodScanPrototype : MonoBehaviour
         quantityConfirmed = MakeToggle(content, "ConsumedQuantityConfirmed", "입력한 g은 제가 실제 먹은 양을 확인한 값입니다.");
         quantityConfirmed.onValueChanged.AddListener(_ => RenderSelection());
         confirmationNotice = MakeLabel(content, "ConfirmationNotice", "식사 구분과 실제 먹은 양을 확인하세요.", 200);
-        foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText })
-        { label.transform.SetParent(content, false); LayoutHeight(label.gameObject, label == foodNameText ? 160 : 64); }
+        {
+            var panel = new GameObject("MainFoodResults", typeof(RectTransform), typeof(MainFoodResultsPanel));
+            panel.transform.SetParent(content, false);
+            multiResults = panel.GetComponent<MainFoodResultsPanel>();
+            multiResults.Initialize(foodNameText.font);
+            multiResults.PortionsChanged += SyncPortionTotal;
+            multiResults.gameObject.SetActive(false);
+        }
+        {
+            foreach (var label in new[] { foodNameText, caloriesText, proteinText, carbText, fatText })
+            { label.transform.SetParent(content, false); LayoutHeight(label.gameObject, label == foodNameText ? 160 : 64); }
+        }
         vegetablesInput = MakeInput(template, content, "VegetableFruitGrams", "확인한 채소·과일량(g), 모르면 비움");
         vegetablesConfirmed = MakeToggle(content, "VegetableFruitConfirmed", "채소·과일량을 확인했습니다. 모르면 비우고 체크하지 않습니다.");
         kcalConfirmed = MakeToggle(content, "FoodKcalReconfirmed", "표시 열량을 실제 섭취량 기준으로 재확인했습니다 (게임 점수용).");
@@ -422,13 +486,20 @@ public class FoodScanPrototype : MonoBehaviour
     }
     private TMP_Text MakeLabel(Transform parent, string name, string text, float height)
     {
-        var label = Instantiate(foodNameText, parent); label.name = name; label.fontSize = 24;
+        var label = Instantiate(foodNameText, parent); label.gameObject.SetActive(true); label.name = name; label.fontSize = 24;
         label.text = text; label.alignment = TextAlignmentOptions.Left; label.enableAutoSizing = false; label.enableWordWrapping = true; label.raycastTarget = false;
         LayoutHeight(label.gameObject, height); return label;
     }
     private TMP_InputField MakeInput(TMP_InputField template, Transform parent, string name, string hint)
     {
         var field = Instantiate(template, parent); field.name = name;
+        var background = field.GetComponent<Image>();
+        if (background != null) { background.sprite = null; background.color = new Color(.94f, .98f, 1f); }
+        if (field.textViewport != null)
+        {
+            field.textViewport.anchorMin = Vector2.zero; field.textViewport.anchorMax = Vector2.one;
+            field.textViewport.offsetMin = new Vector2(14, 8); field.textViewport.offsetMax = new Vector2(-14, -8);
+        }
         foreach (var label in field.GetComponentsInChildren<TMP_Text>(true)) { label.font = foodNameText.font; label.fontSize = 24; }
         field.onValueChanged = new TMP_InputField.OnChangeEvent(); field.onEndEdit = new TMP_InputField.SubmitEvent(); field.onSubmit = new TMP_InputField.SubmitEvent();
         field.text = ""; field.contentType = TMP_InputField.ContentType.DecimalNumber; field.characterLimit = 8;
@@ -449,6 +520,6 @@ public class FoodScanPrototype : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureFailed -= HandleCaptureFailed; }
+        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureFailed -= HandleCaptureFailed; cameraCapture.OnPreviewStatusChanged -= Status; }
     }
 }
