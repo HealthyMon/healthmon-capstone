@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Healthmon.Common;
 using UnityEngine;
 
 [Serializable] public sealed class PoseWorkoutRecord { public string session_id, exercise, completed_at; public int count,left_count,right_count; public float duration_seconds; }
@@ -27,6 +28,8 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
 #endif
     private float elapsed, nextFrame;
     private PoseSnapshot latest;
+    private HealthMonPoseWorkoutSync.Entry workoutBinding;
+    private string resultEventId;
     public bool IsRunning => running;
     public bool IsPaused => paused;
     public bool IsTransitioning => changing || finishing || restoring;
@@ -50,6 +53,11 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
         view.PauseWorkout+=TogglePause; view.FinishWorkout+=Finish; view.Retarget+=Retarget;
         view.SwitchCamera+=SwitchCamera; view.Close+=Close; view.Retry+=Open;
         previousSleepTimeout=Screen.sleepTimeout;
+        if(HealthMonPoseWorkoutSync.Instance!=null)
+        {
+            HealthMonPoseWorkoutSync.Instance.Recorded+=WorkoutRecorded;
+            HealthMonPoseWorkoutSync.Instance.Deferred+=WorkoutDeferred;
+        }
         view.gameObject.SetActive(false);
     }
     public void Open()
@@ -140,12 +148,14 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
 #endif
         if(!client.Configure(endpoint)) {view.message.text="훈련 준비 실패 · 잠시 후 재시도";yield break;}
         changing=true;view.startButton.interactable=false;view.message.text="훈련 준비 중…";
+        var binding=HealthMonPoseWorkoutSync.BindCurrentAccount(DateTime.UtcNow.ToString("o"));
         int version=generation;PoseSnapshot response=null;string error=null;
         yield return client.Json("POST","/sessions",new PoseSessionRequest{exercise=HealthMonPoseView.Keys[selected]},(s,e)=>{response=s;error=e;});
         changing=false;
         if(version!=generation) { if(response!=null&&!string.IsNullOrEmpty(response.session_id))StartCoroutine(client.Json("DELETE","/sessions/"+response.session_id,null,(s,e)=>{}));yield break; }
         if(error!=null||response==null||string.IsNullOrEmpty(response.session_id)) {view.message.text=error??"훈련 시작 실패 · 재시도 필요";view.startButton.interactable=prepared;yield break;}
         session=response.session_id;sequence=0;elapsed=0;paused=faulted=finishing=false;running=true;latest=response;
+        workoutBinding=binding;resultEventId=null;
 #if UNITY_EDITOR
         verificationFresh=false;
 #endif
@@ -237,8 +247,40 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
         view.resultTime.text=HealthMonPoseView.Names[selected]+"  ·  "+FormatTime(elapsed);
         view.resultNote.text=SaveRecord()?"기기 내 훈련 기록 저장 완료":"기록 저장 실패 · 기기 저장 공간 확인";
         if(finishError!=null)view.resultNote.text="연결 종료 전 확인된 기록 기준";
+        QueueWorkout();
         finishing=false;
     }
+    private void QueueWorkout()
+    {
+        if(workoutBinding==null||latest==null||string.IsNullOrEmpty(latest.session_id))return;
+#if UNITY_EDITOR
+        // Old footage verification must never modify the user's real account.
+        if((verificationFrame!=null||VerificationHistoryIsolated)&&
+           (CommonServerConnection.Instance.EnvironmentName!="test"||Environment.GetEnvironmentVariable("HEALTHMON_TEAM_PREFS_BACKUP")!="1"))return;
+#endif
+        var request=workoutBinding.request;
+        request.event_id="pose-"+latest.session_id;
+        request.occurred_at=DateTime.UtcNow.ToString("o");
+        request.workout_type=latest.exercise=="curl"?"dumbbell":latest.exercise;
+        request.actual=Math.Max(0,latest.count);
+        request.duration_seconds=Mathf.Max(0,Mathf.FloorToInt(elapsed));
+#if UNITY_EDITOR
+        request.synthetic=verificationFrame!=null||VerificationHistoryIsolated;
+#endif
+        resultEventId=request.event_id;
+        bool queued=HealthMonPoseWorkoutSync.Instance!=null&&HealthMonPoseWorkoutSync.Instance.Enqueue(workoutBinding);
+        view.resultNote.text=queued?"훈련 기록 저장 · 성장 반영 대기":"성장 기록 저장 실패 · 저장 공간 확인";
+        workoutBinding=null;
+    }
+    private void WorkoutRecorded(string id,WorkoutSubmissionResult result)
+    {
+        if(id!=resultEventId||view==null)return;
+        view.resultNote.text=result.evaluation_status=="archive_only"?"훈련 기록 저장 · 지난 기록은 성장 반영 제외":
+            result.evaluation_status=="recorded_unscored"?"훈련 기록 저장 · 목표와 측정 단위 확인":
+            $"성장 반영 완료\n상체 {result.state.upper_body:0.#} · 하체 {result.state.lower_body:0.#}";
+    }
+    private void WorkoutDeferred(string id)
+    {if(id==resultEventId&&view!=null)view.resultNote.text="훈련 기록 보관 · 연결 복구 후 자동 반영";}
     private bool SaveRecord()
     {
         if(latest==null||string.IsNullOrEmpty(latest.session_id))return false;
@@ -300,7 +342,10 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
         }
     }
     private void OnDestroy()
-    {generation++;ReleaseCamera();RestoreOrientation();if(client!=null)client.Abort();if(frameTexture!=null)Destroy(frameTexture);if(resultTexture!=null)Destroy(resultTexture);}
+    {
+        if(HealthMonPoseWorkoutSync.Instance!=null){HealthMonPoseWorkoutSync.Instance.Recorded-=WorkoutRecorded;HealthMonPoseWorkoutSync.Instance.Deferred-=WorkoutDeferred;}
+        generation++;ReleaseCamera();RestoreOrientation();if(client!=null)client.Abort();if(frameTexture!=null)Destroy(frameTexture);if(resultTexture!=null)Destroy(resultTexture);
+    }
     private void RestoreOrientation()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR

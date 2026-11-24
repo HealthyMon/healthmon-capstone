@@ -359,6 +359,20 @@ namespace Healthmon.Beta
             if (RequirePet(failure)) Begin("GET", PetPath("/quests"), null, success, failure);
         }
 
+        public void SubmitPoseWorkout(PoseWorkoutSubmission value, Action<WorkoutSubmissionResult> success, Action<ApiFailure> failure = null)
+        {
+            if (!RequirePet(failure)) return;
+            string pet = PetId; int generation = stateGate.Generation;
+            Begin<WorkoutSubmissionResult>("POST", PetPath("/workouts"), JsonUtility.ToJson(value), result =>
+            {
+                if (result.event_id != value.event_id || result.state == null || !result.state.IsValidCommonState(pet))
+                { Fail(0, "Invalid workout response; retry the same event.", failure); return; }
+                if (stateGate.Accept(generation, result.state.state_version))
+                { ObserveVersion(result.state.state_version); StateReceived?.Invoke(result.state); }
+                success?.Invoke(result);
+            }, failure);
+        }
+
         public void GetWorkouts(Action<ServerWorkoutList> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
@@ -728,8 +742,8 @@ namespace Healthmon.Beta
             }
             T parsed = null;
             string parseError = null;
-            if (typeof(T) == typeof(FoodConfirmationResult) && !CommonServerContract.HasRequiredStateFields(body))
-            { Fail(status, "Food confirmation omitted required server state fields.", failure); yield break; }
+            if ((typeof(T) == typeof(FoodConfirmationResult) || typeof(T) == typeof(WorkoutSubmissionResult)) && !CommonServerContract.HasRequiredStateFields(body))
+            { Fail(status, "Response omitted required server state fields.", failure); yield break; }
             try { parsed = JsonUtility.FromJson<T>(body); }
             catch (Exception error) { parseError = error.Message; }
             if (parsed == null) { Fail(status, "Invalid JSON response: " + parseError, failure); yield break; }

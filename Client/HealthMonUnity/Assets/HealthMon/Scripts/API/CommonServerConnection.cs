@@ -61,6 +61,7 @@ namespace Healthmon.Common
             DontDestroyOnLoad(gameObject);
             Api = gameObject.AddComponent<HealthmonApiClient>();
             Api.StateReceived += Received;
+            gameObject.AddComponent<HealthMonPoseWorkoutSync>();
             HealthMonAndroidBridge.Initialize();
             urlInput = System.Environment.GetEnvironmentVariable("API_BASE_URL") ??
                 System.Environment.GetEnvironmentVariable("HEALTHMON_SERVER_URL") ?? "http://127.0.0.1:18092";
