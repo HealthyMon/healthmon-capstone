@@ -113,9 +113,11 @@ def exp_progress(total_exp: int) -> dict:
     if isinstance(total_exp, bool) or not isinstance(total_exp, int) or total_exp < 0:
         raise ValueError("total_exp must be a nonnegative integer")
     remaining, level = total_exp, 1
-    while remaining >= required_exp(level):
+    while level < 30 and remaining >= required_exp(level):
         remaining -= required_exp(level)
         level += 1
+    if level == 30:
+        remaining = 0
     return {"total_exp": total_exp, "level": level, "current_exp": remaining,
             "required_exp": required_exp(level), "evolution_target_stage": min(3, sum(level >= x for x in (10, 20, 30)))}
 

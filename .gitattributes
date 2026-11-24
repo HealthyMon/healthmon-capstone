@@ -10,3 +10,4 @@ Server/assets/starter/lucan/model.glb -filter -diff -merge -text
 Server/assets/starter/lucan/manifest.json text eol=lf
 Server/assets/starter/slime/model.glb -filter -diff -merge -text
 Server/assets/starter/slime/manifest.json text eol=lf
+*.cmd text eol=crlf

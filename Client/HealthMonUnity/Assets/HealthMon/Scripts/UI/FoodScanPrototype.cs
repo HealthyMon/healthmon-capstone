@@ -62,6 +62,8 @@ public class FoodScanPrototype : MonoBehaviour
         {
             cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureCompleted += HandleCaptureCompleted;
             cameraCapture.OnCaptureFailed -= HandleCaptureFailed; cameraCapture.OnCaptureFailed += HandleCaptureFailed;
+            cameraCapture.OnPreviewStatusChanged -= Status; cameraCapture.OnPreviewStatusChanged += Status;
+            cameraCapture.ConfigurePreview(capturedPreview, captureView);
         }
         if (candidateView != null)
             foreach (var button in candidateView.GetComponentsInChildren<Button>(true))
@@ -140,12 +142,14 @@ public class FoodScanPrototype : MonoBehaviour
     public void CaptureRealPhoto()
     {
         if (cameraCapture == null) { Status("카메라가 연결되지 않았습니다."); return; }
+        capturedBytes = null;
         Status("촬영 중…"); cameraCapture.Capture();
     }
     private void HandleCaptureCompleted(Texture2D texture, byte[] bytes)
     {
         capturedBytes = bytes; analysis = null; selected = null; LastAnalysis = null; LastAnalysisId = null;
-        if (capturedPreview != null) { capturedPreview.texture = texture; capturedPreview.gameObject.SetActive(true); }
+        if (cameraCapture != null) cameraCapture.ShowPhoto(texture);
+        else if (capturedPreview != null) { capturedPreview.texture = texture; capturedPreview.gameObject.SetActive(true); }
         Status(cameraCapture != null && cameraCapture.LastCaptureWasTestImage
             ? "PC 시연 사진입니다. 음식 분석을 눌러주세요."
             : "사진 준비 완료. 음식 분석을 눌러주세요.");
@@ -296,6 +300,7 @@ public class FoodScanPrototype : MonoBehaviour
     {
         captureView.SetActive(true); candidateView.SetActive(false); resultView.SetActive(false);
         capturedBytes = null; analysis = null; selected = null;
+        cameraCapture?.ResetPreview();
         if (capturedPreview != null) capturedPreview.gameObject.SetActive(false);
         Status("음식 사진을 촬영하거나 선택해 주세요.");
     }
@@ -450,6 +455,6 @@ public class FoodScanPrototype : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureFailed -= HandleCaptureFailed; }
+        if (cameraCapture != null) { cameraCapture.OnCaptureCompleted -= HandleCaptureCompleted; cameraCapture.OnCaptureFailed -= HandleCaptureFailed; cameraCapture.OnPreviewStatusChanged -= Status; }
     }
 }

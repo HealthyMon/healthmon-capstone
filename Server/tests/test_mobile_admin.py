@@ -62,3 +62,33 @@ def test_workout_and_quest_controls_use_real_reconciliation_without_duplicate_re
         rows = c.execute("SELECT synthetic FROM sources WHERE pet_id=%s AND id='admin-workout-mobile-workout-once'", (pet,)).fetchall()
         assert rows == [{'synthetic': True}]
     assert client.put(path + '/quests', json={'slot':'easy', 'candidate':'daily6'}).status_code == 422
+
+
+def test_level_30_and_meal_axes_are_retained_for_combat_projection(client, pet):
+    changed = client.put(f'/pets/{pet}/test-controls/state',
+                         json=values(level=30, upper_body=30, lower_body=30,
+                                     nutrition=20, energy_balance=40))
+    assert changed.status_code == 200, changed.text
+    current = client.get(f'/pets/{pet}/state').json()
+    assert current['level'] == 30
+    assert current['nutrition'] == 20 and current['energy_balance'] == 40
+    assert current['upper_body'] == current['lower_body'] == 30
+    from Server.healthmon.rules import evolution_profile
+    assert evolution_profile(current)['appearance'] == 'adipose'
+    restored = client.delete(f'/pets/{pet}/test-controls/state')
+    assert restored.status_code == 200
+    assert restored.json()['level'] == 1
+
+
+def test_admin_cannot_set_a_level_above_30(client, pet):
+    assert client.put(f'/pets/{pet}/test-controls/state', json=values(level=31)).status_code == 422
+    assert client.put(f'/pets/{pet}/test-controls/state', json=values(level=100)).status_code == 422
+
+
+def test_progression_stops_at_30_without_losing_the_exp_ledger():
+    from Server.healthmon import rules
+    threshold = sum(rules.required_exp(level) for level in range(1, 30))
+    for total in (threshold, threshold + 1, threshold + 1000000):
+        state = rules.exp_progress(total)
+        assert state['level'] == 30 and state['current_exp'] == 0
+        assert state['total_exp'] == total

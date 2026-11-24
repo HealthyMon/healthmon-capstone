@@ -73,5 +73,6 @@ try {
     Write-Host $_.Exception.Message -ForegroundColor Red
     $resultCode = 1
 }
-if (-not $NoPause) { [void](Read-Host 'Press Enter to close') }
+# The CMD wrapper holds failures, including errors before this script can run.
+if (-not $NoPause -and ($resultCode -eq 0 -or $env:HEALTHMON_CMD_LAUNCH -ne '1')) { [void](Read-Host 'Press Enter to close') }
 exit $resultCode

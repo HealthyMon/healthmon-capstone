@@ -103,7 +103,7 @@ public sealed class MobileAdminMenu : MonoBehaviour
 
     private void BuildCharacter(Transform page)
     {
-        stateSummary = Label(page, "서버에 연결하면 현재 상태를 불러옵니다.", 120);
+        stateSummary = Label(page, "서버에 연결하면 현재 상태를 불러옵니다.", 300);
         Label(page, "테스트 계정에서만 아래 값을 변경할 수 있어요. 실제 운동·식사 기록은 유지됩니다.", 90);
         var basic = Row(page, 184);
         level = Input(basic, "레벨", "1", TMP_InputField.ContentType.IntegerNumber);
@@ -233,18 +233,19 @@ public sealed class MobileAdminMenu : MonoBehaviour
         axes["upper_body"].value = state.upper_body; axes["lower_body"].value = state.lower_body;
         axes["nutrition"].value = state.nutrition; axes["energy_balance"].value = state.energy_balance;
         stateSummary.text = state.settings?.name + " · Lv. " + state.level + " · 코인 " + state.coin + "\n친밀도 " + state.affinity + " · 활동성 " + state.activity + " · 주도성 " + state.initiative;
+        stateSummary.text += "\n" + PetCombatStats.FromState(state).StatusText;
     }
     private void ApplyState()
     {
         int selectedLevel, selectedCoin;
-        if (!int.TryParse(level.text, out selectedLevel) || selectedLevel < 1 || selectedLevel > 100 || !int.TryParse(coin.text, out selectedCoin) || selectedCoin < 0)
-        { notice.text = "레벨 1~100, 코인 0 이상의 정수를 입력해 주세요."; return; }
+        if (!int.TryParse(level.text, out selectedLevel) || selectedLevel < 1 || selectedLevel > 30 || !int.TryParse(coin.text, out selectedCoin) || selectedCoin < 0)
+        { notice.text = "레벨 1~30, 코인 0 이상의 정수를 입력해 주세요."; return; }
         Connection.Api.ApplyTestState(new TestPetStateRequest { level = selectedLevel, coin = selectedCoin,
             affinity = axes["affinity"].value, activity = axes["activity"].value, initiative = axes["initiative"].value,
             upper_body = axes["upper_body"].value, lower_body = axes["lower_body"].value, nutrition = axes["nutrition"].value,
             energy_balance = axes["energy_balance"].value }, Applied, Failed);
     }
-    private void Applied(PetState state) { notice.text = "서버에 적용했습니다."; LoadState(); Connection.RefreshQuests(); }
+    private void Applied(PetState state) { notice.text = "서버에 적용했습니다. 변경 능력치는 다음 전투부터 사용합니다."; LoadState(); Connection.RefreshQuests(); }
     private void Failed(ApiFailure error) { notice.text = "적용하지 못했습니다. 연결과 테스트 계정을 확인해 주세요. (" + error.StatusCode + ")"; }
 
     private Button TestButton(Transform parent, string label, UnityEngine.Events.UnityAction action)

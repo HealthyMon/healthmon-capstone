@@ -50,6 +50,24 @@ def main() -> None:
     run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(pose),
          str(scripts / "Pose/HealthMonPoseFrame.cs"), str(project / "Tests/PoseFrameChecks.cs")], output / "pose-frame-compile.log")
     run([str(mono), str(pose)], output / "pose-frame-results.log")
+    combat = output / "CombatStatsChecks.exe"
+    run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(combat),
+         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"),
+         str(scripts / "Adventure/PetCombatStats.cs"), str(project / "Tests/CombatStatsChecks.cs")],
+        output / "combat-compile.log")
+    import sys
+    sys.path.insert(0, str(project.parents[1]))
+    from Server.healthmon.rules import evolution_profile, initial_state
+    import itertools
+    fixtures = output / "combat-body-fixtures.tsv"
+    rows = []
+    for upper, lower, nutrition, energy in itertools.product(
+            (0, 30, 44, 45, 50, 64, 65, 80, 100), (0, 30, 44, 45, 50, 64, 65, 80, 100),
+            (0, 39, 40, 59, 60, 100), (-100, -30, -29, 0, 29, 30, 100)):
+        state = dict(initial_state(), upper_body=upper, lower_body=lower, nutrition=nutrition, energy_balance=energy)
+        rows.append("\t".join(map(str, (upper, lower, nutrition, energy, evolution_profile(state)["appearance"]))))
+    fixtures.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    run([str(mono), str(combat), str(fixtures)], output / "combat-results.log")
     if args.package_assemblies:
         managed = editor / "Data/Managed"
         references = list((managed / "UnityEngine").glob("*.dll")) + list((managed / "UnityEditor").glob("*.dll"))

@@ -254,13 +254,13 @@ public static class HealthMonTeamIntegration
         RequireReferences(battle, "battleManager", "battleRoot", "enemySpawner", "adventurePlayerStats");
         var stats = Object.FindAnyObjectByType<AdventurePlayerStats>(FindObjectsInactive.Include);
         Require(stats != null, "Adventure stats installed");
-        stats.InitializeExploration();
+        stats.ApplyGrowthStats(PetCombatStats.Calculate(1, 50, 50, 50, 0, 50, 50, 50), "editor-verification");
         Require(stats.IsInitialized && stats.MaxHP > 0, "Adventure stats initialize");
         var temporary = new GameObject("Battle transfer verification");
         try
         {
             var unit = temporary.AddComponent<BattleUnit>();
-            stats.ApplyToBattleUnit(unit);
+            stats.CopyToBattleUnit(unit);
             Require(unit.maxHP == stats.MaxHP && unit.currentHP == stats.CurrentHP, "Exploration stats enter battle");
             unit.currentHP = Math.Max(0, unit.currentHP - 1);
             stats.CaptureFromBattleUnit(unit);

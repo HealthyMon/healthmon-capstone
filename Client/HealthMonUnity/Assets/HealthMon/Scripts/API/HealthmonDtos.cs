@@ -102,7 +102,7 @@ namespace Healthmon.Beta
         public bool IsValidCommonState(string expectedPet)
         {
             if (pet_id != expectedPet || rule_version != Healthmon.Common.CommonServerContract.RuleVersion ||
-                state_version < 0 || level < 1 || current_exp < 0 || required_exp <= 0 ||
+                state_version < 0 || level < 1 || level > 30 || current_exp < 0 || required_exp <= 0 ||
                 current_exp >= required_exp || total_exp < current_exp || coin < 0 ||
                 evolution_target_stage < 0 || evolution_target_stage > 3 ||
                 published_model_stage < 0 || published_model_stage > evolution_target_stage ||

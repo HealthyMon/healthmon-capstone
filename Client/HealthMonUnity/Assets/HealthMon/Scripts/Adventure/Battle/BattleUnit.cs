@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class BattleUnit : MonoBehaviour
@@ -17,7 +17,9 @@ public class BattleUnit : MonoBehaviour
     public int LUK = 5;
 
     [Header("스태미나")]
-    public float staminaRecoveryRate = .025f;
+    public const float BaseStaminaRecoveryRate = .025f;
+    public float staminaRecoveryRate = BaseStaminaRecoveryRate;
+    [Min(.01f)] public float actionSpeedMultiplier = 1f;
     public float waitRecoveryBonus = .05f;
 
     [Header("행동 게이지")]
@@ -27,6 +29,13 @@ public class BattleUnit : MonoBehaviour
     [Header("현재 상태")]
     public int currentHP;
     public float currentST;
+
+    public float CriticalChance => Mathf.Clamp(LUK * .01f, 0, .25f);
+    public int CalculateDamage(int attack, int mitigation, float criticalRoll)
+    {
+        int damage = Mathf.Max(1, attack - mitigation);
+        return criticalRoll < CriticalChance ? Mathf.Max(1, Mathf.RoundToInt(damage * 1.5f)) : damage;
+    }
 
     public bool IsAlive => currentHP > 0;
 
@@ -44,7 +53,7 @@ public class BattleUnit : MonoBehaviour
         if (!IsAlive) return;
 
         // SPD에 따른 행동 게이지 충전
-        float gaugeSpeed = 20f + SPD * 3f;
+        float gaugeSpeed = (20f + SPD * 3f) * Mathf.Max(.01f, actionSpeedMultiplier);
 
         actionGauge = Mathf.Min(actionGaugeMax, actionGauge + gaugeSpeed * deltaTime);
 

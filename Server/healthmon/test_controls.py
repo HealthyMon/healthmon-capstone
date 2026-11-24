@@ -11,7 +11,7 @@ from .contracts import Strict
 
 
 class TestPetState(Strict):
-    level: int = Field(ge=1, le=100)
+    level: int = Field(ge=1, le=30)
     coin: int = Field(ge=0, le=1000000)
     upper_body: float = Field(ge=0, le=100)
     lower_body: float = Field(ge=0, le=100)

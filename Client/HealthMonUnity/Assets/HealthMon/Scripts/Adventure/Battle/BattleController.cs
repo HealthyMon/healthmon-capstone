@@ -1,4 +1,3 @@
-﻿
 using System;
 using UnityEngine;
 
@@ -72,6 +71,13 @@ public class BattleController : MonoBehaviour
             return;
         }
 
+        if (adventurePlayerStats == null)
+            adventurePlayerStats = FindAnyObjectByType<AdventurePlayerStats>(FindObjectsInactive.Include);
+        if (adventurePlayerStats == null || !adventurePlayerStats.RefreshGrowthStats())
+        {
+            Debug.LogWarning("[Battle] 캐릭터 성장 상태를 불러온 뒤 전투를 시작해 주세요.");
+            return;
+        }
         IsBattling = true;
 
         // 전투 시작 애니메이션
@@ -95,6 +101,13 @@ public class BattleController : MonoBehaviour
 
     private void BeginBattle(bool isElite)
     {
+        if (!adventurePlayerStats.RefreshGrowthStats())
+        {
+            IsBattling = false;
+            Debug.LogWarning("[Battle] 서버 연결이 변경되어 전투 시작을 취소했습니다.");
+            return;
+        }
+
         // 탐험 상태 UI 숨김
         if (adventurePlayerStatusPanel != null)
             adventurePlayerStatusPanel.SetActive(false);

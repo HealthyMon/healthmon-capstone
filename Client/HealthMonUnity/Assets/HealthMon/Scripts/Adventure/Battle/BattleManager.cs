@@ -1,4 +1,4 @@
-﻿
+
 using System.Collections;
 using UnityEngine;
 
@@ -109,15 +109,20 @@ public class BattleManager : MonoBehaviour
 
     private void InitializePlayerForBattle()
     {
-        if (adventurePlayerStats != null &&
-            adventurePlayerStats.IsInitialized)
+        if (adventurePlayerStats == null)
+            adventurePlayerStats = FindAnyObjectByType<AdventurePlayerStats>(FindObjectsInactive.Include);
+        if (adventurePlayerStats != null)
         {
-            adventurePlayerStats.ApplyToBattleUnit(player);
+            if (!adventurePlayerStats.ApplyToBattleUnit(player))
+                throw new System.InvalidOperationException("Verified growth stats are required before battle.");
         }
         else
         {
-            // 기존 단독 전투 테스트 호환
-            player.Initialize();
+            // Standalone battle scenes use the same growth projection as exploration.
+            var owner = new GameObject("Adventure growth stats").AddComponent<AdventurePlayerStats>();
+            adventurePlayerStats = owner;
+            if (!owner.ApplyToBattleUnit(player))
+                throw new System.InvalidOperationException("Verified growth stats are required before battle.");
         }
     }
     public void StartNormalBattle()
@@ -239,7 +244,7 @@ public class BattleManager : MonoBehaviour
         if (!player.SpendST(attackCost))
             return false;
 
-        int damage = CalculatePhysicalDamage(
+        int damage = CalculatePhysicalDamage(player,
             player.ATK,
             enemy.DEF
         );
@@ -267,7 +272,7 @@ public class BattleManager : MonoBehaviour
             player.ATK * skillDamageMultiplier
         );
 
-        int damage = CalculatePhysicalDamage(
+        int damage = CalculatePhysicalDamage(player,
             skillAttack,
             enemy.DEF
         );
@@ -349,7 +354,7 @@ public class BattleManager : MonoBehaviour
         {
             case EnemyActionType.PhysicalAttack:
 
-                damage = CalculatePhysicalDamage(
+                damage = CalculatePhysicalDamage(enemy,
                     enemy.ATK,
                     player.DEF
                 );
@@ -361,7 +366,7 @@ public class BattleManager : MonoBehaviour
 
             case EnemyActionType.MagicAttack:
 
-                damage = CalculateMagicDamage(
+                damage = CalculateMagicDamage(enemy,
                     enemy.ATK,
                     player.RES
                 );
@@ -431,7 +436,7 @@ public class BattleManager : MonoBehaviour
     }
     private void ExecuteEliteNormalAttack()
     {
-        int damage = CalculatePhysicalDamage(
+        int damage = CalculatePhysicalDamage(enemy,
             enemy.ATK,
             player.DEF
         );
@@ -491,7 +496,7 @@ public class BattleManager : MonoBehaviour
             enemy.ATK * eliteSpecialMultiplier
         );
 
-        int damage = CalculatePhysicalDamage(
+        int damage = CalculatePhysicalDamage(enemy,
             specialAttack,
             player.DEF
         );
@@ -512,13 +517,13 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    private int CalculatePhysicalDamage(int attack, int defense)
+    private int CalculatePhysicalDamage(BattleUnit attacker, int attack, int defense)
     {
-        return Mathf.Max(1, attack - defense);
+        return attacker.CalculateDamage(attack, defense, UnityEngine.Random.value);
     }
-    private int CalculateMagicDamage(int attack, int resistance)
+    private int CalculateMagicDamage(BattleUnit attacker, int attack, int resistance)
     {
-        return Mathf.Max(1, attack - resistance);
+        return attacker.CalculateDamage(attack, resistance, UnityEngine.Random.value);
     }
 
     private bool CheckBattleEnd()

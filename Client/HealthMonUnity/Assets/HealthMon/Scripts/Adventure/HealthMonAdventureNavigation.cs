@@ -6,7 +6,17 @@ public sealed class HealthMonAdventureNavigation : MonoBehaviour
 {
     private bool loading;
 
-    public void OpenAdventure() { HealthMonAdventureAppearance.CaptureHome(); Load("AdventureScene"); }
+    public void OpenAdventure()
+    {
+        if (!PetCombatStatsSource.TryGetCurrent(out _, out _))
+        {
+            Debug.LogWarning("[Navigation] 캐릭터 상태를 불러온 뒤 탐험을 시작해 주세요.");
+            return;
+        }
+        PetCombatStatsSource.CaptureForAdventure();
+        HealthMonAdventureAppearance.CaptureHome();
+        Load("AdventureScene");
+    }
     public void ReturnHome() { Load("MainARScene"); }
 
     private void Load(string sceneName)

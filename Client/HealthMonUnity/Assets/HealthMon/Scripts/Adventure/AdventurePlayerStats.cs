@@ -1,5 +1,5 @@
-﻿
 using System;
+using Healthmon.Common;
 using UnityEngine;
 
 // 이벤트/아이템에서 변경할 수 있는 탐험 능력치
@@ -10,158 +10,105 @@ public enum AdventureStatType
 
 public class AdventurePlayerStats : MonoBehaviour
 {
-    [Header("Initial Player")]
+    // Retain serialized fields/GUIDs used by the team's scenes. Growth replaces their sample values.
     [SerializeField] private BattleUnit initialPlayer;
-
-    [Header("Current Stats")]
-    [SerializeField] private int maxHP;
-    [SerializeField] private int currentHP;
-
-    [SerializeField] private float maxST;
-    [SerializeField] private float currentST;
-
-    [Header("Battle Stats")]
-    [SerializeField] private int ATK;
-    [SerializeField] private int DEF;
-    [SerializeField] private int RES;
-    [SerializeField] private int SPD;
-    [SerializeField] private int LUK;
-
+    [SerializeField] private int maxHP, currentHP;
+    [SerializeField] private float maxST, currentST;
+    [SerializeField] private int ATK, DEF, RES, SPD, LUK;
     private bool initialized;
+    private PetCombatStats growthStats;
+    private string growthScope;
+    private float nextRefresh;
 
     public int CurrentHP => currentHP;
     public int MaxHP => maxHP;
     public float CurrentST => currentST;
     public float MaxST => maxST;
-
     public bool IsInitialized => initialized;
     public bool IsAlive => currentHP > 0;
-
+    public PetCombatStats GrowthStats => growthStats;
     public event Action OnStatsChanged;
 
-    private void Awake()
-    {
-        if (initialPlayer != null)
-            InitializeExploration();
-    }
+    private void Awake() { InitializeExploration(); }
 
-    // 새로운 탐험 시작 시 한 번만 실행
+    private void Update()
+    {
+        if (Time.unscaledTime < nextRefresh) return;
+        nextRefresh = Time.unscaledTime + .5f;
+        var battle = FindAnyObjectByType<BattleController>(FindObjectsInactive.Include);
+        // Keep the current fight's snapshot stable; changes take effect before the next fight.
+        if (battle == null || !battle.IsBattling) RefreshGrowthStats();
+    }
 
     public void InitializeExploration()
     {
-        if (initialPlayer == null)
-        {
-            Debug.LogError(
-                "[AdventureStats] Initial Player 미연결"
-            );
-            return;
-        }
-
-        // 기본 최대 체력과 스태미나
-        maxHP = initialPlayer.maxHP;
-        maxST = initialPlayer.maxST;
-
-        // ATK, DEF, RES, SPD, LUK는
-        // AdventurePlayerStats Inspector 값을 그대로 사용
-
-        currentHP = maxHP;
-        currentST = maxST * 0.5f;
-
-        initialized = true;
-
-        OnStatsChanged?.Invoke();
-
-        Debug.Log(
-            $"[AdventureStats] 탐험 초기화: " +
-            $"ATK={ATK}, DEF={DEF}, RES={RES}, " +
-            $"SPD={SPD}, LUK={LUK}"
-        );
+        initialized = false;
+        RefreshGrowthStats();
     }
 
-
-    // 탐험 스탯을 전투에 전달
-    public void ApplyToBattleUnit(BattleUnit unit)
+    public bool RefreshGrowthStats()
     {
-        if (!initialized || unit == null)
-            return;
-
-        unit.maxHP = maxHP;
-        unit.maxST = maxST;
-
-        unit.ATK = ATK;
-        unit.DEF = DEF;
-        unit.RES = RES;
-        unit.SPD = SPD;
-        unit.LUK = LUK;
-
-        unit.currentHP = Mathf.Clamp(
-            currentHP, 0, maxHP
-        );
-
-        unit.currentST = Mathf.Clamp(
-            currentST, 0f, maxST
-        );
-
-        // 행동 게이지는 전투마다 새로 시작
-        unit.actionGauge = 0f;
+        if (!PetCombatStatsSource.TryGetCurrent(out var stats, out var scope)) return false;
+        ApplyGrowthStats(stats, scope);
+        return true;
     }
 
-    // 전투 결과를 탐험에 저장
+    // Also used by native Unity verification to check transfer/resource lifecycle independently of I/O.
+    public void ApplyGrowthStats(PetCombatStats stats, string scope)
+    {
+        if (initialized && growthScope == scope && growthStats.Equals(stats)) return;
+        bool samePet = initialized && growthScope == scope;
+        float hpRatio = samePet && maxHP > 0 ? (float)currentHP / maxHP : 1;
+        float stRatio = samePet && maxST > 0 ? currentST / maxST : .5f;
+        bool wasAlive = currentHP > 0;
+        growthStats = stats; growthScope = scope;
+        maxHP = stats.MaxHP; maxST = stats.MaxST;
+        ATK = stats.ATK; DEF = stats.DEF; RES = stats.RES; SPD = stats.SPD; LUK = stats.LUK;
+        currentHP = Mathf.Clamp(Mathf.RoundToInt(maxHP * hpRatio), samePet && wasAlive ? 1 : 0, maxHP);
+        currentST = Mathf.Clamp(maxST * stRatio, 0, maxST);
+        initialized = true;
+        OnStatsChanged?.Invoke();
+    }
+
+    public bool ApplyToBattleUnit(BattleUnit unit)
+    {
+        if (unit == null || !RefreshGrowthStats()) return false;
+        CopyToBattleUnit(unit);
+        return true;
+    }
+
+    public void CopyToBattleUnit(BattleUnit unit)
+    {
+        if (!initialized || unit == null) return;
+        unit.maxHP = maxHP; unit.maxST = maxST;
+        unit.ATK = ATK; unit.DEF = DEF; unit.RES = RES; unit.SPD = SPD; unit.LUK = LUK;
+        unit.actionSpeedMultiplier = growthStats.ActionSpeedMultiplier;
+        unit.staminaRecoveryRate = BattleUnit.BaseStaminaRecoveryRate * growthStats.StaminaRecoveryMultiplier;
+        unit.currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+        unit.currentST = Mathf.Clamp(currentST, 0, maxST);
+        unit.actionGauge = 0;
+    }
+
     public void CaptureFromBattleUnit(BattleUnit unit)
     {
-        if (!initialized || unit == null)
-            return;
-
-        maxHP = unit.maxHP;
-        maxST = unit.maxST;
-
-        ATK = unit.ATK;
-        DEF = unit.DEF;
-        RES = unit.RES;
-        SPD = unit.SPD;
-        LUK = unit.LUK;
-
-        currentHP = Mathf.Clamp(
-            unit.currentHP, 0, maxHP
-        );
-
-        currentST = Mathf.Clamp(
-            unit.currentST, 0f, maxST
-        );
-
+        if (!initialized || unit == null) return;
+        // Only resources persist between fights; never turn a battle modifier into permanent growth.
+        currentHP = Mathf.Clamp(unit.currentHP, 0, maxHP);
+        currentST = Mathf.Clamp(unit.currentST, 0, maxST);
         OnStatsChanged?.Invoke();
-
-        Debug.Log(
-            $"[AdventureStats] HP {currentHP}/{maxHP}, " +
-            $"ST {currentST:F1}/{maxST:F1}"
-        );
     }
 
-    // 탐험 이벤트에서 체력 회복
     public void Heal(int amount)
     {
         if (!initialized) return;
-
-        currentHP = Mathf.Clamp(
-            currentHP + Mathf.Max(0, amount),
-            0,
-            maxHP
-        );
-
+        currentHP = Mathf.Clamp(currentHP + Mathf.Max(0, amount), 0, maxHP);
         OnStatsChanged?.Invoke();
     }
 
-    // 탐험 이벤트에서 스태미나 회복
     public void RecoverST(float amount)
     {
         if (!initialized) return;
-
-        currentST = Mathf.Clamp(
-            currentST + Mathf.Max(0f, amount),
-            0f,
-            maxST
-        );
-
+        currentST = Mathf.Clamp(currentST + Mathf.Max(0, amount), 0, maxST);
         OnStatsChanged?.Invoke();
     }
 

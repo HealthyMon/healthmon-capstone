@@ -61,10 +61,10 @@ def test_invalid_level(bad):
 
 
 def test_exp_carries_across_multiple_levels_and_stage_thresholds():
-    total = sum(r.required_exp(level) for level in range(1, 31)) + 23
+    total = sum(r.required_exp(level) for level in range(1, 20)) + 23
     state = r.exp_progress(total)
-    assert state == {"total_exp": total, "level": 31, "current_exp": 23,
-                     "required_exp": r.required_exp(31), "evolution_target_stage": 3}
+    assert state == {"total_exp": total, "level": 20, "current_exp": 23,
+                     "required_exp": r.required_exp(20), "evolution_target_stage": 2}
 
 
 @pytest.mark.parametrize("delay,status", [(timedelta(0), "eligible"), (timedelta(hours=24), "eligible"),

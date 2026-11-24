@@ -94,6 +94,7 @@ public class UIManager : MonoBehaviour
         statusPanel.SetActive(false);
         dialoguePanel.SetActive(false);
         foodScanPanel.SetActive(false);
+        FindAnyObjectByType<ARFoodCameraCapture>()?.StopPreview();
         questPanel.SetActive(false);
         rewardPanel.SetActive(false);
         customizationPanel.SetActive(false);
@@ -139,8 +140,9 @@ public class UIManager : MonoBehaviour
     public void ShowFoodScan()
     {
         HideAllPanels();
-        viewMode?.ShowARWorld(false);
+        viewMode?.ShowHomeWorld();
         foodScanPanel.SetActive(true);
+        FindAnyObjectByType<FoodScanPrototype>(FindObjectsInactive.Include)?.ShowCapture();
     }
 
     public void ShowQuest()

@@ -131,7 +131,7 @@ public sealed class PetExperienceUI : MonoBehaviour
                 $"친밀도 {state.affinity:0.#}    활동성 {state.activity:0.#}\n" +
                 $"주도성 {state.initiative:0.#}\n\n" +
                 $"현재 모습: {(state.published_model_stage == 0 ? "초기형" : state.published_model_stage + "차 진화")}\n" +
-                "진화 해금 · Lv. 10 / 20 / 30";
+                "진화 해금 · Lv. 10 / 20 / 30" + CombatStatus();
         if (arPanel != null && arPanel.activeSelf)
         {
             bool desktop = Application.isEditor || !Application.isMobilePlatform;
@@ -168,8 +168,13 @@ public sealed class PetExperienceUI : MonoBehaviour
             $"친밀도    {pet.CurrentIntimacy} / 100\n\n" +
             $"활동성    {pet.CurrentActivity} / 100\n\n" +
             $"다정함    {pet.CurrentKindness} / 100\n\n" +
-            $"호기심    {pet.CurrentCuriosity} / 100";
+            $"호기심    {pet.CurrentCuriosity} / 100" + CombatStatus();
     }
+    private static string CombatStatus()
+    {
+        return PetCombatStatsSource.TryGetCurrent(out var stats, out _) ? "\n\n" + stats.StatusText : "";
+    }
+
     private void StartFreshPet()
     {
         CommonServerConnection.Instance?.CreateFreshTestPet();
