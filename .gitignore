@@ -220,3 +220,10 @@ Docs/verification/
 /Client/HealthMonUnity/Assets/HealthMon/GameFlow/Backups.meta
 /Client/HealthMonUnity/Assets/HealthMon/UIStyleKit/UIStyleKitV4/SceneBackups/
 /Client/HealthMonUnity/Assets/HealthMon/UIStyleKit/UIStyleKitV4/SceneBackups.meta
+
+# Multi-food models are restored from pinned distribution metadata.
+/Ai/Vision/multifood/models/*
+!/Ai/Vision/multifood/models/manifest.json
+/Ai/Vision/multifood/outputs/
+/Ai/Vision/multifood/.yolo/
+/Ai/Vision/multifood/.matplotlib/

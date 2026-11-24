@@ -1,5 +1,6 @@
 import json
 import sys
+import subprocess
 from pathlib import Path
 import hashlib
 import pytest
@@ -43,15 +44,26 @@ def test_native_connection_does_not_create_new_backend(root):
 def test_model_selection_is_offline_and_independent(root,monkeypatch):
     import socket
     monkeypatch.setattr(socket,'create_connection',lambda *a,**kw:pytest.fail('network used'))
-    for group,folder,manifest in [('food','Ai/Vision','weights-manifest.json'),('pose','Ai/Pose/mac-exercise-counter/models','manifest.json')]:
+    for group,folder,manifest in [('food','Ai/Vision/multifood/models','manifest.json'),('pose','Ai/Pose/mac-exercise-counter/models','manifest.json')]:
         target=root/folder;target.mkdir(parents=True)
         data=b'fixture';name=group+'.bin';(target/name).write_bytes(data)
         (target/manifest).write_text(json.dumps({name:{'file':name,'sha256':hashlib.sha256(data).hexdigest(),'size_bytes':len(data)}}))
     assert bootstrap.available_models()['ready']==['food','pose']
-    (root/'Ai/Vision/food.bin').unlink()
+    (root/'Ai/Vision/multifood/models/food.bin').unlink()
     status=bootstrap.available_models()
     assert status['ready']==['pose'] and list(status['skipped'])==['food']
-    assert not any(name.startswith(('torch','transformers','huggingface_hub')) for name in sys.modules)
+    # The inference suite may already have imported torch during collection.
+    # Check the installer's cold process, independent of pytest import order.
+    code = """import sys,socket
+from pathlib import Path
+from Server.team import bootstrap
+def deny(*a,**k): raise AssertionError('model selection used network')
+socket.create_connection=deny
+bootstrap.ROOT=Path(sys.argv[1])
+assert bootstrap.available_models()['ready']==['pose']
+assert not any(n.startswith(('torch','transformers','huggingface_hub')) for n in sys.modules)
+"""
+    subprocess.run([sys.executable,'-B','-c',code,str(root)],check=True,cwd=Path(__file__).resolve().parents[2])
 
 
 def test_food_only_gateway_reports_optional_models_without_fake_success(root,monkeypatch):

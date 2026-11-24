@@ -429,12 +429,12 @@ namespace Healthmon.Beta
         }
         public void ConfirmFood(string analysisId, int candidateId, float? grams,
             Action<FoodConfirmationResult> success, Action<ApiFailure> failure = null,
-            string mealType = "snack", bool kcalReconfirmed = false, float? vegetableFruitGrams = null, bool syntheticFixture = false, int revision = 1)
+            string mealType = "snack", bool kcalReconfirmed = false, float? vegetableFruitGrams = null, bool syntheticFixture = false, int revision = 1, ConfirmedFoodItem[] items = null)
         {
             if (!RequirePet(failure)) return;
             // A retained failed chat can be retried independently of meal recording.
             string body;
-            try { body = JsonUtility.ToJson(CommonServerContract.FoodConfirmationPayload(analysisId, candidateId, grams, vegetableFruitGrams, mealType, kcalReconfirmed, syntheticFixture, revision)); }
+            try { var payload = CommonServerContract.FoodConfirmationPayload(analysisId, candidateId, grams, vegetableFruitGrams, mealType, kcalReconfirmed, syntheticFixture, revision); payload.items = items; body = JsonUtility.ToJson(payload); if(items==null)body=body.Replace("\"items\":[],", "").Replace("\"items\":null,", ""); }
             catch (ArgumentException) { Fail(0, "Invalid explicitly confirmed food quantities.", failure); return; }
             Begin<FoodConfirmationResult>("POST", PetPath("/food/confirm"), body, result =>
             {

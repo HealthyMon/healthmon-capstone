@@ -1,18 +1,14 @@
-FROM python:3.10-slim-bookworm
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 CUDA_VISIBLE_DEVICES=""
+FROM python:3.11-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 CUDA_VISIBLE_DEVICES="" YOLO_AUTOINSTALL=false
 RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 COPY Server/team/requirements.txt /tmp/control.txt
+COPY Ai/Vision/multifood/requirements.txt /tmp/vision.txt
 RUN python -m pip install --no-cache-dir -r /tmp/control.txt \
     && python -m venv /opt/vision \
-    && /opt/vision/bin/python -m pip install --no-cache-dir setuptools==69.5.1 wheel \
-       numpy==1.23.5 Pillow==9.5.0 opencv-python==4.8.1.78 yapf==0.40.1 \
-    && /opt/vision/bin/python -m pip install --no-cache-dir \
-       torch==1.13.1+cpu torchvision==0.14.1+cpu --extra-index-url https://download.pytorch.org/whl/cpu \
-    && /opt/vision/bin/python -m pip install --no-cache-dir --only-binary=mmcv-full \
-       mmcv-full==1.7.0 -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.13.0/index.html \
-    && /opt/vision/bin/python -m pip install --no-cache-dir --no-build-isolation mmdet==2.26.0 \
-    && /opt/vision/bin/python -c "import torch, torchvision, mmcv.ops, mmdet; assert torch.version.cuda is None"
+    && /opt/vision/bin/python -m pip install --no-cache-dir torch==2.6.0+cpu torchvision==0.21.0+cpu --index-url https://download.pytorch.org/whl/cpu \
+    && /opt/vision/bin/python -m pip install --no-cache-dir -r /tmp/vision.txt \
+    && /opt/vision/bin/python -c "import torch, torchvision; assert torch.version.cuda is None"
 WORKDIR /app
 COPY Server/__init__.py Server/__init__.py
 COPY Server/team/ Server/team/

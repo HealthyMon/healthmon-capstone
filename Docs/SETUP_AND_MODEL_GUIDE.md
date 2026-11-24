@@ -32,7 +32,7 @@ HealthMon은 운동·식사 기록을 슬라임의 성장에 연결하는 **Andr
 5번이 준비하는 내용은 다음과 같습니다.
 
 - 백엔드 API와 PostgreSQL 이미지, 로컬 테스트 연결 설정
-- 음식 분석용 CPU 실행 환경과 가중치 3개, 합계 약 **741MB**
+- 음식 분석용 CPU 실행 환경과 가중치 3개, 합계 약 **565MB**
 - 관절 인식용 CPU 실행 환경과 RTMPose-L·YOLOX-tiny 모델, 합계 약 **131MB**
 - Git LFS 포인터로만 받은 필수 Unity 에셋 복원, 모델 SHA-256 확인
 
@@ -80,7 +80,7 @@ APK 빌드와 관절 촬영은 [Android 안내](../Ai/Pose/README-ANDROID.md)를
 
 | 기능 | 필요한 모델·파일 | 현재 저장소와 설치 방식 |
 | --- | --- | --- |
-| 음식 분석 | `food_detector.pth`, `food_weight_checkpoint.pth`, `cuboid_model.pth` | **기존 가중치 3개를 Git LFS로 관리합니다.** 5번이 필요한 실제 파일을 내려받고 해시를 확인합니다. GitHub 소스를 받았어도 LFS 포인터만 있으면 복원이 필요합니다. |
+| 음식 분석 | `food_regions.pth`, `classifier.pkl`, `portion.pt` | **음식 영역 검출·Food2K 분류·FPB 중량 추정 모델 3개(약 565MB)**입니다. 5번이 팀 비전 소스의 고정 Git LFS revision에서 내려받아 SHA-256을 확인합니다. 파일은 `Ai/Vision/multifood/models/`에 설치하며 일반 Git 커밋에 포함하지 않습니다. 기존 단일 음식 모델은 호환 경로로 유지합니다. |
 | 관절 인식 | `rtmpose-l.onnx`, `yolox-tiny.onnx` | 소스와 다운로드 명세가 저장소에 있고, **5번이 OpenMMLab 배포처에서 모델을 받습니다.** 현재 Windows·Android 경로는 CPU ONNX 추론을 사용합니다. |
 | 대화 | `Qwen/Qwen3.5-9B`, `BAAI/bge-m3`, LoRA 모드에서 사용할 대화 어댑터 | 코드와 버전·해시 명세는 저장소에 있습니다. **기본 5번 설치는 이 모델과 대화 LoRA를 받지 않습니다.** 별도 준비한 로컬 모델·실행 환경을 설정해야 합니다. |
 | 진화 이미지 생성 | `Qwen/Qwen-Image-Edit-2511` 등 기본 구성 파일, `healthmon_epoch10.safetensors` | 설정과 해시 명세는 저장소에 있습니다. **새 진화 LoRA 본체와 대형 기본 모델은 기본 설치에 포함되지 않습니다.** LoRA 크기는 943,905,448바이트이며 전체 진화 모델 크기가 아닙니다. |
@@ -92,7 +92,7 @@ APK 빌드와 관절 촬영은 [Android 안내](../Ai/Pose/README-ANDROID.md)를
 
 | 명세 | 확인할 내용 |
 | --- | --- |
-| [음식 가중치 명세](../Ai/Vision/weights-manifest.json) | 3개 파일의 크기와 SHA-256 |
+| [음식 가중치 명세](../Ai/Vision/multifood/models/manifest.json) | 3개 파일의 크기와 SHA-256 |
 | [관절 모델 명세](../Ai/Pose/mac-exercise-counter/models/manifest.json) | OpenMMLab 다운로드 주소, ONNX 파일명, SHA-256 |
 | [대화 모델 잠금 파일](../Server/portable/model-lock.json) | 대화·임베딩의 모델 ID와 고정 revision, 어댑터 해시 |
 | [진화 LoRA 명세](../Ai/Generation3D/configs/evolution_2511/model.json) | epoch-10 LoRA, 기본 모델 revision, 해시, 추론 설정 |

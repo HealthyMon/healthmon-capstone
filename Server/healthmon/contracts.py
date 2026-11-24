@@ -55,6 +55,7 @@ class Workout(Event):
 
 
 class Meal(Event):
+    food_items: list[dict] | None = None
     food_name: str = Field(max_length=200)
     meal_type: Literal['breakfast', 'lunch', 'dinner', 'snack']
     confirmed: bool = False
@@ -95,7 +96,14 @@ class Session(Strict):
     active: bool = True
 
 
+class ConfirmedFoodItem(Strict):
+    region_id: int = Field(ge=0)
+    class_id: int = Field(ge=0)
+    grams: float = Field(gt=0, le=10000)
+
+
 class ConfirmFood(Strict):
+    items: list[ConfirmedFoodItem] | None = Field(default=None, min_length=1, max_length=100)
     analysis_id: str = Field(min_length=1, max_length=100)
     candidate_id: int = Field(ge=0, le=2)
     grams: float | None = Field(default=None, gt=0, le=10000)

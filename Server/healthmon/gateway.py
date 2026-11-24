@@ -4,6 +4,7 @@ import math
 from typing import Literal
 from urllib.parse import urljoin, urlparse
 import httpx
+from .vision_contract import VisionAnalysis
 from pydantic import Field, ValidationError
 from .contracts import Strict
 
@@ -50,6 +51,7 @@ class FoodCandidate(Strict):
 
 
 class FoodResult(Strict):
+    vision: VisionAnalysis | None = None
     candidates: list[FoodCandidate] = Field(min_length=1, max_length=3)
 
 
@@ -129,7 +131,7 @@ class Gateway:
                                               headers={'Authorization': 'Bearer ' + self.settings.ai_token})
                     if response.status_code >= 400:
                         raise AIUnavailable('ai_authentication_failed' if response.status_code in (401, 403) else 'ai_http_error', response.status_code >= 500 or response.status_code == 429)
-                    if len(response.content) > 2 * 1024 * 1024:
+                    if len(response.content) > (6 if capability == 'food' else 2) * 1024 * 1024:
                         raise AIUnavailable('ai_response_too_large')
                     envelope = Envelope.model_validate(response.json())
             except httpx.TimeoutException as exc:

@@ -14,6 +14,8 @@
 !Ai/Vision/service_worker.py
 !Ai/Vision/nutrition.json
 !Ai/Vision/weights-manifest.json
+!Ai/Vision/multifood/
+!Ai/Vision/multifood/**
 !Ai/Pose/
 !Ai/Pose/unity_service.py
 !Ai/Pose/mac-exercise-counter/
@@ -26,6 +28,9 @@
 **/*.pyc
 **/.env*
 **/*.pth
+**/*.pt
+**/*.pkl
+**/outputs/
 **/*.onnx
 **/*.safetensors
 **/.pytest_cache/

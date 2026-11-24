@@ -5,6 +5,8 @@ downloads, inference, changes to credentials or model directories occur here.
 """
 import json
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 
 
@@ -97,6 +99,24 @@ def configuration(path):
     def vision():
         model = private('vision_config')
         require(model['vision_python'])
+        if model.get('vision_backend') == 'multifood':
+            assets = Path(model['vision_assets'])
+            for name, spec in read(assets / 'models/manifest.json').items():
+                require(assets / 'models' / name, spec['size_bytes'])
+            require(assets / 'nutrition.csv')
+            require(assets / 'worker.py')
+            if model.get('vision_container') is True:
+                docker = shutil.which('docker')
+                if not docker:
+                    raise ValueError('multi-food Docker runtime is not installed; run menu 5')
+                try:
+                    result = subprocess.run([docker, 'image', 'inspect', 'healthmon-multifood:local'],
+                        capture_output=True, timeout=15, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+                except subprocess.TimeoutExpired:
+                    raise ValueError('multi-food Docker runtime did not respond') from None
+                if result.returncode:
+                    raise ValueError('multi-food Docker image is unavailable; start Docker or run menu 5')
+            return
         source = svc.ROOT / 'Ai/Vision'
         for name, spec in read(source / 'weights-manifest.json').items():
             require(Path(model['vision_assets']) / name, spec['size_bytes'])

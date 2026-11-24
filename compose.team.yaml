@@ -2,7 +2,7 @@
 name: ${HEALTHMON_TEAM_PROJECT:?Run menu 5 first}
 services:
   food:
-    image: healthmon-team-food:local
+    image: healthmon-multifood:local
     build:
       context: .
       dockerfile: Server/team/Dockerfile.food

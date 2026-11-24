@@ -22,6 +22,7 @@ if (Test-Path -LiteralPath $nativePath) {
     [IO.File]::WriteAllText((Join-Path $state 'server-token'), $api.AI_SERVER_TOKEN, (New-Object Text.UTF8Encoding($false)))
     Invoke-TeamDocker @('run','--rm','--network','none','--mount',$mount,'healthmon-team-setup:local','connection','--native')
     Write-Host 'Reusing the existing native backend environment and database.'
+    & (Join-Path $PSScriptRoot 'select-native-vision.ps1')
 } else {
     Invoke-TeamDocker @('run','--rm','--network','none','--mount',$mount,'healthmon-team-setup:local','connection')
     $backend = @('compose','--project-directory',$root,'--env-file',(Join-Path $root '.env'),'-f',(Join-Path $root 'compose.yaml'))

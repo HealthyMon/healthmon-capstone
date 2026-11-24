@@ -43,7 +43,7 @@ def main() -> None:
     scripts = project / "Assets/HealthMon/Scripts"
     exe = output / "ContractChecks.exe"
     run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(exe),
-         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"),
+         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"), str(scripts / "Food/MultiFoodContract.cs"),
          str(project / "Tests/ContractChecks.cs")], output / "contracts-compile.log")
     run([str(mono), str(exe)], output / "contracts-results.log")
     pose = output / "PoseFrameChecks.exe"
@@ -52,7 +52,7 @@ def main() -> None:
     run([str(mono), str(pose)], output / "pose-frame-results.log")
     combat = output / "CombatStatsChecks.exe"
     run([str(mono), str(csc), "-nologo", "-langversion:9.0", "-out:" + str(combat),
-         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"),
+         str(scripts / "API/CommonServerContracts.cs"), str(scripts / "API/HealthmonDtos.cs"), str(scripts / "Food/MultiFoodContract.cs"),
          str(scripts / "Adventure/PetCombatStats.cs"), str(project / "Tests/CombatStatsChecks.cs")],
         output / "combat-compile.log")
     import sys

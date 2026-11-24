@@ -94,3 +94,31 @@ def test_failed_optional_process_does_not_stop_other_services(tmp_path,monkeypat
     assert ready['services']=={'router':True,'vision':True}
     assert 'llm' in ready['failed'] and 'llm' not in ready['skipped']
     assert events.index(('stop','vision'))>next(i for i,event in enumerate(events) if event[0]=='ready')
+
+
+def test_multifood_uses_new_manifest_and_keeps_other_services(installed):
+    root,path,put=installed
+    cfg=root/'.runtime/vision.json'; value=json.loads(cfg.read_text())
+    value.update(vision_backend='multifood',vision_assets=str(root/'multifood'))
+    put('.runtime/vision.json',value)
+    put('multifood/models/manifest.json',{'classifier.pkl':{'size_bytes':13}})
+    put('multifood/models/classifier.pkl');put('multifood/nutrition.csv');put('multifood/worker.py')
+    (root/'vision/food.pth').unlink()
+    assert 'vision' in available.configuration(path)['enabled']
+    (root/'multifood/models/classifier.pkl').unlink()
+    result=available.configuration(path)
+    assert result['enabled']==['router','llm','evolution','pose']
+    assert list(result['skipped'])==['vision']
+
+
+def test_missing_food_container_keeps_other_ai(installed,monkeypatch):
+    root,path,put=installed
+    cfg=root/'.runtime/vision.json';value=json.loads(cfg.read_text())
+    value.update(vision_backend='multifood',vision_container=True,vision_assets=str(root/'multifood'))
+    put('.runtime/vision.json',value)
+    put('multifood/models/manifest.json',{'classifier.pkl':{'size_bytes':13}})
+    put('multifood/models/classifier.pkl');put('multifood/nutrition.csv');put('multifood/worker.py')
+    monkeypatch.setattr(available.shutil,'which',lambda _:None)
+    result=available.configuration(path)
+    assert result['enabled']==['router','llm','evolution','pose']
+    assert list(result['skipped'])==['vision']

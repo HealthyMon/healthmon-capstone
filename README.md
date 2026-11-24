@@ -85,7 +85,7 @@ Unity 버전·Android 빌드 모듈·ADB·워치 앱 조건은 [필수 프로그
 3. **3번**: 설치된 AI를 모두 실행합니다. 대화·음식·진화·관절 중 모델이 없는 기능은 `SKIP`으로 표시하고 나머지를 계속 실행합니다.
    **1번**은 2번과 3번을 함께 실행합니다. 종료는 `Stop-HealthMon.cmd`의 같은 번호입니다.
 
-5번은 음식 모델 약 741MB(GitHub LFS)와 관절 모델 약 131MB(OpenMMLab)를 준비하며,
+5번은 음식 모델 약 565MB(GitHub LFS)와 관절 모델 약 131MB(OpenMMLab)를 준비하며,
 Docker 이미지와 실행 패키지는 별도로 내려받습니다. 파일은 해시를 검사하고 정상 파일을 재사용합니다.
 GitHub ZIP에 실제 Unity 에셋 대신 LFS 포인터가 들어 있으면 필요한 에셋도 복원합니다.
 Hugging Face 접속·로그인, 비공개 LoRA, 100GB급 대화·진화 기본 모델 다운로드는 이 설치에 포함하지 않습니다.
@@ -130,3 +130,9 @@ Unity 버전은 `Client/HealthMonUnity/ProjectSettings/ProjectVersion.txt`를 �
 
 환경 설정, 인증 정보, 데이터베이스, 모델 가중치와 생성 캐시는 로컬 런타임에 보관합니다.
 기존 Vision 가중치는 Git LFS로 관리합니다. 3D 환경 준비는 [3D 안내](Ai/Generation3D/README.md)를 따릅니다.
+
+### 비전 선별 통합 검증 브랜치
+
+현재 작업 브랜치는 `integration/vision-review-20261124`입니다. `develop` 기준 게임에 음식별 영역 분석, 이름·중량 수정, 합산 식사 기록을 연결했습니다. `feature/vision`의 관절·상점 삭제, 별도 대화 모델 설정, 가상환경 파일은 가져오지 않았습니다. [통합 범위와 검증 결과](Docs/VISION_INTEGRATION_REVIEW.md)를 확인한 뒤 `develop` 반영을 결정합니다.
+
+기존 설치에서도 이 브랜치의 새 음식 모델과 CPU 이미지를 준비하려면 **5번을 한 번 실행한 후 2번 → 3번**으로 시작합니다. 대화·진화 모델은 추가 다운로드하지 않습니다. 기존 네이티브 설치에서는 음식 서비스 설정만 백업 후 새 Docker worker로 전환합니다.

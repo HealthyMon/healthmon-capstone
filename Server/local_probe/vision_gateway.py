@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import signal
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -33,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'Ai/Vision'
 CONTRACT = 'healthmon.ai.v1'
 BACKEND = 'team-fasterrcnn-swin-resnet18-cpu'
+MULTIFOOD_BACKEND = 'dishseg-noisyvit-food2k-fpb-cpu'
 MAX_IMAGE_BYTES = 12 * 1024 * 1024
 MAX_REQUEST_BYTES = 17 * 1024 * 1024
 MAX_PIXELS = 16_000_000
@@ -166,7 +168,7 @@ def verify_assets(assets, source=SOURCE):
 
 def normalize_result(raw):
     """Map legacy seven-nutrient candidates without fabricating measurements."""
-    if not isinstance(raw, dict) or raw.get('backend') != BACKEND:
+    if not isinstance(raw, dict) or raw.get('backend') not in (BACKEND, MULTIFOOD_BACKEND):
         raise ValueError('Vision backend identity mismatch')
     candidates = raw.get('candidates')
     if not isinstance(candidates, list) or not 1 <= len(candidates) <= 3:
@@ -183,11 +185,25 @@ def normalize_result(raw):
                 raise ValueError('Vision numeric measurement is invalid')
         mapped.append({'food': item.get('food'), 'confidence': item.get('confidence'),
                        'per_100g': nutrients, 'estimated_grams': item.get('estimated_grams')})
-    return FoodResult.model_validate({'candidates': mapped}).model_dump(mode='json')
+    value = {'candidates': mapped}
+    if raw['backend'] == MULTIFOOD_BACKEND:
+        if not raw.get('vision'):
+            raise ValueError('Multi-food result has no regions')
+        value['vision'] = raw['vision']
+    result = FoodResult.model_validate(value).model_dump(mode='json')
+    if result['vision'] is None:
+        result.pop('vision')
+    return result
+
+
+class NoFoodDetected(ValueError):
+    pass
 
 
 class VisionRunner:
     def __init__(self, config, runtime):
+        self.multifood = config.get('vision_backend') == 'multifood'
+        self.container = self.multifood and config.get('vision_container') is True
         # POSIX venv executables are symlinks. Resolving the link launches the
         # base interpreter and discards the vision environment's dependencies.
         self.python = Path(os.path.abspath(config['vision_python']))
@@ -209,6 +225,17 @@ class VisionRunner:
         self.timeout = config.get('timeout_seconds', 300)
         if isinstance(self.timeout, bool) or not isinstance(self.timeout, int) or not 1 <= self.timeout <= 300:
             raise ValueError('Vision timeout must be one to300 seconds')
+        if self.multifood:
+            from Ai.Vision.multifood.assets import verify
+            self.docker = shutil.which('docker') if self.container else None
+            if self.container and not self.docker:
+                raise ValueError('Docker is required for the multi-food runtime')
+            self.identity = {'backend': MULTIFOOD_BACKEND, 'device': 'cpu', 'downloaded': False,
+                'model_sha256': verify(self.assets),
+                'nutrition_sha256': file_digest(self.assets / 'nutrition.csv'),
+                'source_sha256': {'worker.py': file_digest(SOURCE / 'multifood/worker.py')},
+                'gateway_sha256': file_digest(Path(__file__)), 'model_loaded_at_startup': False}
+            return
         self.identity = {'backend': BACKEND, 'device': 'cpu', 'downloaded': False,
             'model_sha256': verify_assets(self.assets),
             'nutrition_sha256': file_digest(self.assets / 'nutrition.json'),
@@ -220,14 +247,32 @@ class VisionRunner:
         started = time.monotonic()
         command = [str(self.python), '-X', 'utf8', '-B', '-u', str(Path(__file__).with_name('vision_worker.py')),
                    '--source', str(SOURCE), '--assets', str(self.assets)]
+        image_path = str(image)
+        container_name = None
+        if self.multifood:
+            command = [str(self.python), '-X', 'utf8', '-B', str(SOURCE / 'multifood/worker.py')]
+        if self.container:
+            container_name = 'healthmon-food-' + uuid.uuid4().hex
+            command = [self.docker, 'run', '--rm', '--network', 'none', '-i', '--name', container_name,
+                '--mount', f'type=bind,src={SOURCE},dst=/app/Ai/Vision,readonly',
+                '--mount', f'type=bind,src={image.parent},dst=/input,readonly',
+                '--entrypoint', '/opt/vision/bin/python', 'healthmon-multifood:local',
+                '-B', '/app/Ai/Vision/multifood/worker.py']
+            image_path = '/input/' + image.name
         environment = dict(os.environ, PYTHONDONTWRITEBYTECODE='1', CUDA_VISIBLE_DEVICES='',
                            HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1', TORCH_HOME=str(self.runtime / 'cache'))
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             text=True, encoding='utf-8', cwd=self.runtime, env=environment,
             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0), start_new_session=os.name != 'nt')
         try:
-            stdout, stderr = process.communicate(json.dumps({'id': request_key, 'image': str(image)}), timeout=self.timeout)
+            stdout, stderr = process.communicate(json.dumps({'id': request_key, 'image': image_path}), timeout=self.timeout)
         except subprocess.TimeoutExpired:
+            if container_name:
+                try:
+                    subprocess.run([self.docker, 'rm', '-f', container_name], capture_output=True, timeout=15,
+                        creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+                except (OSError, subprocess.TimeoutExpired):
+                    pass  # Still reap the owned docker client and its pipes below.
             cleanup = stop_owned_worker(process)
             atomic_json(self.runtime / 'logs' / (request_key + '.timeout-cleanup.json'), cleanup)
             try:
@@ -241,11 +286,13 @@ class VisionRunner:
             raise
         (self.runtime / 'logs' / (request_key + '.stderr.log')).write_text(stderr, encoding='utf-8')
         response = json.loads(stdout)
+        if response.get('id') == request_key and response.get('no_food'):
+            raise NoFoodDetected('No food detected')
         if process.returncode or response.get('id') != request_key or 'error' in response:
             raise RuntimeError('Existing Vision worker failed')
         raw = response['result']
         return raw, {'elapsed_seconds': round(time.monotonic() - started, 3),
-                     'worker_result_sha256': digest(raw), 'backend': BACKEND, 'device': 'cpu'}
+                     'worker_result_sha256': digest(raw), 'backend': self.identity['backend'], 'device': 'cpu'}
 
 
 def stop_owned_worker(process):
@@ -358,8 +405,10 @@ def create_app(config_path, *, runner=None):
                 atomic_json(journal, dict(record, status='failed', error_type=type(exc).__name__))
                 atomic_json(runtime / 'last-error.json', {'request_id': body.request_id, 'pet_id': body.pet_id,
                     'error_type': type(exc).__name__, 'fingerprint': fingerprint, 'fallback': False})
-                raise HTTPException(504 if isinstance(exc, subprocess.TimeoutExpired) else 502,
-                                    {'code': 'real_vision_failed', 'type': type(exc).__name__, 'fallback': False}) from None
+                status = 422 if isinstance(exc, NoFoodDetected) else 504 if isinstance(exc, subprocess.TimeoutExpired) else 502
+                raise HTTPException(status,
+                                    {'code': 'no_food_detected' if isinstance(exc, NoFoodDetected) else 'real_vision_failed',
+                                     'type': type(exc).__name__, 'fallback': False}) from None
 
     return app
 

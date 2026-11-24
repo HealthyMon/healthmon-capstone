@@ -17,6 +17,7 @@ from .db import Database
 from .gateway import AIUnavailable, Gateway
 from .dependencies import AIDependencies
 from . import rules, service
+from .food_portions import resolve_items
 
 
 def create_app(settings=None, database=None):
@@ -420,6 +421,8 @@ def create_app(settings=None, database=None):
                                'has_estimated_grams': item['estimated_grams'] is not None, 'estimated_grams': item['estimated_grams'], 'weight_warning': ''})
         output = {'schema_version': 'healthmon.food.v1', 'analysis_id': ident, 'backend': settings.ai_mode, 'provenance': provenance,
                   'synthetic': provenance == 'synthetic', 'candidates': candidates, 'consumption_confirmed': False, 'image_hash': image_hash}
+        if result.get('vision') is not None:
+            output['vision'] = result['vision']
         with db.connect() as c:
             service.owned(c, owner, pet, True)
             prior = c.execute('SELECT pet_id,result FROM food_analyses WHERE id=%s', (ident,)).fetchone()
@@ -446,6 +449,7 @@ def create_app(settings=None, database=None):
                 if not original or not original['valid']:
                     raise HTTPException(410, 'Confirmed food record was erased')
                 prior_input = dict(analysis['confirmation']['input'])
+                prior_input.setdefault('items', None)
                 prior_input.setdefault('synthetic', False)  # Earlier confirmations predate this optional fixture flag.
                 if prior_input == body.model_dump():
                     return dict(analysis['confirmation'], duplicate=True)
@@ -459,6 +463,12 @@ def create_app(settings=None, database=None):
                 raise HTTPException(422, 'Choose a returned candidate')
             candidate = candidates[body.candidate_id]
             nutrients = {k: v['value'] * body.grams / 100 if v['available'] and body.grams is not None else None for k, v in candidate['per_100g'].items()}
+            food_name = candidate['food']
+            food_items = None
+            if analysis['result'].get('vision') is not None and body.items is None:
+                raise HTTPException(422, 'Confirm the individual food portions')
+            if body.items is not None:
+                food_name, nutrients, food_items = resolve_items(analysis['result'], body.items, body.grams)
             nutrients['vegetable_fruit_g'] = body.vegetable_fruit_g
             # One confirmation belongs to one analysis, not to the image bytes:
             # a fresh capture/selection may represent a different meal. Retries
@@ -467,14 +477,14 @@ def create_app(settings=None, database=None):
                                          else 'food-analysis-' + body.analysis_id)
             existing = c.execute('SELECT occurred_at,payload FROM sources WHERE pet_id=%s AND id=%s', (pet, event_id)).fetchone()
             original_analysis = existing['payload'].get('data', {}).get('analysis_id') if existing else None
-            record = Meal(event_id=event_id, revision=body.revision, occurred_at=existing['occurred_at'] if existing else now(), food_name=candidate['food'], meal_type=body.meal_type,
+            record = Meal(event_id=event_id, revision=body.revision, occurred_at=existing['occurred_at'] if existing else now(), food_name=food_name, food_items=food_items, meal_type=body.meal_type,
                           confirmed=True, grams=body.grams, quantity_confirmed=body.grams is not None,
                           carbohydrate_g=nutrients.get('carbohydrate_g'), protein_g=nutrients.get('protein_g'), fat_g=nutrients.get('fat_g'),
                           vegetable_fruit_g=body.vegetable_fruit_g, kcal=nutrients.get('energy_kcal'), kcal_reconfirmed=body.kcal_reconfirmed,
                           analysis_id=original_analysis or body.analysis_id, synthetic=body.synthetic or analysis['result']['synthetic'])
             applied = service.store_event(c, p, 'meal', record.model_dump(), record.model_dump(mode='json'), now(), settings)
             output = dict(applied, input=body.model_dump(), analysis_id=body.analysis_id, source_id=record.event_id, candidate_id=body.candidate_id, grams=body.grams,
-                          record={'food': record.food_name, 'grams': body.grams, 'nutrition': {k: {'available': v is not None, 'value': v} for k, v in nutrients.items()}})
+                          record={'food': record.food_name, 'items': food_items, 'grams': body.grams, 'nutrition': {k: {'available': v is not None, 'value': v} for k, v in nutrients.items()}})
             c.execute('UPDATE food_analyses SET confirmation=%s WHERE id=%s', (Jsonb(output), body.analysis_id))
         return output
 

@@ -276,6 +276,7 @@ def test_runner_timeout_invokes_its_owned_tree_cleanup_and_keeps_failure_metadat
     monkeypatch.setattr(vision, 'stop_owned_worker', lambda process: stopped.append(process) or {
         'root_pid': process.pid, 'root_reaped': True, 'owned_tree_termination_confirmed': True})
     runner = vision.VisionRunner.__new__(vision.VisionRunner)
+    runner.multifood = runner.container = False
     runner.python, runner.assets, runner.runtime, runner.timeout = Path(sys.executable), tmp_path, tmp_path, 1
     (tmp_path / 'logs').mkdir()
     with pytest.raises(subprocess.TimeoutExpired):

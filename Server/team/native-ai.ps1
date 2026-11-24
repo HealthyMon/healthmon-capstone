@@ -4,6 +4,19 @@ param()
 Set-Location -LiteralPath $root
 $config = Join-Path $root '.runtime/local-services.json'
 $settings = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json
+$visionPath = $settings.vision_config
+if ($visionPath -and -not [IO.Path]::IsPathRooted($visionPath)) { $visionPath = Join-Path $root $visionPath }
+if ($visionPath -and (Test-Path -LiteralPath $visionPath)) {
+    $visionSettings = Get-Content -LiteralPath $visionPath -Raw | ConvertFrom-Json
+    if ($visionSettings.vision_backend -eq 'multifood' -and $visionSettings.vision_container -eq $true) {
+        try {
+            $docker = Get-HealthMonDocker
+            Wait-HealthMonDocker $docker
+        } catch {
+            Write-Warning 'Food Docker runtime is unavailable. Other installed AI services will still be checked.'
+        }
+    }
+}
 $python = if ([IO.Path]::IsPathRooted($settings.python)) { $settings.python } else { Join-Path $root $settings.python }
 & $python -B -m Server.local_probe.local_services check --config $config --available-only
 if ($LASTEXITCODE -ne 0) { throw 'Local AI configuration could not be read.' }

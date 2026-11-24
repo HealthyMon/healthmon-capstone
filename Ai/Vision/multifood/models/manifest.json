@@ -1,0 +1,23 @@
+{
+  "food_regions.pth": {
+    "file": "food_regions.pth",
+    "size_bytes": 76034985,
+    "sha256": "eb1066b1f372ec6ef1fb9a4a5425ba7cd17ec52afbfbd810f532c2dbba15008e",
+    "source_path": "Ai/Vision/Vision/runs/food_regions_dishseg/food_regions.pth",
+    "source_revision": "8be8e8afd9e4d93f28329076243c36bf85f3a1a6"
+  },
+  "portion.pt": {
+    "file": "portion.pt",
+    "size_bytes": 138195850,
+    "sha256": "decac72062b83ede66e4c411f88cf968c6ee7b752f5d291a49dfefd0f4f91925",
+    "source_path": "Ai/Vision/Vision/음식 탐지/Multitask-Food-Portion-Estimation/YOLOv12XL.pt",
+    "source_revision": "8be8e8afd9e4d93f28329076243c36bf85f3a1a6"
+  },
+  "classifier.pkl": {
+    "file": "classifier.pkl",
+    "size_bytes": 350592118,
+    "sha256": "81ad4f517ed9467ba054656a68114b916a6f6dc7c22b2346f400703f83daa51e",
+    "source_path": "Ai/Vision/Vision/음식 탐지/acc_0.941036058619663_lr_1e-05_bs_16_layer_11_base_384_16_linear_ImageNet_NoisyViT.pkl",
+    "source_revision": "8be8e8afd9e4d93f28329076243c36bf85f3a1a6"
+  }
+}

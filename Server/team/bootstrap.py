@@ -25,7 +25,8 @@ def assets(*, clients_only=False):
     lfs_assets(ROOT, 'client')
     if clients_only:
         return
-    lfs_assets(ROOT, 'food')
+    from Ai.Vision.multifood.assets import download_models
+    download_models()
     subprocess.run([sys.executable, '-B', str(ROOT / 'Ai/Pose/mac-exercise-counter/scripts/download_models.py')], check=True)
     verify_models()
     write(STATE / 'assets-ready.json', json.dumps({'capabilities': ['food', 'pose'], 'integrity': 'PASS'}))
@@ -35,7 +36,7 @@ def available_models():
     from Server.portable.downloads import sha256
     ready, skipped = [], {}
     for capability, directory, manifest_name in (
-        ('food', ROOT / 'Ai/Vision', 'weights-manifest.json'),
+        ('food', ROOT / 'Ai/Vision/multifood/models', 'manifest.json'),
         ('pose', ROOT / 'Ai/Pose/mac-exercise-counter/models', 'manifest.json')):
         try:
             for name, spec in json.loads((directory / manifest_name).read_text()).items():
@@ -95,7 +96,8 @@ def food_app(config_path=None, *, runner=None):
         config_path = STATE / 'vision/private.json'
         write(config_path, json.dumps(dict(environment='test', vision_enabled=True,
               server_token=(STATE / 'server-token').read_text().strip(),
-              vision_python='/opt/vision/bin/python', vision_assets=str(ROOT / 'Ai/Vision'), timeout_seconds=300)))
+              vision_python='/opt/vision/bin/python', vision_assets=str(ROOT / 'Ai/Vision/multifood'),
+              vision_backend='multifood', timeout_seconds=300)))
     app = create_app(config_path, runner=runner)
     @app.get('/health/services')
     def services(authorization: str = Header(default='')):
