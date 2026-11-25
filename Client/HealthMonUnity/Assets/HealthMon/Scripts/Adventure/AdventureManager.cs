@@ -161,6 +161,12 @@ public class AdventureManager : MonoBehaviour
         if (state != ExplorationState.Entrance || isMoving)
             return;
 
+        if (playerStats == null || !playerStats.RefreshGrowthStats())
+        {
+            AddLog("캐릭터 스탯을 불러온 뒤 탐험을 시작해 주세요.");
+            return;
+        }
+
         startedAt = Time.realtimeSinceStartup;
         if (startAtCheckpoint)
         {

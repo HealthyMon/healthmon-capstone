@@ -3,7 +3,7 @@ using System.Globalization;
 using Healthmon.Beta;
 
 /// <summary>One projection of verified growth scores, shared by status and both battle modes.
-/// Balance version 1. See Docs/COMBAT_STATS.md; these are game rules, not health advice.</summary>
+/// Weighted growth rules. See Docs/COMBAT_STATS.md; these are game rules, not health advice.</summary>
 public readonly struct PetCombatStats
 {
     public readonly int Level, MaxHP, ATK, DEF, RES, SPD, LUK;
@@ -33,30 +33,43 @@ public readonly struct PetCombatStats
             if (!Bounded(value, 0, 100)) throw new ArgumentOutOfRangeException("growth score");
         if (!Bounded(energy, -100, 100)) throw new ArgumentOutOfRangeException(nameof(energy));
 
-        float growth = level - 1;
-        float hp = 100 + 8 * growth + .6f * (nutrition - 50);
-        float st = 20 + .3f * growth + .12f * (activity - 50);
-        float atk = 10 + 2 * growth + .16f * (upper - 50);
-        float def = 5 + growth + .10f * (lower - 50);
-        float res = 5 + growth + .10f * (nutrition - 50);
-        float spd = 5 + .05f * growth + .06f * (lower - 50) + .04f * (activity - 50);
-        float luk = 5 + .02f * growth + .06f * (initiative - 50) + .02f * (affinity - 50);
-        float tempo = 1, recovery = nutrition >= 60 ? 1.15f : nutrition < 40 ? .75f : 1;
+        int growth = level - 1;
+        decimal upperScore = Normalize(upper), lowerScore = Normalize(lower), nutritionScore = Normalize(nutrition);
+        decimal activityScore = Normalize(activity), affinityScore = Normalize(affinity), initiativeScore = Normalize(initiative);
+        decimal energyPenalty = -Math.Abs((decimal)energy) / 100m;
+
+        decimal hp = Scale(100 + 6 * growth,
+            .15m * upperScore + .30m * lowerScore + .25m * nutritionScore + .10m * activityScore + .20m * energyPenalty);
+        decimal st = Scale(20 + growth,
+            .30m * lowerScore + .50m * activityScore + .15m * initiativeScore + .05m * energyPenalty);
+        decimal atk = Scale(10 + 1.2m * growth,
+            .45m * upperScore + .15m * lowerScore + .10m * nutritionScore + .15m * activityScore + .15m * initiativeScore);
+        decimal def = Scale(5 + .5m * growth,
+            .40m * upperScore + .35m * lowerScore + .15m * nutritionScore + .10m * energyPenalty);
+        decimal res = Scale(5 + .5m * growth,
+            .60m * nutritionScore + .20m * activityScore + .10m * initiativeScore + .10m * energyPenalty);
+        decimal spd = Scale(5 + .25m * growth,
+            .50m * lowerScore + .35m * activityScore + .10m * initiativeScore + .05m * energyPenalty);
+        decimal luk = Scale(5 + .20m * growth,
+            .45m * affinityScore + .45m * initiativeScore + .10m * activityScore);
+
+        // Timing and recovery are separate battle mechanics, outside the seven stat projections.
         string body = ClassifyBody(upper, lower, nutrition, energy);
+        float tempo = 1, recovery = nutrition >= 60 ? 1.15f : nutrition < 40 ? .75f : 1;
         switch (body)
         {
-            case "adipose": hp *= 1.20f; def *= 1.10f; tempo = .50f; break;
-            case "rounded_general": hp *= 1.10f; tempo = .80f; break;
-            case "bulky_athletic": hp *= 1.15f; atk *= 1.10f; tempo = .90f; break;
-            case "lean": hp *= .85f; atk *= .90f; tempo = 1.10f; recovery *= .75f; break;
-            case "lean_athletic": hp *= .95f; tempo = 1.15f; recovery *= .85f; break;
-            case "upper_developed": atk *= 1.10f; break;
-            case "lower_developed": spd *= 1.10f; break;
+            case "adipose": tempo = .50f; break;
+            case "rounded_general": tempo = .80f; break;
+            case "bulky_athletic": tempo = .90f; break;
+            case "lean": tempo = 1.10f; recovery *= .75f; break;
+            case "lean_athletic": tempo = 1.15f; recovery *= .85f; break;
         }
-        return new PetCombatStats(level, Math.Max(1, Round(hp)), Math.Max(1, st),
-            Math.Max(1, Round(atk)), Math.Max(0, Round(def)), Math.Max(0, Round(res)),
-            Math.Max(1, Round(spd)), Math.Max(0, Round(luk)), tempo, recovery, body);
+        return new PetCombatStats(level, Round(hp), (float)Math.Round(st, 1, MidpointRounding.AwayFromZero),
+            Round(atk), Round(def), Round(res), Round(spd), Round(luk), tempo, recovery, body);
     }
+
+    private static decimal Normalize(float score) => ((decimal)score - 50m) / 50m;
+    private static decimal Scale(decimal levelBase, decimal weightedScore) => levelBase * (1 + .30m * weightedScore);
 
     // Mirrors healthmon.v2.2 evolution_profile thresholds, including branch priority.
     public static string ClassifyBody(float upper, float lower, float nutrition, float energy)
@@ -101,5 +114,5 @@ public readonly struct PetCombatStats
         BodyName, MaxHP, MaxST, ATK, DEF, RES, SPD, LUK, ActionSpeedMultiplier, StaminaRecoveryMultiplier);
 
     private static bool Bounded(float v, float min, float max) => !float.IsNaN(v) && !float.IsInfinity(v) && v >= min && v <= max;
-    private static int Round(float v) => (int)Math.Round(v, MidpointRounding.AwayFromZero);
+    private static int Round(decimal v) => (int)Math.Round(v, MidpointRounding.AwayFromZero);
 }

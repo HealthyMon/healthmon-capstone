@@ -58,16 +58,31 @@ public class AdventurePlayerStats : MonoBehaviour
     {
         if (initialized && growthScope == scope && growthStats.Equals(stats)) return;
         bool samePet = initialized && growthScope == scope;
-        float hpRatio = samePet && maxHP > 0 ? (float)currentHP / maxHP : 1;
-        float stRatio = samePet && maxST > 0 ? currentST / maxST : .5f;
-        bool wasAlive = currentHP > 0;
-        growthStats = stats; growthScope = scope;
-        maxHP = stats.MaxHP; maxST = stats.MaxST;
-        ATK = stats.ATK; DEF = stats.DEF; RES = stats.RES; SPD = stats.SPD; LUK = stats.LUK;
-        currentHP = Mathf.Clamp(Mathf.RoundToInt(maxHP * hpRatio), samePet && wasAlive ? 1 : 0, maxHP);
-        currentST = Mathf.Clamp(maxST * stRatio, 0, maxST);
+        var previous = samePet ? CreateSnapshot() : null;
+        growthStats = stats;
+        growthScope = scope;
+        ApplyExplorationState(previous);
         initialized = true;
         OnStatsChanged?.Invoke();
+    }
+
+    private void ApplyExplorationState(AdventureStatsData saved)
+    {
+        // Old checkpoints stored only totals. Their resource ratios still describe the run.
+        var bonus = saved?.bonuses;
+        maxHP = Mathf.Max(1, growthStats.MaxHP + (bonus?.maxHP ?? 0));
+        maxST = Mathf.Max(.1f, growthStats.MaxST + (bonus?.maxST ?? 0));
+        ATK = Mathf.Max(0, growthStats.ATK + (bonus?.ATK ?? 0));
+        DEF = Mathf.Max(0, growthStats.DEF + (bonus?.DEF ?? 0));
+        RES = Mathf.Max(0, growthStats.RES + (bonus?.RES ?? 0));
+        SPD = Mathf.Max(1, growthStats.SPD + (bonus?.SPD ?? 0));
+        LUK = Mathf.Max(0, growthStats.LUK + (bonus?.LUK ?? 0));
+
+        float hpRatio = saved == null ? 1 : (float)saved.currentHP / saved.maxHP;
+        float stRatio = saved == null ? .5f : saved.currentST / saved.maxST;
+        int minimumHP = saved != null && saved.currentHP > 0 ? 1 : 0;
+        currentHP = Mathf.Clamp(Mathf.RoundToInt(maxHP * hpRatio), minimumHP, maxHP);
+        currentST = Mathf.Clamp(maxST * stRatio, 0, maxST);
     }
 
     public bool ApplyToBattleUnit(BattleUnit unit)
@@ -189,24 +204,22 @@ public class AdventurePlayerStats : MonoBehaviour
         {
             maxHP = maxHP, currentHP = currentHP,
             maxST = maxST, currentST = currentST,
-            ATK = ATK, DEF = DEF, RES = RES, SPD = SPD, LUK = LUK
+            ATK = ATK, DEF = DEF, RES = RES, SPD = SPD, LUK = LUK,
+            growthScope = growthScope,
+            bonuses = new AdventureStatBonuses
+            {
+                maxHP = maxHP - growthStats.MaxHP, maxST = maxST - growthStats.MaxST,
+                ATK = ATK - growthStats.ATK, DEF = DEF - growthStats.DEF, RES = RES - growthStats.RES,
+                SPD = SPD - growthStats.SPD, LUK = LUK - growthStats.LUK
+            }
         };
     }
 
     public bool RestoreSnapshot(AdventureStatsData data)
     {
-        if (data == null || !data.IsValid()) return false;
-
-        maxHP = data.maxHP;
-        currentHP = data.currentHP;
-        maxST = data.maxST;
-        currentST = data.currentST;
-        ATK = data.ATK;
-        DEF = data.DEF;
-        RES = data.RES;
-        SPD = data.SPD;
-        LUK = data.LUK;
-        initialized = true;
+        if (!initialized || data == null || !data.IsValid()) return false;
+        if (!string.IsNullOrEmpty(data.growthScope) && data.growthScope != growthScope) return false;
+        ApplyExplorationState(data);
         OnStatsChanged?.Invoke();
         return true;
     }

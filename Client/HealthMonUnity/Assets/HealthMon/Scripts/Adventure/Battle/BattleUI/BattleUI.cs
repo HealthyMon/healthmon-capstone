@@ -140,7 +140,7 @@ public class BattleUI : MonoBehaviour
 
         playerHPText.text = $"{player.currentHP} / {player.maxHP}";
 
-        playerSTText.text = $"ST {player.currentST:0} / {player.maxST:0}";
+        playerSTText.text = $"ST {player.currentST:0.#} / {player.maxST:0.#}";
 
         playerATBText.text = $"ATB {player.actionGauge / player.actionGaugeMax * 100f:0}%";
 
