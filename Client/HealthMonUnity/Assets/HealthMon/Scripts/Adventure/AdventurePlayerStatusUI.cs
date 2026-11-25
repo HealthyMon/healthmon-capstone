@@ -41,7 +41,7 @@ public class AdventurePlayerStatusUI : MonoBehaviour
         if (stText != null)
         {
             stText.text =
-                $"{stats.CurrentST:F0}/{stats.MaxST:F0}";
+                $"{stats.CurrentST:0.#}/{stats.MaxST:0.#}";
         }
 
         if (hpBar != null)
