@@ -64,6 +64,9 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
     private bool switching;
     private GameObject liveVisual;
     private Renderer[] originalRenderers;
+    private string activeStarterColor;
+    private MaterialPropertyBlock starterBlock;
+    private HealthMonAccessoryView starterAccessories;
     private float nextWalletSync;
     private string lastShopSelection;
 
@@ -110,7 +113,10 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
         }
         if (GetEntry(activeId) == null || !IsOwned(GetEntry(activeId))) activeId = catalog.entries[0].id;
         if (homePetAnchor != null && originalHomePet != null)
+        {
             originalRenderers = originalHomePet.GetComponentsInChildren<Renderer>(true);
+            starterAccessories = originalHomePet.GetComponent<HealthMonAccessoryView>();
+        }
         if (Offline)
         {
             // One-time migration from the existing single-character profile.
@@ -127,7 +133,14 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
             LoadSlot(activeId, true);
         }
         ready = true;
+        state.StarterColorChanged += UpdateStarterTint;
+        UpdateStarterTint();
         UpdateQuickBar();
+    }
+
+    private void OnDestroy()
+    {
+        if (state != null) state.StarterColorChanged -= UpdateStarterTint;
     }
 
     private void Update()
@@ -466,6 +479,9 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
         // Do not mistakenly clone that profile into a newly selected shop character.
         var p=(id!=catalog.entries[0].id && !PlayerPrefs.HasKey(DataPrefix+id))
             ? DefaultData(id) : GetSavedData(id);
+        var profile = HealthMonStarterProfile.Instance;
+        if (id == catalog.entries[0].id && profile != null && profile.IsSetupDone)
+            p.petName = profile.Nickname;
         // Make the restored character inherit the LAST shared coin balance, not an old snapshot.
         int sharedCoins=state.CurrentCoin;
         p.coin=sharedCoins;
@@ -473,6 +489,22 @@ public sealed class HealthMonCharacterRosterController : MonoBehaviour
         if(id!=catalog.entries[0].id)ApplyHomeVisual(GetEntry(id));
         SetActiveOutfit(id, true);
         state.LoadPetData();
+    }
+
+    private void UpdateStarterTint()
+    {
+        if (originalRenderers == null) return;
+        var profile = HealthMonStarterProfile.Instance;
+        string color = Offline
+            ? (profile != null && profile.IsSetupDone ? HealthMonStarterProfile.ColorId(profile.SelectedCharacterIndex) : null)
+            : state.StarterColor;
+        if (color == activeStarterColor) return;
+        activeStarterColor = color;
+        Color? tint = HealthMonStarterProfile.TryGetTint(color, out Color parsed) ? parsed : (Color?)null;
+        starterBlock ??= new MaterialPropertyBlock();
+        foreach (var renderer in originalRenderers)
+            if (renderer != null && (starterAccessories == null || !starterAccessories.ContainsAccessory(renderer.transform)))
+                HealthMonStarterProfile.SetTint(renderer, starterBlock, tint);
     }
 
     private OutfitData GetOutfit(string id, bool slotSnapshot=false)

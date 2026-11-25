@@ -76,6 +76,11 @@ namespace Healthmon.Beta
         public string speech_level = "casual";
         public string timezone = "Asia/Seoul";
     }
+    [Serializable] public class PetStateSettings : PetSettings
+    {
+        public string starter_color;
+    }
+    [Serializable] public class StarterProfileRequest { public string name, starter_color; }
     [Serializable] public class CreatedPet { public string pet_id; public long state_version; }
     [Serializable] public class PetSummary { public string pet_id; public string name; public long state_version; }
     [Serializable] public class PetList { public PetSummary[] pets; }
@@ -97,7 +102,7 @@ namespace Healthmon.Beta
         public float upper_body, lower_body, nutrition, energy_balance, activity, affinity, initiative;
         public int evolution_target_stage, published_model_stage;
         public long state_version;
-        public PetSettings settings;
+        public PetStateSettings settings;
         public Traits traits;
         public Mood mood;
         public string as_of, rules_version;

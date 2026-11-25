@@ -15,6 +15,9 @@ public sealed class HealthMonPoseView : MonoBehaviour
     public TMP_Text status, count, angles, exerciseTitle, message, resultCount, resultTime, resultNote, sourceLabel;
     public Button startButton, pauseButton, finishButton, retryButton, switchCameraButton;
     public TMP_Text pauseLabel;
+    private Button squatViewButton;
+    private TMP_Text squatViewLabel;
+    private int selectedExercise, squatViewIndex;
     private Button[] choices;
     private TMP_Text[] choiceLabels;
     private GameObject[] choiceBadges;
@@ -26,9 +29,18 @@ public sealed class HealthMonPoseView : MonoBehaviour
     public static readonly string[] Names = { "스쿼트", "팔굽혀펴기", "덤벨 컬" };
     public static readonly string[] Keys = { "squat", "pushup", "curl" };
     public static readonly string[] Guides = {
-        "골반 · 무릎 · 발목을 화면 안에 배치\n준비 자세: 다리를 펴고 제자리 유지",
+        "좁은 공간에서는 정면으로 촬영하세요.\n한쪽 골반 · 무릎 · 발목이 모두 보이면 됩니다.",
         "어깨 · 팔꿈치 · 손목이 보이도록 측면 배치\n준비 자세: 팔을 펴고 몸통 정렬",
         "어깨 · 팔꿈치 · 손목을 화면 안에 배치\n준비 자세: 팔을 내리고 위팔 고정" };
+
+    private static readonly string[] SquatViewKeys = { "front", "side", "auto" };
+    private static readonly string[] SquatViewLabels = { "정면", "측면", "자동" };
+    private static readonly string[] SquatGuides = {
+        "카메라를 정면에 두고 한쪽 골반 · 무릎 · 발목을 보여주세요.\n다리를 펴고 잠시 멈춘 뒤 시작하세요.",
+        "카메라를 옆에 두고 가까운 쪽 골반 · 무릎 · 발목을 보여주세요.\n다리를 펴고 잠시 멈춘 뒤 시작하세요.",
+        "한쪽 다리만 보이는 정면 촬영은 ‘정면’을 선택하세요.\n골반 · 무릎 · 발목이 화면 안에 있어야 합니다." };
+    public string SquatView => SquatViewKeys[squatViewIndex];
+    public string CameraGuide => selectedExercise == 0 ? SquatGuides[squatViewIndex] : Guides[selectedExercise];
 
     public void Build()
     {
@@ -64,6 +76,8 @@ public sealed class HealthMonPoseView : MonoBehaviour
 
         cameraPage=Rect("CameraPage",safeArea,.05f,.035f,.95f,.815f).gameObject;
         exerciseTitle=Label("Exercise",cameraPage.transform,Names[0],38,Color.white,0,.925f,.65f,1);
+        squatViewButton=Button("SquatView",cameraPage.transform,"",blueButton,.29f,.925f,.63f,1,CycleSquatView,23);
+        squatViewLabel=squatViewButton.GetComponentInChildren<TMP_Text>();
         switchCameraButton=Button("SwitchCamera",cameraPage.transform,"카메라 전환",blueButton,.65f,.925f,1,1,() => SwitchCamera?.Invoke(),23);
         var cameraCard=Panel("CameraCard",cameraPage.transform,0,.495f,1,.92f,card);
         var cameraInset=Panel("CameraInset",cameraCard,.025f,.04f,.975f,.96f,null);
@@ -104,15 +118,28 @@ public sealed class HealthMonPoseView : MonoBehaviour
     }
     public void SelectExercise(int index)
     {
+        selectedExercise = index;
         for(int i=0;i<choices.Length;i++) { choices[i].image.color=i==index?Color.white:new Color(.73f,.81f,.94f); choiceBadges[i].SetActive(i==index); }
-        guide.text=Guides[index]; exerciseTitle.text=Names[index]; message.text=Guides[index];
+        guide.text=Guides[index]; exerciseTitle.text=Names[index]; message.text=CameraGuide;
     }
+    private void CycleSquatView()
+    {
+        squatViewIndex = (squatViewIndex + 1) % SquatViewKeys.Length;
+        squatViewLabel.text = $"촬영 방향 · {SquatViewLabels[squatViewIndex]}";
+        if (startButton.interactable) message.text = CameraGuide;
+    }
+    public void SetSquatViewEditable(bool editable) => squatViewButton.interactable = editable;
     public void ShowSelection() { selection.SetActive(true); cameraPage.SetActive(false); resultPage.SetActive(false); stepLabel.text="01 훈련 선택   ·   02 자세 준비   ·   03 훈련 시작"; }
     public void ShowCamera(bool running)
     {
         selection.SetActive(false); cameraPage.SetActive(true); resultPage.SetActive(false);
         startButton.gameObject.SetActive(!running); pauseButton.gameObject.SetActive(running); finishButton.gameObject.SetActive(running); retryButton.gameObject.SetActive(running);
         switchCameraButton.gameObject.SetActive(!running);
+        bool chooseView = !running && selectedExercise == 0;
+        squatViewButton.gameObject.SetActive(chooseView);
+        SetSquatViewEditable(chooseView);
+        squatViewLabel.text = $"촬영 방향 · {SquatViewLabels[squatViewIndex]}";
+        exerciseTitle.rectTransform.anchorMax = new Vector2(chooseView ? .28f : .65f, 1f);
         stepLabel.text=running?"03 훈련 중  ·  준비 → 굽힘 → 복귀":"02 자세 준비  ·  필요한 관절을 화면 안에 배치";
     }
     public void ShowResult() { selection.SetActive(false); cameraPage.SetActive(false); resultPage.SetActive(true); stepLabel.text="RESULT  ·  훈련 결과"; }

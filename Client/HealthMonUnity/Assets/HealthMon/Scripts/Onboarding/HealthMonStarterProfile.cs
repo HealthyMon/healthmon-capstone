@@ -3,6 +3,31 @@ using UnityEngine;
 public class HealthMonStarterProfile : MonoBehaviour
 {
     public static HealthMonStarterProfile Instance;
+    private static readonly string[] Colors = { "sun", "mint", "lavender" };
+    private static readonly Color[] Tints = {
+        new Color(1f, .63f, .35f), new Color(.38f, .95f, .75f), new Color(.78f, .65f, 1f)
+    };
+    private static readonly int[] ColorProperties = { Shader.PropertyToID("_BaseColor"), Shader.PropertyToID("_Color") };
+
+    public static string ColorId(int index) => Colors[Mathf.Clamp(index, 0, Colors.Length - 1)];
+    public static Color DefaultTint(int index) => Tints[Mathf.Clamp(index, 0, Tints.Length - 1)];
+    public static bool TryGetTint(string color, out Color tint)
+    {
+        int index = System.Array.IndexOf(Colors, color);
+        tint = index < 0 ? Color.white : Tints[index];
+        return index >= 0;
+    }
+
+    public static void SetTint(Renderer renderer, MaterialPropertyBlock block, Color? tint)
+    {
+        var material = renderer.sharedMaterial;
+        if (material == null) return;
+        renderer.GetPropertyBlock(block);
+        foreach (int property in ColorProperties)
+            if (material.HasProperty(property))
+                block.SetColor(property, tint ?? material.GetColor(property));
+        renderer.SetPropertyBlock(block);
+    }
 
     public string Nickname { get; private set; } = "";
     public int SelectedCharacterIndex { get; private set; } = 0;

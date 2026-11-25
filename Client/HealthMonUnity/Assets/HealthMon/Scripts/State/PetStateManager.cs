@@ -6,6 +6,8 @@ public class PetStateManager : MonoBehaviour
     private bool ServerAuthority => Healthmon.Common.CommonServerConnection.UsesServerAuthority;
     private Healthmon.Beta.PetState serverState;
     public bool HasVerifiedServerState => serverState != null;
+    public string StarterColor => serverState?.settings?.starter_color;
+    public event System.Action StarterColorChanged;
     public int Level => level;
     public event System.Action<int> LevelChanged;
 
@@ -176,9 +178,11 @@ public class PetStateManager : MonoBehaviour
 
     public void ClearServerState()
     {
+        bool hadStarterColor = !string.IsNullOrEmpty(StarterColor);
         serverState = null;
-        foreach (var label in new[] { homeLevelText, homeExpText, homeCoinText, homeIntimacyText,
-            homeActivityText, statusLevelText, statusExpText, statusIntimacyText, statusActivityText,
+        if (hadStarterColor) StarterColorChanged?.Invoke();
+        foreach (var label in new[] { homeNameText, homeLevelText, homeExpText, homeCoinText, homeIntimacyText,
+            homeActivityText, statusNameText, statusLevelText, statusExpText, statusIntimacyText, statusActivityText,
             statusKindnessText, statusCuriosityText, growthStageText, evolutionConditionText })
             if (label != null) label.text = "서버 연결 대기";
     }
@@ -187,7 +191,9 @@ public class PetStateManager : MonoBehaviour
     {
         if (!ServerAuthority || state == null || !state.IsValidCommonState(state.pet_id)) return;
         int previousLevel = level;
+        string previousStarterColor = StarterColor;
         serverState = state;
+        if (previousStarterColor != StarterColor) StarterColorChanged?.Invoke();
         if (state.settings != null && !string.IsNullOrWhiteSpace(state.settings.name)) petName = state.settings.name;
         level = state.level; currentExp = state.current_exp; expToNextLevel = state.required_exp;
         coin = state.coin; intimacy = Mathf.RoundToInt(state.affinity); activity = Mathf.RoundToInt(state.activity);

@@ -73,6 +73,25 @@ def test_ready_identity_and_server_instance_survive_new_app(client, pet, db, set
         assert len(reloaded.get(f"/pets/{pet}/workouts").json()["records"]) == 1
 
 
+def test_starter_profile_is_owned_and_survives_pet_settings_updates(client, pet):
+    path = f"/pets/{pet}"
+    previous = client.put(f"{path}/settings", json={"name": "헬스몬", "speech_level": "formal"})
+    assert previous.status_code == 200, previous.text
+    choice = {"name": " 새싹몬 ", "starter_color": "mint"}
+    other_owner = {"Authorization": "Bearer test-owner-b-token"}
+    assert client.put(f"{path}/starter-profile", json=choice, headers=other_owner).status_code == 404
+    for invalid in ({"name": "   "}, {"starter_color": "unknown"}):
+        assert client.put(f"{path}/starter-profile", json=choice | invalid).status_code == 422
+    saved = client.put(f"{path}/starter-profile", json=choice)
+    assert saved.status_code == 200, saved.text
+    assert saved.json()["state_version"] > previous.json()["state_version"]
+    assert saved.json()["settings"] == previous.json()["settings"] | {"name": "새싹몬", "starter_color": "mint"}
+    assert client.get(f"{path}/state").json()["settings"] == saved.json()["settings"]
+    renamed = client.put(f"{path}/settings", json={"name": "건강몬"})
+    assert renamed.status_code == 200, renamed.text
+    assert client.get(f"{path}/state").json()["settings"]["starter_color"] == "mint"
+
+
 def test_concurrent_same_id_is_one_durable_event_and_one_reward(client, pet, db):
     clock(client, BASE + timedelta(hours=2))
     payload = workout("same-watch-id")

@@ -1,3 +1,6 @@
+using System.Collections;
+using Healthmon.Beta;
+using Healthmon.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,6 +34,7 @@ public class HealthMonFirstRunFlow : MonoBehaviour
     public string mainSceneName = "MainARScene";
 
     private int selectedCharacterIndex = 0;
+    private bool saving;
 
     private void Start()
     {
@@ -46,7 +50,9 @@ public class HealthMonFirstRunFlow : MonoBehaviour
                 cardButtons[i].onClick.AddListener(() => SelectCharacter(captured));
         }
 
-        SelectCharacter(0);
+        var profile = HealthMonStarterProfile.Instance;
+        SelectCharacter(profile != null ? profile.SelectedCharacterIndex : 0);
+        if (nicknameInput != null && profile != null) nicknameInput.text = profile.Nickname;
 
         if (HealthMonStarterProfile.Instance != null && HealthMonStarterProfile.Instance.IsSetupDone)
         {
@@ -76,6 +82,7 @@ public class HealthMonFirstRunFlow : MonoBehaviour
 
     public void SelectCharacter(int index)
     {
+        if (saving) return;
         selectedCharacterIndex = index;
 
         for (int i = 0; i < cardFrames.Length; i++)
@@ -93,6 +100,7 @@ public class HealthMonFirstRunFlow : MonoBehaviour
 
     public void ConfirmSetup()
     {
+        if (saving) return;
         string nickname = nicknameInput != null ? nicknameInput.text.Trim() : "";
 
         if (string.IsNullOrEmpty(nickname))
@@ -107,20 +115,90 @@ public class HealthMonFirstRunFlow : MonoBehaviour
             return;
         }
 
-        if (HealthMonStarterProfile.Instance != null)
-            HealthMonStarterProfile.Instance.Save(nickname, selectedCharacterIndex);
-
-        SceneManager.LoadScene(mainSceneName);
+        if (CommonServerConnection.UsesServerAuthority)
+            StartCoroutine(SaveOnServer(nickname, selectedCharacterIndex));
+        else
+            CompleteSetup(nickname, selectedCharacterIndex);
     }
 
     public void OnContinue()
     {
+        if (saving) return;
         if (HealthMonStarterProfile.Instance == null || !HealthMonStarterProfile.Instance.IsSetupDone)
         {
             OpenSetup();
             return;
         }
 
+        if (CommonServerConnection.UsesServerAuthority)
+            StartCoroutine(SaveOnServer(HealthMonStarterProfile.Instance.Nickname,
+                HealthMonStarterProfile.Instance.SelectedCharacterIndex, true));
+        else
+            SceneManager.LoadScene(mainSceneName);
+    }
+
+    private void CompleteSetup(string nickname, int characterIndex)
+    {
+        HealthMonStarterProfile.Instance?.Save(nickname, characterIndex);
         SceneManager.LoadScene(mainSceneName);
+    }
+
+    private IEnumerator SaveOnServer(string nickname, int characterIndex, bool continuing = false)
+    {
+        saving = true;
+        if (confirmButton != null) confirmButton.interactable = false;
+        if (continueButton != null) continueButton.interactable = false;
+        if (backButton != null) backButton.interactable = false;
+        if (newStartButton != null) newStartButton.interactable = false;
+        if (statusText != null) statusText.text = "서버 프로필 확인 중…";
+
+        var connection = CommonServerConnection.Instance;
+        float deadline = Time.realtimeSinceStartup + 10;
+        while (connection != null &&
+               (!connection.IsConnected || connection.Api.IsBusy || connection.LatestState?.settings == null) &&
+               Time.realtimeSinceStartup < deadline)
+            yield return null;
+
+        bool ready = connection != null && connection.IsConnected && !connection.Api.IsBusy &&
+            connection.LatestState?.settings != null;
+        if (continuing && (!ready || !CanRestoreLocalProfile(connection)))
+        {
+            SceneManager.LoadScene(mainSceneName);
+            yield break;
+        }
+
+        bool saved = false;
+        if (ready)
+        {
+            bool completed = false;
+            connection.Api.SetStarterProfile(new StarterProfileRequest {
+                name = nickname, starter_color = HealthMonStarterProfile.ColorId(characterIndex)
+            }, _ => { saved = true; completed = true; }, _ => completed = true);
+            while (!completed) yield return null;
+        }
+        if (saved)
+        {
+            CompleteSetup(nickname, characterIndex);
+            yield break;
+        }
+        saving = false;
+        if (confirmButton != null) confirmButton.interactable = true;
+        if (continueButton != null) continueButton.interactable = true;
+        if (backButton != null) backButton.interactable = true;
+        if (newStartButton != null) newStartButton.interactable = true;
+        if (continuing) OpenSetup();
+        if (statusText != null) statusText.text = "프로필 저장 실패 · 서버 연결을 확인하고 다시 시도해주세요.";
+    }
+
+    private static bool CanRestoreLocalProfile(CommonServerConnection connection)
+    {
+        // Only the unchanged starter bound by the local launcher is eligible for migration.
+        var state = connection.LatestState;
+        return connection.EnvironmentName == "test" && state.published_model_stage == 0 &&
+            (state.settings.name == "몽글이" || state.settings.name == "헬스몬") &&
+            string.IsNullOrEmpty(state.settings.starter_color) &&
+            LocalConnectionProfile.TryRead(out var local) &&
+            local.server_instance_id == connection.ServerInstanceId && local.owner_id == connection.OwnerId &&
+            local.pet_id == state.pet_id;
     }
 }
