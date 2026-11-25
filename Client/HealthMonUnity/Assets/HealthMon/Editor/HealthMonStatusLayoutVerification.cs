@@ -34,7 +34,7 @@ public static class HealthMonStatusLayoutVerification
         pet_id = "status-layout-fixture", rule_version = CommonServerContract.RuleVersion,
         asset_status = "none", level = 8, current_exp = 85, required_exp = 220, total_exp = 1285,
         upper_body = 72, lower_body = 64, nutrition = 68, energy_balance = 8,
-        activity = 74, affinity = 80, initiative = 60, settings = new PetSettings { name = "헬스몬" }
+        activity = 74, affinity = 80, initiative = 60, settings = new PetStateSettings { name = "헬스몬" }
     };
 
     public static void Run()

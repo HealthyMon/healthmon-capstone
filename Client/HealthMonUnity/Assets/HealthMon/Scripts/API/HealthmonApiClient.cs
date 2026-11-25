@@ -238,6 +238,23 @@ namespace Healthmon.Beta
             }, failure);
         }
 
+        public void SetStarterProfile(StarterProfileRequest profile, Action<PetState> success, Action<ApiFailure> failure)
+        {
+            if (!RequirePet(failure)) return;
+            if (HasPendingChat) { Fail(0, "Resolve pending chat before saving the starter profile.", failure); return; }
+            string pet = PetId;
+            int generation = stateGate.Generation;
+            Begin<PetState>("PUT", PetPath("/starter-profile"), JsonUtility.ToJson(profile), state =>
+            {
+                if (!state.IsValidCommonState(pet) || !stateGate.Accept(generation, state.state_version) ||
+                    state.settings == null || state.settings.name != profile.name || state.settings.starter_color != profile.starter_color)
+                { Fail(0, "Starter profile response could not be verified.", failure); return; }
+                ObserveVersion(state.state_version);
+                StateReceived?.Invoke(state);
+                success?.Invoke(state);
+            }, failure, timeoutOverride: 15);
+        }
+
         public void GetState(Action<PetState> success, Action<ApiFailure> failure = null)
         {
             if (!RequirePet(failure)) return;
@@ -681,25 +698,27 @@ namespace Healthmon.Beta
         private void Report(ApiFailure error, Action<ApiFailure> callback)
         { Failed?.Invoke(error); callback?.Invoke(error); }
 
-        private void Begin<T>(string method, string path, string json, Action<T> success, Action<ApiFailure> failure, byte[] image = null) where T : class
+        private void Begin<T>(string method, string path, string json, Action<T> success, Action<ApiFailure> failure,
+            byte[] image = null, int? timeoutOverride = null) where T : class
         {
             if (!isActiveAndEnabled) { Fail(0, "Client component is disabled.", failure); return; }
             if (IsBusy) { Fail(0, "A request is already running.", failure); return; }
             if (string.IsNullOrWhiteSpace(bearerToken)) { Fail(401, "Configure a bearer token at runtime.", failure); return; }
             IsBusy = true;
             activeFailure = failure;
-            activeCoroutine = StartCoroutine(Request(method, path, json, success, failure, image));
+            activeCoroutine = StartCoroutine(Request(method, path, json, success, failure, image, timeoutOverride));
         }
 
         private IEnumerator Request<T>(string method, string path, string json,
-            Action<T> success, Action<ApiFailure> failure, byte[] image = null) where T : class
+            Action<T> success, Action<ApiFailure> failure, byte[] image, int? timeoutOverride) where T : class
         {
             int generation = stateGate.Generation;
             // Yield once so cancellation has the Coroutine handle before the request starts.
             yield return null;
             activeRequest = new UnityWebRequest(baseUrl + path, method);
             activeRequest.downloadHandler = new DownloadHandlerBuffer();
-            int requestTimeout = Mathf.Max(1, typeof(T) == typeof(FoodAnalysis) ? Mathf.Max(timeoutSeconds, foodTimeoutSeconds) : timeoutSeconds);
+            int requestTimeout = timeoutOverride ?? Mathf.Max(1,
+                typeof(T) == typeof(FoodAnalysis) ? Mathf.Max(timeoutSeconds, foodTimeoutSeconds) : timeoutSeconds);
             activeRequest.timeout = requestTimeout;
             activeRequest.redirectLimit = 0; // Avoid forwarding authorization to redirected hosts.
             activeRequest.SetRequestHeader("Authorization", "Bearer " + bearerToken);

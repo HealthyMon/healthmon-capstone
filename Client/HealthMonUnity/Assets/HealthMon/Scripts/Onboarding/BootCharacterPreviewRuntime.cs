@@ -9,14 +9,6 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
     [Header("UI RawImages (3개)")]
     public RawImage[] previewImages = new RawImage[3];
 
-    [Header("Preview Colors")]
-    public Color[] previewColors = new Color[3]
-    {
-        new Color(1f, 0.55f, 0.25f, 1f),   // 썬 - 주황
-        new Color(0.25f, 0.95f, 0.70f, 1f), // 민트
-        new Color(0.75f, 0.55f, 1f, 1f)     // 라벤더
-    };
-
     [Header("Preview Root Base Position")]
     public Vector3 previewBaseWorldPos = new Vector3(0f, -1000f, 0f);
 
@@ -74,7 +66,7 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
                 child.gameObject.SetActive(false);
         foreach (var animator in model.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
 
-        Color tint = previewColors[Mathf.Clamp(index, 0, previewColors.Length - 1)];
+        Color tint = HealthMonStarterProfile.DefaultTint(index);
         TintAllRenderers(model, tint);
 
         // 프리뷰 카메라 생성
@@ -128,16 +120,9 @@ public class BootCharacterPreviewRuntime : MonoBehaviour
 
     private void TintAllRenderers(GameObject target, Color tint)
     {
-        Renderer[] renderers = target.GetComponentsInChildren<Renderer>(true);
-
-        foreach (Renderer r in renderers)
-        {
-            var block = new MaterialPropertyBlock();
-            r.GetPropertyBlock(block);
-            block.SetColor("_BaseColor", tint);
-            block.SetColor("_Color", tint);
-            r.SetPropertyBlock(block);
-        }
+        var block = new MaterialPropertyBlock();
+        foreach (Renderer renderer in target.GetComponentsInChildren<Renderer>())
+            HealthMonStarterProfile.SetTint(renderer, block, tint);
     }
 
     private void OnDestroy()

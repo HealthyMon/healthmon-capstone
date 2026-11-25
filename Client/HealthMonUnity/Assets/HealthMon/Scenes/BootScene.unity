@@ -4271,10 +4271,6 @@ MonoBehaviour:
   - {fileID: 740217601}
   - {fileID: 63990392}
   - {fileID: 1530942700}
-  previewColors:
-  - {r: 1, g: 0.63, b: 0.35, a: 1}
-  - {r: 0.38, g: 0.95, b: 0.75, a: 1}
-  - {r: 0.78, g: 0.65, b: 1, a: 1}
   previewBaseWorldPos: {x: 0, y: -1000, z: 0}
 --- !u!1 &1110906589
 GameObject:

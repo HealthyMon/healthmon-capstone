@@ -36,13 +36,24 @@ public class AdventureStatsData
     public float maxST, currentST;
     public int ATK, DEF, RES, SPD, LUK;
 
+    public string growthScope;
+    public AdventureStatBonuses bonuses;
+
     public bool IsValid()
     {
-        return maxHP > 0 && currentHP > 0 && currentHP <= maxHP &&
+        return (bonuses == null || (!float.IsNaN(bonuses.maxST) && !float.IsInfinity(bonuses.maxST))) &&
+            maxHP > 0 && currentHP > 0 && currentHP <= maxHP &&
             !float.IsNaN(maxST) && !float.IsInfinity(maxST) &&
             !float.IsNaN(currentST) && !float.IsInfinity(currentST) &&
             maxST > 0 && currentST >= 0 && currentST <= maxST;
     }
+}
+
+[Serializable]
+public class AdventureStatBonuses
+{
+    public int maxHP, ATK, DEF, RES, SPD, LUK;
+    public float maxST;
 }
 
 [Serializable]

@@ -12,7 +12,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, Response
 from psycopg.types.json import Jsonb
 from .config import Settings
-from .contracts import Chat, ConfirmFood, Decision, Evolution, Goal, LegacyActivity, Meal, Memory, PetSettings, Proposal, ProposalControl, Session, SourceEdit, Workout
+from .contracts import Chat, ConfirmFood, Decision, Evolution, Goal, LegacyActivity, Meal, Memory, PetSettings, Proposal, ProposalControl, Session, SourceEdit, StarterProfile, Workout
 from .db import Database
 from .gateway import AIUnavailable, Gateway
 from .dependencies import AIDependencies
@@ -157,8 +157,24 @@ def create_app(settings=None, database=None):
     def set_settings(pet: str, body: PetSettings, owner=Depends(identity)):
         with db.connect() as c:
             p = service.owned(c, owner, pet, True)
-            c.execute('UPDATE pets SET settings=%s WHERE id=%s', (Jsonb(body.model_dump()), pet))
-            p['settings'] = body.model_dump()
+            updated = body.model_dump()
+            if 'starter_color' in p['settings']:
+                updated['starter_color'] = p['settings']['starter_color']
+            c.execute('UPDATE pets SET settings=%s WHERE id=%s', (Jsonb(updated), pet))
+            p['settings'] = updated
+            state, _ = service.refresh(c, p, now(), settings.chat_available(owner))
+        return state
+
+    @app.put('/pets/{pet}/starter-profile')
+    def set_starter_profile(pet: str, body: StarterProfile, owner=Depends(identity)):
+        name = body.name.strip()
+        if len(name) < 2:
+            raise HTTPException(422, 'Starter name must contain at least two characters')
+        with db.connect() as c:
+            p = service.owned(c, owner, pet, True)
+            updated = dict(p['settings'], name=name, starter_color=body.starter_color)
+            c.execute('UPDATE pets SET settings=%s WHERE id=%s', (Jsonb(updated), pet))
+            p['settings'] = updated
             state, _ = service.refresh(c, p, now(), settings.chat_available(owner))
         return state
 

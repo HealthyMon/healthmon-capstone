@@ -14,6 +14,11 @@ class PetSettings(Strict):
     timezone: Literal['Asia/Seoul'] = 'Asia/Seoul'
 
 
+class StarterProfile(Strict):
+    name: str = Field(min_length=2, max_length=12)
+    starter_color: Literal['sun', 'mint', 'lavender']
+
+
 class Event(Strict):
     event_id: str = Field(min_length=1, max_length=100)
     revision: int = Field(default=1, ge=1)

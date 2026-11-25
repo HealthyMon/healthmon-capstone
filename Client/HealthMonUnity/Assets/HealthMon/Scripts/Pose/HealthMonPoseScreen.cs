@@ -86,7 +86,7 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
     {
         changing=true; int version=++generation;ReleaseCamera(); prepared=false;view.SetPreview(null);view.ShowCamera(resume);
         if(!resume)view.count.text="—";
-        view.status.text="촬영 준비";view.message.text=HealthMonPoseView.Guides[selected];view.startButton.interactable=false;
+        view.status.text="촬영 준비";view.message.text=view.CameraGuide;view.startButton.interactable=false;
 #if UNITY_EDITOR
         if(verificationFrame!=null) { prepared=true;view.SetPreview(verificationFrame);view.sourceLabel.text="검증용 실제 운동 영상";view.startButton.interactable=true;changing=false;yield break; }
 #endif
@@ -136,7 +136,9 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
         prepared=cameraTexture!=null&&cameraTexture.width>16;
         view.startButton.interactable=prepared; view.sourceLabel.text=prepared?"카메라 준비 완료 · 영상 저장 안 함":"카메라 시작 실패";
         if(prepared)Screen.sleepTimeout=SleepTimeout.NeverSleep;
-        if(!prepared) {ReleaseCamera();view.SetPreview(null);view.message.text="카메라 시작 실패\n사용 중인 다른 앱 종료 또는 카메라 전환";}changing=false;
+        if(!prepared) {ReleaseCamera();view.SetPreview(null);view.message.text="카메라 시작 실패\n사용 중인 다른 앱 종료 또는 카메라 전환";}
+        else if (!resume) view.message.text = view.CameraGuide;
+        changing=false;
     }
     private void SwitchCamera() { if(running||changing)return;cameraChosen=true;cameraIndex++;PrepareCamera(); }
     public void BeginWorkout() { if(prepared&&!running&&!changing&&!restoring&&!applicationPaused)StartCoroutine(BeginRoutine()); }
@@ -148,12 +150,15 @@ public sealed class HealthMonPoseScreen : MonoBehaviour
 #endif
         if(!client.Configure(endpoint)) {view.message.text="훈련 준비 실패 · 잠시 후 재시도";yield break;}
         changing=true;view.startButton.interactable=false;view.message.text="훈련 준비 중…";
+        view.SetSquatViewEditable(false);
         var binding=HealthMonPoseWorkoutSync.BindCurrentAccount(DateTime.UtcNow.ToString("o"));
         int version=generation;PoseSnapshot response=null;string error=null;
-        yield return client.Json("POST","/sessions",new PoseSessionRequest{exercise=HealthMonPoseView.Keys[selected]},(s,e)=>{response=s;error=e;});
+        var options = new PoseSessionRequest { exercise = HealthMonPoseView.Keys[selected] };
+        if (options.exercise == "squat") options.squat_view = view.SquatView;
+        yield return client.Json("POST","/sessions",options,(s,e)=>{response=s;error=e;});
         changing=false;
         if(version!=generation) { if(response!=null&&!string.IsNullOrEmpty(response.session_id))StartCoroutine(client.Json("DELETE","/sessions/"+response.session_id,null,(s,e)=>{}));yield break; }
-        if(error!=null||response==null||string.IsNullOrEmpty(response.session_id)) {view.message.text=error??"훈련 시작 실패 · 재시도 필요";view.startButton.interactable=prepared;yield break;}
+        if(error!=null||response==null||string.IsNullOrEmpty(response.session_id)) {view.message.text=error??"훈련 시작 실패 · 재시도 필요";view.startButton.interactable=prepared;view.SetSquatViewEditable(true);yield break;}
         session=response.session_id;sequence=0;elapsed=0;paused=faulted=finishing=false;running=true;latest=response;
         workoutBinding=binding;resultEventId=null;
 #if UNITY_EDITOR
