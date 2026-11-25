@@ -254,17 +254,34 @@ public static class HealthMonTeamIntegration
         RequireReferences(battle, "battleManager", "battleRoot", "enemySpawner", "adventurePlayerStats");
         var stats = Object.FindAnyObjectByType<AdventurePlayerStats>(FindObjectsInactive.Include);
         Require(stats != null, "Adventure stats installed");
-        stats.ApplyGrowthStats(PetCombatStats.Calculate(1, 50, 50, 50, 0, 50, 50, 50), "editor-verification");
+        var status = HealthMonStatusSnapshot.Create("fixture", "editor-verification", 10, 0, 1, 80, 60, 70, 8, 75, 40, 85);
+        stats.ApplyGrowthStats(status.Combat, status.Scope);
         Require(stats.IsInitialized && stats.MaxHP > 0, "Adventure stats initialize");
         var temporary = new GameObject("Battle transfer verification");
         try
         {
             var unit = temporary.AddComponent<BattleUnit>();
             stats.CopyToBattleUnit(unit);
-            Require(unit.maxHP == stats.MaxHP && unit.currentHP == stats.CurrentHP, "Exploration stats enter battle");
+            Require(unit.maxHP == 167 && unit.maxST == 32.6f && unit.ATK == 24 && unit.DEF == 11 &&
+                unit.RES == 11 && unit.SPD == 8 && unit.LUK == 7, "Status and adventure transfer all seven stats to battle");
             unit.currentHP = Math.Max(0, unit.currentHP - 1);
             stats.CaptureFromBattleUnit(unit);
             Require(stats.CurrentHP == unit.currentHP, "Battle health returns to exploration");
+            stats.ModifyStat(AdventureStatType.ATK, 3);
+            var checkpoint = JsonUtility.FromJson<AdventureStatsData>(JsonUtility.ToJson(stats.CreateSnapshot()));
+            var next = PetCombatStats.Calculate(11, 80, 60, 70, 8, 75, 40, 85);
+            stats.ApplyGrowthStats(next, status.Scope);
+            Require(stats.RestoreSnapshot(checkpoint), "Same-pet checkpoint restores");
+            stats.CopyToBattleUnit(unit);
+            Require(unit.ATK == next.ATK + 3 && unit.maxHP == next.MaxHP && unit.currentHP < unit.maxHP,
+                "Checkpoint applies its bonus once and keeps damage with the latest growth");
+            stats.ApplyGrowthStats(next, "different-pet");
+            Require(!stats.RestoreSnapshot(checkpoint), "New checkpoints belong to their saved pet");
+            var legacy = new AdventureStatsData { maxHP = 184, currentHP = 92, maxST = 25.7f, currentST = 0, ATK = 36 };
+            Require(stats.RestoreSnapshot(legacy), "Legacy run can resume");
+            stats.CopyToBattleUnit(unit);
+            Require(unit.ATK == next.ATK && unit.currentST == 0 && unit.maxST == next.MaxST,
+                "Legacy totals cannot override current battle stats");
             var events = manager.GetComponent<AdventureEventManager>() ?? Object.FindAnyObjectByType<AdventureEventManager>();
             Require(events.GenerateEvent(10) == AdventureEventType.EliteBattle, "Tenth floor elite battle");
         }
